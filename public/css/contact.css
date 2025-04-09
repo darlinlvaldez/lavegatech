@@ -1,0 +1,138 @@
+/* contact.css */
+
+.contenedor-principal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+div .titulo {
+    font-size: 4.5rem;
+    margin-bottom: 20px;
+    color: #000000;
+    font-weight: bold;
+}
+
+.lavega {
+    height: 25px;
+    vertical-align: middle;
+    margin: 05px;
+}
+
+.texto {
+    font-size: 2.1rem;
+    color: #444;
+    line-height: 2.0;
+}
+
+#mapid {
+    width: 100%;
+    height: 400px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+form .form-group, 
+form .mb-3 {
+    margin-bottom: 20px;
+}
+
+.input-principal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    padding: 20px;
+}
+
+.fila-formulario {
+    width: 100%;
+    max-width: 800px;
+    padding: 40px;
+
+}
+
+.formulario-contacto {
+    width: 100%;
+}
+
+.fila-campos {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.campo-formulario {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+}
+
+.entrada-texto {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.fila-boton {
+    margin-top: 20px;
+}
+
+.boton-enviar {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 30px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.boton-enviar:hover {
+    background-color: #218838;
+}
+
+/*----------------------------*\
+    Responsividad
+\*----------------------------*/
+
+@media (max-width: 768px) {
+    .titulo {
+        font-size: 2.8rem;
+    }
+
+    .texto {
+        font-size: 1.4rem;
+        text-align: justify;
+    }
+
+    .fila-campos {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .campo-formulario {
+        width: 100%;
+    }
+
+    .input-principal {
+        height: auto;
+        padding: 10px;
+    }
+
+    .fila-formulario {
+        padding: 20px;
+    }
+
+    .boton-enviar {
+        width: 100%;
+        padding: 12px;
+        font-size: 15px;
+    }
+}

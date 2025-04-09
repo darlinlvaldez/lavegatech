@@ -1,0 +1,510 @@
+<%- include ('./partials/header.ejs') %>
+
+<!-- HTML TAB -->
+<script>
+function openCategory(evt, categoryName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablink");
+    for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(categoryName).style.display = "block";
+    evt.currentTarget.className += " active";
+
+    setTimeout(function () {
+    $("#" + categoryName + " .products-slick").slick("refresh");
+}, 1);
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+document.querySelector(".tablink").click();
+});
+</script>
+<!-- /HTML TAB -->
+       
+
+	<!-- SECTION -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <!-- section title -->
+                <div class="col-md-12">
+                    <div class="section-title">
+                        <h3 class="title">Lo más reciente</h3>
+                        <div class="section-nav">
+                            <ul class="section-tab-nav tab-nav">
+                                <li><a class="tablink active" data-toggle="tab" role="button" onclick="openCategory(event, 'moviles')">Móviles</a></li>
+                                <li><a class="tablink" data-toggle="tab" role="button" onclick="openCategory(event, 'smarttv')">SmartTV</a></li>
+                                <li><a class="tablink" data-toggle="tab" role="button" onclick="openCategory(event, 'laptops')">Laptops</a></li>
+                                <li><a class="tablink" data-toggle="tab" role="button" onclick="openCategory(event, 'consolas')">Consolas</a></li>
+                                <li><a class="tablink" data-toggle="tab" role="button" onclick="openCategory(event, 'tablets')">Tablets</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            <!-- /section title -->
+
+
+            <!-- Products tab & slick -->
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="products-tabs">
+                        <div id="moviles" class="tabcontent active">
+                            <div class="products-slick" data-nav="#slick-nav-1" id="product-list-moviles">
+                                <% const productosMoviles = productos.filter(p => p.categoria === 'moviles').filter(p => {
+                                    const fechaCreacion = new Date(p.fecha);
+                                    const hoy = new Date();
+                                    const diferenciaDias = (hoy - fechaCreacion) / (1000 * 60 * 60 * 24);
+                                    return diferenciaDias <= 30;
+                                }).slice(0); productosMoviles.forEach(producto => { %>
+                                <div class="product" data-categoria="<%= producto.categoria %>">
+                                    <div class="product-img"> <a href="/mobiles/product/<%= producto.id %>?color=<%= producto.color %>">
+                                        <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">
+                                        <div class="product-label">
+                                            <% if (producto.descuento > 0) { %>
+                                            <span class="sale">-<%= producto.descuento %>%</span>
+                                            <% } %>
+                                            <span class="new">Nuevo</span>
+                                        </div>
+                                    </div>
+                                    <div class="product-body">
+                                        <p class="product-category">
+                                            <%= producto.categoria === 'moviles' ? 'Móviles' : producto.categoria.charAt(0).toUpperCase() + producto.categoria.slice(1) %>
+                                        </p>
+                                        <h3 class="product-name">
+                                                <%= producto.nombre %>
+                                            </h3>
+                                            <h4 class="product-price">
+                                                $<%= Number(producto.precio * (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                                <% if (producto.descuento > 0) { %>
+                                                <del class="product-old-price">$<%= Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></del>
+                                                <% } %>
+                                            </h4></a>
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                        <div class="product-btns">
+                                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">Lista de deseo</span></button>
+                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">Comparación</span></button>
+                                            <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
+                                        </div>
+                                    </div>
+                                    <div class="add-to-cart">
+                                        <button class="add-to-cart-btn" onclick="addToCart('<%= producto.id %>', '<%= producto.nombre %>', <%= producto.precio %>, 
+                                        1, '<%= producto.color %>', <%= producto.descuento %>, <%= producto.stock %>, '<%= producto.imagen %>')">
+                                            <i class="fa fa-shopping-cart"></i> Agregar al carrito
+                                        </button>
+                                    </div>                             
+                                </div>
+                                <% }); %>
+                            </div>  
+                        </div>
+                        
+                        <div id="smarttv" class="tabcontent">
+                            <div class="products-slick" data-nav="#slick-nav-2" id="product-list-smarttv">
+                                <% const productosSmarttv = productos.filter(p => p.categoria === 'smarttv').filter(p => {
+                                    const fechaCreacion = new Date(p.fecha);
+                                    const hoy = new Date();
+                                    const diferenciaDias = (hoy - fechaCreacion) / (1000 * 60 * 60 * 24);
+                                    return diferenciaDias <= 30;
+                                }).slice(0); productosSmarttv.forEach(producto => { %>
+                                <div class="product" data-categoria="<%= producto.categoria %>">
+                                    <div class="product-img"> <a href="/mobiles/product/<%= producto.id %>?color=<%= producto.color %>">
+                                        <img src="<%= producto.imagen || '/img/iphone12black.png' %>" alt="<%= producto.nombre %>">
+                                        <div class="product-label">
+                                            <% if (producto.descuento > 0) { %>
+                                            <span class="sale">-<%= producto.descuento %>%</span>
+                                            <% } %>
+                                            <span class="new">Nuevo</span>
+                                        </div>
+                                    </div>
+                                    <div class="product-body">
+                                        <p class="product-category">
+                                            <%= producto.categoria === 'smarttv' ? 'SmartTV' : producto.categoria.charAt(0).toUpperCase() + producto.categoria.slice(1) %>
+                                        </p>
+                                        <h3 class="product-name">
+                                                <%= producto.nombre %>
+                                            </h3>
+                                            <h4 class="product-price">
+                                                $<%= Number(producto.precio * (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                                <% if (producto.descuento > 0) { %>
+                                                <del class="product-old-price">$<%= Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></del>
+                                                <% } %>
+                                            </h4></a>
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                        <div class="product-btns">
+                                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">Lista de deseo</span></button>
+                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">Comparación</span></button>
+                                            <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
+                                        </div>
+                                    </div>
+                                    <div class="add-to-cart">
+                                        <button class="add-to-cart-btn" onclick="addToCart('<%= producto.id %>', '<%= producto.nombre %>', <%= producto.precio %>, 
+                                            1, '<%= producto.color %>', <%= producto.descuento %>, <%= producto.stock %>, '<%= producto.imagen %>')">
+                                                <i class="fa fa-shopping-cart"></i> Agregar al carrito
+                                            </button>
+                                    </div>
+                                </div>
+                                <% }); %>
+                            </div>
+                        </div>
+                        
+                        <div id="laptops" class="tabcontent">
+                            <div class="products-slick" data-nav="#slick-nav-3" id="product-list-laptops">
+                                <% const productosLaptops = productos.filter(p => p.categoria === 'laptops').filter(p => {
+                                    const fechaCreacion = new Date(p.fecha);
+                                    const hoy = new Date();
+                                    const diferenciaDias = (hoy - fechaCreacion) / (1000 * 60 * 60 * 24);
+                                    return diferenciaDias <= 30;
+                                }).slice(0); productosLaptops.forEach(producto => { %>
+                                <div class="product" data-categoria="<%= producto.categoria %>"> 
+                                    <div class="product-img"> <a href="/mobiles/product/<%= producto.id %>?color=<%= producto.color %>">
+                                        <img src="<%= producto.imagen || '/img/iphone12black.png' %>" alt="<%= producto.nombre %>">
+                                        <div class="product-label">
+                                            <% if (producto.descuento > 0) { %>
+                                            <span class="sale">-<%= producto.descuento %>%</span>
+                                            <% } %>
+                                            <span class="new">Nuevo</span>
+                                        </div>
+                                    </div>
+                                    <div class="product-body">
+                                        <p class="product-category">
+                                            <%= producto.categoria === 'laptops' ? 'Laptops' : producto.categoria.charAt(0).toUpperCase() + producto.categoria.slice(1) %>
+                                        </p>
+                                        <h3 class="product-name">
+                                                <%= producto.nombre %>
+                                            </h3>
+                                            <h4 class="product-price">
+                                                $<%= Number(producto.precio * (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                                <% if (producto.descuento > 0) { %>
+                                                <del class="product-old-price">$<%= Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></del>
+                                                <% } %>
+                                            </h4></a>
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                        <div class="product-btns">
+                                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">Lista de deseo</span></button>
+                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">Comparación</span></button>
+                                            <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
+                                        </div>
+                                    </div>
+                                    <div class="add-to-cart">
+                                        <button class="add-to-cart-btn" onclick="addToCart('<%= producto.id %>', '<%= producto.nombre %>', <%= producto.precio %>, 
+                                            1, '<%= producto.color %>', <%= producto.descuento %>, <%= producto.stock %>, '<%= producto.imagen %>')">
+                                                <i class="fa fa-shopping-cart"></i> Agregar al carrito
+                                            </button>
+                                    </div>
+                                </div>
+                                <% }); %>
+                            </div>
+                        </div>
+
+                        <div id="consolas" class="tabcontent">
+                            <div class="products-slick" data-nav="#slick-nav-4" id="product-list-consolas">
+								<% const productosConsolas = productos.filter(p => p.categoria === 'consolas').filter(p => {
+                                    const fechaCreacion = new Date(p.fecha);
+                                    const hoy = new Date();
+                                    const diferenciaDias = (hoy - fechaCreacion) / (1000 * 60 * 60 * 24);
+                                    return diferenciaDias <= 30;
+                                }).slice(0); productosConsolas.forEach(producto => { %>
+                                <div class="product" data-categoria="<%= producto.categoria %>">
+                                    <div class="product-img"> <a href="/mobiles/product/<%= producto.id %>?color=<%= producto.color %>">
+                                        <img src="<%= producto.imagen || '/img/iphone12black.png' %>" alt="<%= producto.nombre %>">
+                                        <div class="product-label">
+                                            <% if (producto.descuento > 0) { %>
+                                            <span class="sale">-<%= producto.descuento %>%</span>
+                                            <% } %>
+                                            <span class="new">Nuevo</span>
+                                        </div>
+                                    </div>
+                                    <div class="product-body">
+                                        <p class="product-category">
+                                            <%= producto.categoria === 'consolas' ? 'Consolas' : producto.categoria.charAt(0).toUpperCase() + producto.categoria.slice(1) %>
+                                        </p>
+                                        <h3 class="product-name">
+                                                <%= producto.nombre %>
+                                            </h3>
+                                            <h4 class="product-price">
+                                                $<%= Number(producto.precio * (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                                <% if (producto.descuento > 0) { %>
+                                                <del class="product-old-price">$<%= Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></del>
+                                                <% } %>
+                                            </h4></a>
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                        <div class="product-btns">
+                                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">Lista de deseo</span></button>
+                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">Comparación</span></button>
+                                            <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
+                                        </div>
+                                    </div>
+                                    <div class="add-to-cart">
+                                        <button class="add-to-cart-btn" onclick="addToCart('<%= producto.id %>', '<%= producto.nombre %>', <%= producto.precio %>, 
+                                            1, '<%= producto.color %>', <%= producto.descuento %>, <%= producto.stock %>, '<%= producto.imagen %>')">
+                                                <i class="fa fa-shopping-cart"></i> Agregar al carrito
+                                            </button>
+                                    </div>
+                                </div>
+                                <% }); %>
+                            </div>
+                        </div>
+
+                        <div id="tablets" class="tabcontent">
+                            <div class="products-slick" data-nav="#slick-nav-5" id="product-list-tablets">
+								<% const productosTablets = productos.filter(p => p.categoria === 'tablets').filter(p => {
+                                    const fechaCreacion = new Date(p.fecha);
+                                    const hoy = new Date();
+                                    const diferenciaDias = (hoy - fechaCreacion) / (1000 * 60 * 60 * 24);
+                                    return diferenciaDias <= 30;
+                                }).slice(0); productosTablets.forEach(producto => { %>
+                                <div class="product" data-categoria="<%= producto.categoria %>">
+                                    <div class="product-img"> <a href="/mobiles/product/<%= producto.id %>?color=<%= producto.color %>">
+                                        <img src="<%= producto.imagen || '/img/iphone12black.png' %>" alt="<%= producto.nombre %>">                                    
+                                        <div class="product-label">
+                                            <% if (producto.descuento > 0) { %>
+                                            <span class="sale">-<%= producto.descuento %>%</span>
+                                            <% } %>
+                                            <span class="new">Nuevo</span>
+                                        </div>
+                                    </div>
+                                    <div class="product-body">
+                                        <p class="product-category">
+                                            <%= producto.categoria === 'tablets' ? 'Tablets' : producto.categoria.charAt(0).toUpperCase() + producto.categoria.slice(1) %>
+                                        </p>
+                                        <h3 class="product-name">
+                                                <%= producto.nombre %>
+                                            </h3>
+                                            <h4 class="product-price">
+                                                $<%= Number(producto.precio * (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                                <% if (producto.descuento > 0) { %>
+                                                <del class="product-old-price">$<%= Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></del>
+                                                <% } %>
+                                            </h4></a>
+                                        <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                        <div class="product-btns">
+                                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">Lista de deseo</span></button>
+                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">Comparación</span></button>
+                                            <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
+                                        </div>
+                                    </div>
+                                    <div class="add-to-cart">
+                                        <button class="add-to-cart-btn" onclick="addToCart('<%= producto.id %>', '<%= producto.nombre %>', <%= producto.precio %>, 
+                                            1, '<%= producto.color %>', <%= producto.descuento %>, <%= producto.stock %>, '<%= producto.imagen %>')">
+                                                <i class="fa fa-shopping-cart"></i> Agregar al carrito
+                                            </button>
+                                    </div>
+                                </div>
+                                <% }); %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				<div id="slick-nav-1" class="products-slick-nav"></div>
+            </div>
+            <!-- /Products tab & slick -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div><br><br>
+<!-- /SECTION -->
+
+
+<!-- HOT DEAL SECTION -->
+<div id="hot-deal" class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="hot-deal">
+                    <ul class="hot-deal-countdown">
+                        <li>
+                            <div>
+                                <h3>02</h3>
+                                <span>Days</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <h3>10</h3>
+                                <span>Hours</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <h3>34</h3>
+                                <span>Mins</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <h3>60</h3>
+                                <span>Secs</span>
+                            </div>
+                        </li>
+                    </ul>
+                    <h2 class="text-uppercase">gran oferta esta semana</h2>
+                    <p>Observa los increibles descuentos %</p>
+                    <p>¡Se acaba el tiempo!</p>
+                    <a class="primary-btn cta-btn" href="mobiles/store">Comprar ahora</a>
+                </div>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /HOT DEAL SECTION -->
+
+
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="section-title text-center">
+                <h3 class="title">Nuestras colecciones</h3>
+            </div>
+            <% categorias.forEach(categoria => { %>
+            <% if (['moviles', 'smarttv', 'laptops','consolas', 'tablets', 'otros'].includes(categoria.categoria)) { %>
+            <!-- shop -->
+            <div class="col-md-4 col-xs-6">
+                <div class="shop">
+                    <div class="shop-img">
+                        <img src="/<%= categoria.imagen %>" alt="<%= categoria.categoria %>">
+                    </div>
+                    <div class="shop-body">
+						<h3>Colección de<br><%= 
+							categoria.categoria === 'moviles' ? 'Móviles' :
+							categoria.categoria === 'smarttv' ? 'SmartTV' : 
+							categoria.categoria === 'otros' ? 'Tech & Home' : 
+							categoria.categoria.charAt(0).toUpperCase() + categoria.categoria.slice(1) %>
+						</h3>
+					   <a href="/mobiles/store/1?&categoria=<%= categoria.id %>" class="cta-btn">Comprar ahora<i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- /shop -->	
+            <% } %>
+            <% }); %>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+
+		<!-- Section -->
+        <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="section-title text-center">
+                        <h3 class="title">Recomendados</h3>
+                    </div>
+                </div>
+                <% if (recomendados && recomendados.length > 0) { %>
+                    <% recomendados.forEach(producto => { %>
+                        <!-- product -->
+                        <div class="col-md-3 col-xs-6">
+                            <div class="product">
+                                <div class="product-img">
+                                    <a href="/mobiles/product/<%= producto.id %>?color=<%= producto.color %>">
+                                        <img src="<%= producto.imagen || '/img/iphone12black.png' %>" alt="<%= producto.nombre %>">                                    
+                                    <div class="product-label">
+                                        <% if (producto.descuento > 0) { %>
+                                            <span class="sale">-<%= producto.descuento %>%</span>
+                                        <% } %>
+
+                                        <% 
+										const fechaCreacion = new Date(producto.fecha);
+										const hoy = new Date();
+										const diferenciaDias = (hoy - fechaCreacion) / (1000 * 60 * 60 * 24);
+										if (diferenciaDias <= 30) {
+										%>
+											<span class="new">Nuevo</span>
+										<% } %>
+                                    </div>
+                                </div>
+                                <div class="product-body">
+                                    <p class="product-category"><%= producto.categoria || 'Sin categoría' %></p>
+                                    <h3 class="product-name"><%= producto.nombre %></h3>
+                                    <h4 class="product-price">
+                                        $<%= Number(producto.precio * (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                        <% if (producto.descuento > 0) { %>
+                                        <del class="product-old-price">$<%= Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></del>
+                                        <% } %>
+                                    </h4></a>
+                                    <div class="product-rating">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                    </div>
+                                    <div class="product-btns">
+                                        <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">Lista de deseo</span></button>
+                                        <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">Comparación</span></button>
+                                        <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
+                                    </div>
+                                </div>
+                                <div class="add-to-cart">
+                                    <button class="add-to-cart-btn" onclick="addToCart('<%= producto.id %>', '<%= producto.nombre %>', <%= producto.precio %>, 
+                                        1, '<%= producto.color %>', <%= producto.descuento %>, <%= producto.stock %>, '<%= producto.imagen %>')">
+                                            <i class="fa fa-shopping-cart"></i> Agregar al carrito
+                                        </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /product -->
+                    <% }); %>
+                <% } else { %>
+                    <p class="text-center">No hay productos recomendados en este momento.</p>
+                <% } %>
+            </div>
+        </div>
+        </div>
+<!-- /Section -->
+
+		<%- include('./partials/footer.ejs') %>
+
+
+			</body>
+
+			</html>

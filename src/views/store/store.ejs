@@ -1,0 +1,321 @@
+<%- include('../partials/header.ejs') %>
+
+	<!DOCTYPE html>
+	<html lang="en">
+
+<script>
+    function actualizarMarcas() {
+        const categoriasSeleccionadas = Array.from(document.querySelectorAll('input[name="categoria"]:checked'))
+            .map(checkbox => parseInt(checkbox.value));
+        
+        if (categoriasSeleccionadas.length === 0) {
+            document.querySelectorAll('input[name="marca"]').forEach(checkbox => {
+                checkbox.parentElement.style.display = 'block';
+            });
+            return;
+        }
+
+        fetch(`/mobiles/marcas-por-categoria?categorias=${categoriasSeleccionadas.join(',')}`)
+            .then(response => response.json())
+            .then(marcasRelevantes => {
+                document.querySelectorAll('input[name="marca"]').forEach(checkbox => {
+                    const marcaDiv = checkbox.parentElement;
+                    if (marcasRelevantes.includes(parseInt(checkbox.value))) {
+                        marcaDiv.style.display = 'block';
+                    } else {
+                        marcaDiv.style.display = 'none';
+                        checkbox.checked = false;
+                    }
+                });
+            });
+    }
+
+	function actualizarProductos() {
+		actualizarMarcas();
+		
+		const limite = document.getElementById('limite-select').value;
+		const orden = document.getElementById('ordenar-select').value;
+		const precioMin = document.getElementById('price-min').value;
+		const precioMax = document.getElementById('price-max').value;
+
+		const categorias = Array.from(document.querySelectorAll('input[name="categoria"]:checked'))
+			.map(checkbox => checkbox.value)
+			.join(',');
+
+		const marcas = Array.from(document.querySelectorAll('input[name="marca"]:checked'))
+			.map(checkbox => checkbox.value)
+			.join(',');
+
+		const pagina = 1;
+
+		window.location.href = `/mobiles/store/${pagina}?limite=${limite}&orden=${orden}&categoria=${categorias}
+		&marca=${marcas}&precioMin=${precioMin}&precioMax=${precioMax}`;
+	}
+
+	document.addEventListener("DOMContentLoaded", function() {
+		document.querySelectorAll('input[name="categoria"]').forEach(checkbox => {
+			checkbox.addEventListener('change', actualizarMarcas);
+		});
+		
+		document.getElementById("aplicar-filtro-precio").addEventListener("click", actualizarProductos);
+		
+		actualizarMarcas();
+	});
+</script>
+  
+	<!-- BREADCRUMB -->
+	<div id="breadcrumb" class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<div class="col-md-12">
+					<ul class="breadcrumb-tree">
+						<li class="active">
+							<%= categorias.length> 0 ? categorias.map(id => cantCategoria.find(c => c.categoria_id ==
+								id)?.categoria).join(' / ') : 'Todos los productos' %>
+								<%= marcas.length > 0 ? ' -- ' + marcas.map(id => cantMarcas.find(m => m.marca_id == id)?.marca).join(' / ') : '' %>
+								(<%= totalProduct %> Resultados)
+						</li>
+					</ul>
+				</div>	
+			</div>
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- /BREADCRUMB -->
+
+	<!-- SECTION -->
+	<div class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<!-- ASIDE -->
+				<div id="aside" class="col-md-3">
+					<!-- aside Widget -->
+					<div class="aside">
+						<h3 class="aside-title">Categorías</h3>
+						<div class="checkbox-filter">
+							<% cantCategoria.forEach(categoria=> { %>
+								<div class="input-checkbox">
+									<input type="checkbox" id="category-<%= categoria.categoria_id %>" name="categoria"
+										value="<%= categoria.categoria_id %>" onchange="actualizarProductos()"
+										<%=categorias.includes(categoria.categoria_id) ? 'checked' : '' %>>
+									<label for="category-<%= categoria.categoria_id %>">
+										<span></span>
+										<%= categoria.categoria %>
+											<small>(<%= categoria.cantidad %>)</small>
+									</label>
+								</div>
+							<% }); %>
+						</div>
+					</div>
+					<!-- /aside Widget -->
+
+					<!-- aside Widget -->
+					<div class="aside">
+						<h3 class="aside-title">Precio</h3>
+						<div class="price-filter">	
+							<div id="price-slider"></div>
+							<div class="input-number price-min">
+								<input id="price-min" type="number" value="<%= precioMin || '' %>">
+								<span class="qty-up">+</span>
+								<span class="qty-down">-</span>
+							</div>
+							<span>-</span>
+							<div class="input-number price-max">
+								<input id="price-max" type="number" value="<%= precioMax || '' %>">
+								<span class="qty-up">+</span>
+								<span class="qty-down">-</span>
+							</div><br><br>
+							<button id="aplicar-filtro-precio" class="btn btn-primary">Aplicar</button>
+							<button id="reset-filtro-precio" class="btn btn-danger">Reiniciar</button>
+						</div>
+					</div>
+					<!-- /aside Widget -->
+
+					<!-- aside Widget -->
+					<div class="aside">
+						<h3 class="aside-title">Marcas</h3>
+						<div class="checkbox-filter">
+							<% cantMarcas.forEach(marca=> { %>
+								<div class="input-checkbox">
+									<input type="checkbox" id="brand-<%= marca.marca_id %>" name="marca"
+										value="<%= marca.marca_id %>" 
+										onchange="actualizarProductos()"
+										<%= marcas.includes(marca.marca_id.toString()) ? 'checked' : '' %>>
+									<label for="brand-<%= marca.marca_id %>">
+										<span></span>
+										<%= marca.marca %>
+										<small>(<%= marca.cantidad %>)</small>
+									</label>
+								</div>
+							<% }); %>
+						</div>
+					</div>
+					<!-- /aside Widget -->
+				</div>
+				<!-- /ASIDE -->
+
+				<!-- STORE -->
+				<div id="store" class="col-md-9">
+					<!-- store top filter -->
+					<div class="store-filter clearfix">
+						<div class="store-sort">
+							<label>
+								Ordenar por:
+								<select class="input-select" id="ordenar-select" onchange="actualizarProductos()">
+									<option value="0" <%=orden===0 ? 'selected' : '' %>>Mas recientes</option>
+									<option value="1" <%=orden===1 ? 'selected' : '' %>>Mas antiguos</option>
+									<option value="2" <%=orden===2 ? 'selected' : '' %>>Menor precio</option>
+									<option value="3" <%=orden===3 ? 'selected' : '' %>>Mayor precio</option>
+									<option value="4" <%=orden===4 ? 'selected' : '' %>>Con descuento</option>
+								</select>
+							</label>
+							<label>
+								Ver:
+								<select class="input-select" id="limite-select" onchange="actualizarProductos()">
+									<option value="9" <%=limite===9 ? 'selected' : '' %>>9</option>
+									<option value="20" <%=limite===20 ? 'selected' : '' %>>20</option>
+									<option value="50" <%=limite===50 ? 'selected' : '' %>>50</option>
+								</select>
+							</label>
+						</div>
+					</div>
+					<!-- /store top filter -->
+
+					<!-- store products -->
+					<div id="store-products">
+						<div class="row">
+							<% if (productos && productos.length> 0) { %>
+								<% productos.forEach(producto=> { %>
+									<div class="col-md-4 col-xs-6">
+										<div class="product">
+											<div class="product-img"> <a href="/mobiles/product/<%= producto.id %>?color=<%= producto.color %>">
+			    								<img src="<%= producto.imagen %>"
+												alt="<%= producto.nombre %>" >
+												<div class="product-label">
+													<% if (producto.descuento> 0) { %>
+														<span class="sale">-<%= producto.descuento %>%</span>
+														<% } %>
+															<% const fechaCreacion=new Date(producto.fecha); const
+																hoy=new Date(); const diferenciaDias=(hoy -
+																fechaCreacion) / (1000 * 60 * 60 * 24); if
+																(diferenciaDias <=30) { %>
+																<span class="new">Nuevo</span>
+																<% } %>
+																</div>
+															</div>
+															<div class="product-body">
+																<p class="product-category"><%= producto.categoria %></p>
+																<h3 class="product-name"><%= producto.nombre %></h3>
+																<h4 class="product-price">
+																	$<%= Number(producto.precio * (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+																	<% if (producto.descuento > 0) { %>
+																		<del class="product-old-price">$<%= Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></del>
+																	<% } %>
+																</h4>
+																	</h4>
+																</a>
+																<div class="product-rating">
+																	<% for(let i=0; i < 5; i++) { %>
+																		<i
+																			class="fa fa-star<%= i < producto.calificacion ? '' : '-o' %>"></i>
+																		<% } %>
+																</div>
+																<div class="product-btns">
+																	<button class="add-to-wishlist"
+																		title="Agregar a la lista de deseos">
+																		<i class="fa fa-heart-o"></i><span class="tooltipp">Agregar a favoritos</span>
+																	</button>
+																	<button class="add-to-compare" title="Agregar a comparar">
+																		<i class="fa fa-exchange"></i><span
+																			class="tooltipp">Comparar</span>
+																	</button>
+																	<button class="quick-view" title="Vista rápida">
+																		<i class="fa fa-eye"></i><span class="tooltipp">Vista
+																			rápida</span>
+																	</button>
+																</div>
+															</div>
+															<div class="add-to-cart">
+																<button class="add-to-cart-btn" onclick="addToCart('<%= producto.id %>', '<%= producto.nombre %>', <%= producto.precio %>, 
+																	1, '<%= producto.color %>', <%= producto.descuento %>, <%= producto.stock %>, '<%= producto.imagen %>')">
+																		<i class="fa fa-shopping-cart"></i> Agregar al carrito
+																	</button>
+															</div>										
+														</div>
+													</div>
+													<% }); %>
+													<% } else { %>
+														<p>No hay productos disponibles.</p>
+														<% } %>
+													</div>
+												</div><br><br><br>
+														<!-- /store products -->
+
+														<!-- store bottom filter -->
+														<div class="store-filter clearfix">
+															<span class="store-qty">Mostrando <%= productos.length %> productos</span>
+															<ul class="store-pagination">
+																<% if (pagina> 1) { %>
+																	<li class="pagination-prev">
+																		<a
+																			href="/mobiles/store/<%= pagina - 1 %>?limite=<%= limite %>&orden=<%= orden %>&categoria=<%= categorias.join(',') %>&marca=<%= marcas.join(',') %>&precioMin=<%= precioMin %>&precioMax=<%= precioMax %>">
+																			<img src="https://img.icons8.com/forma-thin-filled/24/back.png" alt="Anterior" width="20"
+																				height="20">
+																		</a>
+																	</li>
+																	<% } %>
+																	<% const totalPages=Math.ceil(totalProduct / limite); %>
+																	<% const start=Math.max(1, pagina - 2); %>
+																	<% const end=Math.min(totalPages, pagina + 2); %>
+																	<% if (start> 1) { %>
+																		<li>
+																			<a href="/mobiles/store/1?limite=<%= limite %>&orden=<%= orden %>&categoria=<%= categorias.join(',') %>&marca=<%= marcas.join(',') %>&precioMin=<%= precioMin %>&precioMax=<%= precioMax %>">1</a>
+																		</li>
+																		<% if (start> 2) { %><li><span>...</span></li>
+																			<% } %>
+																			<% } %>
+																			<% for (let i=start; i <=end; i++) { %>
+																				<li class="pagination-number <%= i === pagina ? 'active' : '' %>">
+																					<a href="/mobiles/store/<%= i %>?limite=<%= limite %>&orden=<%= orden %>&categoria=<%= categorias.join(',') %>&marca=<%= marcas.join(',') %>&precioMin=<%= precioMin %>&precioMax=<%= precioMax %>">
+																			<%= i %>
+																		</a>
+																	</li>
+																	<% } %>
+																	<% if (end < totalPages) { %>
+																		<% if (end < totalPages - 1) { %>
+																			<li><span>...</span></li>
+																			<% } %>
+																			<li>
+																				<a href="/mobiles/store/<%= totalPages %>?limite=<%= limite %>&orden=<%= orden %>&categoria=<%= categorias.join(',') %>&marca=<%= marcas.join(',') %>&precioMin=<%= precioMin %>&precioMax=<%= precioMax %>">
+																							<%= totalPages %>
+																						</a>
+																					</li>
+																					<% } %>
+																					<% if (pagina < totalPages) { %>
+																						<li class="pagination-next">
+																							<a href="/mobiles/store/<%= pagina + 1 %>?limite=<%= limite %>&orden=<%= orden %>&categoria=<%= categorias.join(',') %>&marca=<%= marcas.join(',') %>&precioMin=<%= precioMin %>&precioMax=<%= precioMax %>">
+																								<img src="https://img.icons8.com/forma-thin-filled/24/forward.png" alt="Siguiente" width="20" height="20"></a>
+																							</li>
+																							<% } %>
+																						</ul>
+																					</div>
+																					<!-- /store bottom filter -->
+																				</div>
+																				<!-- /STORE -->
+																			</div>
+																			<!-- /row -->
+																		</div>
+																		<!-- /container -->
+																	</div>
+																	<!-- /SECTION -->
+
+	<%- include('../partials/footer.ejs') %>
+
+	</body>
+
+	</html>

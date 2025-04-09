@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LaVegaTech</title>
+    <link rel="icon" type="image/png" href="/img/lavegatech-logo.png">
+
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Google font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" />
+
+    <!-- Slick -->
+    <link type="text/css" rel="stylesheet" href="/css/slick.css" />
+    <link type="text/css" rel="stylesheet" href="/css/slick-theme.css" />
+
+    <!-- nouislider -->
+    <link type="text/css" rel="stylesheet" href="/css/nouislider.min.css" />
+
+    <!-- Font Awesome Icon -->
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <!-- Custom stlylesheet -->
+    <link type="text/css" rel="stylesheet" href="/css/style.css" />
+
+    <!-- Contact -->
+    <link type="text/css" rel="stylesheet" href="/css/contact.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+
+    <!-- About -->
+    <link type="text/css" rel="stylesheet" href="/css/about.css" />
+
+   <!-- <link rel="stylesheet" href="/zay/bootstrap.min.css">
+    <link rel="stylesheet" href="/zay/templatemo.css">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" href="/zay/fontawesome.min.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+    -->
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+</head>
+
+<body>
+<!-- HEADER -->
+<header>
+    <!-- TOP HEADER -->
+    <div id="top-header">
+        <div class="container">
+            <ul class="header-links pull-left">
+                <li><a href="#"><i class="fa fa-phone"></i>+1 809-277-2371</a></li>
+                <li><a href="#"><i class="fa fa-envelope-o"></i>lavegatechsrl@gmail.com</a></li>
+                <li><a href="https://maps.app.goo.gl/S85hspS9jMJGpPPt9"><i class="fa fa-map-marker"></i> Calle Libertad, La Vega 41000</a></li>
+            </ul>
+            <ul class="header-links pull-right">
+                <li><a href="#"><i class="fa fa-dollar"></i>RD</a></li>
+                <li><a href="/login"><i class="fa fa-user-o"></i>Mi Cuenta</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- /TOP HEADER -->
+
+<!-- MAIN HEADER -->
+<div id="header">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!-- LOGO -->
+            <div class="col-md-3">
+                <div class="header-logo">
+                    <a href="/" class="logo">
+                        <img src="/img/lavegatech-logo.png" alt="">
+                    </a>
+                </div>
+            </div>
+            <!-- /LOGO -->
+             
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                    const searchForm = document.getElementById('search-form');
+                    const searchInput = document.getElementById('search-input');
+                    const searchCategory = document.getElementById('search-category');
+                    const searchResults = document.getElementById('search-results');
+                    
+                        async function searchProducts(query, category) {
+                        try {
+                            const response = await fetch(`/mobiles/search?q=${encodeURIComponent(query)}&category=${category}`);
+                            if (!response.ok) throw new Error('Error en la búsqueda');
+                            return await response.json();
+                        } catch (error) {
+                            console.error('Error:', error);
+                            return [];
+                        }
+                    }
+                    
+                    function displayResults(products) {
+                        searchResults.innerHTML = '';
+                        
+                        if (products.length === 0) {
+                            searchResults.innerHTML = '<div class="search-result-item">No se encontraron productos</div>';
+                            searchResults.style.display = 'block';
+                            return;
+                        }
+                        
+                        products.forEach(product => {
+                            const productElement = document.createElement('div');
+                            productElement.className = 'search-result-item';
+                            productElement.innerHTML = `
+                            <a href="/mobiles/product/${product.id}${product.colores ? `?color=${encodeURIComponent(product.colores.split(',')[0])}` : ''}" style="display: flex; width: 100%;">
+                                <img src="${product.imagenes?.split(',')[0] || 'default.jpg'}" alt="${product.nombre}">
+                                <div class="product-info">
+                                    <h4>${product.nombre}</h4>
+                                    <p>${product.categoria === 'moviles' ? 'Móviles' : 
+                                    product.categoria.charAt(0).toUpperCase() + product.categoria.slice(1)}</p>
+                                </div>
+                                <div class="product-price">
+                                    $${(Number(product.precio) * (1 - (product.descuento / 100))).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                    ${product.descuento > 0 ? 
+                                    `<del class="product-old-price">$${Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</del>` : ''}
+                                </div>
+                            </a>
+                        `;
+                        searchResults.appendChild(productElement);
+                    });
+                    searchResults.style.display = 'block';
+                }
+                
+                searchInput.addEventListener('input', async function() {
+                        const query = this.value.trim();
+                        const category = searchCategory.value === '0' ? '' : searchCategory.value;
+                        
+                        if (query.length >= 2) {
+                            const products = await searchProducts(query, category);
+                            displayResults(products);
+                        } else {
+                            searchResults.style.display = 'none';
+                        }
+                    });
+                    
+                    document.addEventListener('click', function(e) {
+                        if (!searchForm.contains(e.target)) {
+                            searchResults.style.display = 'none';
+                        }
+                    });
+                });
+                </script>
+
+                <!-- SEARCH BAR -->
+                <div class="col-md-6">
+                    <div class="header-search">
+                        <form id="search-form">
+                            <select class="input-select" id="search-category">
+                                <option value="0">Todos</option>
+                                <option value="moviles">Móviles</option>
+                                <option value="smarttv">SmartTV</option>
+                                <option value="laptops">Laptops</option>
+                                <option value="consolas">Consolas</option>
+                                <option value="tablets">Tablets</option>
+                                <option value="otros">Otros</option>
+                            </select>
+                            <input class="input" id="search-input" placeholder="Buscar">
+                            <button type="submit" class="search-btn">Buscar</button>
+                        </form>
+                        <div id="search-results" class="search-results-dropdown"></div>
+                    </div>
+                </div>
+                <!-- /SEARCH BAR -->
+
+                <!-- ACCOUNT -->
+                <div class="col-md-3 clearfix">
+                    <div class="header-ctn">
+                        <!-- Wishlist -->
+                        <div>
+                            <a href="#">
+                                <i class="fa fa-heart-o"></i>
+                                <span>Tus Favoritos</span>
+                                <div class="qty-fav">2</div>
+                            </a>
+                        </div>
+                        <!-- /Wishlist -->
+                        
+                        <script>
+                            function cargarCarrito() {
+                                let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+                                const cartList = document.getElementById('cart-list');
+                                const carritoCount = document.getElementById('carrito-count');
+                                const cartSummary = document.getElementById('cart-summary');
+                                const cartSubtotal = document.getElementById('cart-subtotal');
+                                
+                                if (carrito.length === 0) {
+                                    if (cartList) cartList.innerHTML = '<p>No hay productos en el carrito.</p>';
+                                    if (carritoCount) carritoCount.textContent = 0;
+                                    if (cartSummary) cartSummary.textContent = '0 producto(s) seleccionado(s)';
+                                    if (cartSubtotal) cartSubtotal.textContent = 'SUBTOTAL: $0.00';
+                                } else {
+                                    let total = 0;
+                                    if (cartList) cartList.innerHTML = '';
+                                    carrito.forEach(item => {
+                                        let precioConDescuento = item.precio;
+                                        if (item.descuento > 0) {
+                                            precioConDescuento = item.precio * (1 - item.descuento / 100);  
+                                        }
+                                        total += precioConDescuento * item.cantidad;
+                        
+                                        if (cartList) {
+                                            cartList.innerHTML += `
+                                                <div class="product-widget">
+                                                    <a href="/mobiles/product/${item.id}${item.colorSeleccionado ? `?color=${encodeURIComponent(item.colorSeleccionado)}` : ''}">
+                                                        <div class="product-img">
+                                                            <img src="${item.imagen}" alt="${item.nombre}">
+                                                        </div>
+                                                        <div class="product-body">
+                                                            <h3 class="product-name">${item.nombre}</h3></a>
+                                                            <p class="product-color">${item.colorSeleccionado}</p>
+                                                            <h4 class="product-price">
+                                                                <span class="qty-cart">${item.cantidad}x</span> 
+                                                                $${precioConDescuento.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+                                                            </h4>
+                                                        </div>
+                                                <button class="delete" onclick="deleteProduct('${item.id}', '${item.colorSeleccionado}')"><i class="fa fa-close"></i></button>
+                                                </div>
+                                            `;
+                                        }
+                                    });
+
+                                    if (carritoCount) carritoCount.textContent = carrito.length;
+                                    if (cartSummary) cartSummary.textContent = `${carrito.length} producto(s) seleccionado(s)`;
+                                    if (cartSubtotal) cartSubtotal.textContent = `SUBTOTAL: $${total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+                                }
+                            }
+                        </script>
+
+                        <!-- Cart -->
+                        <div class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">
+                                <i class="fa fa-shopping-cart"></i>
+                                <span>Tu Carrito</span>
+                                <div class="qty-cart" id="carrito-count">0</div>
+                            </a>
+                            <div class="cart-dropdown">
+                                <div class="cart-list" id="cart-list">
+                                    <p>Cargando productos...</p>
+                                </div>
+                                <div class="cart-summary">
+                                    <small id="cart-summary">0 producto(s) seleccionado</small>
+                                    <h5 id="cart-subtotal">SUBTOTAL: $0.00</h5>
+                                </div>
+                                <div class="cart-btns">
+                                    <a href="/mobiles/cart">Ver Carrito</a>
+                                    <a href="/mobiles/order">Procesar Pago <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Cart -->
+
+                        <!-- Menu Toogle -->
+                        <div class="menu-toggle">
+                            <a href="#">
+                                <i class="fa fa-bars"></i>
+                                <span>Menu</span>
+                            </a>
+                        </div>
+                        <!-- /Menu Toogle -->
+                        </div>
+                    </div>
+                    <!-- /ACCOUNT -->
+                </div>
+                <!-- row -->
+            </div>
+            <!-- container -->
+        </div>
+        <!-- /MAIN HEADER -->
+    </header>
+    <!-- /HEADER -->
+
+    <!-- NAVIGATION -->
+	<nav id="navigation">
+		<!-- container -->
+		<div class="container">
+			<!-- responsive-nav -->
+			<div id="responsive-nav">
+				<!-- NAV -->
+				<ul class="main-nav nav navbar-nav">
+					<li class="active"><a href="/">Inicio</a></li>
+					<li><a href="/mobiles/store">Productos</a></li>
+					<li><a href="/mobiles/contact">Contactanos</a></li>
+					<li><a href="/mobiles/about">Sobre nosotros</a></li>
+					</ul>
+				</ul>
+				<!-- /NAV -->
+			</div>
+			<!-- /responsive-nav -->
+		</div>
+		<!-- /container -->
+	</nav>
+	<!-- /NAVIGATION -->
+     
+</body>
+</html>

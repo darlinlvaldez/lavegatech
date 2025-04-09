@@ -1,0 +1,231 @@
+<%- include('../partials/header.ejs') %>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+		const orderProducts = document.querySelector('.order-products');
+		const orderTotal = document.querySelector('.order-total');
+
+		if (carrito.length === 0) {
+			orderProducts.innerHTML = '<p>No hay productos en tu orden.</p>';
+			orderTotal.textContent = '$0.00';
+		} else {
+			let total = 0;
+			orderProducts.innerHTML = ''; 
+
+			carrito.forEach(item => {
+				let precioConDescuento = item.precio;
+				if (item.descuento > 0) {
+					precioConDescuento = item.precio * (1 - item.descuento / 100);  
+				}
+
+				total += precioConDescuento * item.cantidad;
+
+				orderProducts.innerHTML += `
+					<div class="order-col">
+						<div>${item.cantidad}x ${item.nombre} ${item.colorSeleccionado}</div>
+						<div>$${(precioConDescuento * item.cantidad).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</div>
+					</div>
+				`;
+			});
+			orderTotal.textContent = `$${total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+		}
+	});
+</script>
+
+	<!-- BREADCRUMB -->
+	<div id="breadcrumb" class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<div class="col-md-12">
+					<h3 class="breadcrumb-header">Pedido</h3>
+					<ul class="breadcrumb-tree">
+						<li><a href="/">Inicio</a></li>
+						<li class="active">Procesar pedido</li>
+					</ul>
+				</div>
+			</div>
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- /BREADCRUMB -->
+
+	<!-- SECTION -->
+	<div class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+
+				<div class="col-md-7">
+					<!-- Billing Details -->
+					<div class="billing-details">
+						<div class="section-title">
+							<h3 class="title">Dirección de Envio</h3>
+						</div>
+						<div class="form-group">
+							<input class="input" type="text" name="first-name" placeholder="Nombre">
+						</div>
+						<div class="form-group">
+							<input class="input" type="text" name="last-name" placeholder="Apellido">
+						</div>
+						<div class="form-group">
+							<input class="input" type="email" name="email" placeholder="Correo">
+						</div>
+						<div class="form-group">
+							<input class="input" type="text" name="address" placeholder="Dirección">
+						</div>
+						<div class="form-group">
+							<input class="input" type="text" name="city" placeholder="Ciudad">
+						</div>
+						<div class="form-group">
+							<input class="input" type="text" name="district" placeholder="Distrito">
+						</div>
+						<div class="form-group">
+							<input class="input" type="tel" name="tel" placeholder="Telefono o celular">
+						</div>
+						<div class="form-group">
+							<label for="delivery-time">Horario de entrega preferido (dentro de la semana)</label>
+							<select class="input" id="delivery-time" name="delivery_time">
+								<option value="8-12">8 AM - 12 PM</option>
+								<option value="12-4">2 PM - 5 PM</option>
+							</select>
+							<p><small>Nota: La fecha de entrega será en algún momento dentro de la próxima semana. La compañía te informará sobre el día exacto de entrega.</small></p>
+						</div>						
+						<div class="form-group">
+							<div class="input-checkbox">
+								<input type="checkbox" id="create-account">
+								<div class="caption">
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+										incididunt.</p>
+									<input class="input" type="password" name="password"
+										placeholder="Enter Your Password">
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /Billing Details -->
+
+					<!-- Shiping Details -->
+					<div class="shiping-details">
+						<div class="section-title">
+							<h3 class="title">Destino diferente</h3>
+						</div>
+						<div class="input-checkbox">
+							<input type="checkbox" id="shiping-address">
+							<label for="shiping-address">
+								<span></span>
+								¿Enviar a una dirección diferente?
+							</label>
+							<div class="caption">
+								<div class="form-group">
+									<input class="input" type="text" name="first-name" placeholder="Nombre">
+								</div>
+								<div class="form-group">
+									<input class="input" type="text" name="last-name" placeholder="Apellido">
+								</div>
+								<div class="form-group">
+									<input class="input" type="email" name="email" placeholder="Correo">
+								</div>
+								<div class="form-group">
+									<input class="input" type="text" name="address" placeholder="Dirección">
+								</div>
+								<div class="form-group">
+									<input class="input" type="text" name="city" placeholder="Ciudad">
+								</div>
+								<div class="form-group">
+									<input class="input" type="text" name="district" placeholder="Distrito">
+								</div>
+								<div class="form-group">
+									<input class="input" type="tel" name="tel" placeholder="Telefono o celular">
+								</div>
+								<div class="form-group">
+									<label for="delivery-time">Horario de entrega preferido (dentro de la semana)</label>
+									<select class="input" id="delivery-time" name="delivery_time">
+										<option value="8-12">8 AM - 12 PM</option>
+										<option value="12-4">2 PM - 5 PM</option>
+									</select>
+									<p><small>Nota: La fecha de entrega será en algún momento dentro de la próxima semana. La compañía te informará sobre el día exacto de entrega.</small></p>
+								</div>						
+							</div>
+						</div>
+					</div>
+					<!-- /Shiping Details -->
+
+					<!-- Order notes -->
+					<div class="order-notes">
+						<textarea class="input" placeholder="Mensaje"></textarea>
+					</div>
+					<!-- /Order notes -->
+				</div>
+
+				<!-- Order Details -->
+				<div class="col-md-5 order-details">
+					<div class="section-title text-center">
+						<h3 class="title">Tu Orden</h3>
+					</div>
+					<div class="order-summary">
+						<div class="order-col">
+							<div><strong>PRODUCTO(S)</strong></div>
+							<div><strong>TOTAL</strong></div>
+						</div>
+						<div class="order-products">
+						</div>
+						<div class="order-col">
+							<div>ENVÍO</div>
+							<div><strong>GRATIS</strong></div>
+						</div>
+						<div class="order-col">
+							<div><strong>TOTAL</strong></div>
+							<div><strong class="order-total">$0.00</strong></div>
+						</div>
+					</div>
+					<div class="payment-method">
+						<div class="input-radio">
+							<input type="radio" name="payment" id="payment-1">
+							<label for="payment-1">
+								<span></span>
+								Tarjetas de crédito y débito
+							</label>
+							<div class="caption">
+								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+									incididunt ut labore et dolore magna aliqua.</p>
+							</div>
+						</div>
+						<div class="input-radio">
+							<input type="radio" name="payment" id="payment-3">
+							<label for="payment-3">
+								<span></span>
+								Paypal
+							</label>
+							<div class="caption">
+								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+									incididunt ut labore et dolore magna aliqua.</p>
+							</div>
+						</div>
+					</div>
+					<div class="input-checkbox">
+						<input type="checkbox" id="terms">
+						<label for="terms">
+							<span></span>
+							He leído y acepto los <a href="#">términos y condiciones</a>
+						</label>
+					</div>
+					<a href="#" class="primary-btn order-submit">Realizar Pedido</a>
+				</div>
+				<!-- /Order Details -->
+			</div>
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- /SECTION -->
+
+	<%- include('../partials/footer.ejs') %>
+
+		</body>
+
+	</html>

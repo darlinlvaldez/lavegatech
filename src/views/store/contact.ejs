@@ -1,0 +1,72 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="contactos-page">
+<body>
+    <!-- Start Content Page -->
+    <div class="contenedor-principal bg-light py-5">
+        <div class="col-md-6 m-auto text-center">
+            <h1 class="titulo">Contactanos</h1>
+            <p class="texto">
+                En <img class="lavega" src="/img/lavegatech-logo.png" type="image/png"> queremos brindarte la mejor experiencia de compra. 
+                Si tienes alguna consulta sobre nuestros productos, pedidos o cualquier otro tema, no dudes en contactarnos.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="mapid"></div>
+
+<!-- Start map -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script>
+    var mymap = L.map('mapid').setView([19.222076, -70.529688], 15);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(mymap);
+
+    L.marker([19.222076, -70.529688]).addTo(mymap)
+        .bindPopup("<b>Ubicación</b><br />Calle Libertad, La Vega 41000.").openPopup();
+
+    mymap.scrollWheelZoom.disable();
+    mymap.touchZoom.disable();
+
+    setTimeout(() => {
+        mymap.invalidateSize();
+    }, 500);
+</script>
+<!-- End Map -->
+
+<div class="input-principal">
+    <div class="fila-formulario">
+        <form class="formulario-contacto" method="post" role="form">
+            <div class="fila-campos">
+                <div class="campo-formulario">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" class="entrada-texto" id="nombre" name="nombre" placeholder="Nombre">
+                </div>
+                <div class="campo-formulario">
+                    <label for="correo">Correo</label>
+                    <input type="email" class="entrada-texto" id="correo" name="correo" placeholder="Correo">
+                </div>
+            </div>
+            <div class="campo-formulario">
+                <label for="asunto">Asunto</label>
+                <input type="text" class="entrada-texto" id="asunto" name="asunto" placeholder="Asunto">
+            </div>
+            <div class="campo-formulario">
+                <label for="mensaje" style="margin-top: 20px; display: block;">Mensaje</label>
+                <textarea class="entrada-texto" id="mensaje" name="mensaje" placeholder="Escribe tu mensaje..." rows="8"></textarea>
+            </div>
+            <div class="fila-boton">
+                <button type="submit" class="boton-enviar">Enviar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+    <%- include('../partials/footer.ejs') %>
+
+</body>
+
+</html>
