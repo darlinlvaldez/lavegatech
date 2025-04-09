@@ -115,9 +115,19 @@
 								</div>
 								<br><br>
 								<div class="add-to-cart">
-									<button class="add-to-cart-btn" onclick="addToCart('<%= producto.id %>', '<%= producto.nombre %>', <%= producto.precio %>, 
-									document.getElementById('cantidad').value, document.getElementById('colorSeleccionado') ? document.getElementById('colorSeleccionado').value : '', 
-									<%= producto.descuento %>, <%= stockColor || producto.stock %>, '<%= imagenesPorColor[colorSeleccionado] || (producto.imagenes ? producto.imagenes.split(",")[0] : "") %>')"><i class="fa fa-shopping-cart">
+									<button class="add-to-cart-btn" onclick="
+										const foto = document.getElementById('imagenProducto').src;
+										addToCart(
+											'<%= producto.id %>',
+											'<%= producto.nombre %>',
+											<%= producto.precio %>,
+											document.getElementById('cantidad').value,
+											document.getElementById('colorSeleccionado') ? document.getElementById('colorSeleccionado').value : '',
+											<%= producto.descuento %>,
+											<%= stockColor || producto.stock %>,
+											foto
+										);
+										" ><i class="fa fa-shopping-cart">
 									</i> Agregar al carrito</button>
 								</div>
 							</div>

@@ -89,7 +89,8 @@
             </div>
             <!-- /LOGO -->
              
-                <script>
+                <script>                  
+
                     document.addEventListener('DOMContentLoaded', function() {
                     const searchForm = document.getElementById('search-form');
                     const searchInput = document.getElementById('search-input');
@@ -107,7 +108,8 @@
                         }
                     }
                     
-                    function displayResults(products) {
+                    function displayResults(products) {                       
+
                         searchResults.innerHTML = '';
                         
                         if (products.length === 0) {
@@ -116,12 +118,12 @@
                             return;
                         }
                         
-                        products.forEach(product => {
+                        products.forEach(product => {                        
                             const productElement = document.createElement('div');
                             productElement.className = 'search-result-item';
                             productElement.innerHTML = `
                             <a href="/mobiles/product/${product.id}${product.colores ? `?color=${encodeURIComponent(product.colores.split(',')[0])}` : ''}" style="display: flex; width: 100%;">
-                                <img src="${product.imagenes?.split(',')[0] || 'default.jpg'}" alt="${product.nombre}">
+                                <img src="${product.imagenes?.split(',')[0]}" alt="${product.nombre}">
                                 <div class="product-info">
                                     <h4>${product.nombre}</h4>
                                     <p>${product.categoria === 'moviles' ? 'Móviles' : 
@@ -195,6 +197,7 @@
                         
                         <script>
                             function cargarCarrito() {
+
                                 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
                                 const cartList = document.getElementById('cart-list');
                                 const carritoCount = document.getElementById('carrito-count');
@@ -209,7 +212,8 @@
                                 } else {
                                     let total = 0;
                                     if (cartList) cartList.innerHTML = '';
-                                    carrito.forEach(item => {
+                                    carrito.forEach(item => {                                               
+
                                         let precioConDescuento = item.precio;
                                         if (item.descuento > 0) {
                                             precioConDescuento = item.precio * (1 - item.descuento / 100);  
