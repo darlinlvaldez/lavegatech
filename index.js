@@ -5,6 +5,7 @@ import mobiles from './src/routes/productos.js';
 import {obtenerCategorias, obtenerProductos, obtenerRecomendados} from './src/models/principal.js';
 import storeRoutes from './src/routes/productos.js';
 import productRoutes from "./src/routes/productos.js";
+import config from './config.js';
 
 const app = express();
 
@@ -89,6 +90,6 @@ app.get('/mobiles/cart', (req, res) => {
   res.render('store/cart');
 });
 
-app.listen(3000, () => {
-  console.log('Servidor corriendo en http://localhost:3000');
+app.listen(config.PORT, () => {
+  console.log(`Servidor corriendo en http://localhost:${config.PORT}`);
 });
