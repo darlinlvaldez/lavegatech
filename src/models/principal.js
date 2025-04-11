@@ -9,15 +9,14 @@ export const buscarProductos = async (query, categoria) => {
         p.descuento,
         p.fecha,
         c.categoria,
-        GROUP_CONCAT(DISTINCT v.color) AS colores, 
-        GROUP_CONCAT(DISTINCT v.img) AS imagenes
+        v.color AS colores, 
+        v.img AS imagenes
     FROM productos p
     JOIN categorias c ON p.categoria_id = c.id
     LEFT JOIN variantes v ON p.id = v.producto_id 
     WHERE p.nombre LIKE ? OR p.descripcion LIKE ?
 `;
 
-  
   const params = [`%${query}%`, `%${query}%`];
   
   if (categoria && categoria !== '0') {
@@ -38,21 +37,20 @@ export const buscarProductos = async (query, categoria) => {
 export const obtenerProductos = async (categoria) => {
   const query = `
      SELECT 
-    p.id,
-    p.nombre,
-    p.precio,
-    p.descuento,
-    p.fecha,
-    c.categoria,
-    MAX(v.color) AS color, 
-    MAX(v.stock) AS stock,
-    MAX(v.img) AS imagen
-FROM productos p
-JOIN categorias c ON p.categoria_id = c.id
-LEFT JOIN variantes v ON p.id = v.producto_id 
-${categoria ? `WHERE c.categoria = ?` : ''}
-GROUP BY p.id
-
+          p.id,
+          p.nombre,
+          p.precio,
+          p.descuento,
+          p.fecha,
+          c.categoria,
+          v.color, 
+          v.stock,
+          p.img_principal AS imagen
+      FROM productos p
+      JOIN categorias c ON p.categoria_id = c.id
+      LEFT JOIN variantes v ON p.id = v.producto_id 
+      ${categoria ? `WHERE c.categoria = ?` : ''}
+      GROUP BY p.id 
   `;
   
   try {
@@ -84,9 +82,9 @@ export const obtenerRecomendados = async () => {
           p.descuento,
           p.fecha,
           c.categoria,
-          MAX(v.color) AS color, 
-        MAX(v.stock) AS stock,
-        MAX(v.img) AS imagen
+          v.color, 
+          v.stock,
+          v.img AS imagen
       FROM productos p
       JOIN categorias c ON p.categoria_id = c.id
       LEFT JOIN variantes v ON p.id = v.producto_id 

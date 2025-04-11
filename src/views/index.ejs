@@ -50,7 +50,6 @@ document.querySelector(".tablink").click();
                 </div>
             <!-- /section title -->
 
-
             <!-- Products tab & slick -->
             <div class="col-md-12">
                 <div class="row">
@@ -109,7 +108,7 @@ document.querySelector(".tablink").click();
                                 <% }); %>
                             </div>  
                         </div>
-                        
+                    
                         <div id="smarttv" class="tabcontent">
                             <div class="products-slick" data-nav="#slick-nav-2" id="product-list-smarttv">
                                 <% const productosSmarttv = productos.filter(p => p.categoria === 'smarttv').filter(p => {
@@ -120,7 +119,7 @@ document.querySelector(".tablink").click();
                                 }).slice(0); productosSmarttv.forEach(producto => { %>
                                 <div class="product" data-categoria="<%= producto.categoria %>">
                                     <div class="product-img"> <a href="/mobiles/product/<%= producto.id %>?color=<%= producto.color %>">
-                                        <img src="<%= producto.imagen || '/img/iphone12black.png' %>" alt="<%= producto.nombre %>">
+                                        <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">
                                         <div class="product-label">
                                             <% if (producto.descuento > 0) { %>
                                             <span class="sale">-<%= producto.descuento %>%</span>
@@ -175,7 +174,7 @@ document.querySelector(".tablink").click();
                                 }).slice(0); productosLaptops.forEach(producto => { %>
                                 <div class="product" data-categoria="<%= producto.categoria %>"> 
                                     <div class="product-img"> <a href="/mobiles/product/<%= producto.id %>?color=<%= producto.color %>">
-                                        <img src="<%= producto.imagen || '/img/iphone12black.png' %>" alt="<%= producto.nombre %>">
+                                        <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">
                                         <div class="product-label">
                                             <% if (producto.descuento > 0) { %>
                                             <span class="sale">-<%= producto.descuento %>%</span>
@@ -230,7 +229,7 @@ document.querySelector(".tablink").click();
                                 }).slice(0); productosConsolas.forEach(producto => { %>
                                 <div class="product" data-categoria="<%= producto.categoria %>">
                                     <div class="product-img"> <a href="/mobiles/product/<%= producto.id %>?color=<%= producto.color %>">
-                                        <img src="<%= producto.imagen || '/img/iphone12black.png' %>" alt="<%= producto.nombre %>">
+                                        <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">
                                         <div class="product-label">
                                             <% if (producto.descuento > 0) { %>
                                             <span class="sale">-<%= producto.descuento %>%</span>
@@ -285,7 +284,7 @@ document.querySelector(".tablink").click();
                                 }).slice(0); productosTablets.forEach(producto => { %>
                                 <div class="product" data-categoria="<%= producto.categoria %>">
                                     <div class="product-img"> <a href="/mobiles/product/<%= producto.id %>?color=<%= producto.color %>">
-                                        <img src="<%= producto.imagen || '/img/iphone12black.png' %>" alt="<%= producto.nombre %>">                                    
+                                        <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">                                    
                                         <div class="product-label">
                                             <% if (producto.descuento > 0) { %>
                                             <span class="sale">-<%= producto.descuento %>%</span>
@@ -446,7 +445,7 @@ document.querySelector(".tablink").click();
                             <div class="product">
                                 <div class="product-img">
                                     <a href="/mobiles/product/<%= producto.id %>?color=<%= producto.color %>">
-                                        <img src="<%= producto.imagen || '/img/iphone12black.png' %>" alt="<%= producto.nombre %>">                                    
+                                        <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">                                    
                                     <div class="product-label">
                                         <% if (producto.descuento > 0) { %>
                                             <span class="sale">-<%= producto.descuento %>%</span>

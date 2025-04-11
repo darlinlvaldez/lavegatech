@@ -19,12 +19,9 @@ JOIN categorias c ON p.categoria_id = c.id
 LEFT JOIN variantes v ON p.id = v.producto_id
 WHERE p.id = ?
 GROUP BY 
-    p.id, p.nombre, p.descripcion, p.precio, 
-    p.descuento, p.fecha, p.categoria_id, c.categoria
-
-
+    p.id
     `;
-    
+
     try {
         const [results] = await db.query(query, [id]);
         return results.length > 0 ? results[0] : null;

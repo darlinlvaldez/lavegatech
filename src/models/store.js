@@ -34,24 +34,21 @@ export const obtenerStore = async (pagina = 1, limite = 9, orden = 0, categorias
     }[orden] || "ORDER BY p.fecha DESC";
     
     const query = `
-       SELECT 
+        SELECT 
     p.id,
     p.nombre,
     p.precio,
     p.descuento,
     p.fecha,
-    c.categoria,
-    MAX(v.stock) AS stock,
-    m.nombre AS marca_nombre,
     p.img_principal AS imagen,
-    GROUP_CONCAT(DISTINCT v.color) AS colores,
-    GROUP_CONCAT(DISTINCT v.img) AS imagenes_colores
+    c.categoria,
+    v.stock,
+    v.color
 FROM productos p
 JOIN categorias c ON p.categoria_id = c.id
-LEFT JOIN p_marcas m ON p.marca_id = m.id
 LEFT JOIN variantes v ON p.id = v.producto_id
 ${whereClause}
-GROUP BY p.id
+GROUP BY p.id 
 ${orderByClause}
 LIMIT ? OFFSET ?
 
