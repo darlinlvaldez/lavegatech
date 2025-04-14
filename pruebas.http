@@ -1,7 +1,7 @@
 ###  REGISTRAR USUARIO
-POST http://localhost:4000/api/auth/register HTTP/1.1
+POST http://localhost:3000/api/auth/register HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZnQiLCJhcHAiOiJhdXRoIn0.puyHAVJ0gFi7qAixc_0iEFKkmib7k_wtrmnZYOCWNIQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFtYmFyIiwicGFzc3dvcmQiOiIxMjM0NTYiLCJlbWFpbCI6ImFtYmFyQGdtYWlsLmNvbSJ9.g51YzGvZ4oxMWEN3Sn6wVprDKldt7GQ22NA3ZeYQJWM
 
 {
     "username": "ambar",
@@ -10,7 +10,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZ
 }
 
 ### INICIAR SESION OK
-POST http://localhost:4000/api/auth/login HTTP/1.1
+POST http://localhost:3000/api/auth/login HTTP/1.1
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZnQiLCJhcHAiOiJhdXRoIn0.puyHAVJ0gFi7qAixc_0iEFKkmib7k_wtrmnZYOCWNIQ
 
@@ -20,7 +20,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZ
 }
 
 ### INICIAR SESION FAIL
-POST http://localhost:4000/api/auth/login HTTP/1.1
+POST http://localhost:3000/api/auth/login HTTP/1.1
 content-type: application/json
 
 {
@@ -29,16 +29,16 @@ content-type: application/json
 }
 
 ### AUTENTICAR OK 
-POST http://localhost:4000/api/auth/authenticate HTTP/1.1
+POST http://localhost:3000/api/auth/authenticate HTTP/1.1
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZnQiLCJhcHAiOiJhdXRoIn0.puyHAVJ0gFi7qAixc_0iEFKkmib7k_wtrmnZYOCWNIQ
 
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNkaWF6bG9yYSIsImlhdCI6MTczMDQwMDA4Nn0.pN1GbpjgMcT8r-3vp-jLIBK1EbzHK6RKpQKCcPXUqkA"
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFtYmFyIiwiaWF0IjoxNzQ0NjU1NjY5fQ.j2zhsfBgQCGwSH1FSg-4X95-AGXNJ3EszmkuxZziHK0"
 }
 
 ### AUTENTICAR ERROR
-POST http://localhost:4000/api/auth/authenticate HTTP/1.1
+POST http://localhost:3000/api/auth/authenticate HTTP/1.1
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZnQiLCJzdWIiOiJzb3BvcnRlIiwiYXBwIjoiYXBpIn0._8PaVQPzqIxm6XHGmgE7lIThpCYHpzq2Bw4dkfr-4yY
 
@@ -48,7 +48,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZ
 
 
 ### ESTO DEBE FALLAR, NO SON DEL TIPO DE DATOS ESPERADO
-POST http://localhost:4000/api/auth/register HTTP/1.1
+POST http://localhost:3000/api/auth/register HTTP/1.1
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZnQiLCJzdWIiOiJzb3BvcnRlIiwiYXBwIjoiYXBpIn0._8PaVQPzqIxm6XHGmgE7lIThpCYHpzq2Bw4dkfr-4yY
 
@@ -60,7 +60,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZ
 }
 
 ### ESTO DEBE FALLAR, HAY CAMPOS NO ESPERADOS
-POST http://localhost:4000/api/auth/login HTTP/1.1
+POST http://localhost:3000/api/auth/login HTTP/1.1
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZnQiLCJzdWIiOiJzb3BvcnRlIiwiYXBwIjoiYXBpIn0._8PaVQPzqIxm6XHGmgE7lIThpCYHpzq2Bw4dkfr-4yY
 
@@ -69,25 +69,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZ
     "password": "13456"
 }
 
-### endpoint in app
-GET http://localhost:4000/api/apps/csc HTTP/1.1
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZnQiLCJzdWIiOiJzb3BvcnRlIiwiYXBwIjoiYXBpIn0._8PaVQPzqIxm6XHGmgE7lIThpCYHpzq2Bw4dkfr-4yY
-
-### endpoint in app
-POST http://localhost:4000/api/apps HTTP/1.1
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZnQiLCJzdWIiOiJzb3BvcnRlIiwiYXBwIjoiYXBpIn0._8PaVQPzqIxm6XHGmgE7lIThpCYHpzq2Bw4dkfr-4yY
-
-{
-    "name": "android 14",
-    "alias": "android",
-    "url": "https://summasoft.do/csc/",
-    "icon": "https://i.pinimg.com/736x/ab/d3/fd/abd3fdbf74f54dc52461687b9581b397.jpg"
-}
-
 ### VERIFICAR UN TOKEN 
-POST http://localhost:4000/api/auth/verify HTTP/1.1
+POST http://localhost:3000/api/auth/verify HTTP/1.1
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZnQiLCJhcHAiOiJhdXRoIn0.puyHAVJ0gFi7qAixc_0iEFKkmib7k_wtrmnZYOCWNIQ
 
@@ -96,48 +79,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZ
 }
 
 ### url del portal 
-GET http://localhost:4000/api/auth/portal HTTP/1.1
+GET http://localhost:3000/api/auth/portal HTTP/1.1
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZnQiLCJhcHAiOiJhdXRoIn0.puyHAVJ0gFi7qAixc_0iEFKkmib7k_wtrmnZYOCWNIQ
 
 ### Listado
-GET http://localhost:4000/api/users HTTP/1.1
+GET http://localhost:3000/api/users HTTP/1.1
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZnQiLCJhcHAiOiJhdXRoIn0.puyHAVJ0gFi7qAixc_0iEFKkmib7k_wtrmnZYOCWNIQ
 
 ### Actualizar
-PATCH http://localhost:4000/api/users/HEMILA HTTP/1.1
+PATCH http://localhost:3000/api/users/HEMILA HTTP/1.1
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZnQiLCJhcHAiOiJhdXRoIn0.puyHAVJ0gFi7qAixc_0iEFKkmib7k_wtrmnZYOCWNIQ
 
 {
    "username": "HEMIL"
-}
-
-### Actualizar clave directamente debe fallar
-PATCH http://localhost:4000/api/users/cdiazlora HTTP/1.1
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZnQiLCJhcHAiOiJhdXRoIn0.puyHAVJ0gFi7qAixc_0iEFKkmib7k_wtrmnZYOCWNIQ
-
-{
-   "password": "0000"
-}
-
-
-### Cambiar la clave
-PATCH http://localhost:4000/api/users/cdiazlora/password HTTP/1.1
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZnQiLCJhcHAiOiJhdXRoIn0.puyHAVJ0gFi7qAixc_0iEFKkmib7k_wtrmnZYOCWNIQ
-
-{
-   "password": "123456"
-}
-
-### Importar usuarios
-POST http://localhost:4000/api/users/import HTTP/1.1
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZnQiLCJhcHAiOiJhdXRoIn0.puyHAVJ0gFi7qAixc_0iEFKkmib7k_wtrmnZYOCWNIQ
-
-{
-   
 }

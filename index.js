@@ -1,11 +1,22 @@
+// Dependencias
 import express from 'express';
 import fileUpload from "express-fileupload";
 import path from 'path';
-import mobiles from './src/routes/productos.js';
+import cors from 'cors'
+import config from './config.js';
+
+// Middlewares
+import authenticated from './src/middlewares/validateToken.js';
+
+// Controller
 import {obtenerCategorias, obtenerProductos, obtenerRecomendados} from './src/models/principal.js';
+
+// Routes
+import mobiles from './src/routes/productos.js';
 import storeRoutes from './src/routes/productos.js';
 import productRoutes from "./src/routes/productos.js";
-import config from './config.js';
+import auth from './src/routes/auth.js';
+import users from './src/routes/user.js';
 
 const app = express();
 
@@ -16,6 +27,14 @@ app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.set('views', path.join(process.cwd(), 'src', 'views'));
 app.use(express.static(path.join(process.cwd(), 'public')));
+
+app.disable('x-powered-by');
+app.use(express.json());
+
+app.use(cors())
+    
+app.use('/api/auth', auth); 
+app.use('/api/users', authenticated(), users);
 
 app.use('/mobiles', mobiles);
 
