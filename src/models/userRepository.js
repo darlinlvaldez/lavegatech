@@ -17,13 +17,13 @@ userRepository.getOne = async (username, email) => {
         `SELECT * FROM users WHERE username = ? OR email = ?`,
         [username, email]
     );
-    return rows[0] || null; 
+    return rows[0]; 
 };
 
 // Obtiene todos los usuarios
 userRepository.getAll = async () => {
     const [rows] = await db.query(`SELECT * FROM users`);
-    return rows || []; 
+    return rows; 
 };
 
 // Actualiza un usuario

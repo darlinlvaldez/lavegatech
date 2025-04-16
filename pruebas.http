@@ -86,13 +86,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZ
 ### Listado
 GET http://localhost:3000/api/users HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZnQiLCJhcHAiOiJhdXRoIn0.puyHAVJ0gFi7qAixc_0iEFKkmib7k_wtrmnZYOCWNIQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFtYmFyIiwicGFzc3dvcmQiOiIxMjM0NTYiLCJlbWFpbCI6ImFtYmFyQGdtYWlsLmNvbSJ9.g51YzGvZ4oxMWEN3Sn6wVprDKldt7GQ22NA3ZeYQJWM
 
 ### Actualizar
-PATCH http://localhost:3000/api/users/HEMILA HTTP/1.1
+PATCH http://localhost:3000/api/users/ambar HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZnQiLCJhcHAiOiJhdXRoIn0.puyHAVJ0gFi7qAixc_0iEFKkmib7k_wtrmnZYOCWNIQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFtYmFyIiwicGFzc3dvcmQiOiIxMjM0NTYiLCJlbWFpbCI6ImFtYmFyQGdtYWlsLmNvbSJ9.g51YzGvZ4oxMWEN3Sn6wVprDKldt7GQ22NA3ZeYQJWM
 
 {
-   "username": "HEMIL"
+  "password": "123489"
 }
