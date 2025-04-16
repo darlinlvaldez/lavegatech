@@ -1,32 +1,27 @@
-// validateToken.js
+import jwt from 'jsonwebtoken';
 import config from '../../config.js';
-import keyRepository from '../models/keysRepository.js';
 
-const bearer = () => async (req, res, next) => {
-    const bearer = req.headers.authorization;
+const authenticated = () => async (req, res, next) => {
+    const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
 
-    // Si no tiene el bearer...
-    if (!bearer) {
+    if (!token) {
         return res.status(401).json({
             status: 'error',
-            message: 'Unauthorized',
-            ...(config.MODE === 'development' && { errors: "Missing Authorization" }),
-        });
-    }
-    // Extraer el token
-    const token = bearer.split(" ")[1];
-
-    // Si no tiene el bearer...
-    const key = await keyRepository.getOne(token);
-    if (!key) {
-        return res.status(401).json({
-            status: 'error',
-            message: 'Unauthorized',
-            ...(config.MODE === 'development' && { errors: "Invalid Authorization" }),
+            message: 'Unauthorized - No token provided',
         });
     }
 
-    next();
+    try {
+        const decoded = jwt.verify(token, config.SECRET_KEY);
+        req.user = decoded;
+        next();
+    } catch (error) {
+        return res.status(401).json({
+            status: 'error',
+            message: 'Unauthorized - Invalid token',
+            ...(config.MODE === 'development' && { error: error.message }),
+        });
+    }
 };
 
-export default bearer;
+export default authenticated;

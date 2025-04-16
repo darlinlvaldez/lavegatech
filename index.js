@@ -4,12 +4,14 @@ import fileUpload from "express-fileupload";
 import path from 'path';
 import cors from 'cors'
 import config from './config.js';
+import cookieParser from 'cookie-parser';
 
 // Middlewares
 import authenticated from './src/middlewares/validateToken.js';
 
 // Controller
 import {obtenerCategorias, obtenerProductos, obtenerRecomendados} from './src/models/principal.js';
+import setUser from './src/middlewares/setUser.js';
 
 // Routes
 import mobiles from './src/routes/productos.js';
@@ -20,7 +22,11 @@ import users from './src/routes/user.js';
 
 const app = express();
 
+app.use(cookieParser());
+
 app.use(fileUpload({}));
+
+app.use(setUser());
 
 app.use(express.urlencoded({ extended: true }));
 
@@ -35,6 +41,11 @@ app.use(cors())
     
 app.use('/api/auth', auth); 
 app.use('/api/users', authenticated(), users);
+
+app.use((req, res, next) => {
+  res.locals.user = req.user || null;
+  next();
+});
 
 app.use('/mobiles', mobiles);
 
@@ -59,6 +70,11 @@ app.post('/mobiles/cart/add', (req, res) => {
   res.json({ success: true, message: "Producto agregado al carrito" });
 });
 
+app.post('/logout', async (req, res) => {
+  res.clearCookie('token');
+  res.redirect('/login');
+});
+
 app.get('/mobiles/mant', (req, res) => {
   const data = { nombre: "iphone"}
   res.render('store/mant', data);
@@ -70,7 +86,8 @@ app.get('/', async (req, res) => {
     const categorias = await obtenerCategorias();
     const recomendados = await obtenerRecomendados();
 
-    res.render('index', {productos: productosList, categorias, recomendados});
+    res.render('index', {productos: productosList, categorias, 
+      recomendados});
   } catch (err) {
     console.error('Error al obtener productos:', err);
     res.status(500).send('Error al cargar los productos.');

@@ -56,15 +56,11 @@ auth.register = async (req, res) => {
 };
 
 auth.login = async (req, res) => {
-
     const { username, password } = req.body;
 
     try {
-
-        // Buscar el usuario
         const user = await userRepository.getOne(username);
-
-        // Saber si existe el usuario
+        
         if (!user) {
             return res.status(401).json({
                 status: 'error',
@@ -72,7 +68,6 @@ auth.login = async (req, res) => {
             });
         }
 
-        // Si esta deshabilitado
         if (!user.enabled) {
             return res.status(401).json({
                 status: 'error',
@@ -80,7 +75,6 @@ auth.login = async (req, res) => {
             });
         }
 
-        // validar la contraseña
         const pass = await bcrypt.compare(password, user.password);
         if (!pass) {
             return res.status(401).json({
@@ -89,25 +83,39 @@ auth.login = async (req, res) => {
             });
         }
 
-        // Firmar un nuevo token
-        const token = jwt.sign({ username: user.username }, config.SECRET_KEY);
+        const token = jwt.sign({ username: user.username }, config.SECRET_KEY, {
+            expiresIn: '1h' // Token expira en 1 hora
+        });
 
-        // Enviar la respuesta
+        // Configurar la cookie
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: true,
+            maxAge: 3600000, // 1 hora en milisegundos
+            sameSite: 'strict'
+        });
+
         return res.status(200).json({
             status: 'ok',
             username: user.username.toLowerCase(),
-            token,
+            message: 'Login successful'
         });
 
-
     } catch (error) {
-        //En caso de error
         return res.status(500).json({
             status: 'error',
             message: 'Internal Server Error',
             ...(config.MODE === 'development' && { error }),
         });
     }
+};
+
+auth.logout = (req, res) => {
+    res.clearCookie('token');
+    return res.status(200).json({
+        status: 'ok',
+        message: 'Logout successful'
+    });
 };
 
 auth.authenticate = async (req, res) => {

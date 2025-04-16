@@ -11,5 +11,6 @@ router.post('/register', validate(request.register), auth.register);
 router.post('/login',  validate(request.login), auth.login);
 router.post('/authenticate', validate(request.authenticate), auth.authenticate);
 router.post('/verify', validate(request.verify), auth.verify);
+router.get('/logout', auth.logout);
 
 export default router;
