@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 11-04-2025 a las 17:21:54
+-- Tiempo de generación: 18-04-2025 a las 00:48:23
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -189,6 +189,17 @@ CREATE TABLE `estados_pedido` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `keys`
+--
+
+CREATE TABLE `keys` (
+  `id` int(11) NOT NULL,
+  `token` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `marcas`
 --
 
@@ -367,7 +378,7 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id`, `nombre`, `descripcion`, `precio`, `categoria_id`, `descuento`, `fecha`, `img_principal`, `marca_id`) VALUES
-(1, 'iPhone 12 64GB', '', 15995.00, 1, 20.00, '2025-03-09 11:06:10', '', 1),
+(1, 'iPhone 12 64GB', '', 15995.00, 1, 20.00, '2025-03-09 11:06:10', 'https://www.plug.tech/cdn/shop/products/Untitleddesign_39239d69-632f-4486-8993-1f3e88a1ce2a.jpg?v=1628526193&%3Bwidth=500&em-format=auto', 1),
 (2, 'iPhone 12 128GB', '', 17995.00, 1, 0.00, '2025-03-09 08:00:00', '', 1),
 (3, 'iPhone 12 256GB', '', 19495.00, 1, 0.00, '2025-03-30 08:00:00', '', 1),
 (4, 'iPhone 12 Pro 128GB', '', 21995.00, 1, 0.00, '2025-03-30 08:00:00', '', 1),
@@ -610,6 +621,29 @@ INSERT INTO `p_marcas` (`id`, `nombre`, `logo`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `users`
+--
+
+CREATE TABLE `users` (
+  `id` varchar(36) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `enabled` tinyint(1) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+--
+-- Volcado de datos para la tabla `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `password`, `email`, `enabled`) VALUES
+('34ebfb08-6382-40ea-8078-fcaadcabaa0e', 'darlin', '$2b$10$m.t.1jbxEwFSaTsBGifhfuObuO6IWZrdqauksIabsG9K2eVOLGcZ6', 'darlin@gmail.com', 1),
+('9964576f-364e-4c3b-85c2-4d726d13b515', 'nilrad', '$2b$10$KVIEGsBZ/QqAGEfwIhraneaMQhF1rnAIAv3RVhwVEuIu20b9SBi72', 'nilrad@gmail.com', 1),
+('eba6f384-fdd6-4064-b7b8-224eb62f9349', 'ambar', '$2b$10$OWGvXbmAlkwEvJaaNRrMUutrzuCfRUgClOat9SlIRmfPW4IuQjvTG', 'ambar@gmail.com', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `variantes`
 --
 
@@ -620,6 +654,13 @@ CREATE TABLE `variantes` (
   `stock` int(11) NOT NULL DEFAULT 0,
   `img` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+--
+-- Volcado de datos para la tabla `variantes`
+--
+
+INSERT INTO `variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
+(370, 1, 'rojo', 11, 'https://www.plug.tech/cdn/shop/products/Untitleddesign_39239d69-632f-4486-8993-1f3e88a1ce2a.jpg?v=1628526193&%3Bwidth=500&em-format=auto');
 
 --
 -- Índices para tablas volcadas
@@ -678,6 +719,13 @@ ALTER TABLE `dimensionespeso`
 ALTER TABLE `estados_pedido`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `estado` (`estado`);
+
+--
+-- Indices de la tabla `keys`
+--
+ALTER TABLE `keys`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `token` (`token`);
 
 --
 -- Indices de la tabla `marcas`
@@ -804,6 +852,12 @@ ALTER TABLE `estados_pedido`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `keys`
+--
+ALTER TABLE `keys`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `marcas`
 --
 ALTER TABLE `marcas`
@@ -849,7 +903,7 @@ ALTER TABLE `p_marcas`
 -- AUTO_INCREMENT de la tabla `variantes`
 --
 ALTER TABLE `variantes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=367;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=371;
 
 --
 -- Restricciones para tablas volcadas

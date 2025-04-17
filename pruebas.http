@@ -39,7 +39,7 @@ content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdW1tYXNvZnQiLCJhcHAiOiJhdXRoIn0.puyHAVJ0gFi7qAixc_0iEFKkmib7k_wtrmnZYOCWNIQ
 
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFtYmFyIiwiaWF0IjoxNzQ0ODQ1OTUzLCJleHAiOjE3NDQ4NDk1NTN9.cFrGBg86rI0b5fyErYQx37hoNVh4UcnoDQfKFU5hHrk"
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFtYmFyIiwiaWF0IjoxNzQ0NjU1NjY5fQ.j2zhsfBgQCGwSH1FSg-4X95-AGXNJ3EszmkuxZziHK0"
 }
 
 ### AUTENTICAR ERROR
