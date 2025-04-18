@@ -1,76 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro - Tienda Virtual</title>
-    <link rel="stylesheet" href="/css/login.css">
+  <meta charset="UTF-8">
+  <title>Registro - Tu Tienda</title>
 </head>
 <body>
-    <div class="login-container">
-        <h1>Registro</h1>
-        <form id="registerForm">
-            <div class="form-group">
-                <label for="username">Usuario:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Contraseña:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div class="form-group">
-                <label for="confirmPassword">Confirmar Contraseña:</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required>
-            </div>
-            <button type="submit">Registrarse</button>
-        </form>
-        <p>¿Ya tienes una cuenta? <a href="/login">Inicia sesión aquí</a></p>
-        <div id="errorMessage" class="error-message"></div>
-        <div id="successMessage" class="success-message"></div>
-    </div>
+  <h2>Crear cuenta</h2>
 
-    <script>
-        document.getElementById('registerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            if (password !== confirmPassword) {
-                document.getElementById('errorMessage').textContent = 'Las contraseñas no coinciden';
-                return;
-            }
-            
-            try {
-                const response = await fetch('/api/auth/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, email, password })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    document.getElementById('errorMessage').textContent = '';
-                    document.getElementById('successMessage').textContent = 'Registro exitoso! Redirigiendo...';
-                    setTimeout(() => {
-                        window.location.href = '/login';
-                    }, 2000);
-                } else {
-                    document.getElementById('errorMessage').textContent = data.message;
-                }
-            } catch (error) {
-                document.getElementById('errorMessage').textContent = 'Error al conectar con el servidor';
-            }
-        });
-    </script>
+  <form action="/api/auth/register" method="POST">
+    <label>Nombre de usuario:</label><br>
+    <input type="text" name="username" value="<%= username || '' %>" required><br><br>
+
+    <label>Correo electrónico:</label><br>
+    <input type="email" name="email" value="<%= email || '' %>" required><br><br>
+
+    <label>Contraseña:</label><br>
+    <input type="password" name="password" required><br><br>
+
+    <button type="submit">Registrarse</button>
+  </form>
+
+  <% if (error) { %>
+    <p style="color:red"><%= error %></p>
+  <% } %>
+  
+
+  <p>¿Ya tienes una cuenta? <a href="/login">Inicia sesión</a></p>
 </body>
 </html>

@@ -1,239 +1,112 @@
+import db from '../database/mobiles.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import config from '../../config.js';
-import userRepository from '../models/userRepository.js';
-import { v4 as uuidv4 } from 'uuid';
+import nodemailer from 'nodemailer';
+import crypto from 'crypto';
 
-const auth = {};
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'darlinlvaldez@gmail.com',
+    pass: 'stkj cxpx vveb mcon'
+  }
+});
 
-auth.portal = (req, res) => {
-    return res.status(200).json({
-        status: 'ok',
-        portal: config.PORTAL
-    });
-}
+const generateCode = () => crypto.randomBytes(3).toString('hex').toUpperCase(); // 6 dígitos
 
-auth.register = async (req, res) => {
-
-    const { username, password, email } = req.body;
-
-    try {
-
-        // Buscar el usuario
-        const user = await userRepository.getOne(username, email);
-
-        // Confirmar que no exista
-        if (user) {
-            return res.status(409).json({
-                status: 'error',
-                message: 'Username or email already exists',
-            });
-        }
-
-        // Generar ID
-        const id = uuidv4();
-
-        // Preparar la clave hasheada
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Guardar el usuario
-        await userRepository.create({ id, username, password: hashedPassword, email });
-
-        // Enviar la respuesta
-        return res.status(201).json({
-            status: 'ok',
-            message: 'User registered successfully',
-        });
-
-    } catch (error) {
-        //En caso de error
-        return res.status(500).json({
-            status: 'error',
-            message: 'Internal Server Error',
-            ...(config.MODE === 'development' && { error }),
-        });
+export const register = async (req, res) => {
+    const { username, email, password } = req.body;
+  
+    const [existing] = await db.query(`SELECT * FROM usuarios WHERE email = ?`, [email]);
+  
+    if (existing.length) {
+      const user = existing[0];
+  
+      if (!user.is_verified) {
+        // Si el usuario existe pero no está verificado, redirigir a verificación
+        return res.redirect(`/verify?email=${email}`);
+      }
+  
+      // Si ya está verificado, mostrar el mensaje en la vista de registro
+      return res.render('login/register', {
+        error: 'Este correo ya está registrado.',
+        email,
+        username
+      });
     }
-};
-
-auth.login = async (req, res) => {
-    const { username, password } = req.body;
-
-    try {
-        const user = await userRepository.getOne(username);
-        
-        if (!user) {
-            return res.status(401).json({
-                status: 'error',
-                message: 'The username or password is incorrect',
-            });
-        }
-
-        if (!user.enabled) {
-            return res.status(401).json({
-                status: 'error',
-                message: 'User account is disabled',
-            });
-        }
-
-        const pass = await bcrypt.compare(password, user.password);
-        if (!pass) {
-            return res.status(401).json({
-                status: 'error',
-                message: 'The username or password is incorrect',
-            });
-        }
-
-        const token = jwt.sign({ username: user.username }, config.SECRET_KEY, {
-            expiresIn: '1h' // Token expira en 1 hora
-        });
-
-        // Configurar la cookie
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: true,
-            maxAge: 3600000, // 1 hora en milisegundos
-            sameSite: 'strict'
-        });
-
-        return res.status(200).json({
-            status: 'ok',
-            username: user.username.toLowerCase(),
-            message: 'Login successful'
-        });
-
-    } catch (error) {
-        return res.status(500).json({
-            status: 'error',
-            message: 'Internal Server Error',
-            ...(config.MODE === 'development' && { error }),
-        });
-    }
-};
-
-auth.logout = (req, res) => {
-    res.clearCookie('token');
-    return res.status(200).json({
-        status: 'ok',
-        message: 'Logout successful'
-    });
-};
-
-auth.authenticate = async (req, res) => {
-
-    try {
-        // Vefificar si el token es valido
-        const token = jwt.verify(req.body.token, config.SECRET_KEY);
-
-        // Extraer el username del token
-        const username = token.username;
-
-        // Buscar el usuario
-        const user = await userRepository.getOne(username);
-
-        // Validar si esta activo
-        if (!user.enabled) {
-            return res.status(403).json({
-                status: 'error',
-                message: 'User account is disabled',
-            });
-        }
-
-        // Enviar la respuesta
-        return res.status(200).json({
-            status: 'ok',
-            message: 'Token authenticated',
-        });
-    } catch (error) {
-        //En caso de error
-        return res.status(401).json({
-            status: 'error',
-            message: 'Invalid token',
-            ...(config.MODE === 'development' && { error }),
-        });
-    }
-};
-
-auth.verify = async (req, res) => {
-
-    try {
-        // Vefificar si el token es valido
-        const token = jwt.verify(req.body.token, config.SECRET_KEY);
-
-        // Enviar la respuesta
-        return res.status(200).json({
-            status: 'ok',
-            message: 'Valid token',
-            token
-        });
-    } catch (error) {
-        //En caso de error
-        return res.status(401).json({
-            status: 'error',
-            message: 'Invalid token',
-            ...(config.MODE === 'development' && { error }),
-        });
-    }
-};
-
-// Actualizar perfil
-auth.update = async (req, res) => {
-    try {
-
-        const currentusername = req.params.username
-        let updateduser = req.body;
-
-        if (updateduser?.username) {
-            const username = updateduser.username.toLowerCase()
-            updateduser = { ...updateduser, username }
-        }
-        await userRepository.update(currentusername, updateduser)
-
-        let token = undefined;
-        if (updateduser?.username)
-            token = jwt.sign({ username: updateduser.username }, config.SECRET_KEY);
-
-        return res.status(200).json({
-            status: 'ok',
-            message: 'Profile updated successfully.',
-            token
-        });
-    } catch (error) {
-        return res.status(500).json({
-            status: 'error',
-            message: 'Internal Server Error',
-        });
-    }
-};
-
-auth.updatePassword = async (req, res) => {
-    const currentusername = req.params.username
-
-    const { password } = req.body;
+  
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    await userRepository.update(currentusername, { password: hashedPassword })
-
-    return res.status(500).json({
-        status: 'ok',
-        message: 'Password updated successfully.',
+    const verificationCode = generateCode();
+  
+    await db.query(
+      `INSERT INTO usuarios (username, email, password, is_verified, verification_code) VALUES (?, ?, ?, 0, ?)`,
+      [username, email, hashedPassword, verificationCode]
+    );
+  
+    await transporter.sendMail({
+      from: 'Tu Tienda <tucorreo@gmail.com>',
+      to: email,
+      subject: 'Verificación de correo',
+      text: `Tu código de verificación es: ${verificationCode}`
     });
+  
+    res.redirect(`/verify?email=${email}`);
+  };
+  
+  
+export const showVerificationForm = (req, res) => {
+  const { email } = req.query;
+  res.render('login/verificar', { email });
 };
 
-// Recrear el id y el password. --Eliminar despues de importados
-auth.import = async(req, res) => {
+export const verifyCode = async (req, res) => {
+  const { email, code } = req.body;
 
-    const users = await userRepository.getAll();
-    const usersForImport = users.filter(user => user.id == "")
+  const [result] = await db.query(`SELECT verification_code FROM usuarios WHERE email = ?`, [email]);
+  if (!result.length || result[0].verification_code !== code)
+    return res.status(400).render('login/verificar', { email, error: 'Código inválido.' });
 
-    for (const user of usersForImport) {
-        const id = uuidv4();
-        const password = await bcrypt.hash("1234", 10);
-        await userRepository.update(user.username, { id, password })
-    };
+  await db.query(`UPDATE usuarios SET is_verified = 1, verification_code = NULL WHERE email = ?`, [email]);
+  res.redirect('/login');
+};
 
-    return res.status(200).json({
-        usersImpored: usersForImport
+export const resendCode = async (req, res) => {
+    const { email } = req.body;
+    const newCode = generateCode();
+  
+    await db.query(`UPDATE usuarios SET verification_code = ? WHERE email = ?`, [newCode, email]);
+  
+    await transporter.sendMail({
+      from: 'Tu Tienda <tucorreo@gmail.com>',
+      to: email,
+      subject: 'Nuevo código de verificación',
+      text: `Tu nuevo código es: ${newCode}`
     });
-}
+  
+    res.redirect(`/verify?email=${email}&info=reenviado`);
+  };
+  
 
-export default auth;
+export const login = async (req, res) => {
+    const { email, password } = req.body;
+  
+    const [rows] = await db.query(`SELECT * FROM usuarios WHERE email = ?`, [email]);
+    if (!rows.length) {
+      return res.render('login/login', { error: 'Correo no registrado', email });
+    }
+  
+    const user = rows[0];
+  
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.render('login/login', { error: 'Contraseña incorrecta', email });
+    }
+  
+    if (!user.is_verified) {
+      return res.render('login/login', { error: 'Primero debes verificar tu correo', email });
+    }
+  
+    // Si todo está bien, redirige al home
+    return res.redirect('/');
+  };
+  

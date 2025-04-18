@@ -6,27 +6,20 @@ import cors from 'cors'
 import config from './config.js';
 import cookieParser from 'cookie-parser';
 
-// Middlewares
-import authenticated from './src/middlewares/validateToken.js';
-
 // Controller
 import {obtenerCategorias, obtenerProductos, obtenerRecomendados} from './src/models/principal.js';
-import setUser from './src/middlewares/setUser.js';
 
 // Routes
 import mobiles from './src/routes/productos.js';
 import storeRoutes from './src/routes/productos.js';
 import productRoutes from "./src/routes/productos.js";
 import auth from './src/routes/auth.js';
-import users from './src/routes/user.js';
 
 const app = express();
 
 app.use(cookieParser());
 
 app.use(fileUpload({}));
-
-app.use(setUser());
 
 app.use(express.urlencoded({ extended: true }));
 
@@ -40,7 +33,6 @@ app.use(express.json());
 app.use(cors())
     
 app.use('/api/auth', auth); 
-app.use('/api/users', authenticated(), users);
 
 app.use((req, res, next) => {
   res.locals.user = req.user || null;
@@ -95,12 +87,34 @@ app.get('/', async (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-  res.render('login/login');  
-}); 
+  res.render('login/login', { error: null, email: null });
+});
+
 
 app.get('/register', (req, res) => {
-  res.render('login/register');  
+  res.render('login/register', {
+    error: null,
+    email: '',
+    username: ''
+  });
 });
+
+
+app.get('/verify', (req, res) => {
+  res.render('login/verify', {
+    email: req.query.email,
+    error: null,
+    info: null
+  });
+});
+
+app.post('/api/auth/enviar-codigo', (req, res) => {
+  const { email } = req.body;
+  // ...lógica para enviar código...
+
+  res.render('login/verify', { email }); // 👈 asegúrate de pasar la variable
+});
+
 
 app.get('/mobiles/store', (req, res) => {
   res.render('store/store')  

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-04-2025 a las 00:48:23
+-- Tiempo de generación: 18-04-2025 a las 04:33:40
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -621,25 +621,25 @@ INSERT INTO `p_marcas` (`id`, `nombre`, `logo`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `users`
+-- Estructura de tabla para la tabla `usuarios`
 --
 
-CREATE TABLE `users` (
-  `id` varchar(36) NOT NULL,
-  `username` varchar(50) NOT NULL,
+CREATE TABLE `usuarios` (
+  `id` int(11) NOT NULL,
+  `username` varchar(100) NOT NULL,
+  `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `enabled` tinyint(1) DEFAULT 1
+  `verification_code` varchar(6) DEFAULT NULL,
+  `is_verified` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
--- Volcado de datos para la tabla `users`
+-- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `email`, `enabled`) VALUES
-('34ebfb08-6382-40ea-8078-fcaadcabaa0e', 'darlin', '$2b$10$m.t.1jbxEwFSaTsBGifhfuObuO6IWZrdqauksIabsG9K2eVOLGcZ6', 'darlin@gmail.com', 1),
-('9964576f-364e-4c3b-85c2-4d726d13b515', 'nilrad', '$2b$10$KVIEGsBZ/QqAGEfwIhraneaMQhF1rnAIAv3RVhwVEuIu20b9SBi72', 'nilrad@gmail.com', 1),
-('eba6f384-fdd6-4064-b7b8-224eb62f9349', 'ambar', '$2b$10$OWGvXbmAlkwEvJaaNRrMUutrzuCfRUgClOat9SlIRmfPW4IuQjvTG', 'ambar@gmail.com', NULL);
+INSERT INTO `usuarios` (`id`, `username`, `email`, `password`, `verification_code`, `is_verified`, `created_at`) VALUES
+(15, 'nilrad', 'nilradlvaldez@gmail.com', '$2b$10$HZp3aEtXCxqu1tC/q89fleGMEIn5KpkJ4G3npvMNbfie94cmidYXi', NULL, 1, '2025-04-18 02:31:20');
 
 -- --------------------------------------------------------
 
@@ -793,6 +793,13 @@ ALTER TABLE `p_marcas`
   ADD UNIQUE KEY `nombre` (`nombre`);
 
 --
+-- Indices de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
 -- Indices de la tabla `variantes`
 --
 ALTER TABLE `variantes`
@@ -898,6 +905,12 @@ ALTER TABLE `productos`
 --
 ALTER TABLE `p_marcas`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `variantes`

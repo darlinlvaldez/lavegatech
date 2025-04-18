@@ -55,5 +55,4 @@ router.get('/mobiles/search', async (req, res) => {
     }
 });
 
-
 export default router;

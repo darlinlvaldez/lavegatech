@@ -7,10 +7,7 @@ const config = {
   MODE: process.env.MODE,
   PORT: process.env.PORT,
   PORTAL: process.env.PORTAL,
-
-  // JWT
-  SECRET_KEY:  process.env.SECRET_KEY,
-
+  
   // DATABASE
   DB_HOST: process.env.DB_HOST,
   DB_USER: process.env.DB_USER,

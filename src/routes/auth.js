@@ -1,16 +1,13 @@
 import express from 'express';
-import auth from '../controllers/auth.js';
-import validate from '../middlewares/validateRequest.js';
-import request from './schemas/auth.js';
+import { register, showVerificationForm, verifyCode, resendCode, login } from '../controllers/auth.js';
 
 const router = express.Router();
 
-router.get('/portal', auth.portal)
+router.post('/register', register);
+router.get('/verify', showVerificationForm);
+router.post('/verificar', verifyCode);
+router.post('/reenviar-codigo', resendCode);
+router.post('/login', login); // Asegúrate que apunte a la función que acabamos de definir
 
-router.post('/register', validate(request.register), auth.register);
-router.post('/login',  validate(request.login), auth.login);
-router.post('/authenticate', validate(request.authenticate), auth.authenticate);
-router.post('/verify', validate(request.verify), auth.verify);
-router.get('/logout', auth.logout);
 
 export default router;

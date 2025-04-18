@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Verifica tu correo</h2>
+<p>Hemos enviado un código a tu correo.</p>
+<form method="POST" action="/api/auth/verificar">
+  <input type="hidden" name="email" value="<%= email %>">
+  <input type="text" name="code" placeholder="Código de verificación" required>
+  <button type="submit">Verificar</button>
+</form>
+
+<form method="POST" action="/api/auth/reenviar-codigo">
+  <input type="hidden" name="email" value="<%= email %>">
+  <button type="submit">Reenviar código</button>
+</form>
+
+<% if (error) { %><p style="color:red"><%= error %></p><% } %>
+<% if (info) { %><p style="color:green"><%= info %></p><% } %>
+
+</body>
+</html>
