@@ -4,7 +4,6 @@ import fileUpload from "express-fileupload";
 import path from 'path';
 import cors from 'cors'
 import config from './config.js';
-import cookieParser from 'cookie-parser';
 
 // Controller
 import {obtenerCategorias, obtenerProductos, obtenerRecomendados} from './src/models/principal.js';
@@ -17,7 +16,6 @@ import auth from './src/routes/auth.js';
 
 const app = express();
 
-app.use(cookieParser());
 
 app.use(fileUpload({}));
 
@@ -90,7 +88,6 @@ app.get('/login', (req, res) => {
   res.render('login/login', { error: null, email: null });
 });
 
-
 app.get('/register', (req, res) => {
   res.render('login/register', {
     error: null,
@@ -98,7 +95,6 @@ app.get('/register', (req, res) => {
     username: ''
   });
 });
-
 
 app.get('/verify', (req, res) => {
   res.render('login/verify', {
@@ -110,11 +106,20 @@ app.get('/verify', (req, res) => {
 
 app.post('/api/auth/enviar-codigo', (req, res) => {
   const { email } = req.body;
-  // ...lógica para enviar código...
-
-  res.render('login/verify', { email }); // 👈 asegúrate de pasar la variable
+  res.render('login/verify', { email });
 });
 
+app.get('/email', (req, res) => {
+  res.render('login/email', { error: null, email: null });
+});
+
+app.get('/code', (req, res) => {
+  res.render('login/code', { error: null, email: null });
+});
+
+app.get('/newpass', (req, res) => {
+  res.render('login/newpass', { error: null, email: null });
+});
 
 app.get('/mobiles/store', (req, res) => {
   res.render('store/store')  

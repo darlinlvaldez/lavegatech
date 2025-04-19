@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 
 export const sendVerificationEmail = async (to, code) => {
   const transporter = nodemailer.createTransport({
-    service: 'gmail', // o el proveedor SMTP que prefieras
+    service: 'gmail',
     auth: {
       user: 'darlinlvaldez@gmail.com',
       pass: 'darlin2000',
@@ -10,7 +10,7 @@ export const sendVerificationEmail = async (to, code) => {
   });
 
   const mailOptions = {
-    from: '"Tu Tienda" <tucorreo@gmail.com>',
+    from: '"La Vega Tech" <darlinlvaldez@gmail.com>',
     to,
     subject: 'Código de verificación',
     html: `<p>Tu código de verificación es: <strong>${code}</strong></p>`,

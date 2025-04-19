@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Ayuda con la contraseña</h2>
+<p>Escribe la dirección de correo electrónico asociada a tu cuenta.</p>
+
+<form method="POST" action="/api/auth/recuperar">
+  <input type="email" name="email" placeholder="Correo electrónico" required>
+  <button type="submit">Continuar</button>
+</form>
+
+<% if (error) { %><p style="color:red"><%= error %></p><% } %>
+</body>
+</html>

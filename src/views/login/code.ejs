@@ -6,15 +6,16 @@
     <title>Document</title>
 </head>
 <body>
-    <h2>Verifica tu correo</h2>
-<p>Hemos enviado un código a tu correo.</p>
-<form method="POST" action="/api/auth/verificar">
+    <h2>Ingresar el código de verificación</h2>
+<p>Para tu seguridad, enviamos el código a tu correo electrónico <%= email %>.</p>
+
+<form method="POST" action="/api/auth/verificar-reset">
   <input type="hidden" name="email" value="<%= email %>">
   <input type="text" name="code" placeholder="Código de verificación" required>
-  <button type="submit">Verificar</button>
+  <button type="submit">Enviar código</button>
 </form>
 
-<form method="POST" action="/api/auth/reenviar-codigo">
+<form method="POST" action="/api/auth/reenviar-reset">
   <input type="hidden" name="email" value="<%= email %>">
   <button type="submit">Reenviar código</button>
 </form>

@@ -20,5 +20,5 @@ request.authenticate = z.object({
 request.verify = z.object({
     token: z.string().min(1)
 }).strict();
- 
+
 export default request;
