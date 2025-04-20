@@ -1,21 +1,18 @@
 import express from 'express';
-import { register, showVerificationForm, verifyCode, resendCode, login, recuperarPassword, verificarCodigoReset, reenviarCodigoReset, resetearPassword } from '../controllers/auth.js';
+import auth from '../controllers/auth.js';
 
 const router = express.Router();
 
-router.post('/register', register);
-router.get('/verify', showVerificationForm);
-router.post('/verificar', verifyCode);
-router.post('/reenviar-codigo', resendCode);
-router.post('/login', login); 
+// LOGIN
+router.get('/verify', auth.showVerifyForm);
+router.post('/register', auth.register);
+router.post('/verifyCode', auth.verifyCode);
+router.post('/resendCode', auth.resendCode);
+router.post('/login', auth.login); 
 
-router.get('/recuperar', (req, res) => {
-    res.render('login/email', { error: null, email: null });
-  });
-  
-  router.post('/recuperar', recuperarPassword);
-  router.post('/verificar-reset', verificarCodigoReset);
-  router.post('/reenviar-reset', reenviarCodigoReset);
-  router.post('/reset-password', resetearPassword);
-  
+// FORGOT-PASSWORD
+router.post('/forgotPassword', auth.forgotPassword);
+router.post('/verifyResetCode', auth.verifyResetCode);
+router.post('/newPassword', auth.updatePassword);
+
 export default router;

@@ -9,7 +9,7 @@
     <h2>Crear nueva contraseña</h2>
 <p>Solicitaremos esta contraseña cada vez que inicies sesión.</p>
 
-<form method="POST" action="/api/auth/reset-password">
+<form method="POST" action="/api/auth/newPassword">
   <input type="hidden" name="email" value="<%= email %>">
   <input type="password" name="password" placeholder="Nueva contraseña" required>
   <input type="password" name="confirm" placeholder="Vuelve a escribir la contraseña" required>

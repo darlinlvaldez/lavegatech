@@ -1,6 +1,8 @@
 import db from "../database/mobiles.js";
 
-export const buscarProductos = async (query, categoria) => {
+const principal = {};
+
+principal.buscarProductos = async (query, categoria) => {
   let searchQuery = `
     SELECT 
         p.id,
@@ -34,7 +36,7 @@ export const buscarProductos = async (query, categoria) => {
   }
 };
 
-export const obtenerProductos = async (categoria) => {
+principal.obtenerProductos = async (categoria) => {
   const query = `
      SELECT 
           p.id,
@@ -62,7 +64,7 @@ export const obtenerProductos = async (categoria) => {
   }
 };
 
-export const obtenerCategorias = async () => {
+principal.obtenerCategorias = async () => {
   const query = `SELECT * FROM categorias`;
   
   try {
@@ -73,7 +75,7 @@ export const obtenerCategorias = async () => {
   }
 };
 
-export const obtenerRecomendados = async () => {
+principal.obtenerRecomendados = async () => {
   const query = `
       SELECT 
           p.id,
@@ -88,7 +90,7 @@ export const obtenerRecomendados = async () => {
       FROM productos p
       JOIN categorias c ON p.categoria_id = c.id
       LEFT JOIN variantes v ON p.id = v.producto_id 
-      GROUP BY p.id 
+      GROUP BY p.id
       LIMIT 20;
   `;
   
@@ -100,3 +102,5 @@ export const obtenerRecomendados = async () => {
       return [];
   }
 };
+
+export default principal;

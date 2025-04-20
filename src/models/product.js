@@ -1,6 +1,8 @@
 import db from "../database/mobiles.js";
 
-export const obtenerDetalles = async (id) => {
+const product = {};
+
+product.obtenerDetalles = async (id) => {
     const query = `
         SELECT 
     p.id,
@@ -31,7 +33,7 @@ GROUP BY
     }
 };
 
-export const obtenerImagen = async (productoId, color) => {
+product.obtenerImagen = async (productoId, color) => {
     try {
         const query = `
             SELECT img 
@@ -46,7 +48,7 @@ export const obtenerImagen = async (productoId, color) => {
     }
 };
 
-export const obtenerStock = async (productoId, color) => {
+product.obtenerStock = async (productoId, color) => {
     try {
         const query = `
             SELECT stock 
@@ -61,7 +63,7 @@ export const obtenerStock = async (productoId, color) => {
     }
 };
 
-export const obtenerRelacionados = async (productoId, categoriaId) => {
+product.obtenerRelacionados = async (productoId, categoriaId) => {
     const query = `
         SELECT 
           p.id,
@@ -89,3 +91,5 @@ export const obtenerRelacionados = async (productoId, categoriaId) => {
         return [];
     }
 };
+
+export default product;

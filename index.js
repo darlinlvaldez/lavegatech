@@ -6,16 +6,15 @@ import cors from 'cors'
 import config from './config.js';
 
 // Controller
-import {obtenerCategorias, obtenerProductos, obtenerRecomendados} from './src/models/principal.js';
+import principal from './src/models/principal.js';
 
 // Routes
 import mobiles from './src/routes/productos.js';
-import storeRoutes from './src/routes/productos.js';
-import productRoutes from "./src/routes/productos.js";
+import store from './src/routes/productos.js';
+import product from "./src/routes/productos.js";
 import auth from './src/routes/auth.js';
 
 const app = express();
-
 
 app.use(fileUpload({}));
 
@@ -39,9 +38,9 @@ app.use((req, res, next) => {
 
 app.use('/mobiles', mobiles);
 
-app.use('/', storeRoutes);
+app.use('/', store);
 
-app.use("/product", productRoutes);
+app.use("/product", product);
 
 app.post('/mobiles/mant', async (req, res) => {
   const file = req.files.foto;
@@ -72,12 +71,11 @@ app.get('/mobiles/mant', (req, res) => {
 
 app.get('/', async (req, res) => {
   try {
-    const productosList = await obtenerProductos();
-    const categorias = await obtenerCategorias();
-    const recomendados = await obtenerRecomendados();
+    const productos = await principal.obtenerProductos();
+    const categorias = await principal.obtenerCategorias();
+    const recomendados = await principal.obtenerRecomendados();
 
-    res.render('index', {productos: productosList, categorias, 
-      recomendados});
+    res.render('index', {productos, categorias, recomendados});
   } catch (err) {
     console.error('Error al obtener productos:', err);
     res.status(500).send('Error al cargar los productos.');

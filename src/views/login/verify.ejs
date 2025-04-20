@@ -8,14 +8,15 @@
 <body>
     <h2>Verifica tu correo</h2>
 <p>Hemos enviado un código a tu correo.</p>
-<form method="POST" action="/api/auth/verificar">
+<form method="POST" action="/api/auth/verifyCode">
   <input type="hidden" name="email" value="<%= email %>">
   <input type="text" name="code" placeholder="Código de verificación" required>
   <button type="submit">Verificar</button>
 </form>
 
-<form method="POST" action="/api/auth/reenviar-codigo">
+<form method="POST" action="/api/auth/resendCode">
   <input type="hidden" name="email" value="<%= email %>">
+  <input type="hidden" name="type" value="verify">
   <button type="submit">Reenviar código</button>
 </form>
 

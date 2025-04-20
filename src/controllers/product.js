@@ -1,18 +1,18 @@
-import { obtenerDetalles, obtenerRelacionados, obtenerStock } from "../models/product.js";
+import product from "../models/product.js";
 
-export async function detallesController(req, res) {
+product.detallesController = async (req, res) => {
     try {
         const { id } = req.params;
         const { color } = req.query;
 
-        const producto = await obtenerDetalles(id);
+        const producto = await product.obtenerDetalles(id);
 
         if (!producto) {
             return res.status(404).render('error', { mensaje: "Producto no encontrado" });
         }
 
         const categoriaId = producto.categoriaId;
-        const productRelacionados = await obtenerRelacionados(producto.id, categoriaId);
+        const productRelacionados = await product.obtenerRelacionados(producto.id, categoriaId);
 
         const colores = producto.colores ? producto.colores.split(',') : [];
 
@@ -32,7 +32,7 @@ export async function detallesController(req, res) {
         const colorActual = color && imagenesPorColor[decodeURIComponent(color)] ?
         decodeURIComponent(color) : colores[0]?.trim();
 
-        const stockColor = await obtenerStock(producto.id, colorActual);
+        const stockColor = await product.obtenerStock(producto.id, colorActual);
 
         res.render('store/product', { 
             producto, productRelacionados, imagenesPorColor, colorSeleccionado: colorActual, 
@@ -43,3 +43,16 @@ export async function detallesController(req, res) {
         res.status(500).render('error', { mensaje: error.message });
     }
 }
+
+product.StockController = async (req, res) => {
+    try {
+        const { productId, color } = req.params;
+        const stock = await productModel.obtenerStock(productId, decodeURIComponent(color));
+        res.json({ stock });
+    } catch (error) {
+        console.error('Error al obtener stock:', error);
+        res.status(500).json({ error: 'Error al obtener stock' });
+    }
+};
+
+export default product;

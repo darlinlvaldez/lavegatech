@@ -1,5 +1,7 @@
 import db from "../database/mobiles.js";
 
+const store = {};
+
 const construirWhereClause = (categorias = [], marcas = [], precioMin = null, precioMax = null) => {
     const condiciones = [];
     
@@ -22,7 +24,7 @@ const construirWhereClause = (categorias = [], marcas = [], precioMin = null, pr
     return condiciones.length > 0 ? `WHERE ${condiciones.join(' AND ')}` : '';
 };
 
-export const obtenerStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], marcas = [], precioMin, precioMax) => {
+store.obtenerStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], marcas = [], precioMin, precioMax) => {
     const offset = (pagina - 1) * limite;
     const whereClause = construirWhereClause(categorias, marcas, precioMin, precioMax);
 
@@ -62,7 +64,7 @@ LIMIT ? OFFSET ?
     }
 };
 
-export const totalProductos = async (categorias = [], marcas = [], precioMin, precioMax) => {
+store.totalProductos = async (categorias = [], marcas = [], precioMin, precioMax) => {
     const whereClause = construirWhereClause(categorias, marcas, precioMin, precioMax);
 
     const query = `
@@ -79,7 +81,7 @@ export const totalProductos = async (categorias = [], marcas = [], precioMin, pr
     }
 };
 
-export const cantidadCategoria = async () => {
+store.cantidadCategoria = async () => {
     const mapeoCategorias = {
         1: "Móviles",
         2: "SmartTV",
@@ -111,7 +113,7 @@ export const cantidadCategoria = async () => {
     }
 };
 
-export const cantidadMarcas = async (categorias = []) => {
+store.cantidadMarcas = async (categorias = []) => {
     let whereClause = '';
     let joinClause = '';
     
@@ -141,3 +143,5 @@ export const cantidadMarcas = async (categorias = []) => {
         throw new Error("Error al obtener las marcas y cantidad de productos: " + err.message);
     }
 };
+
+export default store;

@@ -1,12 +1,11 @@
-import {obtenerProductos, obtenerCategorias, obtenerRecomendados} from '../models/principal.js';
+import principal from '../models/principal.js';
 
-export async function productosController(req, res) {
-  const {categoria} = req.query;
-
+principal.productosController = async (req, res) => {
   try {
-      const productos = await obtenerProductos(categoria);
-      const categorias = await obtenerCategorias();
-      const recomendados = await obtenerRecomendados();
+    const {categoria} = req.query;
+      const productos = await principal.obtenerProductos(categoria);
+      const categorias = await principal.obtenerCategorias();
+      const recomendados = await principal.obtenerRecomendados();
 
       res.render('index', {productos, categorias, recomendados});  
   } catch (err) {
@@ -14,3 +13,17 @@ export async function productosController(req, res) {
       res.status(500).send('Error al cargar los datos.');  
   } 
 }
+
+principal.buscarController = async (req, res) => {
+
+  try {
+      const { q: query, category } = req.query;
+      const productos = await principal.buscarProductos(query, category);
+      res.json(productos);
+  } catch (error) {
+      console.error('Error en la búsqueda:', error);
+      res.status(500).json({ error: 'Error en la búsqueda' });
+  }
+}
+
+export default principal;

@@ -1,207 +1,166 @@
-import db from '../database/mobiles.js';
 import bcrypt from 'bcrypt';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
+import config from '../../config.js';
+import user from '../models/user.js';
+
+const auth = {};
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'darlinlvaldez@gmail.com',
-    pass: 'stkj cxpx vveb mcon'
+    user: config.EMAIL_SENDER,
+    pass: config.EMAIL_PASSWORD
   }
 });
 
 const generateCode = () => crypto.randomBytes(3).toString('hex').toUpperCase();
+const sendEmail = async (to, subject, text) => {
+  await transporter.sendMail({ from: `La Vega Tech <${config.EMAIL_SENDER}>`, to, subject, text });
+};
+
+const renderError = (res, view, error, extras = {}) => {
+  return res.render(view, { error, ...extras });
+};
+
+const hashPassword = password => bcrypt.hash(password, 10);
+
+const validateCode = (map, email, code) => {
+  const pending = map.get(email);
+  if (!pending) return { error: 'El código ha expirado o no se ha solicitado uno.' };
+  if (Date.now() > pending.expiresAt) {
+    map.delete(email);
+    return { error: 'El código ha expirado. Solicita uno nuevo.' };
+  }
+  if (pending.code !== code) return { error: 'Código inválido.' };
+  return { success: true, data: pending };
+};
 
 const pendingUsers = new Map();
+const resetPending = new Map();
 
-export const register = async (req, res) => {
+auth.register = async (req, res) => {
   const { username, email, password, confirmPassword } = req.body;
+  if (password !== confirmPassword)
+    return renderError(res, 'login/register', 'Las contraseñas no coinciden.', { email, username });
+  
+  const alreadyExists = await user.userExists(email);
+  if (alreadyExists)
+    return renderError(res, 'login/register', 'Este correo ya está registrado.', { email, username });
 
-  if (password !== confirmPassword) {
-    return res.render('login/register', {
-      error: 'Las contraseñas no coinciden.',
-      email,
-      username
-    });
-  }
+  const hashedPassword = await hashPassword(password);
+  const code = generateCode();
+  pendingUsers.set(email, { username, hashedPassword, code, expiresAt: Date.now() + 10 * 60 * 1000 });
 
-  const [existing] = await db.query(`SELECT * FROM usuarios WHERE email = ?`, [email]);
-  if (existing.length) {
-    return res.render('login/register', {
-      error: 'Este correo ya está registrado.',
-      email,
-      username
-    });
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const verificationCode = generateCode();
-  const expiresAt = Date.now() + 10 * 60 * 1000;
-
-  pendingUsers.set(email, { username, hashedPassword, code: verificationCode, expiresAt });
-
-  await transporter.sendMail({
-    from: 'La Vega Tech <nilradlvaldez@gmail.com>',
-    to: email,
-    subject: 'Verificación de correo',
-    text: `Tu código de verificación es: ${verificationCode}. Este código expirará en 10 minutos.`
-  });
-
+  await sendEmail(email, 'Verificación de correo', `Tu código de verificación es: ${code}. Expira en 10 minutos.`);
   res.redirect(`/verify?email=${email}`);
 };
 
-export const showVerificationForm = (req, res) => {
-  const { email } = req.query;
-  res.render('login/verify', { email });
-};
+auth.showVerifyForm = (req, res) => res.render('login/verify', { email: req.query.email });
 
-export const verifyCode = async (req, res) => {
+auth.verifyCode = async (req, res) => {
   const { email, code } = req.body;
-  const pending = pendingUsers.get(email);
+  const result = validateCode(pendingUsers, email, code);
 
-  if (!pending) {
-    return res.render('login/verify', { email, error: 'El código ha expirado o no se ha solicitado uno.' });
-  }  
+  if (!result.success)
+    return renderError(res, 'login/verify', result.error, { email });
 
-  const isExpired = Date.now() > pending.expiresAt;
+  const { username, hashedPassword } = result.data;
 
-  if (isExpired) {
-    pendingUsers.delete(email);
-    return res.render('login/verify', { email, error: 'El código ha expirado. Reenvíalo de nuevo.' });
-  }
-
-  if (pending.code !== code) {
-    return res.render('login/verify', { email, error: 'Código inválido.' });
-  }
-
-  await db.query(
-    `INSERT INTO usuarios (username, email, password, is_verified, verification_code) VALUES (?, ?, ?, 1, NULL)`,
-    [pending.username, email, pending.hashedPassword]
-  );
-
+  await user.insertUser({ username, email, password: hashedPassword });
   pendingUsers.delete(email);
-
   res.redirect('/login');
 };
 
-export const resendCode = async (req, res) => {
-    const { email } = req.body;
-    const newCode = generateCode();
-  
-    await db.query(`UPDATE usuarios SET verification_code = ? WHERE email = ?`, [newCode, email]);
-  
-    await transporter.sendMail({
-      from: 'la Vega Tech <darlinlvalde@gmail.com>',
-      to: email,
-      subject: 'Nuevo código de verificación',
-      text: `Tu nuevo código es: ${newCode}`
-    });
-  
-    res.redirect(`/verify?email=${email}&info=reenviado`);
-  };
+auth.resendCode = async (req, res) => {
+  const { email, type } = req.body;
+  const isReset = type === 'reset';
 
-export const login = async (req, res) => {
-    const { email, password } = req.body;
-  
-    const [rows] = await db.query(`SELECT * FROM usuarios WHERE email = ?`, [email]);
-    if (!rows.length) {
-      return res.render('login/login', { error: 'Correo no registrado', email });
+  const store = isReset ? resetPending : pendingUsers;
+  const existing = store.get(email);
+  const now = Date.now();
+
+  if (existing && existing.lastSent && now - existing.lastSent < 3 * 60 * 1000) {
+    const remaining = Math.ceil((3 * 60 * 1000 - (now - existing.lastSent)) / 1000);
+    const msg = `Debes esperar ${remaining} segundos antes de reenviar el código.`;
+
+    if (isReset) {
+      return res.render('login/code', { email, error: msg });
+    } else {
+      return res.redirect(`/verify?email=${email}&info=espera`);
     }
-  
-    const user = rows[0];
-  
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.render('login/login', { error: 'Contraseña incorrecta', email });
-    }
-  
-    if (!user.is_verified) {
-      return res.render('login/login', { error: 'Primero debes verificar tu correo', email });
-    }
-  
-    return res.redirect('/');
-  };
-
-const resetPending = new Map();
-
-export const recuperarPassword = async (req, res) => {
-  const { email } = req.body;
-
-  const [users] = await db.query(`SELECT * FROM usuarios WHERE email = ?`, [email]);
-  if (!users.length) {
-    return res.render('login/email', { error: 'Correo no registrado', email });
   }
 
-  const verificationCode = generateCode();
-  const expiresAt = Date.now() + 10 * 60 * 1000;
+  const newCode = generateCode();
+  const expiresAt = now + 10 * 60 * 1000;
 
-  resetPending.set(email, { code: verificationCode, expiresAt });
+  store.set(email, {...(existing || {}), code: newCode, expiresAt, lastSent: now});
 
-  await transporter.sendMail({
-    from: 'La Vega Tech <darlinlvaldez@gmail.com>',
-    to: email,
-    subject: 'Código para recuperación de contraseña',
-    text: `Tu código para restablecer la contraseña es: ${verificationCode}. Este código expirará en 10 minutos.`
-  });
+  const subject = isReset
+    ? 'Nuevo código para recuperación de contraseña'
+    : 'Nuevo código de verificación';
+
+  const text = `Tu nuevo código es: ${newCode}`;
+
+  await sendEmail(email, subject, text);
+
+  if (isReset) {
+    return res.render('login/code', { email, error: null });
+  } else {
+    return res.redirect(`/verify?email=${email}&info=reenviado`);
+  }
+};
+
+auth.login = async (req, res) => {
+  const { email, password } = req.body;
+
+  const foundUser = await user.getUserByEmail(email);
+  if (!foundUser) return renderError(res, 'login/login', 'Correo no registrado', { email });
+  
+  const isMatch = await bcrypt.compare(password, foundUser.password);
+  if (!isMatch) return renderError(res, 'login/login', 'Contraseña incorrecta', { email });
+  if (!foundUser.is_verified) return renderError(res, 'login/login', 'Primero debes verificar tu correo', { email });
+
+res.redirect('/');
+};
+
+auth.forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  const foundUser = await user.getUserByEmail(email);
+  if (!foundUser) return renderError(res, 'login/email', 'Correo no registrado', { email });
+
+  const code = generateCode();
+  resetPending.set(email, { code, expiresAt: Date.now() + 10 * 60 * 1000 });
+  await sendEmail(email, 'Código para recuperación de contraseña', `Tu código es: ${code}. Expira en 10 minutos.`);
 
   res.render('login/code', { email, error: null });
 };
 
-export const verificarCodigoReset = (req, res) => {
+auth.verifyResetCode  = (req, res) => {
   const { email, code } = req.body;
-  const pending = resetPending.get(email);
+  const result = validateCode(resetPending, email, code);
 
-  if (!pending) {
-    return res.render('login/code', { email, error: 'El código ha expirado o no se ha solicitado uno.' });
-  }
-
-  if (Date.now() > pending.expiresAt) {
-    resetPending.delete(email);
-    return res.render('login/code', { email, error: 'El código ha expirado. Solicita uno nuevo.' });
-  }
-
-  if (pending.code !== code) {
-    return res.render('login/code', { email, error: 'Código inválido.' });
-  }
+  if (!result.success)
+    return renderError(res, 'login/code', result.error, { email });
 
   res.render('login/newpass', { email, error: null });
 };
 
-export const reenviarCodigoReset = async (req, res) => {
-  const { email } = req.body;
-  const newCode = generateCode();
-  const expiresAt = Date.now() + 10 * 60 * 1000;
-
-  resetPending.set(email, { code: newCode, expiresAt });
-
-  await transporter.sendMail({
-    from: 'La Vega Tech <darlinlvaldez@gmail.com>',
-    to: email,
-    subject: 'Nuevo código para recuperación de contraseña',
-    text: `Tu nuevo código es: ${newCode}`
-  });
-
-  res.render('login/code', { email, error: null });
-};
-
-export const resetearPassword = async (req, res) => {
+auth.updatePassword = async (req, res) => {
   const { email, password, confirm } = req.body;
 
-  if (password !== confirm) {
-    return res.render('login/newpass', { email, error: 'Las contraseñas no coinciden.' });
-  }
+  if (password !== confirm)
+    return renderError(res, 'login/newpass', 'Las contraseñas no coinciden.', { email });
 
-  const pending = resetPending.get(email);
-  if (!pending) {
-    return res.render('login/email', { error: 'No hay solicitud de recuperación activa.', email });
-  }
+  if (!resetPending.get(email))
+    return renderError(res, 'login/email', 'No hay solicitud de recuperación activa.', { email });
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  await db.query(`UPDATE usuarios SET password = ? WHERE email = ?`, [hashedPassword, email]);
+  const hashed = await hashPassword(password);
+  await user.updatePassword(email, hashed);
 
   resetPending.delete(email);
-
   res.redirect('/login');
 };
+
+export default auth;
