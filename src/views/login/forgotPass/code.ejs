@@ -9,8 +9,9 @@
     <h2>Ingresar el código de verificación</h2>
 <p>Para tu seguridad, enviamos el código a tu correo electrónico <%= email %>.</p>
 
-<form method="POST" action="/api/auth/verifyResetCode">
+<form method="POST" action="/api/auth/verifyCode">
   <input type="hidden" name="email" value="<%= email %>">
+  <input type="hidden" name="type" value="reset">
   <input type="text" name="code" placeholder="Código de verificación" required>
   <button type="submit">Enviar código</button>
 </form>

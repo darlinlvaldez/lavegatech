@@ -12,7 +12,7 @@ router.post('/login', auth.login);
 
 // FORGOT-PASSWORD
 router.post('/forgotPassword', auth.forgotPassword);
-router.post('/verifyResetCode', auth.verifyResetCode);
 router.post('/newPassword', auth.updatePassword);
+router.post('/contact', auth.formEmail);
 
 export default router;

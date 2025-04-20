@@ -59,14 +59,21 @@ auth.register = async (req, res) => {
 auth.showVerifyForm = (req, res) => res.render('login/verify', { email: req.query.email });
 
 auth.verifyCode = async (req, res) => {
-  const { email, code } = req.body;
-  const result = validateCode(pendingUsers, email, code);
+  const { email, code, type } = req.body;
 
-  if (!result.success)
-    return renderError(res, 'login/verify', result.error, { email });
+  const store = type === 'reset' ? resetPending : pendingUsers;
+  const result = validateCode(store, email, code);
+
+  if (!result.success) {
+    const view = type === 'reset' ? 'login/forgotPass/code' : 'login/verify';
+    return renderError(res, view, result.error, { email });
+  }
+
+  if (type === 'reset') {
+    return res.render('login/forgotPass/newpass', { email, error: null });
+  }
 
   const { username, hashedPassword } = result.data;
-
   await user.insertUser({ username, email, password: hashedPassword });
   pendingUsers.delete(email);
   res.redirect('/login');
@@ -85,7 +92,7 @@ auth.resendCode = async (req, res) => {
     const msg = `Debes esperar ${remaining} segundos antes de reenviar el código.`;
 
     if (isReset) {
-      return res.render('login/code', { email, error: msg });
+      return res.render('login/forgotPass/code', { email, error: msg });
     } else {
       return res.redirect(`/verify?email=${email}&info=espera`);
     }
@@ -105,7 +112,7 @@ auth.resendCode = async (req, res) => {
   await sendEmail(email, subject, text);
 
   if (isReset) {
-    return res.render('login/code', { email, error: null });
+    return res.render('login/forgotPass/code', { email, error: null });
   } else {
     return res.redirect(`/verify?email=${email}&info=reenviado`);
   }
@@ -128,33 +135,23 @@ auth.forgotPassword = async (req, res) => {
   const { email } = req.body;
 
   const foundUser = await user.getUserByEmail(email);
-  if (!foundUser) return renderError(res, 'login/email', 'Correo no registrado', { email });
+  if (!foundUser) return renderError(res, 'login/forgotPass/email', 'Correo no registrado', { email });
 
   const code = generateCode();
   resetPending.set(email, { code, expiresAt: Date.now() + 10 * 60 * 1000 });
   await sendEmail(email, 'Código para recuperación de contraseña', `Tu código es: ${code}. Expira en 10 minutos.`);
 
-  res.render('login/code', { email, error: null });
-};
-
-auth.verifyResetCode  = (req, res) => {
-  const { email, code } = req.body;
-  const result = validateCode(resetPending, email, code);
-
-  if (!result.success)
-    return renderError(res, 'login/code', result.error, { email });
-
-  res.render('login/newpass', { email, error: null });
+  res.render('login/forgotPass/code', { email, error: null });
 };
 
 auth.updatePassword = async (req, res) => {
   const { email, password, confirm } = req.body;
 
   if (password !== confirm)
-    return renderError(res, 'login/newpass', 'Las contraseñas no coinciden.', { email });
+    return renderError(res, 'login/forgotPass/newpass', 'Las contraseñas no coinciden.', { email });
 
   if (!resetPending.get(email))
-    return renderError(res, 'login/email', 'No hay solicitud de recuperación activa.', { email });
+    return renderError(res, 'login/forgotPass/email', 'No hay solicitud de recuperación activa.', { email });
 
   const hashed = await hashPassword(password);
   await user.updatePassword(email, hashed);
@@ -162,5 +159,28 @@ auth.updatePassword = async (req, res) => {
   resetPending.delete(email);
   res.redirect('/login');
 };
+
+auth.formEmail = async (req, res) => { 
+  const { nombre, correo, asunto, mensaje } = req.body;
+
+  if (!nombre || !correo || !asunto || !mensaje) {
+    return res.status(400).send('Todos los campos son obligatorios');
+  } 
+
+  const mailOptions = {
+    from: `"${nombre}" <${correo}>`,
+    to: config.EMAIL_SENDER,
+    subject: asunto,
+    text: `Mensaje de ${nombre} <${correo}>:\n\n${mensaje}`
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.redirect('/mobiles/contact');
+  } catch (error) {
+    console.error('Error al enviar correo:', error);
+    res.status(500).send('Error al enviar el correo');
+  }
+}
 
 export default auth;

@@ -29,12 +29,12 @@ app.use(express.json());
 
 app.use(cors())
     
-app.use('/api/auth', auth); 
-
 app.use((req, res, next) => {
   res.locals.user = req.user || null;
   next();
 });
+
+app.use('/api/auth', auth); 
 
 app.use('/mobiles', mobiles);
 
@@ -62,6 +62,11 @@ app.post('/mobiles/cart/add', (req, res) => {
 app.post('/logout', async (req, res) => {
   res.clearCookie('token');
   res.redirect('/login');
+});
+
+app.post('/api/auth/enviar-codigo', (req, res) => {
+  const { email } = req.body;
+  res.render('login/verify', { email });
 });
 
 app.get('/mobiles/mant', (req, res) => {
@@ -102,21 +107,16 @@ app.get('/verify', (req, res) => {
   });
 });
 
-app.post('/api/auth/enviar-codigo', (req, res) => {
-  const { email } = req.body;
-  res.render('login/verify', { email });
-});
-
 app.get('/email', (req, res) => {
-  res.render('login/email', { error: null, email: null });
+  res.render('login/forgotPass/email', { error: null, email: null });
 });
 
 app.get('/code', (req, res) => {
-  res.render('login/code', { error: null, email: null });
+  res.render('login/forgotPass/code', { error: null, email: null });
 });
 
 app.get('/newpass', (req, res) => {
-  res.render('login/newpass', { error: null, email: null });
+  res.render('login/forgotPass/newpass', { error: null, email: null });
 });
 
 app.get('/mobiles/store', (req, res) => {

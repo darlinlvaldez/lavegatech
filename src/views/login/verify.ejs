@@ -10,6 +10,7 @@
 <p>Hemos enviado un código a tu correo.</p>
 <form method="POST" action="/api/auth/verifyCode">
   <input type="hidden" name="email" value="<%= email %>">
+  <input type="hidden" name="type" value="verify">
   <input type="text" name="code" placeholder="Código de verificación" required>
   <button type="submit">Verificar</button>
 </form>
