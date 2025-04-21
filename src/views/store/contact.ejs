@@ -43,21 +43,24 @@
             <div class="fila-campos">
                 <div class="campo-formulario">
                     <label for="nombre">Nombre</label>
-                    <input type="text" class="entrada-texto" id="nombre" name="nombre" placeholder="Nombre">
+                    <input type="text" class="entrada-texto" id="nombre" name="nombre" placeholder="Nombre" value="<%= nombre || '' %>">
                 </div>
                 <div class="campo-formulario">
                     <label for="correo">Correo</label>
-                    <input type="email" class="entrada-texto" id="correo" name="correo" placeholder="Correo">
+                    <input type="email" class="entrada-texto" id="correo" name="correo" placeholder="Correo" value="<%= correo || '' %>">
                 </div>
             </div>
             <div class="campo-formulario">
                 <label for="asunto">Asunto</label>
-                <input type="text" class="entrada-texto" id="asunto" name="asunto" placeholder="Asunto">
+                <input type="text" class="entrada-texto" id="asunto" name="asunto" placeholder="Asunto" value="<%= asunto || '' %>">
             </div>
             <div class="campo-formulario">
                 <label for="mensaje" style="margin-top: 20px; display: block;">Mensaje</label>
                 <textarea class="entrada-texto" id="mensaje" name="mensaje" placeholder="Escribe tu mensaje..." rows="8"></textarea>
-            </div>
+            </div><br>
+            <% if (error) { %>
+                <p style="color:red"><%= error %></p>
+                <% } %>
             <div class="fila-boton">
                 <button type="submit" class="boton-enviar">Enviar</button>
             </div>

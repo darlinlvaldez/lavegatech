@@ -128,7 +128,7 @@ app.get('/mobiles/product', (req, res) => {
 });
 
 app.get('/mobiles/contact', (req, res) => {
-  res.render('store/contact');  
+  res.render('store/contact', {nombre: '', correo: '', mensaje: '', asunto: '', error: []});
 });
 
 app.get('/mobiles/about', (req, res) => {

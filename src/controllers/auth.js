@@ -27,10 +27,9 @@ const hashPassword = password => bcrypt.hash(password, 10);
 
 const validateCode = (map, email, code) => {
   const pending = map.get(email);
-  if (!pending) return { error: 'El código ha expirado o no se ha solicitado uno.' };
-  if (Date.now() > pending.expiresAt) {
-    map.delete(email);
-    return { error: 'El código ha expirado. Solicita uno nuevo.' };
+  if (!pending) return { error: 'El código ha expirado.' };
+  if (Date.now() > pending.expiresAt) {map.delete(email);
+    return { error: 'El código ha expirado. Solicita uno nuevo.'};
   }
   if (pending.code !== code) return { error: 'Código inválido.' };
   return { success: true, data: pending };
@@ -160,12 +159,14 @@ auth.updatePassword = async (req, res) => {
   res.redirect('/login');
 };
 
-auth.formEmail = async (req, res) => { 
+auth.formEmail = async (req, res) => {
   const { nombre, correo, asunto, mensaje } = req.body;
 
   if (!nombre || !correo || !asunto || !mensaje) {
-    return res.status(400).send('Todos los campos son obligatorios');
-  } 
+    return res.render('store/contact', {
+      error: 'Todos los campos son obligatorios.',
+      nombre, correo, asunto, mensaje});
+  }
 
   const mailOptions = {
     from: `"${nombre}" <${correo}>`,
@@ -179,8 +180,10 @@ auth.formEmail = async (req, res) => {
     res.redirect('/mobiles/contact');
   } catch (error) {
     console.error('Error al enviar correo:', error);
-    res.status(500).send('Error al enviar el correo');
+    return res.render('store/contact', {
+      error: 'Ocurrió un error al enviar el correo.',
+      nombre, correo, asunto, mensaje});
   }
-}
+};
 
 export default auth;
