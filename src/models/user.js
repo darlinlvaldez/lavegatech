@@ -2,7 +2,7 @@ import db from "../database/mobiles.js";
 
 const user = {};
 
-user.getUserByEmail = async (email) => {
+user.findByEmail = async (email) => {
   const [rows] = await db.query("SELECT * FROM usuarios WHERE email = ?", [email]);
   return rows[0];
 };

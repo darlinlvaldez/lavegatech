@@ -1,20 +1,22 @@
-import nodemailer from "nodemailer";
+import nodemailer from 'nodemailer';
+import config from '../../config.js';
 
-export const sendVerificationEmail = async (to, code) => {
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'darlinlvaldez@gmail.com',
-      pass: 'darlin2000',
-    },
-  });
+const emailService = {}
 
-  const mailOptions = {
-    from: '"La Vega Tech" <darlinlvaldez@gmail.com>',
-    to,
-    subject: 'Código de verificación',
-    html: `<p>Tu código de verificación es: <strong>${code}</strong></p>`,
-  };
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: config.EMAIL_SENDER,
+    pass: config.EMAIL_PASSWORD
+  }
+});
 
-  await transporter.sendMail(mailOptions);
-};
+const sendEmail = (to, subject, text) =>
+  transporter.sendMail({ from: `La Vega Tech <${config.EMAIL_SENDER}>`, to, subject, text });
+
+emailService.sendEmail = sendEmail;
+
+emailService.sendVerification = (to, code) =>
+  sendEmail(to, 'Código de verificación', `Tu código es: ${code}`);
+
+export default emailService;

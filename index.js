@@ -2,7 +2,6 @@
 import express from 'express';
 import fileUpload from "express-fileupload";
 import path from 'path';
-import cors from 'cors'
 import config from './config.js';
 
 // Controller
@@ -27,8 +26,6 @@ app.use(express.static(path.join(process.cwd(), 'public')));
 app.disable('x-powered-by');
 app.use(express.json());
 
-app.use(cors())
-    
 app.use((req, res, next) => {
   res.locals.user = req.user || null;
   next();

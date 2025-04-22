@@ -1,18 +1,24 @@
 import express from 'express';
 import auth from '../controllers/auth.js';
+import validate from '../middlewares/validateRequest.js';
+import request from './schemas/auth.js';
 
 const router = express.Router();
 
 // LOGIN
 router.get('/verify', auth.showVerifyForm);
-router.post('/register', auth.register);
-router.post('/verifyCode', auth.verifyCode);
+router.post('/login', validate(request.login), auth.login); 
+router.post('/register', validate(request.register), auth.register);
 router.post('/resendCode', auth.resendCode);
-router.post('/login', auth.login); 
+
+// LOGIN AND FORGOT-PASSWORD
+router.post('/verifyCode', validate(request.verifyCode), auth.verifyCode);
 
 // FORGOT-PASSWORD
-router.post('/forgotPassword', auth.forgotPassword);
-router.post('/newPassword', auth.updatePassword);
-router.post('/contact', auth.formEmail);
+router.post('/email', validate(request.email), auth.email);
+router.post('/newPassword', validate(request.updatePassword), auth.updatePassword);
+
+// SEND EMAIL CONTACT
+router.post('/contact', validate(request.formEmail), auth.formEmail);
 
 export default router;
