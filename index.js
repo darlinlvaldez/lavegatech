@@ -40,7 +40,7 @@ app.use(session({
 }));
 
 app.use((req, res, next) => {
-  console.log('Sesión actual:', req.session);
+  //console.log('Sesión actual:');
   res.locals.usuario = req.session.user;
   next();
 });
@@ -120,6 +120,8 @@ app.get('/mobiles/mant', (req, res) => {
 
 app.get('/', async (req, res) => {
   try {
+
+    //console.log('home')
     const productos = await principal.obtenerProductos();
     const categorias = await principal.obtenerCategorias();
     const recomendados = await principal.obtenerRecomendados();

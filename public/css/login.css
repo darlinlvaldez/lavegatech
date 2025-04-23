@@ -1,0 +1,178 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.logo-container {
+    margin: 30px 0;
+    text-align: center;
+}   
+
+.logo img {
+    width: 130px;
+    max-width: 200px;
+    height: auto;
+}
+
+.logo {
+    max-width: 150px;
+    height: auto;
+}
+
+.login-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 32px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+input {
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 1px solid #b3b3b3;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border 0.3s;
+}
+
+input:focus {
+    outline: none;
+    border-color: #1f51bd;
+    box-shadow: 5 10 12 2px rgb(8, 33, 172);
+}
+
+button {
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+button {
+    background-color: #d62839;
+}
+
+.links {
+    text-align: center;
+    margin-top: 20px;
+    color: #000000;
+}
+
+a {
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.show{
+    width: 20px;
+    height: 14px;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .login-container {
+      padding: 1.5rem;
+      width: 85%;
+    }
+  
+    h2 {
+      font-size: 1.5rem;
+    }
+  
+    input, button {
+      padding: 0.675rem 0.875rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    body {
+      padding: 0 1rem;
+    }
+  
+    .logo-container {
+      margin: 1.5rem 0 0.5rem;
+    }
+  
+    .logo img {
+      width: 110px;
+    }
+  
+    .login-container {
+      padding: 1.25rem;
+      width: 100%;
+    }
+  
+    h2 {
+      font-size: 1.375rem;
+      margin-bottom: 1.25rem;
+    }
+  
+    input {
+      margin-bottom: 1rem;
+    }
+  
+    button {
+      padding: 0.625rem;
+    }
+  }
+  
+  /* Pequeñas pantallas (ej: smartphones pequeños) */
+  @media (max-width: 360px) {
+    .login-container {
+      padding: 1rem;
+    }
+  
+    h2 {
+      font-size: 1.25rem;
+    }
+  
+    input, button {
+      font-size: 0.9375rem;
+    }
+  }
+  
+  /* Estilos para pantallas grandes */
+  @media (min-width: 1200px) {
+    .login-container {
+      padding: 2.5rem;
+    }
+  }
+  
+  /* Clase show (si es necesaria) */
+  .show {
+    width: 20px;
+    height: 14px;
+  }

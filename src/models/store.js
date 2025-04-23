@@ -50,7 +50,6 @@ FROM productos p
 JOIN categorias c ON p.categoria_id = c.id
 LEFT JOIN variantes v ON p.id = v.producto_id
 ${whereClause}
-GROUP BY p.id 
 ${orderByClause}
 LIMIT ? OFFSET ?
 

@@ -19,10 +19,7 @@ product.obtenerDetalles = async (id) => {
 FROM productos p
 JOIN categorias c ON p.categoria_id = c.id
 LEFT JOIN variantes v ON p.id = v.producto_id
-WHERE p.id = ?
-GROUP BY 
-    p.id
-    `;
+WHERE p.id = ?`;
 
     try {
         const [results] = await db.query(query, [id]);
@@ -72,14 +69,13 @@ product.obtenerRelacionados = async (productoId, categoriaId) => {
           p.descuento,
           p.fecha,
           c.categoria,
-          MAX(v.color) AS color, 
-    MAX(v.stock) AS stock,
-    MAX(v.img) AS imagen
+          v.color AS color, 
+    v.stock AS stock,
+    v.img AS imagen
       FROM productos p
       JOIN categorias c ON p.categoria_id = c.id
       LEFT JOIN variantes v ON p.id = v.producto_id 
         WHERE p.id != ? AND p.categoria_id = ?
-        GROUP BY p.id
         LIMIT 4
     `;
     

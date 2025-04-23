@@ -2,23 +2,31 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Registro - Tu Tienda</title>
+  <title>LaVegaTech</title>
+  <link rel="icon" type="image/png" href="/img/lavegatech-logo.png">  
+  <link type="text/css" rel="stylesheet" href="/css/login.css" />
 </head>
 <body>
+
+  <div class="logo-container">
+    <a href="/" class="logo"><img src="/img/lavegatech-logo.png" alt=""></a>
+</div>
+
+<div class="login-container">
   <h2>Crear cuenta</h2>
 
   <form action="/api/auth/register" method="POST">
-    <label>Nombre de usuario:</label><br>
-    <input type="text" name="username" value="<%= username || '' %>" required><br><br>
+    <label>Nombre de usuario:</label>
+    <input type="text" name="username" value="<%= username || '' %>" required>
 
-    <label>Correo electrónico:</label><br>
-    <input type="email" name="email" value="<%= email || '' %>" required><br><br>
+    <label>Correo electrónico:</label>
+    <input type="email" name="email" value="<%= email || '' %>" required>
 
-    <label>Contraseña:</label><br>
-    <input type="password" name="password" required><br><br>
+    <label>Contraseña:</label>
+    <input type="password" name="password" required>
     
-    <label>Confirmar contraseña:</label><br>
-    <input type="password" name="confirmPassword" required><br><br>
+    <label>Confirmar contraseña:</label>
+    <input type="password" name="confirmPassword" required>
 
     <button type="submit">Registrarse</button>
   </form>
@@ -26,8 +34,10 @@
   <% if (error) { %>
     <p style="color:red"><%= error %></p>
   <% } %>
-  
 
+  <div class="links">
   <p>¿Ya tienes una cuenta? <a href="/login">Inicia sesión</a></p>
+</div>
+
 </body>
 </html>

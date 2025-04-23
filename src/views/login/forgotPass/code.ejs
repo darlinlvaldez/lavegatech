@@ -1,28 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LaVegaTech</title>
+  <link rel="icon" type="image/png" href="/img/lavegatech-logo.png">
+  <link type="text/css" rel="stylesheet" href="/css/login.css" />
+
 </head>
 <body>
+
+  <div class="logo-container">
+    <a href="/" class="logo"><img src="/img/lavegatech-logo.png" alt=""></a>
+  </div>
+
+  <div class="login-container">
     <h2>Ingresar el código de verificación</h2>
-<p>Para tu seguridad, enviamos el código a tu correo electrónico <%= email %>.</p>
+    <p>Para tu seguridad, enviamos el código a tu correo electrónico <%= email %>.</p>
 
-<form method="POST" action="/api/auth/verifyCode">
-  <input type="hidden" name="email" value="<%= email %>">
-  <input type="hidden" name="type" value="reset">
-  <input type="text" name="code" placeholder="Código de verificación" required>
-  <button type="submit">Enviar código</button>
-</form>
+    <form method="POST" action="/api/auth/verifyCode">
+      <input type="hidden" name="email" value="<%= email %>">
+      <input type="hidden" name="type" value="reset">
+      <input type="text" name="code" placeholder="Código de verificación" required>
+      <button type="submit">Enviar código</button>
+    </form>
 
-<form method="POST" action="/api/auth/resendCode">
-  <input type="hidden" name="email" value="<%= email %>">
-  <input type="hidden" name="type" value="reset">
-  <button type="submit">Reenviar código</button>
-</form>
+    <form method="POST" action="/api/auth/resendCode">
+      <input type="hidden" name="email" value="<%= email %>">
+      <input type="hidden" name="type" value="reset">
+      <button type="submit">Reenviar código</button>
+    </form>
+  </div>
 
-<% if (error) { %><p style="color:red"><%= error %></p><% } %>
+  <% if (error) { %>
+    <p style="color:red"><%= error %></p>
+  <% } %>
 
 </body>
+
 </html>

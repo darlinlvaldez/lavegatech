@@ -26,7 +26,7 @@ principal.buscarProductos = async (query, categoria) => {
       params.push(categoria);
   }
   
-  searchQuery += ' GROUP BY p.id LIMIT 10';
+  searchQuery += 'LIMIT 10';
   
   try {
       const [results] = await db.query(searchQuery, params);
@@ -52,7 +52,6 @@ principal.obtenerProductos = async (categoria) => {
       JOIN categorias c ON p.categoria_id = c.id
       LEFT JOIN variantes v ON p.id = v.producto_id 
       ${categoria ? `WHERE c.categoria = ?` : ''}
-      GROUP BY p.id 
   `;
   
   try {
@@ -90,7 +89,6 @@ principal.obtenerRecomendados = async () => {
       FROM productos p
       JOIN categorias c ON p.categoria_id = c.id
       LEFT JOIN variantes v ON p.id = v.producto_id 
-      GROUP BY p.id
       LIMIT 20;
   `;
   
