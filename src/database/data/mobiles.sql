@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-04-2025 a las 04:05:01
+-- Tiempo de generación: 23-04-2025 a las 04:42:23
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -621,6 +621,18 @@ INSERT INTO `p_marcas` (`id`, `nombre`, `logo`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `sessions`
+--
+
+CREATE TABLE `sessions` (
+  `session_id` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `expires` int(11) UNSIGNED NOT NULL,
+  `data` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `usuarios`
 --
 
@@ -638,7 +650,8 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `username`, `email`, `password`, `is_verified`, `created_at`) VALUES
-(40, 'nilrad', 'nilradlvaldez@gmail.com', '$2b$10$U1NxuwgRdyme0x.DagoG8.HKLSSi0lR2.yLE6sDnwf4jI4COjZlXG', 1, '2025-04-22 00:10:01');
+(40, 'nilrad', 'nilradlvaldez@gmail.com', '$2b$10$U1NxuwgRdyme0x.DagoG8.HKLSSi0lR2.yLE6sDnwf4jI4COjZlXG', 1, '2025-04-22 00:10:01'),
+(41, 'darlin', 'darlinlvaldez@gmail.com', '$2b$10$4OAHTq0p2M/YdynnE2D3iuaCNN9MawyvsfOYsxTevHIhrb.U9x.oG', 1, '2025-04-23 00:23:05');
 
 -- --------------------------------------------------------
 
@@ -792,6 +805,12 @@ ALTER TABLE `p_marcas`
   ADD UNIQUE KEY `nombre` (`nombre`);
 
 --
+-- Indices de la tabla `sessions`
+--
+ALTER TABLE `sessions`
+  ADD PRIMARY KEY (`session_id`);
+
+--
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
@@ -909,7 +928,7 @@ ALTER TABLE `p_marcas`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT de la tabla `variantes`
