@@ -6,13 +6,14 @@ import request from './schemas/auth.js';
 const router = express.Router();
 
 // LOGIN
+router.get('/logout', auth.logout);
 router.get('/verify', auth.showVerifyForm);
 router.post('/login', validate(request.login), auth.login); 
 router.post('/register', validate(request.register), auth.register);
-router.post('/resendCode', auth.resendCode);
 
 // LOGIN AND FORGOT-PASSWORD
 router.post('/verifyCode', validate(request.verifyCode), auth.verifyCode);
+router.post('/resendCode', auth.resendCode);
 
 // FORGOT-PASSWORD
 router.post('/email', validate(request.email), auth.email);

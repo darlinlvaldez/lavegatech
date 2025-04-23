@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.config({ path: '.env.development' });
+dotenv.config({ path: '.env.development'});
 
 const config = {
 
@@ -18,6 +18,9 @@ const config = {
   // EMAIL
   EMAIL_SENDER: process.env.EMAIL_SENDER,
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
+
+  // SECRET KEY
+  SESSION_SECRET: process.env.SESSION_SECRET
 };
 
 export default config;

@@ -118,6 +118,12 @@ auth.login = async (req, res) => {
   if (!foundUser.is_verified)
     return renderError(res, 'login/login', 'Primero debes verificar tu correo', { email });
 
+   req.session.user = {
+    id: foundUser.id,
+    email: foundUser.email,
+    username: foundUser.username
+  };
+
   res.redirect('/');
 };
 
@@ -148,6 +154,16 @@ auth.updatePassword = async (req, res) => {
 
   resetPending.delete(email);
   res.redirect('/login');
+};
+
+auth.logout = (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Error al cerrar sesión:', err);
+      return res.status(500).send('Error al cerrar sesión');
+    }
+    res.redirect('/login');
+  });
 };
 
 auth.formEmail = async (req, res) => {
