@@ -6,8 +6,8 @@ import request from './schemas/auth.js';
 const router = express.Router();
 
 // LOGIN
-router.get('/logout', auth.logout);
 router.get('/verify', auth.showVerifyForm);
+router.post('/logout', auth.logout);
 router.post('/login', validate(request.login), auth.login); 
 router.post('/register', validate(request.register), auth.register);
 
@@ -21,5 +21,6 @@ router.post('/newPassword', validate(request.updatePassword), auth.updatePasswor
 
 // SEND EMAIL CONTACT
 router.post('/contact', validate(request.formEmail), auth.formEmail);
+
 
 export default router;

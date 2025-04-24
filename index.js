@@ -1,13 +1,13 @@
 // Dependencias
 import express from 'express';
 import fileUpload from "express-fileupload";
-import session from 'express-session';
 import path from 'path';
 import config from './config.js'; 
-import sessionStore from './src/database/sessions.js';
 
 // Middleware
 import isAuth from './src/middlewares/auth.js';
+import session from './src/middlewares/session.js';
+import userLocals from './src/middlewares/userLocals.js';
 
 // Controller
 import principal from './src/models/principal.js';
@@ -20,6 +20,10 @@ import auth from './src/routes/auth.js';
 
 const app = express();
 
+app.use(session);
+
+app.use(userLocals);
+
 app.use(fileUpload({}));
 
 app.use(express.urlencoded({ extended: true }));
@@ -30,20 +34,6 @@ app.use(express.static(path.join(process.cwd(), 'public')));
 
 app.disable('x-powered-by');
 app.use(express.json());
-
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  store: sessionStore,
-  cookie: { secure: false, maxAge: 3600000, httpOnly: true, sameSite: 'strict'} 
-}));
-
-app.use((req, res, next) => {
-  //console.log('Sesión actual:');
-  res.locals.usuario = req.session.user;
-  next();
-});
 
 app.use('/api/auth', auth); 
 
@@ -73,14 +63,6 @@ app.post('/mobiles/cart/add', (req, res) => {
 app.post('/api/auth/enviar-codigo', (req, res) => {
   const { email } = req.body;
   res.render('login/verify', { email });
-});
-
-app.post('/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) console.error(err);
-    res.clearCookie('connect.sid');
-    res.redirect('/login');
-  });
 });
 
 app.get('/perfil', isAuth, (req, res) => {
@@ -120,8 +102,6 @@ app.get('/mobiles/mant', (req, res) => {
 
 app.get('/', async (req, res) => {
   try {
-
-    //console.log('home')
     const productos = await principal.obtenerProductos();
     const categorias = await principal.obtenerCategorias();
     const recomendados = await principal.obtenerRecomendados();

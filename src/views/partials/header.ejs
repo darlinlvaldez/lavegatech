@@ -68,10 +68,9 @@
             <ul class="header-links pull-right">
                 <li><a href="#"><i class="fa fa-dollar"></i>RD</a></li>
                 <% if (usuario) { %>
-                    console.log("hola")
                     <li><a href="/profile"><i class="fa fa-user-o"></i>Mi Perfil</a></li>
                     <li>
-                        <form id="logout-form" action="/logout" method="POST" style="display: none;"></form>
+                        <form id="logout-form" action="/api/auth/logout" method="POST" style="display: none;"></form>
                         <a href="#" onclick="document.getElementById('logout-form').submit();">
                             <i class="fa fa-sign-out"></i> Cerrar Sesión
                         </a>
