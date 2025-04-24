@@ -13,9 +13,7 @@ import userLocals from './src/middlewares/userLocals.js';
 import principal from './src/models/principal.js';
 
 // Routes
-import mobiles from './src/routes/productos.js';
 import store from './src/routes/productos.js';
-import product from "./src/routes/productos.js";
 import auth from './src/routes/auth.js';
 
 const app = express();
@@ -37,27 +35,12 @@ app.use(express.json());
 
 app.use('/api/auth', auth); 
 
-app.use('/mobiles', mobiles);
-
 app.use('/', store);
 
-app.use("/product", product);
-
-app.post('/mobiles/mant', async (req, res) => {
+app.post(' /mant', async (req, res) => {
   const file = req.files.foto;
   await file.mv(file.name);
   res.status(200).send('ok');
-});
-
-app.post('/mobiles/cart/add', (req, res) => {
-  const { id, nombre, precio, cantidad, color, descuento, stock } = req.body;
-
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-  cart.push({ id, nombre, precio, cantidad, color, descuento, stock });
-
-  localStorage.setItem('cart', JSON.stringify(cart));
-
-  res.json({ success: true, message: "Producto agregado al carrito" });
 });
 
 app.post('/api/auth/enviar-codigo', (req, res) => {
@@ -95,7 +78,7 @@ app.get('/newpass', (req, res) => {
   res.render('login/forgotPass/newpass', { error: null, email: null });
 });
 
-app.get('/mobiles/mant', (req, res) => {
+app.get('/mant', (req, res) => {
   const data = { nombre: "iphone"}
   res.render('store/mant', data);
 });
@@ -113,27 +96,27 @@ app.get('/', async (req, res) => {
   }
 });
 
-app.get('/mobiles/store', (req, res) => {
+app.get('/store', (req, res) => {
   res.render('store/store')  
 });
 
-app.get('/mobiles/product', (req, res) => {
+app.get('/product', (req, res) => {
   res.render('store/product');  
 });
 
-app.get('/mobiles/contact', (req, res) => {
+app.get('/contact', (req, res) => {
   res.render('store/contact', {nombre: '', correo: '', mensaje: '', asunto: '', error: []});
 });
 
-app.get('/mobiles/about', (req, res) => {
+app.get('/about', (req, res) => {
   res.render('store/about');  
 });
 
-app.get('/mobiles/order', (req, res) => {
+app.get('/order', (req, res) => {
   res.render('store/order');  
 });
 
-app.get('/mobiles/cart', (req, res) => {
+app.get('/cart', (req, res) => {
   res.render('store/cart');
 });
 

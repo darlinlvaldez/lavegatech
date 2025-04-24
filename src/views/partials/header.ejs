@@ -108,7 +108,7 @@
                     
                         async function searchProducts(query, category) {
                         try {
-                            const response = await fetch(`/mobiles/search?q=${encodeURIComponent(query)}&category=${category}`);
+                            const response = await fetch(` /search?q=${encodeURIComponent(query)}&category=${category}`);
                             if (!response.ok) throw new Error('Error en la búsqueda');
                             return await response.json();
                         } catch (error) {
@@ -131,7 +131,7 @@
                             const productElement = document.createElement('div');
                             productElement.className = 'search-result-item';
                             productElement.innerHTML = `
-                            <a href="/mobiles/product/${product.id}${product.colores ? `?color=${encodeURIComponent(product.colores.split(',')[0])}` : ''}" style="display: flex; width: 100%;">
+                            <a href="/product/${product.id}${product.colores ? `?color=${encodeURIComponent(product.colores.split(',')[0])}` : ''}" style="display: flex; width: 100%;">
                                 <img src="${product.imagenes?.split(',')[0]}" alt="${product.nombre}">
                                 <div class="product-info">
                                     <h4>${product.nombre}</h4>
@@ -232,7 +232,7 @@
                                         if (cartList) {
                                             cartList.innerHTML += `
                                                 <div class="product-widget">
-                                                    <a href="/mobiles/product/${item.id}${item.colorSeleccionado ? `?color=${encodeURIComponent(item.colorSeleccionado)}` : ''}">
+                                                    <a href="/product/${item.id}${item.colorSeleccionado ? `?color=${encodeURIComponent(item.colorSeleccionado)}` : ''}">
                                                         <div class="product-img">
                                                             <img src="${item.imagen}" alt="${item.nombre}">
                                                         </div>
@@ -273,8 +273,8 @@
                                     <h5 id="cart-subtotal">SUBTOTAL: $0.00</h5>
                                 </div>
                                 <div class="cart-btns">
-                                    <a href="/mobiles/cart">Ver Carrito</a>
-                                    <a href="/mobiles/order">Procesar Pago <i class="fa fa-arrow-circle-right"></i></a>
+                                    <a href=" /cart">Ver Carrito</a>
+                                    <a href=" /order">Procesar Pago <i class="fa fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -309,9 +309,9 @@
 				<!-- NAV -->
 				<ul class="main-nav nav navbar-nav">
 					<li class="active"><a href="/">Inicio</a></li>
-					<li><a href="/mobiles/store">Productos</a></li>
-					<li><a href="/mobiles/contact">Contactanos</a></li>
-					<li><a href="/mobiles/about">Sobre nosotros</a></li>
+					<li><a href=" /store">Productos</a></li>
+					<li><a href=" /contact">Contactanos</a></li>
+					<li><a href=" /about">Sobre nosotros</a></li>
 					</ul>
 				</ul>
 				<!-- /NAV -->

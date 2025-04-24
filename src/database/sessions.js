@@ -12,6 +12,4 @@ const sessionStore = new MySQLStore({
   database: config.DB_DATABASE,
 });
 
-console.log('Store configurado:', sessionStore);
-
 export default sessionStore;

@@ -167,6 +167,7 @@ auth.logout = (req, res) => {
   });
 };
 
+
 auth.formEmail = async (req, res) => {
   const { nombre, correo, asunto, mensaje } = req.body;
 
@@ -181,7 +182,7 @@ auth.formEmail = async (req, res) => {
 
   try {
     await emailService.sendEmail(config.EMAIL_SENDER, asunto, formattedMessage);
-    res.redirect('/mobiles/contact');
+    res.redirect('/contact');
   } catch (error) {
     console.error('Error al enviar correo:', error);
     return res.render('store/contact', {

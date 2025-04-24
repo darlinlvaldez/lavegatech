@@ -1,4 +1,4 @@
-app.get('/mobiles/product/:id', async (req, res) => {
+app.get('/product/:id', async (req, res) => {
     const { id } = req.params;
     const { color } = req.query;
 
@@ -8,7 +8,7 @@ app.get('/mobiles/product/:id', async (req, res) => {
         if (!color && producto.colores) {
             const colores = producto.colores.split(',');
             const colorDefault = colores[0].trim();
-            return res.redirect(`/mobiles/product/${id}?color=${colorDefault}`);
+            return res.redirect(`/product/${id}?color=${colorDefault}`);
         }
 
         const colores = producto.colores.split(',');

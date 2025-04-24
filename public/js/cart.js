@@ -85,7 +85,7 @@ async function changeColor(select, productId) {
     const encodedColor = encodeURIComponent(color);
     
     cambiarImagen(productId, color);
-    history.replaceState({ color }, '', `/mobiles/product/${productId}?color=${encodedColor}`);
+    history.replaceState({ color }, '', `/product/${productId}?color=${encodedColor}`);
 
     const stockColor = await obtenerStock(productId, color);
     const cantidadInput = document.getElementById('cantidad');
@@ -98,7 +98,7 @@ async function changeColor(select, productId) {
 
 async function obtenerStock(productId, color) {
     try {
-        const response = await fetch(`/mobiles/stock/${productId}/${encodeURIComponent(color)}`);
+        const response = await fetch(`/stock/${productId}/${encodeURIComponent(color)}`);
         if (!response.ok) {
             throw new Error(`Error al obtener stock: ${response.statusText}`);
         }

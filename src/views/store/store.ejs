@@ -15,7 +15,7 @@
             return;
         }
 
-        fetch(`/mobiles/marcas-por-categoria?categorias=${categoriasSeleccionadas.join(',')}`)
+        fetch(` /marcas-por-categoria?categorias=${categoriasSeleccionadas.join(',')}`)
             .then(response => response.json())
             .then(marcasRelevantes => {
                 document.querySelectorAll('input[name="marca"]').forEach(checkbox => {
@@ -48,7 +48,7 @@
 
 		const pagina = 1;
 
-		window.location.href = `/mobiles/store/${pagina}?limite=${limite}&orden=${orden}&categoria=${categorias}
+		window.location.href = ` /store/${pagina}?limite=${limite}&orden=${orden}&categoria=${categorias}
 		&marca=${marcas}&precioMin=${precioMin}&precioMax=${precioMax}`;
 	}
 
@@ -193,7 +193,7 @@
 								<% productos.forEach(producto=> { %>
 									<div class="col-md-4 col-xs-6">
 										<div class="product">
-											<div class="product-img"> <a href="/mobiles/product/<%= producto.id %>?color=<%= producto.color %>">
+											<div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
 			    								<img src="<%= producto.imagen %>" alt="<%= producto.nombre %>" >
 												<div class="product-label">
 													<% if (producto.descuento> 0) { %>
@@ -262,7 +262,7 @@
 																<% if (pagina> 1) { %>
 																	<li class="pagination-prev">
 																		<a
-																			href="/mobiles/store/<%= pagina - 1 %>?limite=<%= limite %>&orden=<%= orden %>&categoria=<%= categorias.join(',') %>&marca=<%= marcas.join(',') %>&precioMin=<%= precioMin %>&precioMax=<%= precioMax %>">
+																			href=" /store/<%= pagina - 1 %>?limite=<%= limite %>&orden=<%= orden %>&categoria=<%= categorias.join(',') %>&marca=<%= marcas.join(',') %>&precioMin=<%= precioMin %>&precioMax=<%= precioMax %>">
 																			<img src="https://img.icons8.com/forma-thin-filled/24/back.png" alt="Anterior" width="20"
 																				height="20">
 																		</a>
@@ -273,14 +273,14 @@
 																	<% const end=Math.min(totalPages, pagina + 2); %>
 																	<% if (start> 1) { %>
 																		<li>
-																			<a href="/mobiles/store/1?limite=<%= limite %>&orden=<%= orden %>&categoria=<%= categorias.join(',') %>&marca=<%= marcas.join(',') %>&precioMin=<%= precioMin %>&precioMax=<%= precioMax %>">1</a>
+																			<a href=" /store/1?limite=<%= limite %>&orden=<%= orden %>&categoria=<%= categorias.join(',') %>&marca=<%= marcas.join(',') %>&precioMin=<%= precioMin %>&precioMax=<%= precioMax %>">1</a>
 																		</li>
 																		<% if (start> 2) { %><li><span>...</span></li>
 																			<% } %>
 																			<% } %>
 																			<% for (let i=start; i <=end; i++) { %>
 																				<li class="pagination-number <%= i === pagina ? 'active' : '' %>">
-																					<a href="/mobiles/store/<%= i %>?limite=<%= limite %>&orden=<%= orden %>&categoria=<%= categorias.join(',') %>&marca=<%= marcas.join(',') %>&precioMin=<%= precioMin %>&precioMax=<%= precioMax %>">
+																					<a href=" /store/<%= i %>?limite=<%= limite %>&orden=<%= orden %>&categoria=<%= categorias.join(',') %>&marca=<%= marcas.join(',') %>&precioMin=<%= precioMin %>&precioMax=<%= precioMax %>">
 																			<%= i %>
 																		</a>
 																	</li>
@@ -290,14 +290,14 @@
 																			<li><span>...</span></li>
 																			<% } %>
 																			<li>
-																				<a href="/mobiles/store/<%= totalPages %>?limite=<%= limite %>&orden=<%= orden %>&categoria=<%= categorias.join(',') %>&marca=<%= marcas.join(',') %>&precioMin=<%= precioMin %>&precioMax=<%= precioMax %>">
+																				<a href=" /store/<%= totalPages %>?limite=<%= limite %>&orden=<%= orden %>&categoria=<%= categorias.join(',') %>&marca=<%= marcas.join(',') %>&precioMin=<%= precioMin %>&precioMax=<%= precioMax %>">
 																							<%= totalPages %>
 																						</a>
 																					</li>
 																					<% } %>
 																					<% if (pagina < totalPages) { %>
 																						<li class="pagination-next">
-																							<a href="/mobiles/store/<%= pagina + 1 %>?limite=<%= limite %>&orden=<%= orden %>&categoria=<%= categorias.join(',') %>&marca=<%= marcas.join(',') %>&precioMin=<%= precioMin %>&precioMax=<%= precioMax %>">
+																							<a href=" /store/<%= pagina + 1 %>?limite=<%= limite %>&orden=<%= orden %>&categoria=<%= categorias.join(',') %>&marca=<%= marcas.join(',') %>&precioMin=<%= precioMin %>&precioMax=<%= precioMax %>">
 																								<img src="https://img.icons8.com/forma-thin-filled/24/forward.png" alt="Siguiente" width="20" height="20"></a>
 																							</li>
 																							<% } %>

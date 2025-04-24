@@ -46,7 +46,7 @@
                         </li>
                     </ul>
                         <div class="total-price">
-                        <a href="/mobiles/order" class="btn btn-checkout" onclick="cartServer()">Procesar Pago <i class="fa fa-arrow-circle-right"></i></a>
+                        <a href=" /order" class="btn btn-checkout" onclick="cartServer()">Procesar Pago <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -74,7 +74,7 @@
                 totalItems += 1;                  
 
                 html += `
-                <div class="cart-item" data-id="${item.id}"><a href="/mobiles/product/${item.id}${item.colorSeleccionado ? `?color=${encodeURIComponent(item.colorSeleccionado)}` : ''}">
+                <div class="cart-item" data-id="${item.id}"><a href="/product/${item.id}${item.colorSeleccionado ? `?color=${encodeURIComponent(item.colorSeleccionado)}` : ''}">
                         <img src="${item.imagen}" alt="${item.nombre}" class="product-img">
                         <div class="product-info">
                             <h5>${item.nombre}</h5>

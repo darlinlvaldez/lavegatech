@@ -63,7 +63,7 @@ document.querySelector(".tablink").click();
                                     return diferenciaDias <= 30;
                                 }).slice(0); productosMoviles.forEach(producto => { %>
                                 <div class="product" data-categoria="<%= producto.categoria %>">
-                                    <div class="product-img"> <a href="/mobiles/product/<%= producto.id %>?color=<%= producto.color %>">
+                                    <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
                                         <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">
                                         <div class="product-label">
                                             <% if (producto.descuento > 0) { %>
@@ -118,7 +118,7 @@ document.querySelector(".tablink").click();
                                     return diferenciaDias <= 30;
                                 }).slice(0); productosSmarttv.forEach(producto => { %>
                                 <div class="product" data-categoria="<%= producto.categoria %>">
-                                    <div class="product-img"> <a href="/mobiles/product/<%= producto.id %>?color=<%= producto.color %>">
+                                    <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
                                         <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">
                                         <div class="product-label">
                                             <% if (producto.descuento > 0) { %>
@@ -173,7 +173,7 @@ document.querySelector(".tablink").click();
                                     return diferenciaDias <= 30;
                                 }).slice(0); productosLaptops.forEach(producto => { %>
                                 <div class="product" data-categoria="<%= producto.categoria %>"> 
-                                    <div class="product-img"> <a href="/mobiles/product/<%= producto.id %>?color=<%= producto.color %>">
+                                    <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
                                         <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">
                                         <div class="product-label">
                                             <% if (producto.descuento > 0) { %>
@@ -228,7 +228,7 @@ document.querySelector(".tablink").click();
                                     return diferenciaDias <= 30;
                                 }).slice(0); productosConsolas.forEach(producto => { %>
                                 <div class="product" data-categoria="<%= producto.categoria %>">
-                                    <div class="product-img"> <a href="/mobiles/product/<%= producto.id %>?color=<%= producto.color %>">
+                                    <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
                                         <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">
                                         <div class="product-label">
                                             <% if (producto.descuento > 0) { %>
@@ -283,7 +283,7 @@ document.querySelector(".tablink").click();
                                     return diferenciaDias <= 30;
                                 }).slice(0); productosTablets.forEach(producto => { %>
                                 <div class="product" data-categoria="<%= producto.categoria %>">
-                                    <div class="product-img"> <a href="/mobiles/product/<%= producto.id %>?color=<%= producto.color %>">
+                                    <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
                                         <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">                                    
                                         <div class="product-label">
                                             <% if (producto.descuento > 0) { %>
@@ -340,55 +340,6 @@ document.querySelector(".tablink").click();
 </div><br><br>
 <!-- /SECTION -->
 
-
-<!-- HOT DEAL SECTION -->
-<div id="hot-deal" class="section">
-    <!-- container -->
-    <div class="container">
-        <!-- row -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="hot-deal">
-                    <ul class="hot-deal-countdown">
-                        <li>
-                            <div>
-                                <h3>02</h3>
-                                <span>Days</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div>
-                                <h3>10</h3>
-                                <span>Hours</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div>
-                                <h3>34</h3>
-                                <span>Mins</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div>
-                                <h3>60</h3>
-                                <span>Secs</span>
-                            </div>
-                        </li>
-                    </ul>
-                    <h2 class="text-uppercase">gran oferta esta semana</h2>
-                    <p>Observa los increibles descuentos %</p>
-                    <p>¡Se acaba el tiempo!</p>
-                    <a class="primary-btn cta-btn" href="mobiles/store">Comprar ahora</a>
-                </div>
-            </div>
-        </div>
-        <!-- /row -->
-    </div>
-    <!-- /container -->
-</div>
-<!-- /HOT DEAL SECTION -->
-
-
 <!-- SECTION -->
 <div class="section">
     <!-- container -->
@@ -413,7 +364,7 @@ document.querySelector(".tablink").click();
 							categoria.categoria === 'otros' ? 'Tech & Home' : 
 							categoria.categoria.charAt(0).toUpperCase() + categoria.categoria.slice(1) %>
 						</h3>
-					   <a href="/mobiles/store/1?&categoria=<%= categoria.id %>" class="cta-btn">Comprar ahora<i class="fa fa-arrow-circle-right"></i></a>
+					   <a href=" /store/1?&categoria=<%= categoria.id %>" class="cta-btn">Comprar ahora<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -444,7 +395,7 @@ document.querySelector(".tablink").click();
                         <div class="col-md-3 col-xs-6">
                             <div class="product">
                                 <div class="product-img">
-                                    <a href="/mobiles/product/<%= producto.id %>?color=<%= producto.color %>">
+                                    <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
                                         <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">                                    
                                     <div class="product-label">
                                         <% if (producto.descuento > 0) { %>

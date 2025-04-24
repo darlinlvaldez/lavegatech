@@ -19,7 +19,8 @@ product.obtenerDetalles = async (id) => {
 FROM productos p
 JOIN categorias c ON p.categoria_id = c.id
 LEFT JOIN variantes v ON p.id = v.producto_id
-WHERE p.id = ?`;
+WHERE p.id = ?
+GROUP BY p.id `;
 
     try {
         const [results] = await db.query(query, [id]);
@@ -76,8 +77,8 @@ product.obtenerRelacionados = async (productoId, categoriaId) => {
       JOIN categorias c ON p.categoria_id = c.id
       LEFT JOIN variantes v ON p.id = v.producto_id 
         WHERE p.id != ? AND p.categoria_id = ?
-        LIMIT 4
-    `;
+        GROUP BY p.id 
+        LIMIT 4`;
     
     try {
         const [results] = await db.query(query, [productoId, categoriaId]);

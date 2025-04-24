@@ -6,12 +6,12 @@ import product from "../controllers/product.js";
 const router = express.Router();
 
 router.get('/productos/:categoria', principal.productosController);
-router.get('/mobiles/search', principal.buscarController);
+router.get('/search', principal.buscarController);
 
-router.get('/mobiles/store', store.storeController);
-router.get('/mobiles/store/:pagina', store.storeController);
+router.get('/store', store.storeController);
+router.get('/store/:pagina', store.storeController);
 
-router.get("/mobiles/product/:id", product.detallesController);
+router.get("/product/:id", product.detallesController);
 router.get('/stock/:productId/:color', product.StockController);
 
 export default router;

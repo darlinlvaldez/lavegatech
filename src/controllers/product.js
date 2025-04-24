@@ -18,7 +18,7 @@ product.detallesController = async (req, res) => {
 
         if (!color && colores.length > 0) {
             const colorDefault = encodeURIComponent(colores[0].trim());
-            return res.redirect(`/mobiles/product/${id}?color=${colorDefault}`);
+            return res.redirect(`/product/${id}?color=${colorDefault}`);
         }
 
         const imagenes = producto.imagenes ? producto.imagenes.split(',') : [];
@@ -47,7 +47,7 @@ product.detallesController = async (req, res) => {
 product.StockController = async (req, res) => {
     try {
         const { productId, color } = req.params;
-        const stock = await productModel.obtenerStock(productId, decodeURIComponent(color));
+        const stock = await product.obtenerStock(productId, decodeURIComponent(color));
         res.json({ stock });
     } catch (error) {
         console.error('Error al obtener stock:', error);
