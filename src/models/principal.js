@@ -2,39 +2,35 @@ import db from "../database/mobiles.js";
 
 const principal = {};
 
-principal.buscarProductos = async (query, categoria) => {
+principal.buscarProductos = async (query) => {
   let searchQuery = `
     SELECT 
-        p.id,
-        p.nombre,
-        p.precio,
-        p.descuento,
-        p.fecha,
-        c.categoria,
-        v.color AS colores, 
-        v.img AS imagenes
+      p.id,
+      p.nombre,
+      p.precio,
+      p.descuento,
+      p.fecha,
+      c.categoria,
+      v.color AS colores, 
+      v.img AS imagenes
     FROM productos p
     JOIN categorias c ON p.categoria_id = c.id
     LEFT JOIN variantes v ON p.id = v.producto_id 
     WHERE p.nombre LIKE ? OR p.descripcion LIKE ?
-`;
+    GROUP BY p.id
+    LIMIT 10
+  `;
 
   const params = [`%${query}%`, `%${query}%`];
-  
-  if (categoria && categoria !== '0') {
-      searchQuery += 'AND c.categoria = ?';
-      params.push(categoria);
-  }
-  
-  searchQuery += 'GROUP BY p.id LIMIT 10';
-  
+
   try {
-      const [results] = await db.query(searchQuery, params);
-      return results;
+    const [results] = await db.query(searchQuery, params);
+    return results;
   } catch (err) {
-      throw new Error("Error al buscar productos: " + err.message);
+    throw new Error("Error al buscar productos: " + err.message);
   }
 };
+
 
 principal.obtenerProductos = async (categoria) => {
   const query = `

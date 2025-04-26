@@ -15,10 +15,9 @@ principal.productosController = async (req, res) => {
 }
 
 principal.buscarController = async (req, res) => {
-
   try {
-      const { q: query, category } = req.query;
-      const productos = await principal.buscarProductos(query, category);
+      const { q: query } = req.query;
+      const productos = await principal.buscarProductos(query);
       res.json(productos);
   } catch (error) {
       console.error('Error en la búsqueda:', error);

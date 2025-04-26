@@ -1,19 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('../../components/header.ejs') %>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LaVegaTech</title>
-  <link rel="icon" type="image/png" href="/img/lavegatech-logo.png">  
-  <link type="text/css" rel="stylesheet" href="/css/login.css" />
-</head>
 <body>
-
-  <div class="logo-container">
-    <a href="/" class="logo"><img src="/img/lavegatech-logo.png" alt=""></a>
-  </div>
-
   <div class="login-container">
   <h2>Crear nueva contraseña</h2>
   <p>Solicitaremos esta contraseña cada vez que inicies sesión.</p>
@@ -30,5 +17,4 @@
     <p style="color:red"><%= error %></p>
     <% } %>
 
-</body>
-</html>
+  <%- include('../../components/footer.ejs') %>

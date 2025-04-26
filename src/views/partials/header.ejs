@@ -99,96 +99,85 @@
             </div>
             <!-- /LOGO -->
              
-                <script>                  
-                    document.addEventListener('DOMContentLoaded', function() {
-                    const searchForm = document.getElementById('search-form');
-                    const searchInput = document.getElementById('search-input');
-                    const searchCategory = document.getElementById('search-category');
-                    const searchResults = document.getElementById('search-results');
-                    
-                        async function searchProducts(query, category) {
-                        try {
-                            const response = await fetch(` /search?q=${encodeURIComponent(query)}&category=${category}`);
-                            if (!response.ok) throw new Error('Error en la búsqueda');
-                            return await response.json();
-                        } catch (error) {
-                            console.error('Error:', error);
-                            return [];
-                        }
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                  const searchForm = document.getElementById('search-form');
+                  const searchInput = document.getElementById('search-input');
+                  const searchResults = document.getElementById('search-results');
+                  
+                  async function searchProducts(query) {
+                    try {
+                      const response = await fetch(`/search?q=${encodeURIComponent(query)}`);
+                      if (!response.ok) throw new Error('Error en la búsqueda');
+                      return await response.json();
+                    } catch (error) {
+                      console.error('Error:', error);
+                      return [];
                     }
-                    
-                    function displayResults(products) {                       
-
-                        searchResults.innerHTML = '';
-                        
-                        if (products.length === 0) {
-                            searchResults.innerHTML = '<div class="search-result-item">No se encontraron productos</div>';
-                            searchResults.style.display = 'block';
-                            return;
-                        }
-                        
-                        products.forEach(product => {                        
-                            const productElement = document.createElement('div');
-                            productElement.className = 'search-result-item';
-                            productElement.innerHTML = `
-                            <a href="/product/${product.id}${product.colores ? `?color=${encodeURIComponent(product.colores.split(',')[0])}` : ''}" style="display: flex; width: 100%;">
-                                <img src="${product.imagenes?.split(',')[0]}" alt="${product.nombre}">
-                                <div class="product-info">
-                                    <h4>${product.nombre}</h4>
-                                    <p>${product.categoria === 'moviles' ? 'Móviles' : 
-                                    product.categoria.charAt(0).toUpperCase() + product.categoria.slice(1)}</p>
-                                </div>
-                                <div class="product-price">
-                                    $${(Number(product.precio) * (1 - (product.descuento / 100))).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                                    ${product.descuento > 0 ? 
-                                    `<del class="product-old-price">$${Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</del>` : ''}
-                                </div>
-                            </a>
-                        `;
-                        searchResults.appendChild(productElement);
+                  }
+              
+                  function displayResults(products) {
+                    searchResults.innerHTML = '';
+                    if (products.length === 0) {
+                      searchResults.innerHTML = '<div class="search-result-item">No se encontraron productos</div>';
+                      searchResults.style.display = 'block';
+                      return;
+                    }
+                    products.forEach(product => {
+                      const productElement = document.createElement('div');
+                      productElement.className = 'search-result-item';
+                      productElement.innerHTML = `
+                        <a href="/product/${product.id}${product.colores ? `?color=${encodeURIComponent(product.colores.split(',')[0])}` : ''}">
+                          <img src="${product.imagenes?.split(',')[0]}" alt="${product.nombre}">
+                          <div class="product-info">
+                            <h4>${product.nombre}</h4>
+                            <p>${product.categoria === 'moviles' ? 'Móviles' : product.categoria.charAt(0).toUpperCase() + product.categoria.slice(1)}</p>
+                          </div>
+                          <div class="product-price">
+                            $${(Number(product.precio) * (1 - (product.descuento / 100))).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                            ${product.descuento > 0 ? `<del class="product-old-price">$${Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</del>` : ''}
+                          </div>
+                        </a>
+                      `;
+                      searchResults.appendChild(productElement);
                     });
                     searchResults.style.display = 'block';
-                }
-                
-                searchInput.addEventListener('input', async function() {
-                        const query = this.value.trim();
-                        const category = searchCategory.value === '0' ? '' : searchCategory.value;
-                        
-                        if (query.length >= 2) {
-                            const products = await searchProducts(query, category);
-                            displayResults(products);
-                        } else {
-                            searchResults.style.display = 'none';
-                        }
-                    });
-                    
-                    document.addEventListener('click', function(e) {
-                        if (!searchForm.contains(e.target)) {
-                            searchResults.style.display = 'none';
-                        }
-                    });
+                  }
+              
+                  searchInput.addEventListener('input', async function() {
+                    const query = this.value.trim();
+                    if (query.length >= 2) {
+                      const products = await searchProducts(query);
+                      displayResults(products);
+                    } else {
+                      searchResults.style.display = 'none';
+                    }
+                  });
+              
+                  document.addEventListener('click', function(e) {
+                    if (!searchForm.contains(e.target)) {
+                      searchResults.style.display = 'none';
+                    }
+                  });
                 });
-                </script>
-
+              </script>
+              
                 <!-- SEARCH BAR -->
                 <div class="col-md-6">
                     <div class="header-search">
-                        <form id="search-form">
-                            <select class="input-select" id="search-category">
-                                <option value="0">Todos</option>
-                                <option value="moviles">Móviles</option>
-                                <option value="smarttv">SmartTV</option>
-                                <option value="laptops">Laptops</option>
-                                <option value="consolas">Consolas</option>
-                                <option value="tablets">Tablets</option>
-                                <option value="otros">Otros</option>
-                            </select>
-                            <input class="input" id="search-input" placeholder="Buscar">
-                            <button type="submit" class="search-btn">Buscar</button>
-                        </form>
-                        <div id="search-results" class="search-results-dropdown"></div>
+                    <form id="search-form">
+                        <div class="search-wrapper">
+                        <input class="input" id="search-input" placeholder="Buscar">
+                        <div class="search-icon-btn">
+                            <i class="fa fa-search"></i>
+                        </div>
+                        </div>
+                    </form>
+                    <div id="search-overlay">
+                    <div id="search-results" class="search-results-dropdown"></div>
                     </div>
                 </div>
+            </div>
                 <!-- /SEARCH BAR -->
 
                 <!-- ACCOUNT -->

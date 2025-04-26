@@ -1,21 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('../../components/header.ejs') %>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LaVegaTech</title>
-  <link rel="icon" type="image/png" href="/img/lavegatech-logo.png">
-  <link type="text/css" rel="stylesheet" href="/css/login.css" />
-
-</head>
 <body>
 
-  <div class="logo-container">
-    <a href="/" class="logo"><img src="/img/lavegatech-logo.png" alt=""></a>
-  </div>
-
-  <div class="login-container">
+  <div class="code-container">
     <h2>Ingresar el código de verificación</h2>
     <p>Para tu seguridad, enviamos el código a tu correo electrónico <%= email %>.</p>
 
@@ -39,4 +26,4 @@
 
 </body>
 
-</html>
+<%- include('../../components/footer.ejs') %>

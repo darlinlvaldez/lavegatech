@@ -24,10 +24,11 @@ body {
     height: auto;
 }
 
-.login-container {
+.login-container, .register-container, .verify-container, 
+.newpass-container, .code-container, .email-container {
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px;    
     padding: 30px;
     width: 100%;
     max-width: 400px;
@@ -101,6 +102,19 @@ a:hover {
     height: 14px;
 }
 
+.section {
+  border-top: 2px solid #E4E7ED;
+  margin-top: 10px;
+  margin-bottom: 30px; 
+}
+
+.footer {
+  width: 100%;
+  padding: 20px 0;
+  color: rgb(0, 0, 0);
+  text-align: center;
+}
+
 /* Estilos responsivos */
 @media (max-width: 768px) {
     .login-container {
@@ -149,7 +163,6 @@ a:hover {
     }
   }
   
-  /* Pequeñas pantallas (ej: smartphones pequeños) */
   @media (max-width: 360px) {
     .login-container {
       padding: 1rem;
@@ -164,14 +177,12 @@ a:hover {
     }
   }
   
-  /* Estilos para pantallas grandes */
   @media (min-width: 1200px) {
     .login-container {
       padding: 2.5rem;
     }
   }
   
-  /* Clase show (si es necesaria) */
   .show {
     width: 20px;
     height: 14px;
