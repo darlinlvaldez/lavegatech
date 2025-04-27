@@ -32,16 +32,17 @@ body, html {
 
 .sobre-nosotros{
     font-weight: bold;
-    font-size: 40px;
+    font-size: 5rem;
     color: #000000;
 }
 
-.parrafo{
+.parrafo-about{
     line-height: 2.4;
     font-size: 18px;
     margin-top: 20px;
     color: #000000;
 }
+
 .columna-imagen {
     display: flex;
     justify-content: center;
@@ -67,8 +68,8 @@ body, html {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.titulo {
-    font-size: 3rem;
+.titulo-about {
+    font-size: 4rem;
     color: #000000;
     font-weight: bold;
     text-align: center;
@@ -125,7 +126,6 @@ body, html {
 
 /* Start history */
 
-
 .bg-light {
     background-color: #e9eef5 ;
     color: rgb(0, 0, 0);
@@ -133,12 +133,12 @@ body, html {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.historia .titulo {
+.historia .titulo-about {
     font-size: 2.5rem;
     font-weight: bold;
 }
 
-.historia .parrafo {
+.historia .parrafo-about {
     font-size: 1.1rem;
     color: #000000;
 }
@@ -229,11 +229,11 @@ body, html {
         height: auto;
     }
 
-    .titulo {
+    .titulo-about {
         font-size: 2rem;
     }
 
-    .parrafo {
+    .parrafo-about {
         font-size: 16px;
         padding: 0 10px;
     }
@@ -258,7 +258,7 @@ body, html {
 }
 
 @media (max-width: 480px) {
-    .titulo {
+    .titulo-about {
         font-size: 1.5rem;
     }
 

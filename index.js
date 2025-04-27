@@ -128,6 +128,10 @@ app.get('/warranty', (req, res) => {
   res.render('information/warranty');  
 });
 
+app.get('/account', (req, res) => {
+  res.render('profile/account');  
+});
+
 app.listen(config.PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${config.PORT}`);
 });

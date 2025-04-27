@@ -105,69 +105,6 @@
                 </div>
             </div>
             <!-- /LOGO -->
-             
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                  const searchForm = document.getElementById('search-form');
-                  const searchInput = document.getElementById('search-input');
-                  const searchResults = document.getElementById('search-results');
-                  
-                  async function searchProducts(query) {
-                    try {
-                      const response = await fetch(`/search?q=${encodeURIComponent(query)}`);
-                      if (!response.ok) throw new Error('Error en la búsqueda');
-                      return await response.json();
-                    } catch (error) {
-                      console.error('Error:', error);
-                      return [];
-                    }
-                  }
-              
-                  function displayResults(products) {
-                    searchResults.innerHTML = '';
-                    if (products.length === 0) {
-                      searchResults.innerHTML = '<div class="search-result-item">No se encontraron productos</div>';
-                      searchResults.style.display = 'block';
-                      return;
-                    }
-                    products.forEach(product => {
-                      const productElement = document.createElement('div');
-                      productElement.className = 'search-result-item';
-                      productElement.innerHTML = `
-                        <a href="/product/${product.id}${product.colores ? `?color=${encodeURIComponent(product.colores.split(',')[0])}` : ''}">
-                          <img src="${product.imagenes?.split(',')[0]}" alt="${product.nombre}">
-                          <div class="product-info">
-                            <h4>${product.nombre}</h4>
-                            <p>${product.categoria === 'moviles' ? 'Móviles' : product.categoria.charAt(0).toUpperCase() + product.categoria.slice(1)}</p>
-                          </div>
-                          <div class="product-price">
-                            $${(Number(product.precio) * (1 - (product.descuento / 100))).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                            ${product.descuento > 0 ? `<del class="product-old-price">$${Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</del>` : ''}
-                          </div>
-                        </a>
-                      `;
-                      searchResults.appendChild(productElement);
-                    });
-                    searchResults.style.display = 'block';
-                  }
-              
-                  searchInput.addEventListener('input', async function() {
-                    const query = this.value.trim();
-                    if (query.length >= 2) {
-                      const products = await searchProducts(query);
-                      displayResults(products);
-                    } else {
-                      searchResults.style.display = 'none';
-                    }
-                  });
-              
-                  document.addEventListener('click', function(e) {
-                    if (!searchForm.contains(e.target)) {
-                      searchResults.style.display = 'none';
-                    }
-                  });
-                });
-              </script>
               
                 <!-- SEARCH BAR -->
                 <div class="col-md-6">
@@ -185,7 +122,7 @@
                     </div>
                 </div>
             </div>
-                <!-- /SEARCH BAR -->
+            <!-- /SEARCH BAR -->
 
                 <!-- ACCOUNT -->
                 <div class="col-md-3 clearfix">
@@ -199,59 +136,6 @@
                             </a>
                         </div>
                         <!-- /Wishlist -->
-                        
-                        <script>
-                            function cargarCarrito() {
-
-                                let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-                                const cartList = document.getElementById('cart-list');
-                                const carritoCount = document.getElementById('carrito-count');
-                                const cartSummary = document.getElementById('cart-summary');
-                                const cartSubtotal = document.getElementById('cart-subtotal');
-                                
-                                if (carrito.length === 0) {
-                                    if (cartList) cartList.innerHTML = '<p>No hay productos en el carrito.</p>';
-                                    if (carritoCount) carritoCount.textContent = 0;
-                                    if (cartSummary) cartSummary.textContent = '0 producto(s) seleccionado(s)';
-                                    if (cartSubtotal) cartSubtotal.textContent = 'SUBTOTAL: $0.00';
-                                } else {
-                                    let total = 0;
-                                    if (cartList) cartList.innerHTML = '';
-                                    carrito.forEach(item => {                                               
-
-                                        let precioConDescuento = item.precio;
-                                        if (item.descuento > 0) {
-                                            precioConDescuento = item.precio * (1 - item.descuento / 100);  
-                                        }
-                                        total += precioConDescuento * item.cantidad;
-                        
-                                        if (cartList) {
-                                            cartList.innerHTML += `
-                                                <div class="product-widget">
-                                                    <a href="/product/${item.id}${item.colorSeleccionado ? `?color=${encodeURIComponent(item.colorSeleccionado)}` : ''}">
-                                                        <div class="product-img">
-                                                            <img src="${item.imagen}" alt="${item.nombre}">
-                                                        </div>
-                                                        <div class="product-body">
-                                                            <h3 class="product-name">${item.nombre}</h3></a>
-                                                            <p class="product-color">${item.colorSeleccionado}</p>
-                                                            <h4 class="product-price">
-                                                                <span class="qty-cart">${item.cantidad}x</span> 
-                                                                $${precioConDescuento.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
-                                                            </h4>
-                                                        </div>
-                                                <button class="delete" onclick="deleteProduct('${item.id}', '${item.colorSeleccionado}')"><i class="fa fa-close"></i></button>
-                                                </div>
-                                            `;
-                                        }
-                                    });
-
-                                    if (carritoCount) carritoCount.textContent = carrito.length;
-                                    if (cartSummary) cartSummary.textContent = `${carrito.length} producto(s) seleccionado(s)`;
-                                    if (cartSubtotal) cartSubtotal.textContent = `SUBTOTAL: $${total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
-                                }
-                            }
-                        </script>
 
                         <!-- Cart -->
                         <div class="dropdown">

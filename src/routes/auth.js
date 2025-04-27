@@ -22,5 +22,4 @@ router.post('/newPassword', validate(request.updatePassword), auth.updatePasswor
 // SEND EMAIL CONTACT
 router.post('/contact', validate(request.formEmail), auth.formEmail);
 
-
 export default router;
