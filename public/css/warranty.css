@@ -1,0 +1,30 @@
+.contenido-garantia {
+    text-align: center;
+    padding: 50px;
+}
+
+.subtitulo-garantias{
+    text-transform: uppercase;
+}
+
+.pdf-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; 
+    flex-wrap: wrap;
+    padding: 50px 0;
+}
+
+.pdf-iframe {
+    width: 49.1%; 
+    height: 800px;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .pdf-iframe {
+        width: 100%;
+    }
+}

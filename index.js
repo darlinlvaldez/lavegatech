@@ -120,6 +120,14 @@ app.get('/cart', (req, res) => {
   res.render('store/cart');
 });
 
+app.get('/conditions', (req, res) => {
+  res.render('information/conditions');  
+});
+
+app.get('/warranty', (req, res) => {
+  res.render('information/warranty');  
+});
+
 app.listen(config.PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${config.PORT}`);
 });
