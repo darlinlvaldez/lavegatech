@@ -15,6 +15,8 @@ import principal from './src/models/principal.js';
 // Routes
 import store from './src/routes/productos.js';
 import auth from './src/routes/auth.js';
+import userProfile from './src/routes/userProfile.js';  
+
 
 const app = express();
 
@@ -34,6 +36,8 @@ app.disable('x-powered-by');
 app.use(express.json());
 
 app.use('/api/auth', auth); 
+
+app.use('/user', userProfile);  // Nuevas rutas para actualización de usuario
 
 app.use('/', store);
 
@@ -128,8 +132,8 @@ app.get('/warranty', (req, res) => {
   res.render('information/warranty');  
 });
 
-app.get('/account', (req, res) => {
-  res.render('profile/account');  
+app.get('/account', isAuth, (req, res) => {
+  res.render('profile/account', { user: req.session.user });
 });
 
 app.listen(config.PORT, () => {

@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import config from '../../config.js';
-import user from '../models/user.js';
+import user from '../models/auth.js';
 import emailService from '../services/email.js';
 
 const auth = {};

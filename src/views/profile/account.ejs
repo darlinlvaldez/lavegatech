@@ -1,0 +1,118 @@
+<%- include('../partials/header.ejs') %>
+
+<body>
+
+  <div>
+    <label>Nombre de usuario:</label>
+    <span id="username"><%= user.username %></span>
+    <button onclick="openModal('username')">Editar</button>
+  </div>
+
+  <div>
+    <label>Correo:</label>
+    <span id="email"><%= user.email %></span>
+    <button onclick="openModal('email')">Editar</button>
+  </div>
+
+  <div>
+    <label>Contraseña:</label>
+    <span id="password">********</span>
+    <button onclick="openModal('password')">Editar</button>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" style="display:none;">
+    <div id="modal-content">
+      <h2 id="modal-title"></h2>
+      <form id="modal-form">
+        <!-- Inputs dinámicos -->
+      </form>
+      <button onclick="closeModal()">Cancelar</button>
+      <button type="submit" form="modal-form">Guardar</button>
+    </div>
+  </div>
+
+  <script>
+    const formTemplates = {
+      username: `
+        <label>Nuevo nombre:</label>
+        <input type="text" name="newUsername" required>
+      `,
+      email: `
+        <label>Nuevo correo:</label>
+        <input type="email" name="newEmail" required>
+      `,
+      password: `
+        <label>Contraseña actual:</label>
+        <input type="password" name="oldPassword" required><br>
+        <label>Nueva contraseña:</label>
+        <input type="password" name="newPassword" required><br>
+        <label>Confirmar nueva contraseña:</label>
+        <input type="password" name="confirmPassword" required>
+      `
+    };
+  
+    const titles = {
+      username: 'Editar Nombre de Usuario',
+      email: 'Editar Correo',
+      password: 'Editar Contraseña'
+    };
+  
+    const urls = {
+      username: '/user/update-username',
+      email: '/user/update-email',
+      password: '/user/update-password'
+    };
+  
+    function openModal(type) {
+      const modal = document.getElementById('modal');
+      const title = document.getElementById('modal-title');
+      const form = document.getElementById('modal-form');
+  
+      form.dataset.type = type; // Guardamos el tipo de edición
+      title.innerText = titles[type];
+      form.innerHTML = formTemplates[type] || ''; // Usamos la plantilla correspondiente
+  
+      modal.style.display = 'block';
+    }
+  
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+  
+    // Captura el submit del formulario
+    document.getElementById('modal-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+  
+      const form = e.target;
+      const type = form.dataset.type;
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      const url = urls[type]; // URL de la acción correspondiente
+  
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+  
+        if (response.ok) {
+          alert('Datos actualizados correctamente');
+          window.location.reload();
+        } else {
+          const errorText = await response.text();
+          alert('Error: ' + errorText);
+        }
+      } catch (error) {
+        alert('Error de red: ' + error.message);
+      }
+  
+      closeModal();
+    });
+  </script>
+    
+</body>
+
+<%- include('../partials/footer.ejs') %>
+
