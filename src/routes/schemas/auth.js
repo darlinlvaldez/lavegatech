@@ -24,7 +24,7 @@ request.email = z.object({
     email: z.string().email().min(1)
 }).strict();
 
-request.updatePassword = z.object({
+request.forgotPassword = z.object({
     email: z.string().email().min(1),
     password: z.string().min(6),
     confirm: z.string().min(6)

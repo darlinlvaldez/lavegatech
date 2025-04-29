@@ -1,32 +1,14 @@
 import bcrypt from 'bcrypt';
-import crypto from 'crypto';
 import config from '../../config.js';
 import user from '../models/auth.js';
 import emailService from '../services/email.js';
+import code from '../utils/generateCode.js';
 
 const auth = {};
-
-const generateCode = () => crypto.randomBytes(3).toString('hex').toUpperCase();
 
 const renderError = (res, view, error, extras = {}) => {
   return res.render(view, { error, ...extras });
 };
-
-const hashPassword = password => bcrypt.hash(password, 10);
-
-const validateCode = (map, email, code) => {
-  const pending = map.get(email);
-  if (!pending) return { error: 'El código ha expirado.' };
-  if (Date.now() > pending.expiresAt) {
-    map.delete(email);
-    return { error: 'El código ha expirado. Solicita uno nuevo.' };
-  }
-  if (pending.code !== code) return { error: 'Código inválido.' };
-  return { success: true, data: pending };
-};
-
-const pendingUsers = new Map();
-const resetPending = new Map();
 
 auth.register = async (req, res) => {
   const { username, email: correo, password, confirmPassword } = req.body;
@@ -37,21 +19,21 @@ auth.register = async (req, res) => {
   if (alreadyExists)
     return renderError(res, 'login/register', 'Este correo ya está registrado.', { email: correo, username });
 
-  const hashedPassword = await hashPassword(password);
-  const code = generateCode();
-  pendingUsers.set(correo, { username, hashedPassword, code, expiresAt: Date.now() + 10 * 60 * 1000 });
+  const hashedPassword = await code.hashPassword(password);
+  const generatedCode = await code.generateCode();
+  code.pendingUsers.set(correo, { username, hashedPassword, code: generatedCode, expiresAt: Date.now() + 10 * 60 * 1000 });
 
-  await emailService.sendVerification(correo, code);
-  res.redirect(`/verify?email=${correo}`);
+await emailService.sendVerification(correo, generatedCode);
+res.redirect(`/verify?email=${correo}`);
 };
 
 auth.showVerifyForm = (req, res) => res.render('login/verify', { email: req.query.email });
 
 auth.verifyCode = async (req, res) => {
-  const { email, code, type } = req.body;
+  const { email, code: userCode, type } = req.body;
 
-  const store = type === 'reset' ? resetPending : pendingUsers;
-  const result = validateCode(store, email, code);
+  const store = type === 'reset' ? code.resetPending : code.pendingUsers;
+  const result = code.validateCode(store, email, userCode);
 
   if (!result.success) {
     const view = type === 'reset' ? 'login/forgotPass/code' : 'login/verify';
@@ -64,7 +46,7 @@ auth.verifyCode = async (req, res) => {
 
   const { username, hashedPassword } = result.data;
   await user.insertUser({ username, email, password: hashedPassword });
-  pendingUsers.delete(email);
+  code.pendingUsers.delete(email);
   res.redirect('/login');
 };
 
@@ -72,7 +54,7 @@ auth.resendCode = async (req, res) => {
   const { email, type } = req.body;
   const isReset = type === 'reset';
 
-  const store = isReset ? resetPending : pendingUsers;
+  const store = isReset ? code.resetPending : code.pendingUsers;
   const existing = store.get(email);
   const now = Date.now();
 
@@ -87,7 +69,7 @@ auth.resendCode = async (req, res) => {
     }
   }
 
-  const newCode = generateCode();
+  const newCode = code.generateCode();
   const expiresAt = now + 10 * 60 * 1000;
 
   store.set(email, { ...(existing || {}), code: newCode, expiresAt, lastSent: now });
@@ -133,26 +115,26 @@ auth.email = async (req, res) => {
   const foundUser = await user.findByEmail(email);
   if (!foundUser) return renderError(res, 'login/forgotPass/email', 'Correo no registrado', { email });
 
-  const code = generateCode();
-  resetPending.set(email, { code, expiresAt: Date.now() + 10 * 60 * 1000 });
+  const codeUser = code.generateCode();
+  code.resetPending.set(email, { code: codeUser, expiresAt: Date.now() + 10 * 60 * 1000 });
 
-  await emailService.sendEmail(email, 'Código para recuperación de contraseña', `Tu código es: ${code}. Expira en 10 minutos.`);
+  await emailService.sendEmail(email, 'Código para recuperación de contraseña', `Tu código es: ${codeUser}. Expira en 10 minutos.`);
   res.render('login/forgotPass/code', { email, error: null });
 };
 
-auth.updatePassword = async (req, res) => {
+auth.forgotPassword = async (req, res) => {
   const { email, password, confirm } = req.body;
 
   if (password !== confirm)
     return renderError(res, 'login/forgotPass/newpass', 'Las contraseñas no coinciden.', { email });
 
-  if (!resetPending.get(email))
+  if (!code.resetPending.get(email))
     return renderError(res, 'login/forgotPass/email', 'No hay solicitud de recuperación activa.', { email });
 
-  const hashed = await hashPassword(password);
-  await user.updatePassword(email, hashed);
+  const hashed = await code.hashPassword(password);
+  await user.forgotPassword(email, hashed);
 
-  resetPending.delete(email);
+  code.resetPending.delete(email);
   res.redirect('/login');
 };
 
@@ -166,7 +148,6 @@ auth.logout = (req, res) => {
     res.redirect('/login');
   });
 };
-
 
 auth.formEmail = async (req, res) => {
   const { nombre, correo, asunto, mensaje } = req.body;

@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.post('/update-username', user.updateUsername);
 router.post('/update-email', user.updateEmail);
+router.post('/verify-email-code', user.verifyEmailCode);
 router.post('/update-password', user.updatePassword);
 
 export default router;

@@ -17,7 +17,6 @@ import store from './src/routes/productos.js';
 import auth from './src/routes/auth.js';
 import userProfile from './src/routes/userProfile.js';  
 
-
 const app = express();
 
 app.use(session);
@@ -37,7 +36,7 @@ app.use(express.json());
 
 app.use('/api/auth', auth); 
 
-app.use('/user', userProfile);  // Nuevas rutas para actualización de usuario
+app.use('/user', userProfile);  
 
 app.use('/', store);
 
@@ -133,7 +132,7 @@ app.get('/warranty', (req, res) => {
 });
 
 app.get('/account', isAuth, (req, res) => {
-  res.render('profile/account', { user: req.session.user });
+  res.render('profile/account', { user: req.session.user, error: null, email: null });
 });
 
 app.listen(config.PORT, () => {

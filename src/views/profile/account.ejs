@@ -2,6 +2,10 @@
 
 <body>
 
+  <div class="titulo-admin"> 
+    <h1>Administrar Cuenta</h1>
+  </div>
+
   <div>
     <label>Nombre de usuario:</label>
     <span id="username"><%= user.username %></span>
@@ -51,68 +55,95 @@
         <input type="password" name="confirmPassword" required>
       `
     };
-  
+
     const titles = {
       username: 'Editar Nombre de Usuario',
       email: 'Editar Correo',
-      password: 'Editar Contraseña'
+      password: 'Editar Contraseña',
+      'verify-email': 'Verificar Código de Correo'
     };
-  
+
     const urls = {
       username: '/user/update-username',
       email: '/user/update-email',
-      password: '/user/update-password'
+      password: '/user/update-password',
+      'verify-email': '/user/verify-email-code'
     };
-  
+
     function openModal(type) {
       const modal = document.getElementById('modal');
       const title = document.getElementById('modal-title');
       const form = document.getElementById('modal-form');
-  
-      form.dataset.type = type; // Guardamos el tipo de edición
+
+      form.dataset.type = type; 
       title.innerText = titles[type];
-      form.innerHTML = formTemplates[type] || ''; // Usamos la plantilla correspondiente
-  
+      form.innerHTML = formTemplates[type] || '';
+
       modal.style.display = 'block';
     }
-  
+
     function closeModal() {
       document.getElementById('modal').style.display = 'none';
     }
-  
-    // Captura el submit del formulario
+
+    async function openCodeModal(newEmail) {
+      const modal = document.getElementById('modal');
+      const title = document.getElementById('modal-title');
+      const form = document.getElementById('modal-form');
+
+      form.dataset.type = 'verify-email';
+      title.innerText = titles['verify-email'];
+      form.innerHTML = `
+        <label>Código de verificación:</label>
+        <input type="text" name="codeInput" required>
+        <input type="hidden" name="newEmail" value="${newEmail}">
+      `;
+
+      modal.style.display = 'block';
+    }
+
     document.getElementById('modal-form').addEventListener('submit', async function (e) {
-      e.preventDefault();
-  
-      const form = e.target;
-      const type = form.dataset.type;
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
-      const url = urls[type]; // URL de la acción correspondiente
-  
-      try {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-  
-        if (response.ok) {
-          alert('Datos actualizados correctamente');
-          window.location.reload();
-        } else {
-          const errorText = await response.text();
-          alert('Error: ' + errorText);
-        }
-      } catch (error) {
-        alert('Error de red: ' + error.message);
-      }
-  
-      closeModal();
+  e.preventDefault();
+
+  const form = e.target;
+  const type = form.dataset.type;
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData.entries());
+
+  let url = urls[type];
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     });
+
+    if (response.ok) {
+      if (type === 'email') {
+        alert('Se envió un código de verificación a tu correo.');
+        openCodeModal(data.newEmail); 
+      } else if (type === 'verify-email') {
+        alert('Correo verificado y actualizado exitosamente.');
+        closeModal();
+        window.location.reload();
+      } else {
+        alert('Actualizado correctamente.');
+        closeModal();
+        window.location.reload();
+      }
+    } else {
+      const errorText = await response.text();
+      alert('Error: ' + errorText);
+      closeModal();
+    }
+  } catch (error) {
+    alert('Error de red: ' + error.message);
+    closeModal();
+  }
+});
   </script>
-    
+
 </body>
 
 <%- include('../partials/footer.ejs') %>
-

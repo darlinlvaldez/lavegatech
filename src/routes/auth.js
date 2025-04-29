@@ -17,7 +17,7 @@ router.post('/resendCode', auth.resendCode);
 
 // FORGOT-PASSWORD
 router.post('/email', validate(request.email), auth.email);
-router.post('/newPassword', validate(request.updatePassword), auth.updatePassword);
+router.post('/newPassword', validate(request.forgotPassword), auth.forgotPassword);
 
 // SEND EMAIL CONTACT
 router.post('/contact', validate(request.formEmail), auth.formEmail);
