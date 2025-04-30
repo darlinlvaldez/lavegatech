@@ -55,6 +55,10 @@ app.get('/perfil', isAuth, (req, res) => {
   res.render('perfil', { user: req.session.user });
 });
 
+app.get('/account', isAuth, (req, res) => {
+  res.render('profile/account', { user: req.session.user, error: null, email: null });
+});
+
 app.get('/login', (req, res) => {
   res.render('login/login', { error: null, email: null });
 });
@@ -129,10 +133,6 @@ app.get('/conditions', (req, res) => {
 
 app.get('/warranty', (req, res) => {
   res.render('information/warranty');  
-});
-
-app.get('/account', isAuth, (req, res) => {
-  res.render('profile/account', { user: req.session.user, error: null, email: null });
 });
 
 app.listen(config.PORT, () => {

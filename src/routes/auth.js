@@ -13,7 +13,7 @@ router.post('/register', validate(request.register), auth.register);
 
 // LOGIN AND FORGOT-PASSWORD
 router.post('/verifyCode', validate(request.verifyCode), auth.verifyCode);
-router.post('/resendCode', auth.resendCode);
+router.post('/resendCode', auth.resendCode);    
 
 // FORGOT-PASSWORD
 router.post('/email', validate(request.email), auth.email);

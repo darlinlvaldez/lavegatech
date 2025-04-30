@@ -25,16 +25,18 @@
   </div>
 
   <!-- Modal -->
-  <div id="modal" style="display:none;">
-    <div id="modal-content">
-      <h2 id="modal-title"></h2>
-      <form id="modal-form">
-        <!-- Inputs dinámicos -->
-      </form>
-      <button onclick="closeModal()">Cancelar</button>
-      <button type="submit" form="modal-form">Guardar</button>
-    </div>
+  <!-- Modifica tu modal así: -->
+<div id="modal" style="display:none;">
+  <div id="modal-content">
+    <h2 id="modal-title"></h2>
+    <form id="modal-form">
+      <!-- Inputs dinámicos -->
+    </form>
+    <button id="resend-code-btn" style="display:none;" type="button">Reenviar código</button>
+    <button onclick="closeModal()">Cancelar</button>
+    <button type="submit" form="modal-form">Guardar</button>
   </div>
+</div>
 
   <script>
     const formTemplates = {
@@ -87,20 +89,42 @@
     }
 
     async function openCodeModal(newEmail) {
-      const modal = document.getElementById('modal');
-      const title = document.getElementById('modal-title');
-      const form = document.getElementById('modal-form');
+  const modal = document.getElementById('modal');
+  const title = document.getElementById('modal-title');
+  const form = document.getElementById('modal-form');
+  const resendBtn = document.getElementById('resend-code-btn');
 
-      form.dataset.type = 'verify-email';
-      title.innerText = titles['verify-email'];
-      form.innerHTML = `
-        <label>Código de verificación:</label>
-        <input type="text" name="codeInput" required>
-        <input type="hidden" name="newEmail" value="${newEmail}">
-      `;
+  form.dataset.type = 'verify-email';
+  title.innerText = titles['verify-email'];
+  form.innerHTML = `
+    <label>Código de verificación:</label>
+    <input type="text" name="codeInput" required>
+    <input type="hidden" name="newEmail" value="${newEmail}">
+  `;
+  
+  // Mostrar el botón de reenvío
+  resendBtn.style.display = 'block';
+  resendBtn.onclick = async () => {
+    try {
+      const response = await fetch('/user/resend-email-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: newEmail, type: 'verify' })
+      });
 
-      modal.style.display = 'block';
+      if (response.ok) {
+        alert('Se ha reenviado el código de verificación a tu correo.');
+      } else {
+        const errorText = await response.text();
+        alert('Error: ' + errorText);
+      }
+    } catch (error) {
+      alert('Error de red: ' + error.message);
     }
+  };
+
+  modal.style.display = 'block';
+}
 
     document.getElementById('modal-form').addEventListener('submit', async function (e) {
   e.preventDefault();
