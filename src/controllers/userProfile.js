@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import user from "../models/auth.js";
 import emailService from '../services/email.js';
 import code from '../utils/generateCode.js';
-import { ERROR_MESSAGES } from '../utils/error.js';  // Importamos los mensajes de error
+import { ERROR_MESSAGES } from '../utils/error.js';
 
 const auth = {};
 

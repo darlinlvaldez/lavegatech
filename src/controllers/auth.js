@@ -125,10 +125,7 @@ auth.login = async (req, res) => {
       return renderError(res, 'login/login', ERROR_MESSAGES.UNVERIFIED_EMAIL, { email });
 
     req.session.user = {
-      id: foundUser.id,
-      email: foundUser.email,
-      username: foundUser.username
-    };
+      id: foundUser.id, email: foundUser.email, username: foundUser.username};
 
     res.redirect('/');
   } catch (error) {
@@ -179,9 +176,9 @@ auth.forgotPassword = async (req, res) => {
 
     code.resetPending.delete(email);
     res.redirect('/login');
-  } catch (error) {
-    console.error(error);
-    return renderError(res, 'login/forgotPass/newpass', ERROR_MESSAGES.PASSWORD_RESET_ERROR, { email: req.body.email });
+  } catch (error) {console.error(error);
+    return renderError(res, 'login/forgotPass/newpass', ERROR_MESSAGES.PASSWORD_RESET_ERROR, 
+    { email: req.body.email });
   }
 };
 
@@ -211,13 +208,10 @@ auth.formEmail = async (req, res) => {
   try {
     await emailService.sendEmail(config.EMAIL_SENDER, asunto, formattedMessage);
     res.redirect('/contact');
-  } catch (error) {
-    console.error('Error al enviar correo:', error);
-    return res.render('store/contact', {
-      error: ERROR_MESSAGES.EMAIL_SEND_ERROR,
-      nombre, correo, asunto, mensaje
-    });
-  }
-};
+  } catch (error) {console.error('Error al enviar correo:', error);
+    return res.render('store/contact', {error: ERROR_MESSAGES.EMAIL_SEND_ERROR,
+      nombre, correo, asunto, mensaje});
+    }
+  };
 
 export default auth;
