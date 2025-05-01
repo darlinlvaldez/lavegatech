@@ -63,8 +63,8 @@ input {
 input:focus {
     outline: none;
     border-color: #1f51bd;
-    box-shadow: 5 10 12 2px rgb(8, 33, 172);
-}
+    box-shadow: 0 0 5px rgba(8, 33, 172, 0.5);
+  }
 
 button {
     color: white;

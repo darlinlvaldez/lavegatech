@@ -79,6 +79,13 @@ form .mb-3 {
     font-size: 16px;
 }
 
+.entrada-texto:focus {
+    outline: none;
+    border-color: #1f51bd;
+    box-shadow: 0 0 5px rgba(8, 33, 172, 0.5);
+  }
+  
+
 .fila-boton {
     margin-top: 20px;
 }

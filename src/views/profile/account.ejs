@@ -1,185 +1,198 @@
 <%- include('../partials/header.ejs') %>
 
-<body>
-  <div class="contenedor-account"> 
-    <div class="titulo-admin"> 
-      <h1>Administrar Cuenta</h1>
+  <body>
+    <div class="contenedor-account">
+      <div class="titulo-admin">
+        <h1>Administrar Cuenta</h1>
+      </div>
     </div>
-  </div>
 
-  <div class="contenido-account">
-    <div class="informacion">
-      <label class="titulo-user">Nombre:</label>
-      <span id="username"><%= user.username %></span>
-      <button class="editar" onclick="openModal('username')">Editar</button>
-    </div>
-  
-    <div class="informacion">
-      <label class="titulo-user">Correo:</label>
-      <span id="email"><%= user.email %></span>
-      <button class="editar" onclick="openModal('email')">Editar</button>
-    </div>
-  
-    <div class="informacion">
-      <label class="titulo-user">Contraseña:</label>
-      <span id="password">********</span>
-      <button class="editar" onclick="openModal('password')">Editar</button>
-    </div>
-  </div>
-  
+    <div class="contenido-account">
+      <div class="informacion">
+        <label class="titulo-user">Nombre:</label>
+        <span id="username">
+          <%= user.username %>
+        </span>
+        <button class="editar" onclick="openModal('username')">Editar</button>
+      </div>
 
- <!-- Modal -->
-<div id="modal" class="modal-container" style="display:none;">
-  <div id="modal-content" class="modal-contenido">
-    <h2 id="modal-title" class="modal-titulo"></h2>
-    <div id="verification-message" class="verification-message" style="display:none;"></div>
-    <form id="modal-form">
-    </form>
-    <button class="reenviar modal-btn" id="resend-code-btn" style="display:none;" type="button">Reenviar Código</button>
-    <button class="cancelar modal-btn" onclick="closeModal()">Cancelar</button>
-    <button class="guardar modal-btn" type="submit" form="modal-form">Guardar</button>
-  </div>
-</div>
+      <div class="informacion">
+        <label class="titulo-user">Correo:</label>
+        <span id="email">
+          <%= user.email %>
+        </span>
+        <button class="editar" onclick="openModal('email')">Editar</button>
+      </div>
 
-  <script>
-    const formTemplates = {
-      username: `
-        <label class="text-modal">Nuevo nombre:</label>
-        <input class="modal-input" type="text" name="newUsername" required>
+      <div class="informacion">
+        <label class="titulo-user">Contraseña:</label>
+        <span id="password">********</span>
+        <button class="editar" onclick="openModal('password')">Editar</button>
+      </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div id="modal" class="modal-container" style="display:none;">
+      <div id="modal-content" class="modal-contenido">
+        <h2 id="modal-title" class="modal-titulo"></h2>
+        <div id="verification-message" class="verification-message" style="display:none;"></div>
+        <form id="modal-form"></form>
+
+        <div class="contenedor-reenviar">
+          <button class="reenviar modal-btn" id="resend-code-btn" style="display:none;" type="button">Reenviar
+            Código</button>
+        </div>
+
+        <div class="contenedor-acciones">
+          <button class="cancelar modal-btn" onclick="closeModal()">Cancelar</button>
+          <button class="guardar modal-btn" type="submit" form="modal-form">Guardar</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const formTemplates = {
+        username: `
+      <label class="text-modal">Nuevo nombre:</label>
+      <input class="modal-input" type="text" name="newUsername" placeholder="Ingresa tu nuevo nombre" required>
       `,
-      email: `
-        <label class="text-modal">Nuevo correo:</label>
-        <input class="modal-input" type="email" name="newEmail" required>
+
+        email: `
+      <label class="text-modal">Nuevo correo:</label>
+      <input class="modal-input" type="email" name="newEmail" placeholder="ejemplo@correo.com" required>
       `,
-      password: `
-        <label class="text-modal">Contraseña actual:</label>
-        <input class="modal-input" type="password" name="oldPassword" required><br>
-        <label>Nueva contraseña:</label>
-        <input class="modal-input" type="password" name="newPassword" required><br>
-        <label>Confirmar nueva contraseña:</label>
-        <input class="modal-input" type="password" name="confirmPassword" required>
-      `
-    };
 
-    const titles = {
-      username: 'Editar Nombre',
-      email: 'Editar Correo',
-      password: 'Editar Contraseña',
-      'verify-email': 'Verificar Código'
-    };
-  
-    const urls = {
-      username: '/user/update-username',
-      email: '/user/update-email',
-      password: '/user/update-password',
-      'verify-email': '/user/verify-email-code'
-    };
+        password: `
+      <label class="text-modal">Contraseña actual:</label>
+      <input class="modal-input" type="password" name="oldPassword" placeholder="Tu contraseña actual" required><br>
+      <label class="text-modal">Nueva contraseña:</label>
+      <input class="modal-input" type="password" name="newPassword" placeholder="Nueva contraseña" required><br>
+      <label class="text-modal">Confirmar nueva contraseña:</label>
+      <input class="modal-input" type="password" name="confirmPassword" placeholder="Repite la nueva contraseña" required>
+`
 
-    function openModal(type) {
-      const modal = document.getElementById('modal');
-      const title = document.getElementById('modal-title');
-      const form = document.getElementById('modal-form');
+      };
 
-      form.dataset.type = type;
-      title.innerText = titles[type];
-      form.innerHTML = formTemplates[type] || '';
+      const titles = {
+        username: 'Editar Nombre',
+        email: 'Editar Correo',
+        password: 'Editar Contraseña',
+        'verify-email': 'Verificar Código'
+      };
 
-      modal.style.display = 'flex';
-    }
+      const urls = {
+        username: '/user/update-username',
+        email: '/user/update-email',
+        password: '/user/update-password',
+        'verify-email': '/user/verify-email-code'
+      };
 
-    function closeModal() {
-      document.getElementById('modal').style.display = 'none';
-      document.getElementById('resend-code-btn').style.display = 'none';
-    }
+      function openModal(type) {
+        const modal = document.getElementById('modal');
+        const title = document.getElementById('modal-title');
+        const form = document.getElementById('modal-form');
 
-    async function openCodeModal(newEmail) {
-  const modal = document.getElementById('modal');
-  const title = document.getElementById('modal-title');
-  const form = document.getElementById('modal-form');
-  const resendBtn = document.getElementById('resend-code-btn');
-  const verificationMsg = document.getElementById('verification-message');
+        form.dataset.type = type;
+        title.innerText = titles[type];
+        form.innerHTML = formTemplates[type] || '';
 
-  form.dataset.type = 'verify-email';
-  title.innerText = titles['verify-email'];
-  form.innerHTML = `
-    <label>Código de verificación:</label>
-    <input class="modal-input" type="text" name="codeInput" required>
+        modal.style.display = 'flex';
+      }
+
+      function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+        document.getElementById('resend-code-btn').style.display = 'none';
+      }
+
+      async function openCodeModal(newEmail) {
+        const modal = document.getElementById('modal');
+        const title = document.getElementById('modal-title');
+        const form = document.getElementById('modal-form');
+        const resendBtn = document.getElementById('resend-code-btn');
+        const verificationMsg = document.getElementById('verification-message');
+
+        form.dataset.type = 'verify-email';
+        title.innerText = titles['verify-email'];
+        form.innerHTML = `
+    <label class="text-modal">Código de verificación:</label>
+    <input class="modal-input" type="text" name="codeInput" placeholder="Introduce el código" required>
     <input type="hidden" name="newEmail" value="${newEmail}">
   `;
-  
-  verificationMsg.style.display = 'block';
-  verificationMsg.textContent = `Te hemos enviado un código de verificación a ${newEmail}`;
-  
-  resendBtn.style.display = 'block';
-  resendBtn.onclick = async () => {
-    try {
-      const response = await fetch('/user/resend-email-code', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: newEmail, type: 'verify' })
+
+        verificationMsg.style.display = 'block';
+        verificationMsg.innerHTML = `Te hemos enviado un código de verificación a <strong>${newEmail}</strong>`;
+
+        resendBtn.style.display = 'block';
+        resendBtn.onclick = async () => {
+          try {
+            const response = await fetch('/user/resend-email-code', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: newEmail, type: 'verify' })
+            });
+
+            if (response.ok) {
+              verificationMsg.innerHTML = `Te hemos enviado un código de verificación a <strong>${newEmail}</strong>`;
+            } else {
+              const errorText = await response.text();
+              alert('Error: ' + errorText);
+            }
+          } catch (error) {
+            alert('Error de red: ' + error.message);
+          }
+        };
+
+        modal.style.display = 'flex';
+      }
+
+      function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+        document.getElementById('resend-code-btn').style.display = 'none';
+        document.getElementById('verification-message').style.display = 'none';
+      }
+
+      document.getElementById('modal-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const form = e.target;
+        const type = form.dataset.type;
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        let url = urls[type];
+
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          });
+
+          if (response.ok) {
+            if (type === 'email') {
+              openCodeModal(data.newEmail);
+            } else if (type === 'verify-email') {
+              alert('Correo verificado y actualizado exitosamente.');
+              closeModal();
+              window.location.reload();
+            } else {
+              alert('Actualizado correctamente.');
+              closeModal();
+              window.location.reload();
+            }
+          } else {
+            const errorText = await response.text();
+            alert('Error: ' + errorText);
+            closeModal();
+          }
+        } catch (error) {
+          alert('Error de red: ' + error.message);
+          closeModal();
+        }
       });
+    </script>
 
-      if (response.ok) {
-        verificationMsg.textContent = `Se ha reenviado el código de verificación a ${newEmail}`;
-      } else {
-        const errorText = await response.text();
-        alert('Error: ' + errorText);
-      }
-    } catch (error) {
-      alert('Error de red: ' + error.message);
-    }
-  };
+  </body>
 
-  modal.style.display = 'flex';
-}
-
-function closeModal() {
-  document.getElementById('modal').style.display = 'none';
-  document.getElementById('resend-code-btn').style.display = 'none';
-  document.getElementById('verification-message').style.display = 'none';
-}
-
-document.getElementById('modal-form').addEventListener('submit', async function (e) {
-  e.preventDefault();
-
-  const form = e.target;
-  const type = form.dataset.type;
-  const formData = new FormData(form);
-  const data = Object.fromEntries(formData.entries());
-
-  let url = urls[type];
-
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-
-    if (response.ok) {
-      if (type === 'email') {
-        openCodeModal(data.newEmail);
-      } else if (type === 'verify-email') {
-        alert('Correo verificado y actualizado exitosamente.');
-        closeModal();
-        window.location.reload();
-      } else {
-        alert('Actualizado correctamente.');
-        closeModal();
-        window.location.reload();
-      }
-    } else {
-      const errorText = await response.text();
-      alert('Error: ' + errorText);
-      closeModal();
-    }
-  } catch (error) {
-    alert('Error de red: ' + error.message);
-    closeModal();
-  }
-});
-  </script>
-
-</body>
-
-<%- include('../partials/footer.ejs') %>
+  <%- include('../partials/footer.ejs') %>

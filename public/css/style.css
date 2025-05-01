@@ -616,8 +616,8 @@ textarea.input {
 
 @media (max-width: 768px) {
   #search-results {
-    width: 90%; 
-    left: 5%;
+    width: 94%; 
+    left: 3%;
     right: 5%;
   }
 
