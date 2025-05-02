@@ -14,9 +14,12 @@ export const ERROR_MESSAGES = {
 
   // Login
   USER_NOT_FOUND: 'Correo no registrado.',
+  
+  INCORRECT_PASSWORD: 'Contraseña actual incorrecta.',
   WRONG_PASSWORD: 'Contraseña incorrecta.',
   UNVERIFIED_EMAIL: 'Primero debes verificar tu correo.',
   LOGIN_ERROR: 'Error en el inicio de sesión.',
+  EMAIL_REPEATED: 'No puedes actualizar al mismo correo',
 
   // Recuperación
   NO_RESET_REQUEST: 'No hay solicitud de recuperación activa.',

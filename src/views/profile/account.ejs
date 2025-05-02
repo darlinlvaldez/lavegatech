@@ -1,5 +1,7 @@
 <%- include('../partials/header.ejs') %>
 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
   <body>
     <div class="contenedor-account">
       <div class="titulo-admin">
@@ -31,7 +33,6 @@
       </div>
     </div>
 
-
     <!-- Modal -->
     <div id="modal" class="modal-container" style="display:none;">
       <div id="modal-content" class="modal-contenido">
@@ -52,6 +53,26 @@
     </div>
 
     <script>
+      function showNotification(message, isSuccess = true) {
+        Toastify({
+          text: message,
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "right",
+          backgroundColor: isSuccess ? "#4CAF50" : "#f44336",
+          stopOnFocus: true,
+          className: "toast-notification",
+          style: {
+            color: "#fff",
+            "font-family": "Arial, sans-serif",
+            "font-size": "14px",
+            "border-radius": "4px",
+            "box-shadow": "0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)"
+          }
+        }).showToast();
+      }
+
       const formTemplates = {
         username: `
       <label class="text-modal">Nuevo nombre:</label>
@@ -60,18 +81,17 @@
 
         email: `
       <label class="text-modal">Nuevo correo:</label>
-      <input class="modal-input" type="email" name="newEmail" placeholder="ejemplo@correo.com" required>
+      <input class="modal-input" type="email" name="newEmail" placeholder="ejemplo@gmail.com" required>
       `,
 
         password: `
       <label class="text-modal">Contraseña actual:</label>
-      <input class="modal-input" type="password" name="oldPassword" placeholder="Tu contraseña actual" required><br>
+      <input class="modal-input" type="password" name="oldPassword" placeholder="Tu contraseña actual" required>
       <label class="text-modal">Nueva contraseña:</label>
-      <input class="modal-input" type="password" name="newPassword" placeholder="Nueva contraseña" required><br>
+      <input class="modal-input" type="password" name="newPassword" placeholder="Nueva contraseña" required>
       <label class="text-modal">Confirmar nueva contraseña:</label>
       <input class="modal-input" type="password" name="confirmPassword" placeholder="Repite la nueva contraseña" required>
-`
-
+      `
       };
 
       const titles = {
@@ -100,11 +120,6 @@
         modal.style.display = 'flex';
       }
 
-      function closeModal() {
-        document.getElementById('modal').style.display = 'none';
-        document.getElementById('resend-code-btn').style.display = 'none';
-      }
-
       async function openCodeModal(newEmail) {
         const modal = document.getElementById('modal');
         const title = document.getElementById('modal-title');
@@ -115,10 +130,10 @@
         form.dataset.type = 'verify-email';
         title.innerText = titles['verify-email'];
         form.innerHTML = `
-    <label class="text-modal">Código de verificación:</label>
-    <input class="modal-input" type="text" name="codeInput" placeholder="Introduce el código" required>
-    <input type="hidden" name="newEmail" value="${newEmail}">
-  `;
+        <label class="text-modal">Código de verificación:</label>
+        <input class="modal-input" type="text" name="codeInput" placeholder="Introduce el código" required>
+        <input type="hidden" name="newEmail" value="${newEmail}">
+        `;
 
         verificationMsg.style.display = 'block';
         verificationMsg.innerHTML = `Te hemos enviado un código de verificación a <strong>${newEmail}</strong>`;
@@ -133,13 +148,14 @@
             });
 
             if (response.ok) {
-              verificationMsg.innerHTML = `Te hemos enviado un código de verificación a <strong>${newEmail}</strong>`;
+              showNotification('Código reenviado exitosamente', true);
+              verificationMsg.innerHTML = `Te hemos enviado un nuevo código de verificación a <strong>${newEmail}</strong>`;
             } else {
               const errorText = await response.text();
-              alert('Error: ' + errorText);
+              showNotification('Error: ' + errorText, false);
             }
           } catch (error) {
-            alert('Error de red: ' + error.message);
+            showNotification('Error de red: ' + error.message, false);
           }
         };
 
@@ -152,47 +168,51 @@
         document.getElementById('verification-message').style.display = 'none';
       }
 
-      document.getElementById('modal-form').addEventListener('submit', async function (e) {
+      document.getElementById('modal-form').addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const form = e.target;
-        const type = form.dataset.type;
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
-
-        let url = urls[type];
-
         try {
-          const response = await fetch(url, {
+          const form = e.target;
+          const { type } = form.dataset;
+          const data = Object.fromEntries(new FormData(form));
+
+          const response = await fetch(urls[type], {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
           });
 
+          const responseData = await response.json();
+
           if (response.ok) {
-            if (type === 'email') {
-              openCodeModal(data.newEmail);
-            } else if (type === 'verify-email') {
-              alert('Correo verificado y actualizado exitosamente.');
+            showNotification(
+              responseData.message ||
+                type === 'email' ? 'Actualizado con exito' :
+                type === 'verify-email' ? 'Correo verificado' : 'Actualizado con exito',
+              true
+            );
+            type === 'email' ? openCodeModal(data.newEmail) : setTimeout(() => {
               closeModal();
-              window.location.reload();
-            } else {
-              alert('Actualizado correctamente.');
-              closeModal();
-              window.location.reload();
-            }
+              window.location.href = responseData.redirectUrl || '/account';
+            }, 2000);
           } else {
-            const errorText = await response.text();
-            alert('Error: ' + errorText);
-            closeModal();
+            showNotification(
+              responseData.error ||
+              responseData.message ||
+              responseData.errors?.[0]?.message ||
+              'Error desconocido',
+              false
+            );
           }
         } catch (error) {
-          alert('Error de red: ' + error.message);
+          showNotification(error.message || 'Error de red', false);
           closeModal();
         }
       });
     </script>
 
   </body>
+
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
   <%- include('../partials/footer.ejs') %>

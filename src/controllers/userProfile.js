@@ -10,19 +10,15 @@ auth.updateUsername = async (req, res) => {
   const sessionUser = req.session.user;
   const { newUsername } = req.body;
 
-  try {
-    if (sessionUser.username === newUsername) {
-      return res.status(400).send(ERROR_MESSAGES.PASSWORDS_DONT_MATCH);
-    }
-
-    if (!newUsername) return res.status(400).send(ERROR_MESSAGES.MISSING_FIELDS);
+  try {    
+    if (!newUsername) return res.status(400).json({ error: ERROR_MESSAGES.MISSING_FIELDS });
 
     await user.updateUsername(sessionUser.id, newUsername);
     req.session.user.username = newUsername;
-    res.redirect('/account');
+    res.status(200).json({ success: true, redirectUrl: '/account' });
   } catch (error) {
     console.error(error);
-    res.status(500).send(ERROR_MESSAGES.SERVER_ERROR);
+    res.status(500).json({ error: ERROR_MESSAGES.SERVER_ERROR });
   }
 };
 
@@ -31,15 +27,15 @@ auth.updateEmail = async (req, res) => {
   const { newEmail } = req.body;
   
   try {
-    if (!sessionUser) return res.status(401).send(ERROR_MESSAGES.LOGIN_ERROR);
+    if (!sessionUser) return res.status(401).json({ error: ERROR_MESSAGES.LOGIN_ERROR });
 
     if (sessionUser.email === newEmail) {
-      return res.status(400).send(ERROR_MESSAGES.EMAIL_ALREADY_EXISTS);
+      return res.status(400).json({ error: ERROR_MESSAGES.EMAIL_REPEATED });
     }
 
     const alreadyExists = await user.userExists(newEmail);
     if (alreadyExists) {
-      return res.status(400).send(ERROR_MESSAGES.EMAIL_ALREADY_EXISTS);
+      return res.status(400).json({ error: ERROR_MESSAGES.EMAIL_ALREADY_EXISTS });
     }
 
     const verificationCode = code.generateCode();
@@ -51,14 +47,14 @@ auth.updateEmail = async (req, res) => {
 
     try {
       await emailService.sendVerification(newEmail, verificationCode);
-      res.status(200).send('Código enviado al nuevo correo.');
+      res.status(200).json({ success: true, message: 'Código enviado al nuevo correo.' });
     } catch (error) {
       console.error(error);
-      res.status(500).send(ERROR_MESSAGES.EMAIL_SEND_ERROR);
+      res.status(500).json({ error: ERROR_MESSAGES.EMAIL_SEND_ERROR });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).send(ERROR_MESSAGES.SERVER_ERROR);
+    res.status(500).json({ error: ERROR_MESSAGES.SERVER_ERROR });
   }
 };
 
@@ -70,8 +66,7 @@ auth.resendCode = async (req, res) => {
   try {
     if (existing?.lastSent && now - existing.lastSent < 3 * 60 * 1000) {
       const remaining = Math.ceil((3 * 60 * 1000 - (now - existing.lastSent))) / 1000;
-      return res.status(429).json({ 
-        error: ERROR_MESSAGES.RESEND_COOLDOWN.replace("{seconds}", remaining) 
+      return res.status(429).json({error: ERROR_MESSAGES.RESEND_COOLDOWN.replace("{seconds}", remaining) 
       });
     }
 
@@ -86,8 +81,7 @@ auth.resendCode = async (req, res) => {
     try {
       await emailService.sendEmail(
         email,
-        'Nuevo código de verificación',
-        `Tu nuevo código es: ${newCode}`
+        'Nuevo código de verificación', `Tu nuevo código es: ${newCode}`
       );
       res.status(200).json({ message: 'Código reenviado exitosamente' });
     } catch (error) {
@@ -106,15 +100,15 @@ auth.verifyEmailCode = async (req, res) => {
   try {
     const result = code.validateCode(code.pendingUsers, newEmail, codeInput);
 
-    if (result.error) return res.status(400).send(result.error);
+    if (result.error) return res.status(400).json({ error: result.error });
 
     await user.updateEmail(result.data.userId, newEmail);
     code.pendingUsers.delete(newEmail);
     req.session.user.email = newEmail; 
-    res.status(200).send('Correo actualizado exitosamente.');
+    res.status(200).json({ success: true, message: 'Correo actualizado exitosamente.', redirectUrl: '/account' });
   } catch (error) {
     console.error(error);
-    res.status(500).send(ERROR_MESSAGES.SERVER_ERROR);
+    res.status(500).json({ error: ERROR_MESSAGES.SERVER_ERROR });
   }
 };
 
@@ -123,23 +117,23 @@ auth.updatePassword = async (req, res) => {
   const { oldPassword, newPassword, confirmPassword } = req.body;
 
   try {
-    if (!sessionUser) return res.redirect('/login');
+    if (!sessionUser) return res.status(401).json({ error: ERROR_MESSAGES.LOGIN_ERROR });
     if (!newPassword || newPassword !== confirmPassword)
-      return res.status(400).send(ERROR_MESSAGES.PASSWORDS_DONT_MATCH);
+      return res.status(400).json({ error: ERROR_MESSAGES.PASSWORDS_DONT_MATCH });
 
     const foundUser = await user.findById(sessionUser.id);
-    if (!foundUser) return res.status(404).send(ERROR_MESSAGES.USER_NOT_FOUND);
+    if (!foundUser) return res.status(404).json({ error: ERROR_MESSAGES.USER_NOT_FOUND });
 
     const match = await bcrypt.compare(oldPassword, foundUser.password);
-    if (!match) return res.status(400).send(ERROR_MESSAGES.WRONG_PASSWORD);
+    if (!match) return res.status(400).json({ error: ERROR_MESSAGES.INCORRECT_PASSWORD });
 
     const saltRounds = 10;
     const hashed = await bcrypt.hash(newPassword, saltRounds);
     await user.updatePassword(sessionUser.id, hashed);
-    res.redirect('/account');
+    res.status(200).json({ success: true, redirectUrl: '/account' });
   } catch (error) {
     console.error(error);
-    res.status(500).send(ERROR_MESSAGES.SERVER_ERROR);
+    res.status(500).json({ error: ERROR_MESSAGES.SERVER_ERROR });
   }
 };
 
