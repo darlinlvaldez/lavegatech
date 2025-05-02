@@ -10,8 +10,12 @@ const construirWhereClause = (categorias = [], marcas = [], precioMin = null, pr
     }
 
     if (marcas.length > 0) {
-        condiciones.push(`p.marca_id IN (${marcas.join(',')})`);
-    }
+        condiciones.push(`(
+            p.marca_id IN (${marcas.join(',')}) OR p.categoria_id NOT IN ( 
+            SELECT DISTINCT mc.categoria_id
+            FROM marca_categoria mc 
+            WHERE mc.marca_id IN (${marcas.join(',')})))`);
+        }
 
     if (precioMin !== null && !isNaN(precioMin)) {
         condiciones.push(`p.precio >= ${precioMin}`);

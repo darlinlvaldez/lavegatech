@@ -34,4 +34,18 @@ store.storeController = async (req, res) => {
     }
 }
 
+store.marcasPorCategoriaController = async (req, res) => {
+    try {
+        const categorias = req.query.categorias ? req.query.categorias.split(',').map(Number) : [];
+        const marcas = await store.cantidadMarcas(categorias);
+        
+        const marcasIds = marcas.map(m => m.marca_id);
+        
+        res.json(marcasIds);
+    } catch (err) {
+        console.error('Error al obtener marcas por categoría:', err);
+        res.status(500).json({ error: 'Error al obtener marcas' });
+    }
+}
+
 export default store;

@@ -10,6 +10,7 @@ router.get('/search', principal.buscarController);
 
 router.get('/store', store.storeController);
 router.get('/store/:pagina', store.storeController);
+router.get('/marcas-por-categoria', store.marcasPorCategoriaController);
 
 router.get("/product/:id", product.detallesController);
 router.get('/stock/:productId/:color', product.StockController);

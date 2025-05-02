@@ -15,7 +15,7 @@
             return;
         }
 
-        fetch(` /marcas-por-categoria?categorias=${categoriasSeleccionadas.join(',')}`)
+        fetch(`/marcas-por-categoria?categorias=${categoriasSeleccionadas.join(',')}`)
             .then(response => response.json())
             .then(marcasRelevantes => {
                 document.querySelectorAll('input[name="marca"]').forEach(checkbox => {
@@ -28,7 +28,7 @@
                     }
                 });
             });
-    }
+		}
 
 	function actualizarProductos() {
 		actualizarMarcas();
@@ -48,7 +48,7 @@
 
 		const pagina = 1;
 
-		window.location.href = ` /store/${pagina}?limite=${limite}&orden=${orden}&categoria=${categorias}
+		window.location.href = `/store/${pagina}?limite=${limite}&orden=${orden}&categoria=${categorias}
 		&marca=${marcas}&precioMin=${precioMin}&precioMax=${precioMax}`;
 	}
 

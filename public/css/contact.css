@@ -7,6 +7,13 @@
     padding: 20px;
 }
 
+.bg-light {
+    background-color: #e9eef5 ;
+    color: rgb(0, 0, 0);
+    padding: 100px 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 div .titulo {
     font-size: 4.5rem;
     margin-bottom: 20px;
@@ -82,10 +89,8 @@ form .mb-3 {
 .entrada-texto:focus {
     outline: none;
     border-color: #1f51bd;
-    box-shadow: 0 0 5px rgba(8, 33, 172, 0.5);
   }
   
-
 .fila-boton {
     margin-top: 20px;
 }
