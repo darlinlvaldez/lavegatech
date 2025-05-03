@@ -7,7 +7,7 @@
     function actualizarMarcas() {
         const categoriasSeleccionadas = Array.from(document.querySelectorAll('input[name="categoria"]:checked'))
             .map(checkbox => parseInt(checkbox.value));
-        
+
         if (categoriasSeleccionadas.length === 0) {
             document.querySelectorAll('input[name="marca"]').forEach(checkbox => {
                 checkbox.parentElement.style.display = 'block';
@@ -15,7 +15,7 @@
             return;
         }
 
-        fetch(`/marcas-por-categoria?categorias=${categoriasSeleccionadas.join(',')}`)
+        fetch(`/store?categorias=${categoriasSeleccionadas.join(',')}`)
             .then(response => response.json())
             .then(marcasRelevantes => {
                 document.querySelectorAll('input[name="marca"]').forEach(checkbox => {
@@ -31,8 +31,7 @@
 		}
 
 	function actualizarProductos() {
-		actualizarMarcas();
-		
+			
 		const limite = document.getElementById('limite-select').value;
 		const orden = document.getElementById('ordenar-select').value;
 		const precioMin = document.getElementById('price-min').value;
@@ -51,15 +50,9 @@
 		window.location.href = `/store/${pagina}?limite=${limite}&orden=${orden}&categoria=${categorias}
 		&marca=${marcas}&precioMin=${precioMin}&precioMax=${precioMax}`;
 	}
-
+	
 	document.addEventListener("DOMContentLoaded", function() {
-		document.querySelectorAll('input[name="categoria"]').forEach(checkbox => {
-			checkbox.addEventListener('change', actualizarMarcas);
-		});
-		
 		document.getElementById("aplicar-filtro-precio").addEventListener("click", actualizarProductos);
-		
-		actualizarMarcas();
 	});
 </script>
   
@@ -143,8 +136,7 @@
 							<% cantMarcas.forEach(marca=> { %>
 								<div class="input-checkbox">
 									<input type="checkbox" id="brand-<%= marca.marca_id %>" name="marca"
-										value="<%= marca.marca_id %>" 
-										onchange="actualizarProductos()"
+										value="<%= marca.marca_id %>" onchange="actualizarProductos()"
 										<%= marcas.includes(marca.marca_id.toString()) ? 'checked' : '' %>>
 									<label for="brand-<%= marca.marca_id %>">
 										<span></span>
@@ -158,7 +150,7 @@
 					<!-- /aside Widget -->
 				</div>
 				<!-- /ASIDE -->
-
+				 
 				<!-- STORE -->
 				<div id="store" class="col-md-9">
 					<!-- store top filter -->

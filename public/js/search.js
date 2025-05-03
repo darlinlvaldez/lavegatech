@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
       products.forEach(product => {
+        if (!product.imagenes || !product.colores) return; 
         const productElement = document.createElement('div');
         productElement.className = 'search-result-item';
         productElement.innerHTML = `

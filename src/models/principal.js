@@ -31,7 +31,6 @@ principal.buscarProductos = async (query) => {
   }
 };
 
-
 principal.obtenerProductos = async (categoria) => {
   const query = `
      SELECT 

@@ -30,21 +30,7 @@ store.storeController = async (req, res) => {
         });
     } catch (err) {
         console.error('Error al obtener datos de productos:', err);
-        res.status(500).send('Error al cargar los datos.');
-    }
-}
-
-store.marcasPorCategoriaController = async (req, res) => {
-    try {
-        const categorias = req.query.categorias ? req.query.categorias.split(',').map(Number) : [];
-        const marcas = await store.cantidadMarcas(categorias);
-        
-        const marcasIds = marcas.map(m => m.marca_id);
-        
-        res.json(marcasIds);
-    } catch (err) {
-        console.error('Error al obtener marcas por categoría:', err);
-        res.status(500).json({ error: 'Error al obtener marcas' });
+        res.status(500).json('Error al cargar los datos.');
     }
 }
 
