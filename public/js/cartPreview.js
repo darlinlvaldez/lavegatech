@@ -30,9 +30,8 @@ function cargarCarrito() {
                                 <img src="${item.imagen}" alt="${item.nombre}">
                             </div>
                             <div class="product-body">
-                                <h3 class="product-name">${item.nombre}</h3></a>
-                                <p class="product-color">${item.colorSeleccionado}</p>
-                                <h4 class="product-price">
+                                <h3 class="product-nombres">${item.nombre}</h3></a>
+                                <h4 class="product-precios">
                                     <span class="qty-cart">${item.cantidad}x</span> 
                                     $${precioConDescuento.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
                                 </h4>

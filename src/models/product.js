@@ -4,7 +4,7 @@ const product = {};
 
 product.obtenerDetalles = async (id) => {
     const query = `
-        SELECT 
+    SELECT 
     p.id,
     p.nombre,
     p.descripcion,
@@ -16,11 +16,11 @@ product.obtenerDetalles = async (id) => {
     GROUP_CONCAT(DISTINCT v.color) AS colores,
     GROUP_CONCAT(DISTINCT v.img) AS imagenes,
     GROUP_CONCAT(DISTINCT v.stock) AS stocks
-FROM productos p
-JOIN categorias c ON p.categoria_id = c.id
-LEFT JOIN variantes v ON p.id = v.producto_id
-WHERE p.id = ?
-GROUP BY p.id `;
+    FROM productos p
+    JOIN categorias c ON p.categoria_id = c.id
+    LEFT JOIN variantes v ON p.id = v.producto_id
+    WHERE p.id = ?
+    GROUP BY p.id `;
 
     try {
         const [results] = await db.query(query, [id]);
@@ -63,22 +63,22 @@ product.obtenerStock = async (productoId, color) => {
 
 product.obtenerRelacionados = async (productoId, categoriaId) => {
     const query = `
-        SELECT 
-          p.id,
-          p.nombre,
-          p.precio,
-          p.descuento,
-          p.fecha,
-          c.categoria,
-          v.color AS color, 
+    SELECT 
+    p.id,
+    p.nombre,
+    p.precio,
+    p.descuento,
+    p.fecha,
+    c.categoria,
+    v.color AS color, 
     v.stock AS stock,
     v.img AS imagen
-      FROM productos p
-      JOIN categorias c ON p.categoria_id = c.id
-      LEFT JOIN variantes v ON p.id = v.producto_id 
-        WHERE p.id != ? AND p.categoria_id = ?
-        GROUP BY p.id 
-        LIMIT 4`;
+    FROM productos p
+    JOIN categorias c ON p.categoria_id = c.id
+    LEFT JOIN variantes v ON p.id = v.producto_id 
+    WHERE p.id != ? AND p.categoria_id = ?
+    GROUP BY p.id 
+    LIMIT 4`;
     
     try {
         const [results] = await db.query(query, [productoId, categoriaId]);

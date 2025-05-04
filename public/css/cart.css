@@ -58,6 +58,10 @@
     font-weight: normal;
 }
 
+.product-price{
+    color: #d10000; 
+}
+
 span.sale {
     background-color: #ffffff;
     color: #d10000; 
