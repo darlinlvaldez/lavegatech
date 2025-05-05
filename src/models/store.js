@@ -15,11 +15,11 @@ const construirWhereClause = (categorias = [], marcas = [], precioMin = null, pr
   if (tieneMarcas) {
     if (tieneCategorias) {
       condiciones.push(`(
-                p.marca_id IN (${marcas.join(",")})
-                OR p.categoria_id NOT IN (
-                SELECT DISTINCT mc.categoria_id
-                FROM marca_categoria mc 
-                WHERE mc.marca_id IN (${marcas.join(",")})))`);
+        p.marca_id IN (${marcas.join(",")})
+        OR p.categoria_id NOT IN (
+        SELECT DISTINCT mc.categoria_id
+        FROM marca_categoria mc 
+        WHERE mc.marca_id IN (${marcas.join(",")})))`);
     } else {
       condiciones.push(`p.marca_id IN (${marcas.join(",")})`);
     }
@@ -54,7 +54,7 @@ store.obtenerStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], 
     p.precio,
     p.descuento,
     p.fecha,
-    p.img_principal AS imagen,
+    v.img AS imagen,
     c.categoria,
     v.stock,
     v.color

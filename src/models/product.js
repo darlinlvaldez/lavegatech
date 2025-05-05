@@ -13,9 +13,9 @@ product.obtenerDetalles = async (id) => {
     p.fecha,
     p.categoria_id AS categoriaId,
     c.categoria,
-    GROUP_CONCAT(DISTINCT v.color) AS colores,
-    GROUP_CONCAT(DISTINCT v.img) AS imagenes,
-    GROUP_CONCAT(DISTINCT v.stock) AS stocks
+    GROUP_CONCAT(DISTINCT v.color ORDER BY v.color) AS colores,
+    GROUP_CONCAT(DISTINCT v.img ORDER BY v.color) AS imagenes,
+    GROUP_CONCAT(DISTINCT v.stock ORDER BY v.color) AS stocks
     FROM productos p
     JOIN categorias c ON p.categoria_id = c.id
     LEFT JOIN variantes v ON p.id = v.producto_id

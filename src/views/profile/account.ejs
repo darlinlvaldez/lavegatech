@@ -183,7 +183,7 @@
           if (response.ok) {
             showNotification(
               responseData.message ||
-                type === 'email' ? 'Actualizado con exito' :
+                type === 'email' ? 'Se te ha enviado un código al correo' :
                 type === 'verify-email' ? 'Correo verificado' : 'Actualizado con exito',
               true
             );

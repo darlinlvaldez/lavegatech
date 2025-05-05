@@ -41,7 +41,7 @@ principal.obtenerProductos = async (categoria) => {
   c.categoria,
   v.color, 
   v.stock,
-  p.img_principal AS imagen
+  v.img AS imagen
   FROM productos p
   JOIN categorias c ON p.categoria_id = c.id
   LEFT JOIN variantes v ON p.id = v.producto_id 
@@ -70,22 +70,21 @@ principal.obtenerCategorias = async () => {
 
 principal.obtenerRecomendados = async () => {
   const query = `
-      SELECT 
-          p.id,
-          p.nombre,
-          p.precio,
-          p.descuento,
-          p.fecha,
-          c.categoria,
-          v.color, 
-          v.stock,
-          v.img AS imagen
-      FROM productos p
-      JOIN categorias c ON p.categoria_id = c.id
-      LEFT JOIN variantes v ON p.id = v.producto_id 
-      GROUP BY p.id 
-      LIMIT 20;
-  `;
+  SELECT 
+  p.id,
+  p.nombre,
+  p.precio,
+  p.descuento,
+  p.fecha,
+  c.categoria,
+  v.color, 
+  v.stock,
+  v.img AS imagen
+  FROM productos p
+  JOIN categorias c ON p.categoria_id = c.id
+  LEFT JOIN variantes v ON p.id = v.producto_id 
+  GROUP BY p.id 
+  LIMIT 20;`;
   
   try {
       const [results] = await db.query(query);

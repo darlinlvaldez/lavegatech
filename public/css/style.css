@@ -775,21 +775,20 @@ textarea.input {
 
 .product-precios{
   font-size: 14px;
-
 }
 
-.cart-dropdown .cart-list .product-widget .product-img {
-  width: 18%;
-  height: 15%;
-  left: 15px;
-  top: 0px;
+.cart-dropdown .cart-list .product-widget .product-img img {
+  width: 100%;
+  margin-left: 50%;
+  object-fit: cover;
+  display: block;
 }
 
 .cart-dropdown .cart-list .product-widget .product-body {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  margin-top: 5px;
+  margin-top: 0px;
 }
 
 .cart-dropdown .cart-list .product-widget .product-body .product-precios {
@@ -1022,8 +1021,17 @@ textarea.input {
   height: 100%;
 }
 
+.product .product-img {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+}
+
 .product .product-img a img {
   width: 100%;
+  height: 100%;
+  object-fit: cover; 
   display: block;
 }
 
