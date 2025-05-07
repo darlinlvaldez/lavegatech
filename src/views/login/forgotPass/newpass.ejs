@@ -2,19 +2,50 @@
 
 <body>
   <div class="login-container">
-  <h2>Crear nueva contraseña</h2>
-  <p>Solicitaremos esta contraseña cada vez que inicies sesión.</p>
+    <h2>Crear nueva contraseña</h2>
+    <p>Solicitaremos esta contraseña cada vez que inicies sesión.</p>
 
-  <form method="POST" action="/api/auth/newPassword">
-    <input type="hidden" name="email" value="<%= email %>">
-    <input type="password" name="password" placeholder="Nueva contraseña" required>
-    <input type="password" name="confirm" placeholder="Vuelve a escribir la contraseña" required>
-    <button type="submit">Guardar contraseña</button>
-  </form>
-</div>
+    <form method="POST" action="/api/auth/newPassword" class="password-form">
+      <input type="hidden" name="email" value="<%= email %>">
+      
+      <div class="password-wrapper">
+        <input type="password" name="password" id="passwordInput" placeholder="Nueva contraseña" required
+        class="password-input <%= validationErrors?.password ? 'input-error' : '' %>">
 
-  <% if (error) { %>
-    <p style="color:red"><%= error %></p>
-    <% } %>
+        <span onclick="togglePassword('password')" class="toggle-password">
+          <i id="eyeIconPassword" class="fas fa-eye-slash"></i>
+        </span>
+      </div>
 
-  <%- include('../../components/footer.ejs') %>
+        <% if (validationErrors?.password) { %>
+          <p class="field-error"><%= validationErrors.password %></p>
+        <% } %>
+
+      <div class="password-wrapper">
+        <input type="password" name="confirm" id="confirmPasswordInput" placeholder="Confirmar contraseña" required
+          class="password-input <%= validationErrors?.confirm ? 'input-error' : '' %>">
+
+
+          <span onclick="togglePassword('confirmPassword')" class="toggle-password">
+            <i id="eyeIconConfirmPassword" class="fas fa-eye-slash"></i>
+          </span>
+        </div>
+
+        <% if (validationErrors?.confirm) { %>
+          <p class="field-error"><%= validationErrors.confirm %></p>
+        <% } %>
+      
+      <% if (error && !validationErrors?.password && !validationErrors?.confirm) { %>
+        <div class="general-error">
+          <%= error %>
+        </div>
+      <% } %>
+
+      <button type="submit" class="submit-btn">Guardar contraseña</button>
+    </form>
+  </div>
+</body>
+
+<script src="/js/showPass.js"></script>
+
+<%- include('../../components/footer.ejs') %>

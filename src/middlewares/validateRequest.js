@@ -5,17 +5,35 @@ const validate = (schema) => (req, res, next) => {
   const validation = validator.schema(schema, req.body);
 
   if (!validation.isValid) {
-    const response = {
-      error: validation.errors[0]?.message || 'Error de validación',
-      validationError: true
-    };
+    const errorMessage = validation.errors[0]?.message || 'Error de validación';
+    
+    const isApiRequest = req.xhr || 
+    req.path.startsWith('/api') || 
+    req.get('Accept')?.includes('application/json') ||
+    req.get('Content-Type')?.includes('application/json');
+    
+    if (isApiRequest) {
+      const response = {
+        error: errorMessage,
+        validationError: true
+      };
 
-    if (config.MODE === 'development') {
-      response.errors = validation.errors;
-      response.stack = validation.stack;
+      if (config.MODE === 'development') {
+        response.errors = validation.errors;
+        response.stack = validation.stack;
+      }
+
+      return res.status(400).json(response);
+    } else {
+      req.validationError = {
+        message: errorMessage,
+        fields: validation.errors.reduce((acc, err) => {
+          acc[err.path] = err.message;
+          return acc;
+        }, {})
+      };
+      return next();
     }
-
-    return res.status(400).json(response);
   }
 
   next();

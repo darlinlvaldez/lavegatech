@@ -1,20 +1,35 @@
 <%- include('../../components/header.ejs') %>
 
-</body>
+<body>
   <div class="email-container">
     <h2>Ayuda con la contraseña</h2>
     <p>Escribe la dirección de correo electrónico asociada a tu cuenta.</p>
 
-    <form method="POST" action="/api/auth/email">
-      <input type="email" name="email" placeholder="ejemplo@gmail.com" required>
-      <button type="submit">Continuar</button>
+    <form method="POST" action="/api/auth/email" class="password-form">
+        <input 
+          type="email" 
+          name="email" 
+          placeholder="ejemplo@gmail.com" 
+          required
+          class="form-input <%= validationErrors?.email ? 'input-error' : '' %>"
+          value="<%= email || '' %>"
+        >
+        
+        <% if (validationErrors?.email) { %>
+          <div class="field-error">
+            <%= validationErrors.email %>
+          </div>
+        <% } %>
+      
+      <% if (error && !validationErrors?.email) { %>
+        <div class="general-error">
+          <%= error %>
+        </div>
+      <% } %>
+
+      <button type="submit" class="submit-btn">Continuar</button>
     </form>
   </div>
-
-  <% if (error) { %>
-    <p style="color:red"><%= error %></p>
-    <% } %>
-
 </body>
 
 <%- include('../../components/footer.ejs') %>

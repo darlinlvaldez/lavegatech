@@ -19,6 +19,8 @@ import userProfile from './src/routes/userProfile.js';
 
 const app = express();
 
+app.use(express.json());
+
 app.use(session);
 
 app.use(userLocals);
@@ -32,7 +34,6 @@ app.set('views', path.join(process.cwd(), 'src', 'views'));
 app.use(express.static(path.join(process.cwd(), 'public')));
 
 app.disable('x-powered-by');
-app.use(express.json());
 
 app.use('/api/auth', auth); 
 
@@ -40,7 +41,7 @@ app.use('/user', userProfile);
 
 app.use('/', store);
 
-app.post(' /mant', async (req, res) => {
+app.post('/mant', async (req, res) => {
   const file = req.files.foto;
   await file.mv(file.name);
   res.status(200).send('ok');
@@ -60,29 +61,27 @@ app.get('/account', isAuth, (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-  res.render('login/login', { error: null, email: null });
+  res.render('login/login', {error: null, email: null, validationErrors: {}});
 });
 
 app.get('/register', (req, res) => {
-  res.render('login/register', {
-    error: null, email: '', username: ''});
+  res.render('login/register', {error: null, email: '', username: '', validationErrors: {}});
 });
 
 app.get('/verify', (req, res) => {
-  res.render('login/verify', {
-    email: req.query.email, error: null, info: null});
+  res.render('login/verify', {email: req.query.email, error: null, info: null, validationErrors: {}});
 });
 
 app.get('/email', (req, res) => {
-  res.render('login/forgotPass/email', { error: null, email: null });
+  res.render('login/forgotPass/email', { error: null, email: null, validationErrors: {}});
 });
 
 app.get('/code', (req, res) => {
-  res.render('login/forgotPass/code', { error: null, email: null });
+  res.render('login/forgotPass/code', { error: null, email: null, validationErrors: {}});
 });
 
 app.get('/newpass', (req, res) => {
-  res.render('login/forgotPass/newpass', { error: null, email: null });
+  res.render('login/forgotPass/newpass', { error: null, email: null, validationErrors: {}});
 });
 
 app.get('/mant', (req, res) => {
@@ -112,7 +111,8 @@ app.get('/product', (req, res) => {
 });
 
 app.get('/contact', (req, res) => {
-  res.render('store/contact', {nombre: '', correo: '', mensaje: '', asunto: '', error: []});
+  res.render('store/contact', {nombre: '', email: '', mensaje: '', asunto: '', 
+    error: [], success: false, validationErrors: {}, query: req.query});
 });
 
 app.get('/about', (req, res) => {

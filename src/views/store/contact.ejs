@@ -3,6 +3,8 @@
   <!-- Contact -->
   <link type="text/css" rel="stylesheet" href="/css/contact.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <link type="text/css" rel="stylesheet" href="/css/error.css"/>
 
 <div class="contactos-page">
 <body>
@@ -43,28 +45,50 @@
 
 <div class="input-principal">
     <div class="fila-formulario">
-        <form class="formulario-contacto" method="post" action="/api/auth/contact" role="form">
+        <form class="formulario-contacto" method="post" action="/api/auth/contact" role="form" id="contactForm">
             <div class="fila-campos">
                 <div class="campo-formulario">
                     <label for="nombre">Nombre</label>
-                    <input type="text" class="entrada-texto" id="nombre" name="nombre" placeholder="Nombre" value="<%= nombre || '' %>">
+                    <input type="text" class="entrada-texto <%= validationErrors?.nombre ? 'input-error' : '' %>" 
+                    id="nombre" name="nombre" placeholder="Introduce el nombre" value="<%= nombre || '' %>">
+                    <% if (validationErrors?.nombre) { %>
+                        <p class="field-error"><%= validationErrors.nombre %></p>
+                    <% } %>
                 </div>
                 <div class="campo-formulario">
-                    <label for="correo">Correo</label>
-                    <input type="email" class="entrada-texto" id="correo" name="correo" placeholder="Correo" value="<%= correo || '' %>">
+                    <label for="email">Correo</label>
+                    <input type="email" class="entrada-texto <%= validationErrors?.email ? 'input-error' : '' %>" 
+                    id="email" name="email" placeholder="ejemplo@gmail.com" value="<%= email || '' %>">
+                    <% if (validationErrors?.email) { %>
+                        <p class="field-error"><%= validationErrors.email %></p>
+                    <% } %>
                 </div>
             </div>
             <div class="campo-formulario">
                 <label for="asunto">Asunto</label>
-                <input type="text" class="entrada-texto" id="asunto" name="asunto" placeholder="Asunto" value="<%= asunto || '' %>">
+                <input type="text" class="entrada-texto <%= validationErrors?.asunto ? 'input-error' : '' %>" 
+                id="asunto" name="asunto" placeholder="Introduce el asunto" value="<%= asunto || '' %>">
+                <% if (validationErrors?.asunto) { %>
+                    <p class="field-error"><%= validationErrors.asunto %></p>
+                <% } %>
             </div>
             <div class="campo-formulario">
                 <label for="mensaje" style="margin-top: 20px; display: block;">Mensaje</label>
-                <textarea class="entrada-texto" id="mensaje" name="mensaje" placeholder="Escribe tu mensaje..." rows="8"></textarea>
-            </div><br>
-            <% if (error) { %>
-                <p style="color:red"><%= error %></p>
+                <textarea class="entrada-texto <%= validationErrors?.mensaje ? 'input-error' : '' %>" 
+                id="mensaje" name="mensaje" placeholder="Escribe tu mensaje..." rows="8"><%= mensaje || '' %></textarea>
+                <% if (validationErrors?.mensaje) { %>
+                    <p class="field-error"><%= validationErrors.mensaje %></p>
                 <% } %>
+            </div>
+            
+            <% if (validationErrors?.password) { %>
+                <p class="field-error"><%= validationErrors.password %></p>
+              <% } %>
+
+              <% if (error && !validationErrors) { %>
+                <p class="general-error"><%= error %></p>
+              <% } %>
+            
             <div class="fila-boton">
                 <button type="submit" class="boton-enviar">Enviar</button>
             </div>
@@ -72,8 +96,25 @@
     </div>
 </div>
 
-    <%- include('../partials/footer.ejs') %>
+<% if (success) { %>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        Toastify({
+          text: "Mensaje enviado correctamente",
+          duration: 3000,
+          close: true,
+          gravity: "top",
+          position: "right",
+          stopOnFocus: true
+        }).showToast();
+      });
+    </script>
+  <% } %>
+  
+  <%- include('../partials/footer.ejs') %>
 
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 </html>

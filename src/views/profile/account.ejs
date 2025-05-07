@@ -2,8 +2,8 @@
 
     <!-- Account -->
     <link type="text/css" rel="stylesheet" href="/css/account.css" />
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
   <body>
     <div class="contenedor-account">
@@ -69,40 +69,22 @@
         }).showToast();
       }
 
-      const formTemplates = {
-        username: `
-      <label class="text-modal">Nuevo nombre:</label>
-      <input class="modal-input" type="text" name="newUsername" placeholder="Ingresa tu nuevo nombre" required>
-      `,
+      const formTemplates = {username: `<label class="text-modal">Nuevo nombre:</label>
+        <input class="modal-input" type="text" name="newUsername" placeholder="Ingresa tu nuevo nombre" required>`,
 
-        email: `
-      <label class="text-modal">Nuevo correo:</label>
-      <input class="modal-input" type="email" name="newEmail" placeholder="ejemplo@gmail.com" required>
-      `,
+        email: `<label class="text-modal">Nuevo correo:</label> 
+        <input class="modal-input" type="email" name="newEmail" placeholder="ejemplo@gmail.com" required>`,
 
-        password: `
-      <label class="text-modal">Contraseña actual:</label>
-      <input class="modal-input" type="password" name="oldPassword" placeholder="Tu contraseña actual" required>
-      <label class="text-modal">Nueva contraseña:</label>
-      <input class="modal-input" type="password" name="newPassword" placeholder="Nueva contraseña" required>
-      <label class="text-modal">Confirmar nueva contraseña:</label>
-      <input class="modal-input" type="password" name="confirmPassword" placeholder="Repite la nueva contraseña" required>
-      `
-      };
+        password: `<label class="text-modal">Contraseña actual:</label>
+        <input class="modal-input" type="password" name="oldPassword" placeholder="Tu contraseña actual" required>
+        <label class="text-modal">Nueva contraseña:</label>
+        <input class="modal-input" type="password" name="newPassword" placeholder="Nueva contraseña" required>
+        <label class="text-modal">Confirmar nueva contraseña:</label>
+        <input class="modal-input" type="password" name="confirmPassword" placeholder="Repite la nueva contraseña" required>`};
 
-      const titles = {
-        username: 'Editar Nombre',
-        email: 'Editar Correo',
-        password: 'Editar Contraseña',
-        'verify-email': 'Verificar Código'
-      };
+      const titles = {username: 'Editar Nombre', email: 'Editar Correo', password: 'Editar Contraseña', 'verify-email': 'Verificar Código'};
 
-      const urls = {
-        username: '/user/update-username',
-        email: '/user/update-email',
-        password: '/user/update-password',
-        'verify-email': '/user/verify-email-code'
-      };
+      const urls = {username: '/user/update-username', email: '/user/update-email', password: '/user/update-password', 'verify-email': '/user/verify-email-code'};
 
       function openModal(type) {
         const modal = document.getElementById('modal');
@@ -147,65 +129,67 @@
               showNotification('Código reenviado exitosamente', true);
               verificationMsg.innerHTML = `Te hemos enviado un nuevo código de verificación a <strong>${newEmail}</strong>`;
             } else {
-              const errorText = await response.text();
-              showNotification('Error: ' + errorText, false);
+              const errorData = await response.json();
+              const errorMessage = errorData.error || 'Error al reenviar el código';
+              showNotification(errorMessage, false);
             }
-          } catch (error) {
-            showNotification('Error de red: ' + error.message, false);
+          } catch (error) {showNotification('Error de red: ' + error.message, false);
           }
         };
-
         modal.style.display = 'flex';
       }
-
+      
       function closeModal() {
         document.getElementById('modal').style.display = 'none';
         document.getElementById('resend-code-btn').style.display = 'none';
         document.getElementById('verification-message').style.display = 'none';
       }
-
+      
       document.getElementById('modal-form').addEventListener('submit', async (e) => {
         e.preventDefault();
-
+        
         try {
           const form = e.target;
           const { type } = form.dataset;
           const data = Object.fromEntries(new FormData(form));
-
+          
           const response = await fetch(urls[type], {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
           });
-
+          
           const responseData = await response.json();
-
+          
           if (response.ok) {
-            showNotification(
-              responseData.message ||
-                type === 'email' ? 'Se te ha enviado un código al correo' :
-                type === 'verify-email' ? 'Correo verificado' : 'Actualizado con exito',
-              true
-            );
-            type === 'email' ? openCodeModal(data.newEmail) : setTimeout(() => {
-              closeModal();
-              window.location.href = responseData.redirectUrl || '/account';
-            }, 2000);
+            let successMessage;
+            if (type === 'verify-email') {
+              successMessage = 'Correo verificado';
+            } else if (type === 'email') {
+              openCodeModal(data.newEmail); 
+              return;
+            } else {
+              successMessage = 'Actualizado con éxito';}
+              
+              showNotification(responseData.message || successMessage, true);
+              
+              if (type !== 'email') {setTimeout(() => {closeModal();
+                window.location.href = responseData.redirectUrl || '/account';
+              }, 2000);
+            }
           } else {
             showNotification(
               responseData.error ||
               responseData.message ||
               responseData.errors?.[0]?.message ||
               'Error desconocido',
-              false
-            );
-          }
-        } catch (error) {
-          showNotification(error.message || 'Error de red', false);
+              false);
+            }
+          } catch (error) {showNotification(error.message || 'Error de red', false);
           closeModal();
         }
       });
-    </script>
+      </script>
 
   </body>
 

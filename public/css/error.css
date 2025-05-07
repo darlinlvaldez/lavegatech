@@ -1,0 +1,16 @@
+.input-error {
+    border: 1px solid #ff4444 !important;
+}
+
+.field-error {
+    color: #ff4444;
+    font-size: 0.8rem;
+    margin-top: -1.00rem;
+    margin-bottom: 1.0rem;
+}
+
+.general-error {
+    color: #ff4444;
+    margin: 0.5rem 0;
+    text-align: center;
+}

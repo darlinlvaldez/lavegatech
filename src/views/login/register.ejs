@@ -7,28 +7,63 @@
 
   <form action="/api/auth/register" method="POST">
     <label>Nombre de usuario:</label>
-    <input type="text" name="username" value="<%= username || '' %>" placeholder="Introducir nombre de usuario" required>
+    <input type="text" name="username" value="<%= username || '' %>" 
+           placeholder="Introducir nombre de usuario" required
+           class="<%= validationErrors?.username ? 'input-error' : '' %>">
+    
+    <% if (validationErrors?.username) { %>
+      <p class="field-error"><%= validationErrors.username %></p>
+    <% } %>
 
     <label>Correo electrónico:</label>
-    <input type="email" name="email" value="<%= email || '' %>"  placeholder="ejemplo@gmail.com" required>
+    <input type="email" name="email" value="<%= email || '' %>" 
+           placeholder="ejemplo@gmail.com" required
+           class="<%= validationErrors?.email ? 'input-error' : '' %>">
+    
+    <% if (validationErrors?.email) { %>
+      <p class="field-error"><%= validationErrors.email %></p>
+    <% } %>
 
     <label>Contraseña:</label>
-    <input type="password" name="password"  placeholder="Introducir contraseña" required>
+<div class="password-wrapper">
+  <input type="password" name="password" id="passwordInput" placeholder="Introducir contraseña" required
+         class="password-input <%= validationErrors?.password ? 'input-error' : '' %>">
+  
+  <span onclick="togglePassword('password')" class="toggle-password">
+    <i id="eyeIconPassword" class="fas fa-eye-slash"></i>
+  </span>
+</div>
     
-    <label>Confirmar contraseña:</label>
-    <input type="password" name="confirmPassword"  placeholder="Repetir contraseña" required>
+<% if (validationErrors?.password) { %>
+  <p class="field-error"><%= validationErrors.password %></p>
+<% } %>
 
-<% if (error) { %>
-    <p style="color:red"><%= error %></p>
-  <% } %>
+<label>Confirmar contraseña:</label>
+<div class="password-wrapper">
+  <input type="password" name="confirmPassword" id="confirmPasswordInput" placeholder="Repetir contraseña" required
+  class="password-input <%= validationErrors?.confirmPassword ? 'input-error' : '' %>">
+  
+  <span onclick="togglePassword('confirmPassword')" class="toggle-password">
+    <i id="eyeIconConfirmPassword" class="fas fa-eye-slash"></i>
+  </span>
+</div>
 
+    <% if (validationErrors?.confirmPassword) { %>
+      <p class="field-error"><%= validationErrors.confirmPassword %></p>
+    <% } %>
+
+    <% if (error && !validationErrors) { %>
+      <p class="general-error"><%= error %></p>
+    <% } %>
 
     <button type="submit">Registrarse</button>
   </form>
 
   <div class="links">
-  <p>¿Ya tienes una cuenta? <a href="/login">Inicia sesión</a></p>
-</div>
+    <p>¿Ya tienes una cuenta? <a href="/login">Inicia sesión</a></p>
+  </div>
 </div>  
+
+<script src="/js/showPass.js"> </script>
 
 <%- include('../components/footer.ejs') %>

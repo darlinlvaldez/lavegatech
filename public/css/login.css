@@ -114,6 +114,27 @@ a:hover {
   text-align: center;
 }
 
+.password-input {
+  padding-right: 40px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 35%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: gray;
+}
+
+.password-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
 /* Estilos responsivos */
 @media (max-width: 768px) {
     .login-container {

@@ -1,29 +1,43 @@
 <%- include('../../components/header.ejs') %>
 
 <body>
-
   <div class="code-container">
     <h2>Ingresar el código de verificación</h2>
     <p>Para tu seguridad, enviamos el código a tu correo electrónico <strong><%= email %></strong></p>
 
-    <form method="POST" action="/api/auth/verifyCode">
+    <form method="POST" action="/api/auth/verifyCode" class="code-form">
       <input type="hidden" name="email" value="<%= email %>">
       <input type="hidden" name="type" value="reset">
-      <input type="text" name="code" placeholder="Código de verificación" required>
-      <button type="submit">Enviar código</button>
+      
+      <input 
+        type="text" 
+        name="code" 
+        placeholder="Código de verificación" 
+        required
+        class="code-input <%= validationErrors?.code ? 'input-error' : '' %>"
+      >
+      
+      <% if (validationErrors?.code) { %>
+        <p class="field-error">
+          <%= validationErrors.code %>
+        </p>
+      <% } %>
+      
+      <% if (error && !validationErrors?.code) { %>
+        <p class="general-error">
+          <%= error %>
+        </p>
+      <% } %>
+
+      <button type="submit" class="submit-btn">Verificar código</button>
     </form>
 
-    <form method="POST" action="/api/auth/resendCode">
+    <form method="POST" action="/api/auth/resendCode" class="resend-form">
       <input type="hidden" name="email" value="<%= email %>">
       <input type="hidden" name="type" value="reset">
-      <button type="submit">Reenviar código</button>
+      <button type="submit" class="resend-btn">Reenviar código</button>
     </form>
   </div>
-
-  <% if (error) { %>
-    <p style="color:red"><%= error %></p>
-  <% } %>
-
 </body>
 
 <%- include('../../components/footer.ejs') %>

@@ -5,15 +5,24 @@
   <div class="verify-container">
   <h2>Verifica tu correo</h2>
 
-  <p class="text">Hemos enviado un código a tu correo.</p>
+  <p class="text">Hemos enviado un código a tu correo <strong><%= email %></strong></p>
 
   <form method="POST" action="/api/auth/verifyCode">
     <input type="hidden" name="email" value="<%= email %>">
     <input type="hidden" name="type" value="verify">
-    <input type="text" name="code" placeholder="Código de verificación" required>
+    <input type="text" name="code" placeholder="Código de verificación" required class="<%= validationErrors?.code ? 'input-error' : '' %>">
+    
+    <% if (validationErrors?.code) { %>
+      <p class="field-error"><%= validationErrors.code %></p>
+    <% } %>
+    
+    <% if (error && !validationErrors?.code) { %>
+      <p class="general-error"><%= error %></p>
+    <% } %>
+  
     <button type="submit">Verificar</button>
   </form>
-
+  
   <form method="POST" action="/api/auth/resendCode">
     <input type="hidden" name="email" value="<%= email %>">
     <input type="hidden" name="type" value="verify">
@@ -21,8 +30,4 @@
   </form>
 </div>
     
-  <% if (error) { %>
-    <p style="color:red"><%= error %></p>
-  <% } %>
-
 <%- include('../components/footer.ejs') %>

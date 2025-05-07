@@ -1,41 +1,43 @@
 import { z } from "zod";
+import {ERROR_ZOD} from "../../utils/error.js";
 
 const request = {};
 
 request.updateUsername = z.object({
   newUsername: z
-    .string({ required_error: "El nombre es obligatorio" })
-    .min(3, { message: "El nombre debe tener al menos 3 caracteres" })
-    .max(40, { message: "El nombre no debe superar los 40 caracteres" }),
+    .string()
+    .min(3, { message: ERROR_ZOD.USERNAME_MIN })
+    .max(40, { message: ERROR_ZOD.USERNAME_MAX }),
 }).strict();
 
 request.updateEmail = z.object({
   newEmail: z
-    .string({ required_error: "El correo es obligatorio" })
-    .email({ message: "El formato del correo no es válido" })
-    .min(5, { message: "El correo debe tener al menos 5 caracteres" }),
+    .string()
+    .email({ message: ERROR_ZOD.EMAIL_INVALID })
+    .min(15, { message: ERROR_ZOD.EMAIL_MIN }),
 }).strict();
 
 request.verifyEmailCode = z.object({
   newEmail: z
-    .string({ required_error: "El correo es obligatorio" })
-    .email({ message: "El formato del correo no es válido" }),
+    .string()
+    .email({ message: ERROR_ZOD.EMAIL_INVALID })
+    .min(15, { message: ERROR_ZOD.EMAIL_MIN }),
   codeInput: z
-    .string({ required_error: "El código es obligatorio" })
-    .min(6, { message: "El código debe tener exactamente 6 caracteres" })
-    .max(6, { message: "El código debe tener exactamente 6 caracteres" }),
+    .string()
+    .min(6, { message: ERROR_ZOD.CODE_LENGTH })
+    .max(6, { message: ERROR_ZOD.CODE_LENGTH }),
 }).strict();
 
 request.updatePassword = z.object({
   oldPassword: z
-    .string({ required_error: "La contraseña actual es obligatoria" })
-    .min(6, { message: "La contraseña debe tener al menos 6 caracteres" }),
+    .string()
+    .min(6, { message: ERROR_ZOD.OLD_PASSWORD_MIN }),
   newPassword: z
-    .string({ required_error: "La nueva contraseña es obligatoria" })
-    .min(6, { message: "La nueva contraseña debe tener al menos 6 caracteres" }),
+    .string()
+    .min(6, { message: ERROR_ZOD.NEW_PASSWORD_MIN }),
   confirmPassword: z
-    .string({ required_error: "Debes confirmar la nueva contraseña" })
-    .min(6, { message: "La confirmación debe tener al menos 6 caracteres" }),
+    .string()
+    .min(6, { message: ERROR_ZOD.CONFIRM_PASSWORD_MIN }),
 }).strict();
 
 export default request;

@@ -2,52 +2,46 @@
 
 <body>
 
-<script>
-  function togglePassword() {
-    var input = document.getElementById('myInput');
-    var icon = document.getElementById('eyeIcon');
+<div class="login-container">
+  <h2>Iniciar sesión</h2>
+  
+  <form action="/api/auth/login" method="POST">
+    <label for="email">Correo electrónico:</label>
+    <input type="email" name="email" value="<%= email || '' %>" placeholder="ejemplo@gmail.com" required class="<%= validationErrors?.email ? 'input-error' : '' %>">
     
-    if (input.type === "password") {
-      input.type = "text";
-      icon.classList.remove("fa-eye-slash");
-      icon.classList.add("fa-eye");
-    } else {
-      input.type = "password";
-      icon.classList.remove("fa-eye");
-      icon.classList.add("fa-eye-slash");
-    }
-  }
-</script>
-
-  <div class="login-container">
-    <h2>Iniciar sesión</h2>
+    <% if (validationErrors?.email) { %>
+      <p class="field-error"><%= validationErrors.email %></p>
+    <% } %>
     
-    <form action="/api/auth/login" method="POST">
-      <label for="email">Correo electrónico:</label>
-      <input type="email" name="email" value="<%= email || '' %>" placeholder="ejemplo@gmail.com" required>
-      
-      <label for="password">Contraseña:</label>
-      <div style="position: relative; display: inline-block; width: 100%;">
-        <input type="password" name="password" id="myInput" placeholder="Introduce la contraseña" required 
-          style="padding-right: 40px; width: 100%; box-sizing: border-box;">
-        
-        <span onclick="togglePassword()" 
-          style="position: absolute; right: 10px; top: 35%; transform: translateY(-50%); cursor: pointer; color: gray;">
-          <i id="eyeIcon" class="fas fa-eye-slash"></i>
-        </span>
-      </div>
-      
-      <% if (error) { %>
-      <p style="color:red;"><%= error %></p>
-      <% } %>
+    <label for="password">Contraseña:</label>
+    <div class="password-wrapper">
+      <input type="password" name="password" id="passwordInput" placeholder="Introduce la contraseña" required 
+      class="password-input <%= validationErrors?.password ? 'input-error' : '' %>">
     
+      <span onclick="togglePassword('password')" class="toggle-password">
+        <i id="eyeIconPassword" class="fas fa-eye-slash"></i>
+      </span>
+    </div>
+    
+    <% if (validationErrors?.password) { %>
+      <p class="field-error"><%= validationErrors.password %></p>
+    <% } %>
+    
+    <% if (error && !validationErrors) { %>
+      <p class="general-error"><%= error %></p>
+    <% } %>
+  
     <button type="submit">Entrar</button>
   </form>
 
-    <div class="links">
-      <p>¿No tienes una cuenta? <a href="/register">Regístrate</a></p>
-      <p><a href="/email">¿Has olvidado la contraseña?</a></p>
-    </div>
+  <div class="links">
+    <p>¿No tienes una cuenta? <a href="/register">Regístrate</a></p>
+    <p><a href="/email">¿Has olvidado la contraseña?</a></p>
   </div>
+</div>
+
+</body>
+
+<script src="/js/showPass.js"></script>
 
 <%- include('../components/footer.ejs') %>
