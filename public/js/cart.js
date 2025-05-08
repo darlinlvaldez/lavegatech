@@ -110,43 +110,76 @@ async function obtenerStock(productId, color) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+function syncColorFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     const color = urlParams.get('color');
-    
     if (color) {
         const decodedColor = decodeURIComponent(color);
         const colorSelect = document.getElementById('colorSeleccionado');
-        
         if (colorSelect) {
             colorSelect.value = decodedColor;
+            colorSelect.dispatchEvent(new Event('change', { bubbles: true }));
         }
-        
-        const productId = window.location.pathname.split('/').pop();
-        cambiarImagen(productId, decodedColor);
     }
-});
+}
 
-window.addEventListener('popstate', function(event) {
-    setTimeout(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const color = urlParams.get('color');
-        
-        if (color) {
-            const decodedColor = decodeURIComponent(color);
-            const colorSelect = document.getElementById('colorSeleccionado');
-            
-            if (colorSelect) {
-                colorSelect.value = decodedColor;
-            }
-            
-            const productId = window.location.pathname.split('/').pop();
-            cambiarImagen(productId, decodedColor);
-        }
-    }, 50);
-});
+document.addEventListener('DOMContentLoaded', syncColorFromURL);
+
+window.addEventListener('popstate', () => setTimeout(syncColorFromURL, 50));
 
 document.addEventListener('DOMContentLoaded', function () {
     cargarCarrito();
     loadCartPage();
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const id = btn.dataset.id;
+        const nombre = btn.dataset.nombre;
+        const precio = parseFloat(btn.dataset.precio);
+        const descuento = parseFloat(btn.dataset.descuento) || 0;
+        const stock = parseInt(btn.dataset.stock) || 0;
+  
+        let cantidad = 1;
+        let color = btn.dataset.color || '';
+        let imagen = btn.dataset.imagen || '';
+  
+        const cantidadInput = document.getElementById('cantidad');
+        if (cantidadInput) {
+          cantidad = parseInt(cantidadInput.value) || 1;
+        }
+        const colorSelect = document.getElementById('colorSeleccionado');
+        if (colorSelect) {
+          color = colorSelect.value;
+        }
+        const imagenProducto = document.getElementById('imagenProducto');
+        if (imagenProducto) {
+          imagen = imagenProducto.src;
+        }
+  
+        addToCart(id, nombre, precio, cantidad, color, descuento, stock, imagen);
+      });
+    });
+  
+    const cantidadInput = document.getElementById('cantidad');
+    const qtyUp = document.getElementById('qty-up');
+    const qtyDown = document.getElementById('qty-down');
+    
+    if (cantidadInput && qtyUp && qtyDown) {
+      qtyUp.addEventListener('click', function() {
+        let value = parseInt(cantidadInput.value) || 1;
+        let max = parseInt(cantidadInput.max);
+        cantidadInput.value = Math.min(value + 1, max);
+      });
+      qtyDown.addEventListener('click', function() {
+        let value = parseInt(cantidadInput.value) || 1;
+        cantidadInput.value = Math.max(value - 1, 1);
+      });
+      cantidadInput.addEventListener('input', function() {
+        let value = parseInt(cantidadInput.value) || 1;
+        let max = parseInt(cantidadInput.max);
+        cantidadInput.value = Math.max(1, Math.min(value, max));
+      });
+    }
+  });  

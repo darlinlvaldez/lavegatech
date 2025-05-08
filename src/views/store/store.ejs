@@ -29,32 +29,32 @@
                 });
             });
 		}
-
-	function actualizarProductos() {
+		
+		function actualizarProductos() {	
 			
-		const limite = document.getElementById('limite-select').value;
-		const orden = document.getElementById('ordenar-select').value;
-		const precioMin = document.getElementById('price-min').value;
-		const precioMax = document.getElementById('price-max').value;
+			const limite = document.getElementById('limite-select').value;
+			const orden = document.getElementById('ordenar-select').value;
+			const precioMin = document.getElementById('price-min').value;
+			const precioMax = document.getElementById('price-max').value;
 
-		const categorias = Array.from(document.querySelectorAll('input[name="categoria"]:checked'))
-			.map(checkbox => checkbox.value)
-			.join(',');
+			const categorias = Array.from(document.querySelectorAll('input[name="categoria"]:checked'))
+				.map(checkbox => checkbox.value)
+				.join(',');
 
-		const marcas = Array.from(document.querySelectorAll('input[name="marca"]:checked'))
-			.map(checkbox => checkbox.value)
-			.join(',');
+			const marcas = Array.from(document.querySelectorAll('input[name="marca"]:checked'))
+				.map(checkbox => checkbox.value)
+				.join(',');
 
-		const pagina = 1;
+			const pagina = 1;
 
-		window.location.href = `/store/${pagina}?limite=${limite}&orden=${orden}&categoria=${categorias}
-		&marca=${marcas}&precioMin=${precioMin}&precioMax=${precioMax}`;
-	}
-	
-	document.addEventListener("DOMContentLoaded", function() {
-		document.getElementById("aplicar-filtro-precio").addEventListener("click", actualizarProductos);
-	});
-</script>
+			window.location.href = `/store/${pagina}?limite=${limite}&orden=${orden}&categoria=${categorias}
+			&marca=${marcas}&precioMin=${precioMin}&precioMax=${precioMax}`;
+		}
+		
+		document.addEventListener("DOMContentLoaded", function() {
+			document.getElementById("aplicar-filtro-precio").addEventListener("click", actualizarProductos);
+		});
+		</script>
   
 	<!-- BREADCRUMB -->
 	<div id="breadcrumb" class="section">
@@ -232,10 +232,11 @@
 																</div>
 															</div>
 															<div class="add-to-cart">
-																<button class="add-to-cart-btn" onclick="addToCart('<%= producto.id %>', '<%= producto.nombre %>', <%= producto.precio %>, 
-																	1, '<%= producto.color %>', <%= producto.descuento %>, <%= producto.stock %>, '<%= producto.imagen %>')">
-																		<i class="fa fa-shopping-cart"></i> Agregar al carrito
-																	</button>
+															<button class="add-to-cart-btn"
+															data-id="<%= producto.id %>" data-nombre="<%= producto.nombre %>" data-precio="<%= producto.precio %>" data-color="<%= producto.color %>"
+															data-descuento="<%= producto.descuento %>" data-stock="<%= producto.stock %>" data-imagen="<%= producto.imagen %>">
+															<i class="fa fa-shopping-cart"></i> Agregar al carrito
+															</button>
 															</div>										
 														</div>
 													</div>

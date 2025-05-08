@@ -98,38 +98,23 @@
 							<% } %>
 							<div class="add-to-cart">
 								<div class="qty-label">
-									Cantidad
-									<div class="input-number product-quantity">
-										<input 
-											id="cantidad" 
-											type="number" 
-											value="1" 
-											min="1" 
-											max="<%= stockColor || producto.stock %>" 
-											oninput="this.value = Math.max(1, Math.min(parseInt(this.value) || 1, parseInt(this.max)))">
-										<span class="qty-up" onclick="document.getElementById('cantidad').value = parseInt(document.getElementById('cantidad').value) 
-										+ 1; document.getElementById('cantidad').dispatchEvent(new Event('input'))">+</span>
-										<span class="qty-down" onclick="document.getElementById('cantidad').value = Math.max(1, parseInt(document.getElementById('cantidad').value) 
-										- 1); document.getElementById('cantidad').dispatchEvent(new Event('input'))">-</span>
-									</div>
+								  Cantidad
+								  <div class="input-number product-quantity">
+									<input 
+									  id="cantidad" type="number" value="1" min="1" max="<%= stockColor || producto.stock %>">
+									<span class="qty-up" id="qty-up">+</span> <span class="qty-down" id="qty-down">-</span>
+								  </div>
 								</div>
 								<br><br>
 								<div class="add-to-cart">
-									<button class="add-to-cart-btn" onclick="
-										const foto = document.getElementById('imagenProducto').src;
-										addToCart(
-											'<%= producto.id %>',
-											'<%= producto.nombre %>',
-											<%= producto.precio %>,
-											document.getElementById('cantidad').value,
-											document.getElementById('colorSeleccionado') ? document.getElementById('colorSeleccionado').value : '',
-											<%= producto.descuento %>,
-											<%= stockColor || producto.stock %>,
-											foto
-										);" ><i class="fa fa-shopping-cart">
-									</i> Agregar al carrito</button>
+								  <button 
+									class="add-to-cart-btn" id="add-to-cart-btn" data-id="<%= producto.id %>" data-nombre="<%= producto.nombre %>"
+									data-precio="<%= producto.precio %>"data-descuento="<%= producto.descuento %>" data-stock="<%= stockColor || producto.stock %>">
+									<i class="fa fa-shopping-cart"></i> Agregar al carrito
+								  </button>
 								</div>
-							</div>
+							  </div>
+							  
 						<ul class="product-btns">
 							<li><a href="#"><i class="fa fa-heart-o"></i>Favoritos</a></li>
 							<li><a href="#"><i class="fa fa-exchange"></i>Comparalo</a></li>

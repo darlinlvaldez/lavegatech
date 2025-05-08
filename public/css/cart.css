@@ -2,7 +2,7 @@
     border-bottom: 1px solid #ddd;
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 50px;
     border: 1px solid #ddd;
     border-radius: 8px;  
     padding: 10px;
@@ -14,12 +14,15 @@
     border-bottom: none;
 }
 
-.product-img {
-    max-width: 150px; 
-    object-fit: contain;
-    margin-right: 20px; 
+.product-imagen {
+    width: 100px;        
+    height: 100px;
+    overflow: hidden;  
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-
+  
 .product-info {
     flex-grow: 1;
     margin-bottom: 10px; 

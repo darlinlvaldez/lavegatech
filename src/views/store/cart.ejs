@@ -75,7 +75,7 @@
 
                 html += `
                 <div class="cart-item" data-id="${item.id}"><a href="/product/${item.id}${item.colorSeleccionado ? `?color=${encodeURIComponent(item.colorSeleccionado)}` : ''}">
-                        <img src="${item.imagen}" alt="${item.nombre}" class="product-img">
+                        <img src="${item.imagen}" alt="${item.nombre}" class="product-imagen">
                         <div class="product-info">
                             <h5>${item.nombre}</h5>
                             <span class="product-price">
@@ -128,4 +128,5 @@
     <%- include('../partials/footer.ejs') %>
 
 </body>
+
 </html>

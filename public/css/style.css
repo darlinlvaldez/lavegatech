@@ -614,38 +614,6 @@ textarea.input {
   padding: 20px;
 }
 
-@media (max-width: 768px) {
-  #search-results {
-    width: 94%; 
-    left: 3%;
-    right: 5%;
-  }
-
-  .input {
-    font-size: 14px; 
-    height: 35px; 
-  }
-
-  .search-icon-btn {
-    font-size: 16px; 
-    right: 8px;
-  }
-
-  .search-result-item img {
-    width: 40px;
-    height: 40px;
-  }
-
-  .search-result-item h4 {
-    font-size: 14px;
-    width: 70%; 
-  }
-
-  .search-result-item .product-price {
-    font-size: 14px;
-  }
-}
-
 @media (max-width: 480px) {
   .input {
     font-size: 12px;
@@ -669,6 +637,22 @@ textarea.input {
 
   .search-result-item .product-price {
     font-size: 12px;
+  }
+}
+
+@media (max-width: 912px) and (max-width: 1368px)  {
+  #search-results {
+    width: 96%; 
+    left: 2%;
+    right: 10%;
+  }
+}
+
+@media (max-width: 1368px)  {
+  #search-results {
+    width: 96%; 
+    left: 2%;
+    right: 10%;
   }
 }
 
@@ -732,7 +716,7 @@ textarea.input {
   padding: 10px;
   -webkit-box-shadow: 0px 0px 0px 2px #E4E7ED;
   box-shadow: 0px 0px 0px 2px #E4E7ED;
-  z-index: 99;
+  z-index: 999;
   right: 0;
   opacity: 0;
   visibility: hidden;
@@ -778,12 +762,21 @@ textarea.input {
   font-size: 14px;
 }
 
+.cart-dropdown .cart-list .product-widget .product-img {
+  width: 70px;
+  height: 70px;
+  margin-left: 10%;  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .cart-dropdown .cart-list .product-widget .product-img img {
   object-fit: cover;
   display: block;
   width: 100%;
-  max-height: 80px;
-  margin-left: 50%;
+  height: 100%;
+  margin: 0 auto;
 }
 
 .cart-dropdown .cart-list .product-widget .product-body {
@@ -797,7 +790,7 @@ textarea.input {
 }
 
 .cart-dropdown .cart-btns {
-  margin: 0px -17px -17px;
+  margin: 0px -12px -17px;
 }
 
 .cart-dropdown .cart-btns>a {
@@ -826,6 +819,40 @@ textarea.input {
   padding-top: 15px;
   padding-bottom: 15px;
 }
+
+@media (max-width: 667px) {
+  .cart-dropdown {
+      position: absolute;
+      top: 110%; 
+      right: -100%;
+      width: 300px;
+      max-height: 70vh;
+      z-index: 9999;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .cart-dropdown {
+    position: absolute;
+    top: 110%;
+    right: 10%;
+    width: 300px;
+    max-height: 70vh;
+    z-index: 9999;
+  }
+}
+
+@media (min-width: 540px) and (max-width: 720px) {
+  .cart-dropdown {
+    position: absolute;
+    top: 110%;
+    right: 10%;
+    width: 300px;
+    max-height: 70vh;
+    z-index: 9999;
+  }
+}
+
 
 /*=========================================================
 	03 -> Navigation
