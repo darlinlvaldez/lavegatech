@@ -10,23 +10,15 @@
       <input type="hidden" name="type" value="reset">
       
       <input 
-        type="text" 
-        name="code" 
-        placeholder="Código de verificación" 
-        required
-        class="code-input <%= validationErrors?.code ? 'input-error' : '' %>"
-      >
+        type="text" name="code" placeholder="Código de verificación"  required 
+        class="code-input <%= validationErrors?.code ? 'input-error' : '' %>">
       
       <% if (validationErrors?.code) { %>
-        <p class="field-error">
-          <%= validationErrors.code %>
-        </p>
+        <p class="field-error"> <%= validationErrors.code %></p>
       <% } %>
       
       <% if (error && !validationErrors?.code) { %>
-        <p class="general-error">
-          <%= error %>
-        </p>
+        <p class="general-error"> <%= error %></p>
       <% } %>
 
       <button type="submit" class="submit-btn">Verificar código</button>

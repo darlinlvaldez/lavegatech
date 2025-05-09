@@ -4,32 +4,6 @@
 	<html lang="en">
 
 <script>
-    function actualizarMarcas() {
-        const categoriasSeleccionadas = Array.from(document.querySelectorAll('input[name="categoria"]:checked'))
-            .map(checkbox => parseInt(checkbox.value));
-
-        if (categoriasSeleccionadas.length === 0) {
-            document.querySelectorAll('input[name="marca"]').forEach(checkbox => {
-                checkbox.parentElement.style.display = 'block';
-            });
-            return;
-        }
-
-        fetch(`/store?categorias=${categoriasSeleccionadas.join(',')}`)
-            .then(response => response.json())
-            .then(marcasRelevantes => {
-                document.querySelectorAll('input[name="marca"]').forEach(checkbox => {
-                    const marcaDiv = checkbox.parentElement;
-                    if (marcasRelevantes.includes(parseInt(checkbox.value))) {
-                        marcaDiv.style.display = 'block';
-                    } else {
-                        marcaDiv.style.display = 'none';
-                        checkbox.checked = false;
-                    }
-                });
-            });
-		}
-		
 		function actualizarProductos() {	
 			
 			const limite = document.getElementById('limite-select').value;

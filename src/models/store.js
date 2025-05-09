@@ -92,13 +92,13 @@ store.totalProductos = async (categorias = [], marcas = [], precioMin, precioMax
 
 store.cantidadCategoria = async () => {
     const query = `
-        SELECT  
-        c.id AS categoria_id, 
-        c.categoria, 
-        COUNT(p.id) AS cantidad
-        FROM categorias c
-        LEFT JOIN productos p ON c.id = p.categoria_id
-        GROUP BY c.id`;
+    SELECT  
+    c.id AS categoria_id, 
+    c.categoria, 
+    COUNT(p.id) AS cantidad
+    FROM categorias c
+    LEFT JOIN productos p ON c.id = p.categoria_id
+    GROUP BY c.id`;
 
     try {
         const [results] = await db.query(query);
