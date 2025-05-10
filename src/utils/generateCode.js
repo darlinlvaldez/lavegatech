@@ -1,6 +1,9 @@
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 
+export const CODE_EXPIRATION = 10 * 60 * 1000; 
+export const RESEND_COOLDOWN = 3 * 60 * 1000;
+
 const code = {};
 
 code.generateCode = () => crypto.randomBytes(3).toString('hex').toUpperCase();

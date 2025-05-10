@@ -76,12 +76,17 @@ app.get('/email', (req, res) => {
   res.render('login/forgotPass/email', { error: null, email: null, validationErrors: {}});
 });
 
-app.get('/code', (req, res) => {
-  res.render('login/forgotPass/code', { error: null, email: null, validationErrors: {}});
-});
-
 app.get('/newpass', (req, res) => {
   res.render('login/forgotPass/newpass', { error: null, email: null, validationErrors: {}});
+});
+
+app.get('/verify', (req, res) => {
+  const {email, type, error} = req.query;
+  
+  if (!email || !type) return res.redirect('/login');
+
+  res.render('login/verify', {
+    email, type, error: error || null, validationErrors: {} });
 });
 
 app.get('/mant', (req, res) => {

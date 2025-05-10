@@ -2,7 +2,8 @@ import bcrypt from "bcrypt";
 import user from "../models/auth.js";
 import emailService from '../services/email.js';
 import code from '../utils/generateCode.js';
-import { ERROR_MESSAGES } from '../utils/error.js';
+import {ERROR_MESSAGES} from '../utils/error.js';
+import {CODE_EXPIRATION, RESEND_COOLDOWN} from '../utils/generateCode.js';
 
 const auth = {};
 
@@ -40,10 +41,7 @@ auth.updateEmail = async (req, res) => {
 
     const verificationCode = code.generateCode();
     code.pendingUsers.set(newEmail, {
-      code: verificationCode,
-      expiresAt: Date.now() + 10 * 60 * 1000,
-      userId: sessionUser.id
-    });
+      code: verificationCode, expiresAt: Date.now() + CODE_EXPIRATION, userId: sessionUser.id});
 
     try {
       await emailService.sendVerification(newEmail, verificationCode);
@@ -64,19 +62,15 @@ auth.resendCode = async (req, res) => {
   const existing = code.pendingUsers.get(email); 
 
   try {
-    if (existing?.lastSent && now - existing.lastSent < 3 * 60 * 1000) {
-      const remaining = Math.ceil((3 * 60 * 1000 - (now - existing.lastSent))) / 1000;
+    if (existing?.lastSent && now - existing.lastSent < RESEND_COOLDOWN) {
+      const remaining = Math.ceil((RESEND_COOLDOWN - (now - existing.lastSent))) / 1000;
       return res.status(429).json({error: ERROR_MESSAGES.RESEND_COOLDOWN.replace("{seconds}", remaining) 
       });
     }
 
     const newCode = code.generateCode();
-    code.pendingUsers.set(email, { 
-      code: newCode,
-      expiresAt: now + 10 * 60 * 1000,
-      lastSent: now,
-      userId: existing?.userId 
-    });
+    code.pendingUsers.set(email, {  
+      code: newCode, expiresAt: now + CODE_EXPIRATION, lastSent: now, userId: existing?.userId});
 
     try {
       await emailService.sendEmail(

@@ -3,49 +3,88 @@ import config from '../../config.js';
 import user from '../models/auth.js';
 import emailService from '../services/email.js';
 import code from '../utils/generateCode.js';
-import { ERROR_MESSAGES } from '../utils/error.js';
-import { renderError } from '../utils/error.js';
+import {ERROR_MESSAGES} from '../utils/error.js';
+import {renderError} from '../utils/error.js';
+import {CODE_EXPIRATION, RESEND_COOLDOWN} from '../utils/generateCode.js';
 
 const auth = {};
 
 auth.register = async (req, res) => {
   try {
-    const { username, email: correo, password, confirmPassword } = req.body;
+    const { username, email, password, confirmPassword } = req.body;
 
     if (req.validationError) {
       return renderError(res, 'login/register', null, { 
-        email: correo, username, validationErrors: req.validationError.fields});
+        email, username, validationErrors: req.validationError.fields});
     }
-
+    
     if (password !== confirmPassword) {
-      return renderError(res, 'login/register', 'Las contraseñas no coinciden', { 
-        email: correo, username, validationErrors: 
-        { password: ERROR_MESSAGES.PASSWORDS_DONT_MATCH, confirmPassword: ERROR_MESSAGES.PASSWORDS_DONT_MATCH }
+      return renderError(res, 'login/register', ERROR_MESSAGES.PASSWORDS_DONT_MATCH, {
+        email, username,
+        validationErrors: {password: ERROR_MESSAGES.PASSWORDS_DONT_MATCH, 
+          confirmPassword: ERROR_MESSAGES.PASSWORDS_DONT_MATCH}
       });
     }
 
-    const alreadyExists = await user.userExists(correo);
-    if (alreadyExists) {
-      return renderError(res, 'login/register', 'El correo ya está registrado', { 
-        email: correo, username,
-        validationErrors: { email: ERROR_MESSAGES.EMAIL_ALREADY_EXISTS }
+    if (await user.userExists(email)) {
+      return renderError(res, 'login/register', ERROR_MESSAGES.EMAIL_ALREADY_EXISTS, {
+        email, username, validationErrors: { email: ERROR_MESSAGES.EMAIL_ALREADY_EXISTS }
       });
     }
 
     const hashedPassword = await code.hashPassword(password);
-    const generatedCode = await code.generateCode();
+    const generatedCode = code.generateCode();
+    const userData = { username, hashedPassword, code: generatedCode,
+      xpiresAt: Date.now() + CODE_EXPIRATION};
 
-    code.pendingUsers.set(correo, {
-      username, hashedPassword, code: generatedCode, expiresAt: Date.now() + 10 * 60 * 1000
+    code.pendingUsers.set(email, userData);
+    await emailService.sendVerification(email, generatedCode);
+    
+    return res.render('login/verify', {
+      email, type: 'verify', error: null, validationErrors: {}
     });
 
-    await emailService.sendVerification(correo, generatedCode);
-    res.redirect(`/verify?email=${correo}`);
-  } catch (error) {console.error(error);
+  } catch (error) {
+    console.error(error);
     return renderError(res, 'login/register', ERROR_MESSAGES.REGISTRATION_ERROR, {
-      email: req.body.email, username: req.body.username, validationErrors: {} });
+      email: req.body.email, username: req.body.username, validationErrors: {} 
+    });
+  }
+};
+
+auth.verifyCode = async (req, res) => {
+  try {
+    const { email, code: userCode, type } = req.body;
+    const store = type === 'reset' ? code.resetPending : code.pendingUsers;
+
+    if (req.validationError) {
+      return renderError(res, 'login/verify', null, {
+        email, type, validationErrors: req.validationError.fields});
     }
-  };
+
+    const result = code.validateCode(store, email, userCode);
+    if (!result.success) {
+      return renderError(res, 'login/verify', ERROR_MESSAGES.INVALID_CODE, {
+        email, type, validationErrors: {code: ERROR_MESSAGES.INVALID_CODE} });
+    }
+
+    if (type === 'reset') {
+      return res.render('login/forgotPass/newpass', { 
+        email, error: null, validationErrors: {} });
+    }
+
+    const { username, hashedPassword } = result.data;
+    await user.insertUser({ username, email, password: hashedPassword });
+    code.pendingUsers.delete(email);
+
+    return res.redirect('/login');
+
+  } catch (error) {
+    console.error(error);
+    return renderError(res, 'login/verify', ERROR_MESSAGES.VERIFICATION_ERROR, {
+      email: req.body.email, type: req.body.type, validationErrors: {} });
+  }
+};
 
 auth.showVerifyForm = (req, res) => res.render('login/verify', { email: req.query.email });
 
@@ -55,83 +94,69 @@ auth.verifyCode = async (req, res) => {
     const store = type === 'reset' ? code.resetPending : code.pendingUsers;
 
     if (req.validationError) {
-      const view = type === 'reset' ? 'login/forgotPass/code' : 'login/verify';
-      return renderError(res, view, null, {email, validationErrors: req.validationError.fields});
+      return renderError(res, 'login/verify', null, {
+        email, type, validationErrors: req.validationError.fields});
     }
 
     const result = code.validateCode(store, email, userCode);
-
     if (!result.success) {
-      const view = type === 'reset' ? 'login/forgotPass/code' : 'login/verify';
-      return renderError(res, view, ERROR_MESSAGES.INVALID_CODE, { 
-        email, validationErrors: {code: ERROR_MESSAGES.INVALID_CODE}});
+      return renderError(res, 'login/verify', ERROR_MESSAGES.INVALID_CODE, {
+        email, type, validationErrors: {code: ERROR_MESSAGES.INVALID_CODE} });
     }
 
     if (type === 'reset') {
-      return res.render('login/forgotPass/newpass', { 
-        email, error: null, validationErrors: {}});
+      return res.render('login/forgotPass/newpass', {
+        email, error: null, validationErrors: {} });
     }
 
-    const { username, hashedPassword } = result.data;
-    await user.insertUser({ username, email, password: hashedPassword });
+    const {username, hashedPassword} = result.data;
+    await user.insertUser({username, email, password: hashedPassword});
     code.pendingUsers.delete(email);
-    
-    res.redirect('/login');
 
-  } catch (error) {console.error(error);
-    const view = req.body.type === 'reset' ? 'login/forgotPass/code' : 'login/verify';
-    return renderError(res, view, ERROR_MESSAGES.VERIFICATION_ERROR, { 
-      email: req.body.email, validationErrors: {} });
+    return res.redirect('/login');
+
+  } catch (error) {
+    console.error(error);
+    return renderError(res, 'login/verify', ERROR_MESSAGES.VERIFICATION_ERROR, {
+      email: req.body.email, type: req.body.type, validationErrors: {}
+    });
   }
 };
 
 auth.resendCode = async (req, res) => {
   try {
-    const { email, type } = req.body;
+    const {email, type} = req.body;
     const isReset = type === 'reset';
     const store = isReset ? code.resetPending : code.pendingUsers;
     const existing = store.get(email);
     const now = Date.now();
 
     if (req.validationError) {
-      const view = isReset ? 'login/forgotPass/code' : 'login/verify';
-      return renderError(res, view, null, {
-        email, validationErrors: req.validationError.fields});
+      return renderError(res, 'login/verify', null, {email, type, 
+        validationErrors: req.validationError.fields });
     }
 
-    if (existing && existing.lastSent && now - existing.lastSent < 3 * 60 * 1000) {
-      const remaining = Math.ceil((3 * 60 * 1000 - (now - existing.lastSent)) / 1000);
+    if (existing && existing.lastSent && existing.lastSent !== 0 && (now - existing.lastSent < RESEND_COOLDOWN)) {
+      const remaining = Math.ceil((RESEND_COOLDOWN - (now - existing.lastSent)) / 1000);
       const msg = ERROR_MESSAGES.RESEND_COOLDOWN.replace('{seconds}', remaining);
-
-      if (isReset) {
-        return renderError(res, 'login/forgotPass/code', msg, { email });
-      } else {
-        return res.redirect(`/verify?email=${email}&info=espera`);
-      }
+      return renderError(res, 'login/verify', msg, { email, type, validationErrors: {} });
     }
 
     const newCode = code.generateCode();
-    const expiresAt = now + 10 * 60 * 1000;
+    const expiresAt = now + CODE_EXPIRATION;
 
-    store.set(email, {...(existing || {}), code: newCode, expiresAt, lastSent: now});
+    store.set(email, {...existing, code: newCode, expiresAt, lastSent: now});
 
-    const subject = isReset
-    ? 'Nuevo código para recuperación de contraseña' : 'Nuevo código de verificación';
+    const subject = isReset ? 'Nuevo código para recuperación de contraseña' : 'Nuevo código de verificación';
+    await emailService.sendEmail(email, subject, `Tu nuevo código es: ${newCode}`);
 
-    const text = `Tu nuevo código es: ${newCode}`;
-    await emailService.sendEmail(email, subject, text);
-
-    if (isReset) {
-      return res.render('login/forgotPass/code', { 
-        email, error: null, validationErrors: {} });
-    } else {
-      return res.redirect(`/verify?email=${email}&info=reenviado`);
-    }
+    return res.render('login/verify', { email, type, error: null, 
+      validationErrors: {}, info: isReset ? null : 'reenviado' });
   } catch (error) {
     console.error(error);
-    const view = req.body.type === 'reset' ? 'login/forgotPass/code' : 'login/verify';
-    return renderError(res, view, ERROR_MESSAGES.RESEND_ERROR, { 
-      email: req.body.email, validationErrors: {} });
+    return renderError(res, 'login/verify', ERROR_MESSAGES.RESEND_ERROR, {
+      email: req.body.email, type: req.body.type, validationErrors: {}
+    });
   }
 };
 
@@ -178,27 +203,36 @@ auth.email = async (req, res) => {
 
     if (req.validationError) {
       return renderError(res, 'login/forgotPass/email', null, { 
-        email: req.body.email, validationErrors: req.validationError.fields});
+        email, validationErrors: req.validationError.fields 
+      });
     }
     
-    const foundUser = await user.findByEmail(email);
-    if (!foundUser) {
+    if (!await user.findByEmail(email)) {
       return renderError(res, 'login/forgotPass/email', ERROR_MESSAGES.USER_NOT_FOUND, { 
-        email, validationErrors: {email: ERROR_MESSAGES.USER_NOT_FOUND} });
-      }
-        
-    const codeUser = code.generateCode();
-    code.resetPending.set(email, {code: codeUser, expiresAt: Date.now() + 10 * 60 * 1000});
-        
-    await emailService.sendEmail(email, 'Código para recuperación de contraseña', 
-      `Tu código es: ${codeUser}. Expira en 10 minutos.`);
-          
-    res.render('login/forgotPass/code', {email, error: null, validationErrors: {} });
-  } catch (error) {console.error(error);
-    return renderError(res, 'login/forgotPass/email', ERROR_MESSAGES.SERVER_ERROR, {
-      email: req.body.email, validationErrors: {} });
+        email, validationErrors: { email: ERROR_MESSAGES.USER_NOT_FOUND }
+      });
     }
-  };
+
+    const codeUser = code.generateCode();
+    code.resetPending.set(email, { 
+      code: codeUser, expiresAt: Date.now() + CODE_EXPIRATION, 
+    });
+    
+    await emailService.sendEmail(
+      email, 'Código para recuperación de contraseña', 
+      `Tu código es: ${codeUser}. Expira en 10 minutos.`
+    );
+
+    return res.render('login/verify', { 
+      email, type: 'reset', error: null, validationErrors: {} });
+
+  } catch (error) {
+    console.error(error);
+    return renderError(res, 'login/forgotPass/email', ERROR_MESSAGES.SERVER_ERROR, {
+      email: req.body.email, validationErrors: {}
+    });
+  }
+};
 
 auth.forgotPassword = async (req, res) => {
   try {
