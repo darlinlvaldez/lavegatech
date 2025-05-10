@@ -80,18 +80,24 @@ function cambiarImagen(productId, color) {
     }
 }
 
-async function changeColor(select, productId) {
-    const color = select.value;
+async function changeColor(selectOrEvent, productId) {
+    const color = selectOrEvent.value;
     const encodedColor = encodeURIComponent(color);
-    
+
     cambiarImagen(productId, color);
+
     history.replaceState({ color }, '', `/product/${productId}?color=${encodedColor}`);
+
+    const select = document.getElementById('colorSeleccionado');
+    if (select && select.value !== color) {
+        select.value = color;
+    }
 
     const stockColor = await obtenerStock(productId, color);
     const cantidadInput = document.getElementById('cantidad');
-    
+
     cantidadInput.max = stockColor;
-    cantidadInput.value = 1; 
+    cantidadInput.value = 1;
 
     document.getElementById('stockDisponible').textContent = `Cantidad disponible: ${stockColor}`;
 }

@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 dotenv.config({ path: '.env.development'});
 
 const config = {
-
   // ENVIRONMENT
   MODE: process.env.MODE,
   PORT: process.env.PORT,
