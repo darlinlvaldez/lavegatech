@@ -1,4 +1,4 @@
-function addToCart(id, nombre, precio, cantidad, color, descuento, stock, imagen) {
+async function addToCart(id, nombre, precio, cantidad, color, descuento, stock, imagen) {
     let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
     const cantidadNumerica = parseInt(cantidad);
     
@@ -30,8 +30,80 @@ function addToCart(id, nombre, precio, cantidad, color, descuento, stock, imagen
     }
 
     localStorage.setItem('carrito', JSON.stringify(carrito));
-    cargarCarrito(); 
+
+    try {
+    const response = await fetch('/cart/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+            producto_id: id,
+            colorSeleccionado: color,
+            cantidad: cantidadFinal,
+            nombre: nombre,
+            precio: precio,
+            descuento: descuento,
+            imagen: imagen,
+            stock: stock
+        }),
+        credentials: 'include'
+    });
+
+    if (response.status === 401) {
+        console.log('Usuario no autenticado, manteniendo datos en localStorage.');
+    } else if (response.ok) {
+        localStorage.removeItem('carrito');
+    } else {
+        const error = await response.json();
+        console.error('Error al sincronizar carrito:', error.message);
+    }
+
+    } catch (error) {
+        console.error('Error de red al sincronizar carrito:', error);
+    }
+
+    cargarCarrito();
+    updateCart();
 }
+
+function loadCartPage() {
+    if (window.location.pathname.includes('/cart')) {
+        cargarCarrito();
+    }
+}
+
+window.addEventListener('load', async () => {
+  const carritoLocal = JSON.parse(localStorage.getItem('carrito')) || [];
+
+  if (carritoLocal.length === 0) return;
+
+  try {
+    const response = await fetch('/cart/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ items: carritoLocal }),
+      credentials: 'include'
+    });
+
+    if (response.status === 401) {
+      console.log('Usuario no autenticado. Carrito local no se sincroniza.');
+      return;
+    }
+
+    if (response.ok) {
+      const result = await response.json();
+      if (result.success) {
+        localStorage.removeItem('carrito');
+        await cargarCarrito();
+        updateCart();
+      }
+    } else {
+      const error = await response.json();
+      console.error('Error en la sincronización del carrito:', error.message);
+    }
+  } catch (error) {
+    console.error('Error al sincronizar carrito:', error);
+  }
+});
 
 function updateCart() {
     let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
@@ -41,33 +113,58 @@ function updateCart() {
     cargarCarrito();
 }
 
-function deleteProduct(id, color) {
-    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-    carrito = carrito.filter(item => !(item.id === id && item.colorSeleccionado === color));
+async function deleteProduct(id, color) {
+  try {
+    const carrito = (JSON.parse(localStorage.getItem('carrito')) || [])
+      .filter(item => !(item.id === id && item.colorSeleccionado === color));
     localStorage.setItem('carrito', JSON.stringify(carrito));
-    cargarCarrito();
+
+    await fetch('/cart/remove-item', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ producto_id: id, colorSeleccionado: color }),
+      credentials: 'include'
+    });
+
+  } catch (err) {
+    console.error('Error al eliminar producto:', err);
+  } finally {
+    await cargarCarrito();
     loadCartPage();
+  }
 }
 
-function updateQuantity(input, change = 0, productId = null, color = null) {
-    const maxStock = parseInt(input.getAttribute('max'));
-    let value = parseInt(input.value) + change;
+async function updateQuantity(input, change = 0, productId = null, color = null) {
+    const max = parseInt(input.max);
+    const value = input.value = Math.max(1, Math.min(parseInt(input.value) + change, max));
 
-    value = Math.max(1, Math.min(value, maxStock));
+    if (!(productId && color)) return value;
 
-    input.value = value;
-
-    if (productId && color) {
-        let cart = JSON.parse(localStorage.getItem('carrito')) || [];
-        const item = cart.find(item => item.id === productId && item.colorSeleccionado === color);
-
-        if (item) {
-            item.cantidad = value;
-            localStorage.setItem('carrito', JSON.stringify(cart));
-            loadCartPage();
-        }
+    const cart = JSON.parse(localStorage.getItem('carrito')) || [];
+    const item = cart.find(i => i.id === productId && i.colorSeleccionado === color);
+    if (item) {
+        item.cantidad = value;
+        localStorage.setItem('carrito', JSON.stringify(cart));
     }
 
+    try {
+        const res = await fetch('/cart/update-quantity', { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ itemId: productId, colorSeleccionado: color, cantidad: value }),
+            credentials: 'include'
+        });
+
+        if (res.status === 401) {
+            console.log('No autenticado: solo se actualizó localStorage.');
+        } else if (!res.ok) {
+            throw new Error('Error en el servidor al actualizar cantidad.');
+        }
+    } catch (err) {
+        console.error('Error actualizando cantidad:', err);
+    }
+
+    await cargarCarrito();
     return value;
 }
 

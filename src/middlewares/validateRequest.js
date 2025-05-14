@@ -35,7 +35,6 @@ const validate = (schema) => (req, res, next) => {
       return next();
     }
   }
-
   next();
 };
 

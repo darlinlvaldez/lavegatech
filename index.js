@@ -9,13 +9,11 @@ import isAuth from './src/middlewares/auth.js';
 import session from './src/middlewares/session.js';
 import userLocals from './src/middlewares/userLocals.js';
 
-// Controller
-import principal from './src/models/principal.js';
-
 // Routes
 import store from './src/routes/productos.js';
 import auth from './src/routes/auth.js';
 import userProfile from './src/routes/userProfile.js';  
+import cart from './src/routes/cart.js';
 
 const app = express();
 
@@ -37,7 +35,9 @@ app.disable('x-powered-by');
 
 app.use('/api/auth', auth); 
 
-app.use('/user', userProfile);  
+app.use('/user', userProfile); 
+
+app.use('/cart', cart);
 
 app.use('/', store);
 
@@ -92,27 +92,6 @@ app.get('/verify', (req, res) => {
 app.get('/mant', (req, res) => {
   const data = { nombre: "iphone"}
   res.render('store/mant', data);
-});
-
-app.get('/', async (req, res) => {
-  try {
-    const productos = await principal.obtenerProductos();
-    const categorias = await principal.obtenerCategorias();
-    const recomendados = await principal.obtenerRecomendados();
-
-    res.render('index', {productos, categorias, recomendados});
-  } catch (err) {
-    console.error('Error al obtener productos:', err);
-    res.status(500).send('Error al cargar los productos.');
-  }
-});
-
-app.get('/store', (req, res) => {
-  res.render('store/store')  
-});
-
-app.get('/product', (req, res) => {
-  res.render('store/product');  
 });
 
 app.get('/contact', (req, res) => {
