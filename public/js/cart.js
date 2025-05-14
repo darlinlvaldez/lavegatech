@@ -43,7 +43,7 @@ async function addToCart(id, nombre, precio, cantidad, color, descuento, stock, 
             precio: precio,
             descuento: descuento,
             imagen: imagen,
-            stock: stock
+            stock: stockActual
         }),
         credentials: 'include'
     });

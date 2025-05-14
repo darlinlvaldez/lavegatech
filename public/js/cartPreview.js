@@ -8,10 +8,8 @@ async function cargarCarrito() {
             carrito = data.items;
         }
     } catch (error) {
-        // Falló la petición o no hay sesión, se usará localStorage
     }
 
-    // Si el carrito sigue vacío, intenta cargar del localStorage
     if (carrito.length === 0) {
         carrito = JSON.parse(localStorage.getItem('carrito')) || [];
     }

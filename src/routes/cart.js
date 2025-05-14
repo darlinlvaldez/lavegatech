@@ -4,7 +4,6 @@ import {isAuth} from '../middlewares/auth.js';
 
 const router = express.Router();
 
-// Rutas que requieren autenticación
 router.post('/sync', isAuth, cart.syncCart);
 router.post('/add', isAuth, cart.addToCart);
 router.post('/update-quantity', isAuth, cart.updateQuantity);

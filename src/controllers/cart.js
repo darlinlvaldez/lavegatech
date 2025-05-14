@@ -43,15 +43,12 @@ cartController.syncCart = async (req, res) => {
 cartController.addToCart = async (req, res) => {
   try {
     const userId = req.session.user.id;
-    const { 
-      producto_id, colorSeleccionado, cantidad = 1, nombre, precio, 
+    const {producto_id, colorSeleccionado, cantidad = 1, nombre, precio, 
       descuento = 0, imagen, stock} = req.body;
     
     if (!producto_id || cantidad < 1 || !nombre || !precio) {
       return res.status(400).json({ 
-        success: false, 
-        message: 'Datos inválidos' 
-      });
+        success: false, message: 'Datos inválidos'});
     }
     
     const stockActual = stock;
@@ -89,8 +86,7 @@ cartController.getCartItems = async (req, res) => {
     const items = await cart.getByUserId(userId);
 
     res.json({success: true, items});
-  } catch (error) {
-    console.error(error);
+  } catch (error) {console.error(error);
     res.status(500).json({success: false,
       message: 'Error al obtener los productos del carrito'});
   }

@@ -4,7 +4,7 @@ const cart = {};
 
 cart.addItem = async ({usuario_id, producto_id, colorSeleccionado, cantidad, 
   descuento, precio, imagen, nombre, stock}) => {
-    db.query(`INSERT INTO cart (usuario_id, producto_id, colorSeleccionado,
+    await db.query(`INSERT INTO cart (usuario_id, producto_id, colorSeleccionado,
       cantidad, descuento, precio, imagen, nombre, stock) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [usuario_id, producto_id, colorSeleccionado, cantidad, descuento, precio, imagen, nombre, stock]);
 };
@@ -18,9 +18,7 @@ cart.updateQuantity = async (id, usuario_id, cantidad) => {
 
 cart.removeItem = async (id, usuario_id) => {
   await db.query("DELETE FROM cart WHERE id = ? AND usuario_id = ?", [
-    id,
-    usuario_id,
-  ]);
+    id, usuario_id]);
 };
 
 cart.itemExists = async (usuario_id, producto_id, colorSeleccionado) => {
