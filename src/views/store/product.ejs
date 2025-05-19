@@ -98,23 +98,24 @@
 							<% } %>
 							<div class="add-to-cart">
 								<div class="qty-label">
-								  Cantidad
-								  <div class="input-number product-quantity">
-									<input 
-									  id="cantidad" type="number" value="1" min="1" max="<%= stockColor %>">
-									<span class="qty-up" id="qty-up">+</span> <span class="qty-down" id="qty-down">-</span>
-								  </div>
+									Cantidad
+									<div class="input-number product-quantity">
+									<select class="input-select" id="cantidad">
+										<% for(let i = 1; i <= stockColor; i++) { %>
+											<option value="<%= i %>"><%= i %></option>
+										<% } %>
+									</select>
 								</div>
-								<br><br>
-								<div class="add-to-cart">
-								  <button 
-									class="add-to-cart-btn" id="add-to-cart-btn" data-id="<%= producto.id %>" data-nombre="<%= producto.nombre %>"
-									data-precio="<%= producto.precio %>"data-descuento="<%= producto.descuento %>" data-stock="<%= stockColor %>">
-									<i class="fa fa-shopping-cart"></i> Agregar al carrito
-								  </button>
-								</div>
-							  </div>
-							  
+							</div>
+							<br><br>
+							<div class="add-to-cart">
+								<button 
+								class="add-to-cart-btn" id="add-to-cart-btn" data-id="<%= producto.id %>" data-nombre="<%= producto.nombre %>"
+								data-precio="<%= producto.precio %>"data-descuento="<%= producto.descuento %>" data-stock="<%= stockColor %>">
+								<i class="fa fa-shopping-cart"></i> Agregar al carrito
+								</button>
+							</div>
+						</div>  
 						<ul class="product-btns">
 							<li><a href="#"><i class="fa fa-heart-o"></i>Favoritos</a></li>
 							<li><a href="#"><i class="fa fa-exchange"></i>Comparalo</a></li>

@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="/css/cart.css">
 </head>
 
-<script>
+<!-- <script>
     function cartServer() {
         let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
         
@@ -21,7 +21,7 @@
           .then(data => console.log(data))
           .catch(error => console.error('Error:', error));
     }
-</script>
+</script> -->
 
 <body>
     <div class="container mt-5">
@@ -46,86 +46,17 @@
                         </li>
                     </ul>
                         <div class="total-price">
-                        <a href="/order" class="btn btn-checkout" onclick="cartServer()">Procesar Pago <i class="fa fa-arrow-circle-right"></i></a>
+                         <a href="/order" class="btn btn-checkout" onclick="cartServer()">Procesar Pago <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
   </div>  
-    
-    <script>
-        function loadCartPage() {
-        const cart = JSON.parse(localStorage.getItem('carrito')) || [];
-        const container = document.getElementById('cart-items-container');
-        const countElement = document.getElementById('cart-items-count');
-        const totalElement = document.getElementById('cart-total');
-        const checkoutBtn = document.getElementById('checkout-btn');
-
-        if (cart.length > 0) {
-            let html = '';
-            let total = 0;
-            let totalItems = 0;
-            
-            cart.forEach(item => {
-                const priceWithDiscount = Number(item.precio) * (1 - (item.descuento / 100));
-                const itemTotal = priceWithDiscount * item.cantidad;
-                total += itemTotal;
-                totalItems += 1;                  
-
-                html += `
-                <div class="cart-item" data-id="${item.id}"><a href="/product/${item.id}${item.colorSeleccionado ? `?color=${encodeURIComponent(item.colorSeleccionado)}` : ''}">
-                        <img src="${item.imagen}" alt="${item.nombre}" class="product-imagen">
-                        <div class="product-info">
-                            <h5>${item.nombre}</h5>
-                            <span class="product-price">
-                                <b>Precio:</b> ${priceWithDiscount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}${item.descuento > 0 ? `
-                                    <del class="product-old-price">$${Number(item.precio).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</del>
-                                    <span class="sale">-${item.descuento.toFixed(2)}%</span>
-                                ` : ''}
-                            </span>
-                            </a>
-                        </div>
-                    <div class="product-items">
-                    <span class="label">Color</span>
-                    <div class="color-item">
-                        ${item.colorSeleccionado ? `<span class="product-color">${item.colorSeleccionado}</span>` : '<span class="product-color">No disponible</span>'}
-                    </div>
-                </div>
-                    <div data-id="${item.id}" data-color="${item.colorSeleccionado}">
-                       <div class="qty-cantidad">
-                        <span>Cantidad</span>
-                        <div class="input-number product-quantity">
-                            <input 
-                                type="number" 
-                                value="${item.cantidad}" 
-                                min="1" 
-                                max="${item.stock}" 
-                                onchange="updateQuantity(this, 0, '${item.id}', '${item.colorSeleccionado}')">
-                            <span class="qty-up" onclick="updateQuantity(this.parentNode.querySelector('input'), 1, '${item.id}', '${item.colorSeleccionado}')">+</span>
-                            <span class="qty-down" onclick="updateQuantity(this.parentNode.querySelector('input'), -1, '${item.id}', '${item.colorSeleccionado}')">-</span>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="col-md-1">
-                    <i class="bi bi-trash remove-btn" onclick="deleteProduct('${item.id}', '${item.colorSeleccionado}')"></i>
-                    </div>
-                </div>
-                `;
-            });
-
-            container.innerHTML = html;
-            countElement.textContent = `${totalItems} ${totalItems === 1 ? 'producto' : 'productos'}`;
-            totalElement.textContent = `$${total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
-        } else {
-            container.innerHTML = '<p>No hay productos en el carrito.</p>';
-            countElement.textContent = '0 productos';
-            totalElement.textContent = '$0.00';
-        }
-    }
-    </script>
-    
+        
     <%- include('../partials/footer.ejs') %>
+
+    <script src="/js/cartView.js"></script>
 
 </body>
 

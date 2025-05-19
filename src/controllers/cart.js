@@ -43,38 +43,41 @@ cartController.syncCart = async (req, res) => {
 cartController.addToCart = async (req, res) => {
   try {
     const userId = req.session.user.id;
-    const {producto_id, colorSeleccionado, cantidad = 1, nombre, precio, 
-      descuento = 0, imagen, stock} = req.body;
-    
+    const { producto_id, colorSeleccionado, cantidad = 1, nombre, precio, descuento = 0, imagen, stock } = req.body;
+
     if (!producto_id || cantidad < 1 || !nombre || !precio) {
       return res.status(400).json({ 
-        success: false, message: 'Datos inválidos'});
+        success: false, 
+        message: 'Datos inválidos'
+      });
     }
-    
-    const stockActual = stock;
 
+    const stockActual = stock;
     const existingItem = await cart.itemExists(userId, producto_id, colorSeleccionado);
 
     if (existingItem) {
       const nuevaCantidad = existingItem.cantidad + cantidad;
+      const cantidadFinal = Math.min(nuevaCantidad, stockActual); 
 
       if (nuevaCantidad > stockActual) {
-        return res.status(400).json({success: false,
-          message: `No hay suficiente stock disponible. Stock máximo: ${stockActual}`});
+        await cart.updateQuantity(existingItem.id, userId, cantidadFinal);
+        return res.json({success: true, count: await cart.getCount(userId),
+          message: `Solo se agregaron ${cantidadFinal - existingItem.cantidad} unidades (stock máximo: ${stockActual})`
+        });
       }
 
       await cart.incrementQuantity(existingItem.id, userId, cantidad);
-    } else {
-      if (cantidad > stockActual) {
+    } else { if (cantidad > stockActual) {
         return res.status(400).json({success: false,
-          message: `No hay suficiente stock disponible. Stock máximo: ${stockActual}`});
+          message: `No hay suficiente stock disponible. Stock máximo: ${stockActual}`
+        });
       }
 
-      await cart.addItem({usuario_id: userId, producto_id, colorSeleccionado, cantidad,
-        descuento, precio, imagen: imagen, nombre, stock: stockActual});
-      }
-      
-      res.json({success: true, count: await cart.getCount(userId)});
+      await cart.addItem({usuario_id: userId, producto_id, colorSeleccionado, 
+        cantidad, descuento, precio, imagen, nombre, stock: stockActual});
+    }
+
+    res.json({success: true, count: await cart.getCount(userId) });
   } catch (error) {console.error(error);
     res.status(500).json({success: false, message: 'Error al agregar al carrito'});
   }
@@ -94,24 +97,11 @@ cartController.getCartItems = async (req, res) => {
 
 cartController.updateQuantity = async (req, res) => {
   try {
-    const userId = req.session.user.id;
-    const { itemId, cantidad } = req.body;
-    
-    if (!itemId || cantidad < 1) {
-      return res.status(400).json({ 
-        success: false, message: 'Datos inválidos'});
-    }
-    
-    await cart.updateQuantity(itemId, userId, cantidad);
-    
-    const cartItems = await cart.getByUserId(userId);
-    const subtotal = cartItems.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
-    const total = cartItems.reduce((sum, item) => sum + ((item.precio - item.descuento) * item.cantidad), 0);
-    
-    res.json({success: true, subtotal, total, count: 
-      await cart.getCount(userId)});
-  } catch (error) {console.error(error);
-    res.status(500).json({ 
+    const { producto_id, colorSeleccionado, cantidad } = req.body;
+    await cart.updateQuantity(
+      producto_id, req.session.user.id, cantidad, colorSeleccionado);
+    res.json({ success: true });
+  } catch (error) {res.status(500).json({ 
       success: false, message: 'Error al actualizar cantidad'});
   }
 };
@@ -119,7 +109,7 @@ cartController.updateQuantity = async (req, res) => {
 cartController.removeItem = async (req, res) => {
   try {
     const userId = req.session.user.id;
-    const { producto_id, colorSeleccionado } = req.body;
+    const { producto_id, colorSeleccionado } = req.body; 
 
     if (!producto_id) {
       return res.status(400).json({ success: false, message: 'ID inválido' });
@@ -130,7 +120,7 @@ cartController.removeItem = async (req, res) => {
 
     const items = await cart.getByUserId(userId);
     const subtotal = items.reduce((sum, i) => sum + (i.precio * i.cantidad), 0);
-    const total = items.reduce((sum, i) => sum + ((i.precio - i.descuento) * i.cantidad), 0);
+    const total = items.reduce((sum, i) => sum + ((i.precio * (1 - i.descuento/100)) * i.cantidad), 0);
     const count = await cart.getCount(userId);
 
     res.json({ success: true, subtotal, total, count });

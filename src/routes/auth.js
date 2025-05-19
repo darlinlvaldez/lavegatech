@@ -22,4 +22,13 @@ router.post('/newPassword', validate(request.forgotPassword), auth.forgotPasswor
 // SEND EMAIL CONTACT
 router.post('/contact', validate(request.formEmail), auth.formEmail);
 
+// AUTHENTICATED
+router.get('/status', (req, res) => {
+  if (req.session.user) {
+    res.json({ authenticated: true, user: req.session.user });
+  } else {
+    res.json({ authenticated: false });
+  }
+});
+
 export default router;
