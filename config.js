@@ -19,7 +19,12 @@ const config = {
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
 
   // SECRET KEY
-  SESSION_SECRET: process.env.SESSION_SECRET
+  SESSION_SECRET: process.env.SESSION_SECRET,
+
+  // PAYPAL
+  CLIENT_ID: process.env.CLIENT_ID,
+  CLIENT_SECRET: process.env.CLIENT_SECRET,
+  API_URL: process.env.API_URL
 };
 
 export default config;

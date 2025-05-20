@@ -1,36 +1,58 @@
 <%- include('../partials/header.ejs') %>
 
+<script src="https://www.paypal.com/sdk/js?client-id=Adxx8fzjTmAkgRKTLil8ciSgRYaYZxTnJf96IAsdJVAvE8-fW3Rx2hbrDZ5VC662O1So9fgvFOPZd5IG&currency=USD"></script>
+
 <script>
-	document.addEventListener('DOMContentLoaded', function () {
-		let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-		const orderProducts = document.querySelector('.order-products');
-		const orderTotal = document.querySelector('.order-total');
+document.addEventListener('DOMContentLoaded', async function () {
+    const orderProducts = document.querySelector('.order-products');
+    const orderTotal = document.querySelector('.order-total');
+    
+    try {
+        const authRes = await fetch('/api/auth/status', { credentials: 'include' });
+        const authData = await authRes.json();
+        
+        if (!authData.authenticated) {
+            orderProducts.innerHTML = '<p>Por favor inicia sesión para ver tu carrito.</p>';
+            orderTotal.textContent = '$0.00';
+            return;
+        }
 
-		if (carrito.length === 0) {
-			orderProducts.innerHTML = '<p>No hay productos en tu orden.</p>';
-			orderTotal.textContent = '$0.00';
-		} else {
-			let total = 0;
-			orderProducts.innerHTML = ''; 
+        const cartRes = await fetch('/cart/items', { credentials: 'include' });
+        const cartData = await cartRes.json();
+        
+        if (!cartData.success || !cartData.items || cartData.items.length === 0) {
+            orderProducts.innerHTML = '<p>No hay productos en tu orden.</p>';
+            orderTotal.textContent = '$0.00';
+            return;
+        }
 
-			carrito.forEach(item => {
-				let precioConDescuento = item.precio;
-				if (item.descuento > 0) {
-					precioConDescuento = item.precio * (1 - item.descuento / 100);  
-				}
+        let total = 0;
+        orderProducts.innerHTML = '';
+        
+        cartData.items.forEach(item => {
+            const precioFinal = item.descuento > 0 
+                ? item.precio * (1 - item.descuento / 100)
+                : item.precio;
+            
+            const subtotal = precioFinal * item.cantidad;
+            total += subtotal;
 
-				total += precioConDescuento * item.cantidad;
-
-				orderProducts.innerHTML += `
-					<div class="order-col">
-						<div>${item.cantidad}x ${item.nombre} ${item.colorSeleccionado}</div>
-						<div>$${(precioConDescuento * item.cantidad).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</div>
-					</div>
-				`;
-			});
-			orderTotal.textContent = `$${total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
-		}
-	});
+            orderProducts.innerHTML += `
+                <div class="order-col">
+                    <div>${item.cantidad}x ${item.nombre} ${item.colorSeleccionado || ''}</div>
+                    <div>$${subtotal.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</div>
+                </div>
+            `;
+        });
+        
+        orderTotal.textContent = `$${total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+        
+    } catch (error) {
+        console.error('Error al cargar el carrito:', error);
+        orderProducts.innerHTML = '<p>Error al cargar los productos. Por favor intenta nuevamente.</p>';
+        orderTotal.textContent = '$0.00';
+    }
+});
 </script>
 
 	<!-- BREADCRUMB -->
@@ -109,52 +131,6 @@
 					</div>
 					<!-- /Billing Details -->
 
-					<!-- Shiping Details -->
-					<div class="shiping-details">
-						<div class="section-title">
-							<h3 class="title">Destino diferente</h3>
-						</div>
-						<div class="input-checkbox">
-							<input type="checkbox" id="shiping-address">
-							<label for="shiping-address">
-								<span></span>
-								¿Enviar a una dirección diferente?
-							</label>
-							<div class="caption">
-								<div class="form-group">
-									<input class="input" type="text" name="first-name" placeholder="Nombre">
-								</div>
-								<div class="form-group">
-									<input class="input" type="text" name="last-name" placeholder="Apellido">
-								</div>
-								<div class="form-group">
-									<input class="input" type="email" name="email" placeholder="Correo">
-								</div>
-								<div class="form-group">
-									<input class="input" type="text" name="address" placeholder="Dirección">
-								</div>
-								<div class="form-group">
-									<input class="input" type="text" name="city" placeholder="Ciudad">
-								</div>
-								<div class="form-group">
-									<input class="input" type="text" name="district" placeholder="Distrito">
-								</div>
-								<div class="form-group">
-									<input class="input" type="tel" name="tel" placeholder="Telefono o celular">
-								</div>
-								<div class="form-group">
-									<label for="delivery-time">Horario de entrega preferido (dentro de la semana)</label>
-									<select class="input" id="delivery-time" name="delivery_time">
-										<option value="8-12">8 AM - 12 PM</option>
-										<option value="12-4">2 PM - 5 PM</option>
-									</select>
-									<p><small>Nota: La fecha de entrega será en algún momento dentro de la próxima semana. La compañía te informará sobre el día exacto de entrega.</small></p>
-								</div>						
-							</div>
-						</div>
-					</div>
-					<!-- /Shiping Details -->
-
 					<!-- Order notes -->
 					<div class="order-notes">
 						<textarea class="input" placeholder="Mensaje"></textarea>
@@ -204,6 +180,7 @@
 							<div class="caption">
 								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
 									incididunt ut labore et dolore magna aliqua.</p>
+									<div id="paypal-button-container" style="margin-top: 20px;"></div>
 							</div>
 						</div>
 					</div>
@@ -211,7 +188,7 @@
 						<input type="checkbox" id="terms">
 						<label for="terms">
 							<span></span>
-							He leído y acepto los <a href="#">términos y condiciones</a>
+							He leído y acepto las <a href="/conditions">Políticas y condiciones</a>
 						</label>
 					</div>
 					<a href="#" class="primary-btn order-submit">Realizar Pedido</a>
@@ -223,6 +200,41 @@
 		<!-- /container -->
 	</div>
 	<!-- /SECTION -->
+	 
+	 <script>
+	 document.addEventListener('DOMContentLoaded', function () {
+		const paypalRadio = document.getElementById('payment-3');
+		const paypalContainer = document.getElementById('paypal-button-container');
+		let buttonRendered = false;
+		
+		paypalRadio.addEventListener('change', function () {
+			if (paypalRadio.checked && !buttonRendered) {
+				const totalTexto = document.querySelector('.order-total').textContent;
+				const orderTotal = parseFloat(totalTexto.replace(/[^0-9.-]+/g, ''));
+				
+				paypal.Buttons({
+					createOrder: function(data, actions) {
+					return actions.order.create({
+						purchase_units: [{
+							amount: {
+								value: orderTotal.toFixed(2)
+							}
+						}]
+					});
+				},
+				
+				onApprove: function(data, actions) {
+					return actions.order.capture().then(function(details) {
+						alert('Transacción completada por ' + details.payer.name.given_name);
+					});
+				}
+			}).render('#paypal-button-container');
+			buttonRendered = true;
+		}
+	});
+});
+</script>
+
 
 	<%- include('../partials/footer.ejs') %>
 

@@ -49,43 +49,67 @@
   
   /////////////////////////////////////////
 
-  // Product Main img Slick
-  $("#product-main-img").slick({
-    infinite: true,
-    speed: 300,
-    dots: false,
-    arrows: true,
-    fade: true,
-    asNavFor: "#product-imgs",
-  });
+ // Product Main img Slick
+$("#product-main-img").slick({
+  infinite: true,
+  speed: 300,
+  dots: false,
+  arrows: true,
+  fade: true,
+  asNavFor: "#product-imgs",
+});
 
-  // Product imgs Slick
-  $("#product-imgs").slick({
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    arrows: true,
-    centerMode: true,
-    focusOnSelect: true,
-    centerPadding: 0,
-    vertical: true,
-    asNavFor: "#product-main-img",
-    responsive: [
-      {
-        breakpoint: 991,
-        settings: {
-          vertical: false,
-          arrows: false,
-          dots: true,
-        },
+// Product imgs Slick
+var $productImgs = $("#product-imgs").slick({
+  slidesToShow: 3,
+  slidesToScroll: 1,
+  arrows: true,
+  centerMode: true,
+  focusOnSelect: true,
+  centerPadding: 0,
+  vertical: true,
+  asNavFor: "#product-main-img",
+  responsive: [
+    {
+      breakpoint: 991,
+      settings: {
+        vertical: false,
+        arrows: false,
+        dots: true,
       },
-    ],
-  });
+    },
+  ],
+});
+
+// Función para manejar el cambio de color
+function handleColorChange() {
+  var currentSlide = $productImgs.slick('slickCurrentSlide');
+  var currentSlideElement = $productImgs.find('.slick-slide').not('.slick-cloned').eq(currentSlide);
+  var imgElement = currentSlideElement.find('img');
+  var color = imgElement.attr('alt');
+  var productId = currentSlideElement.data('product-id') || currentSlideElement.attr('onclick').match(/'([^']+)'/)[1];
+  
+  if(color && productId) {
+    changeColor({ value: color }, productId);
+  }
+}
+
+// Capturar eventos que cambian el slide
+$productImgs.on('afterChange', handleColorChange);
+
+// También capturar clics en los botones de navegación
+$productImgs.on('click', '.slick-arrow', function() {
+  // Pequeño timeout para esperar que Slick complete la animación
+  setTimeout(handleColorChange, 100);
+});
+
+
 
   // Product img zoom
-  var zoomMainProduct = document.getElementById("product-main-img");
-  if (zoomMainProduct) {
-    $("#product-main-img .product-preview").zoom();
-  }
+  // var zoomMainProduct = document.getElementById("product-main-img");
+  // if (zoomMainProduct) {
+  //   $("#product-main-img .product-preview").zoom();
+  // }
 
   /////////////////////////////////////////
 

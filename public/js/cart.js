@@ -54,7 +54,7 @@ window.addEventListener('load', async () => {
         const res = await fetch('/api/auth/status', { method: 'GET', credentials: 'include' });
         const data = await res.json();
 
-        if (!data.authenticated) return console.log('No autenticado. No se sincroniza carrito.');
+        if (!data.authenticated) return //console.log('No autenticado. No se sincroniza carrito.');
 
         const syncRes = await fetch('/cart/sync', {
             method: 'POST',
@@ -94,7 +94,7 @@ async function deleteProduct(id, color) {
         if (!authenticated) {
             let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
             carrito = carrito.filter(item => 
-                !((item.id === id || item.producto_id === id) && 
+                !((item.id === id) && 
                 item.colorSeleccionado === color)
             );
             localStorage.setItem('carrito', JSON.stringify(carrito));
@@ -114,11 +114,14 @@ async function deleteProduct(id, color) {
 }
 
 function cambiarImagen(productId, color) {
-    const imagenProducto = document.getElementById('imagenProducto');
-    const nuevaImagen = document.querySelector(`#product-imgs img[alt="${color}"]`);
-    
-    if (nuevaImagen) {
-        imagenProducto.src = nuevaImagen.src;
+    const slickInstance = $('#product-main-img').slick('getSlick');
+    const slides = $('#product-main-img img');
+
+    for (let i = 0; i < slides.length; i++) {
+        if (slides[i].alt === color) {
+            slickInstance.slickGoTo(i);
+            break;
+        }
     }
 }
 
@@ -128,6 +131,11 @@ async function changeColor(selectOrEvent, productId) {
 
     cambiarImagen(productId, color);
 
+    const addToCartBtn = document.getElementById('add-to-cart-btn');
+    if (addToCartBtn) {
+        addToCartBtn.dataset.color = color;
+    }
+    
     history.replaceState({ color }, '', `/product/${productId}?color=${encodedColor}`);
 
     const select = document.getElementById('colorSeleccionado');
@@ -192,23 +200,23 @@ document.addEventListener('DOMContentLoaded', function() {
       const precio = parseFloat(btn.dataset.precio);
       const descuento = parseFloat(btn.dataset.descuento) || 0;
       const stock = parseInt(btn.dataset.stock) || 0;
+      const color = btn.dataset.color;
 
       let cantidad = 1;
-      let color = btn.dataset.color;
       let imagen = btn.dataset.imagen;
-
-      const cantidadInput = document.getElementById('cantidad');
-      if (cantidadInput) {
-        cantidad = parseInt(cantidadInput.value) || 1;
-      }
-      const colorSelect = document.getElementById('colorSeleccionado');
-      if (colorSelect) {
-        color = colorSelect.value;
-      }
-      const imagenProducto = document.getElementById('imagenProducto');
-      if (imagenProducto) {
-        imagen = imagenProducto.src;
-      }
+    
+      if (!imagen) {
+        const currentSlide = $('#product-main-img').slick('slickCurrentSlide');
+        const currentImg = $('#product-main-img .slick-slide').eq(currentSlide).find('img');
+        if (currentImg.length) {
+          imagen = currentImg.attr('src');
+        }
+    }
+    
+    const cantidadInput = document.getElementById('cantidad');
+    if (cantidadInput) {
+        cantidad = parseInt(cantidadInput.value);
+    }
 
       addToCart(id, nombre, precio, cantidad, color, descuento, stock, imagen); 
     });

@@ -1608,7 +1608,7 @@ textarea.input {
 }
 
 #product-main-img .slick-prev, #product-main-img .slick-next {
-  opacity: 0;
+  opacity: 1;
   visibility: hidden;
   -webkit-transition: 0.2s all;
   transition: 0.2s all;

@@ -103,12 +103,16 @@ app.get('/about', (req, res) => {
   res.render('store/about');  
 });
 
-app.get('/order', (req, res) => {
+app.get('/order', isAuth, (req, res) => {
   res.render('store/order');  
 });
 
 app.get('/cart', (req, res) => {
   res.render('store/cart');
+});
+
+app.get('/fav', (req, res) => {
+  res.render('store/fav');
 });
 
 app.get('/conditions', (req, res) => {

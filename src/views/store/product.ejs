@@ -30,25 +30,28 @@
 			<div class="row">
 				<!-- Product main img -->
 				<div class="col-md-5 col-md-push-2">
-					<div id="product-main-img">
+				<div id="product-main-img">
+					<% if (producto.imagenes) { 
+					for (const [color, imagen] of Object.entries(imagenesPorColor)) { %>
 						<div class="product-preview">
-							<% if (producto.imagenes) { %>
-								<img id="imagenProducto" src="<%= producto.imagenes.split(',')[0] %>" alt="<%= producto.nombre %>">
-							<% } %>   
+						<img src="<%= imagen %>" alt="<%= color %>"  class="product-img" id="imagenProducto">
 						</div>
-					</div>
+					<% }} %>
 				</div>
-				<!-- Product thumb imgs -->
-				<div class="col-md-2 col-md-pull-5">
-					<div id="product-imgs">
-						<% for (const [color, imagen] of Object.entries(imagenesPorColor)) { %>
-							<div class="product-preview" onclick="changeColor({ value: '<%= color %>' }, '<%= producto.id %>')">
-								<img src="<%= imagen %>" alt="<%= color %>">
-							</div>
-						<% } %>
+			</div>
+			<!-- Product thumb imgs -->
+			<div class="col-md-2 col-md-pull-5">
+				<div id="product-imgs">
+					<% for (const [color, imagen] of Object.entries(imagenesPorColor)) { %>
+						<div class="product-preview" 
+						onclick="changeColor({ value: '<%= color %>' }, '<%= producto.id %>')"
+						data-product-id="<%= producto.id %>">
+						<img src="<%= imagen %>" alt="<%= color %>"  class="product-img" id="imagenProducto">
 					</div>
-				</div>
-				<!-- /Product thumb imgs -->
+				<% } %>
+			</div>
+		</div>
+		<!-- /Product thumb imgs -->
 				 
 				<!-- Product details -->
 				<div class="col-md-5">
@@ -111,7 +114,8 @@
 							<div class="add-to-cart">
 								<button 
 								class="add-to-cart-btn" id="add-to-cart-btn" data-id="<%= producto.id %>" data-nombre="<%= producto.nombre %>"
-								data-precio="<%= producto.precio %>"data-descuento="<%= producto.descuento %>" data-stock="<%= stockColor %>">
+								data-precio="<%= producto.precio %>"data-descuento="<%= producto.descuento %>" data-stock="<%= stockColor %>"
+								  data-color="<%= colorSeleccionado %>">
 								<i class="fa fa-shopping-cart"></i> Agregar al carrito
 								</button>
 							</div>
