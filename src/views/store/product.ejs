@@ -26,6 +26,8 @@
 	<div class="section">
 		<!-- container -->
 		<div class="container">
+						<div id="product-root" data-product-stocks='<%- JSON.stringify(stocksPorColor) %>' data-product-id="<%= producto.id %>">
+
 			<!-- row -->
 			<div class="row">
 				<!-- Product main img -->
@@ -78,7 +80,7 @@
 								</h3>
 								<span class="product-available">
 									<p id="stockDisponible">
-										Cantidad disponible: <% if (stockColor) { %><%= stockColor %><% } else { %>0<% } %>
+										Cantidad disponible: <% if (stocksPorColor) { %><%= stocksPorColor %><% } else { %>0<% } %>
 									</p>
 								</span>														
 							</div>
@@ -104,7 +106,7 @@
 									Cantidad
 									<div class="input-number product-quantity">
 									<select class="input-select" id="cantidad">
-										<% for(let i = 1; i <= stockColor; i++) { %>
+										<% for(let i = 1; i <= stocksPorColor; i++) { %>
 											<option value="<%= i %>"><%= i %></option>
 										<% } %>
 									</select>
@@ -114,7 +116,7 @@
 							<div class="add-to-cart">
 								<button 
 								class="add-to-cart-btn" id="add-to-cart-btn" data-id="<%= producto.id %>" data-nombre="<%= producto.nombre %>"
-								data-precio="<%= producto.precio %>"data-descuento="<%= producto.descuento %>" data-stock="<%= stockColor %>"
+								data-precio="<%= producto.precio %>"data-descuento="<%= producto.descuento %>" data-stock="<%= stocksPorColor %>"
 								  data-color="<%= colorSeleccionado %>">
 								<i class="fa fa-shopping-cart"></i> Agregar al carrito
 								</button>

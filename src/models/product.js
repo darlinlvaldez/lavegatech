@@ -5,60 +5,38 @@ const product = {};
 product.obtenerDetalles = async (id) => {
     const query = `
     SELECT 
-    p.id,
-    p.nombre,
-    p.descripcion,
-    p.precio,
-    p.descuento,
-    p.fecha,
-    p.categoria_id AS categoriaId,
-    c.categoria,
-    GROUP_CONCAT(DISTINCT v.color ORDER BY v.color) AS colores,
-    GROUP_CONCAT(DISTINCT v.img ORDER BY v.color) AS imagenes,
-    GROUP_CONCAT(DISTINCT v.stock ORDER BY v.color) AS stocks
+        p.id,
+        p.nombre,
+        p.descripcion,
+        p.precio,
+        p.descuento,
+        p.fecha,
+        p.categoria_id AS categoriaId,
+        c.categoria,
+        GROUP_CONCAT(DISTINCT v.color ORDER BY v.color) AS colores,
+        GROUP_CONCAT(DISTINCT v.img ORDER BY v.color) AS imagenes,
+        GROUP_CONCAT(DISTINCT v.stock ORDER BY v.color) AS stocks
     FROM productos p
     JOIN categorias c ON p.categoria_id = c.id
     LEFT JOIN variantes v ON p.id = v.producto_id
     WHERE p.id = ?
-    GROUP BY p.id `;
+    GROUP BY p.id`;
 
-    try {
-        const [results] = await db.query(query, [id]);
-        return results.length > 0 ? results[0] : null;
-    } catch (err) {
-        console.error("Error al obtener detalles del producto:", err.message);
-        throw new Error("Error al obtener detalles del producto: " + err.message);
-    }
-};
+    const [results] = await db.query(query, [id]);
+    if (!results.length) return null;
 
-product.obtenerImagen = async (productoId, color) => {
-    try {
-        const query = `
-            SELECT img 
-            FROM variantes 
-            WHERE producto_id = ? AND color = ?
-        `;
-        const [result] = await db.execute(query, [productoId, color]);
-        return result.length > 0 ? result[0].img : null;
-    } catch (error) {
-        console.error('Error al obtener la imagen por color:', error);
-        throw error;
+    const producto = results[0];
+    
+    if (producto.colores && producto.stocks) {
+        producto.stocksPorColor = {};
+        const colores = producto.colores.split(',');
+        const stocks = producto.stocks.split(',');
+        colores.forEach((color, i) => {
+            producto.stocksPorColor[color.trim()] = parseInt(stocks[i]);
+        });
     }
-};
 
-product.obtenerStock = async (productoId, color) => {
-    try {
-        const query = `
-            SELECT stock 
-            FROM variantes 
-            WHERE producto_id = ? AND color = ?`;
-        const [result] = await db.execute(query, [productoId, color]);
-        
-        return result.length > 0 ? result[0].stock : 0;
-    } catch (error) {
-        console.error('Error al obtener el stock por color:', error);
-        return 0;
-    }
+    return producto;
 };
 
 product.obtenerRelacionados = async (productoId, categoriaId) => {

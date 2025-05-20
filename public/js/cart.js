@@ -1,5 +1,5 @@
 async function addToCart(id, nombre, precio, cantidad = 1, color, descuento = 0, stock, imagen) {
-    const stockActual = await obtenerStock(id, color); 
+    const stockActual = window.productData?.stocksPorColor?.[color];
 
     let authenticated = false;
     try {
@@ -76,36 +76,33 @@ window.addEventListener('load', async () => {
 });
 
 async function deleteProduct(id, color) {
+    const itemElement = document.querySelector(`.cart-item[data-id="${id}"][data-color="${color}"]`);
+    if (itemElement) {
+        itemElement.remove();
+    }
 
-        const itemElement = document.querySelector(`.cart-item[data-id="${id}"][data-color="${color}"]`);
-        if (itemElement) {
-            itemElement.remove();
-        }
-
-        const countElement = document.querySelector('.qty-cart');
-        if (countElement) {
-            countElement.textContent = parseInt(countElement.textContent) - 1;
-        }
-
-            try {
+    const countElement = document.querySelector('.qty-cart');
+    if (countElement) {
+        countElement.textContent = parseInt(countElement.textContent) - 1;
+    }
+    
+    try {
         const res = await fetch('/api/auth/status', { credentials: 'include' });
         const { authenticated } = await res.json();
 
-        if (!authenticated) {
-            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-            carrito = carrito.filter(item => 
-                !((item.id === id) && 
-                item.colorSeleccionado === color)
-            );
-            localStorage.setItem('carrito', JSON.stringify(carrito));
-        } else {
-            await fetch('/cart/remove-item', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ producto_id: id, colorSeleccionado: color }),
-                credentials: 'include'
-            });
-        }
+    if (!authenticated) {
+        let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+        carrito = carrito.filter(item => 
+            !((item.id === id) && item.colorSeleccionado === color));
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+    } else {
+        await fetch('/cart/remove-item', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ producto_id: id, colorSeleccionado: color }),
+            credentials: 'include'
+        });
+    }
 
         await cargarCarrito();
     } catch (err) {
@@ -126,52 +123,58 @@ function cambiarImagen(productId, color) {
 }
 
 async function changeColor(selectOrEvent, productId) {
-    const color = selectOrEvent.value;
-    const encodedColor = encodeURIComponent(color);
+  let color;
+  
+  if (typeof selectOrEvent === 'object' && 'value' in selectOrEvent) {
+    color = selectOrEvent.value;
+  } else if (typeof selectOrEvent === 'string') {
+    color = selectOrEvent;
+  } else { return;
+  }
 
-    cambiarImagen(productId, color);
+  const encodedColor = encodeURIComponent(color);
 
-    const addToCartBtn = document.getElementById('add-to-cart-btn');
-    if (addToCartBtn) {
-        addToCartBtn.dataset.color = color;
-    }
-    
-    history.replaceState({ color }, '', `/product/${productId}?color=${encodedColor}`);
+  if ($('#colorSeleccionado').val() !== color) {
+    $('#colorSeleccionado').val(color);
+  }
 
-    const select = document.getElementById('colorSeleccionado');
-    if (select && select.value !== color) {
-        select.value = color;
-    }
+  cambiarImagen(productId, color);
 
-    const stockColor = await obtenerStock(productId, color);
-    const cantidadSelect = document.getElementById('cantidad');
-    
+  const addToCartBtn = document.getElementById('add-to-cart-btn');
+  if (addToCartBtn) {
+    addToCartBtn.dataset.color = color;
+  }
+  
+  history.replaceState({ color }, '', `/product/${productId}?color=${encodedColor}`);
+
+  const stockColor = window.productData.stocksPorColor[color] || 0;
+
+  const cantidadSelect = document.getElementById('cantidad');
+  if (cantidadSelect) {
     cantidadSelect.innerHTML = '';
-    
     const maxOptions = Math.min(stockColor); 
     for(let i = 1; i <= maxOptions; i++) {
-        const option = document.createElement('option');
-        option.value = i;
-        option.textContent = i;
-        cantidadSelect.appendChild(option);
+      const option = document.createElement('option');
+      option.value = i;
+      option.textContent = i;
+      cantidadSelect.appendChild(option);
     }
+  }
 
-    document.getElementById('stockDisponible').textContent = `Cantidad disponible: ${stockColor}`;
+  const stockElement = document.getElementById('stockDisponible');
+  if (stockElement) {
+    stockElement.textContent = `Cantidad disponible: ${stockColor}`;
+  }
 }
 
-async function obtenerStock(productId, color) {
-    try {
-        const response = await fetch(`/stock/${productId}/${encodeURIComponent(color)}`);
-        if (!response.ok) {
-            throw new Error(`Error al obtener stock: ${response.statusText}`);
-        }
-        const data = await response.json();
-        return data.stock;
-    } catch (error) {
-        console.error('Error obteniendo stock:', error);
-        return 0;
-    }
-}
+document.addEventListener('DOMContentLoaded', () => {
+    const productRoot = document.getElementById('product-root');
+    
+    window.productData = {
+        stocksPorColor: JSON.parse(productRoot.dataset.productStocks || '{}'),
+        productId: productRoot.dataset.productId
+    };
+});
 
 function syncColorFromURL() {
     const urlParams = new URLSearchParams(window.location.search);

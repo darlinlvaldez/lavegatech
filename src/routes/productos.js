@@ -12,6 +12,5 @@ router.get('/store', store.storeController);
 router.get('/store/:pagina', store.storeController);
 
 router.get("/product/:id", product.detallesController);
-router.get('/stock/:productId/:color', product.StockController);
 
 export default router;
