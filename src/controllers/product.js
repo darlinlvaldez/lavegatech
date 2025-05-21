@@ -29,14 +29,9 @@ product.detallesController = async (req, res) => {
 
         const productRelacionados = await product.obtenerRelacionados(producto.id, producto.categoriaId);
 
-        res.render('store/product', { 
-            producto,
-            productRelacionados,
-            imagenesPorColor,
-            colorSeleccionado: colorActual,
-            stocksPorColor: producto.stocksPorColor,
-            currentUrl: req.originalUrl
-        });
+        res.render('store/product', {producto, productRelacionados, imagenesPorColor,
+            colorSeleccionado: colorActual, stocksPorColor: producto.stocksPorColor,
+            currentUrl: req.originalUrl});
     } catch (error) {
         console.error('Error al obtener detalles del producto:', error);
         res.status(500).render('error', { mensaje: error.message });

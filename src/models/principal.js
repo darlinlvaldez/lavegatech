@@ -49,11 +49,11 @@ principal.obtenerProductos = async (categoria) => {
   GROUP BY p.id`;
   
   try {
-      const params = categoria ? [categoria] : [];
-      const [results] = await db.query(query, params);
-      return results;
+    const params = categoria ? [categoria] : [];
+    const [results] = await db.query(query, params);
+    return results;
   } catch (err) {
-      throw new Error("Error al obtener los productos: " + err.message);
+    throw new Error("Error al obtener los productos: " + err.message);
   }
 };
 

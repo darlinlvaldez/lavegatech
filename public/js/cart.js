@@ -1,48 +1,49 @@
 async function addToCart(id, nombre, precio, cantidad = 1, color, descuento = 0, stock, imagen) {
-    const stockActual = window.productData?.stocksPorColor?.[color];
+    const stockDisponible = window.productData?.stocksPorColor?.[color] || stock || 1;
+    const cantidadFinal = Math.min(parseInt(cantidad) || 1, stockDisponible);
 
-    let authenticated = false;
     try {
-        const res = await fetch('/api/auth/status', { method: 'GET', credentials: 'include' });
-        const data = await res.json();
-        authenticated = !!data.authenticated;
-    } catch (e) {
-        console.error('Error autenticación:', e);
-    }
+        const authRes = await fetch('/api/auth/status', { 
+            method: 'GET', 
+            credentials: 'include' 
+        });
+        const authData = await authRes.json();
+        const authenticated = !!authData.authenticated;
 
-    if (!authenticated) {
-        let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-        const cantidadFinal = parseInt(cantidad) || 1;
-        const producto = carrito.find(p => p.id === id && p.colorSeleccionado === color);
+        if (!authenticated) {
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            const productoExistente = carrito.find(p => p.id === id && p.colorSeleccionado === color);
 
-        if (producto) {
-            producto.cantidad = Math.min(producto.cantidad + cantidadFinal, stockActual);
-        } else {
-            carrito.push({ id, nombre, precio, cantidad: cantidadFinal, 
-                colorSeleccionado: color, descuento, stock: stockActual, imagen});
+            if (productoExistente) {
+                productoExistente.cantidad = Math.min(
+                    productoExistente.cantidad + cantidadFinal, 
+                    stockDisponible);
+            } else {carrito.push({id, nombre, precio, cantidad: cantidadFinal, colorSeleccionado: color, 
+                descuento, stock: stockDisponible, imagen});
+            }
+            
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+            await cargarCarrito();
+            window.location.href = '/cart';
+            return;
         }
-        
-        window.location.href = '/cart';
-        localStorage.setItem('carrito', JSON.stringify(carrito));
-        cargarCarrito(); 
-        return;
-    }
 
-    try {
         const res = await fetch('/cart/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
-            body: JSON.stringify({ producto_id: id, nombre, precio, cantidad, 
-                colorSeleccionado: color, descuento, stock: stockActual, imagen })
-        });
-
-        if (!res.ok) throw new Error('Error al agregar al carrito');
+            body: JSON.stringify({producto_id: id, nombre, precio, cantidad: cantidadFinal,
+                colorSeleccionado: color, descuento, stock: stockDisponible, imagen})
+            });
+            
+            if (!res.ok) {const errorData = await res.json();
+            throw new Error(errorData.message || 'Error al agregar al carrito');
+        } 
         
-        window.location.href = '/cart';
         await cargarCarrito();
-    } catch (e) {
-        console.error('Error:', e);
+        window.location.href = '/cart';
+    } catch (error) {console.error('Error en addToCart:', error);
+        console.error('Error en addToCart:', error);
     }
 }
 
@@ -110,85 +111,6 @@ async function deleteProduct(id, color) {
     }
 }
 
-function cambiarImagen(productId, color) {
-    const slickInstance = $('#product-main-img').slick('getSlick');
-    const slides = $('#product-main-img img');
-
-    for (let i = 0; i < slides.length; i++) {
-        if (slides[i].alt === color) {
-            slickInstance.slickGoTo(i);
-            break;
-        }
-    }
-}
-
-async function changeColor(selectOrEvent, productId) {
-  let color;
-  
-  if (typeof selectOrEvent === 'object' && 'value' in selectOrEvent) {
-    color = selectOrEvent.value;
-  } else if (typeof selectOrEvent === 'string') {
-    color = selectOrEvent;
-  } else { return;
-  }
-
-  const encodedColor = encodeURIComponent(color);
-
-  if ($('#colorSeleccionado').val() !== color) {
-    $('#colorSeleccionado').val(color);
-  }
-
-  cambiarImagen(productId, color);
-
-  const addToCartBtn = document.getElementById('add-to-cart-btn');
-  if (addToCartBtn) {
-    addToCartBtn.dataset.color = color;
-  }
-  
-  history.replaceState({ color }, '', `/product/${productId}?color=${encodedColor}`);
-
-  const stockColor = window.productData.stocksPorColor[color] || 0;
-
-  const cantidadSelect = document.getElementById('cantidad');
-  if (cantidadSelect) {
-    cantidadSelect.innerHTML = '';
-    const maxOptions = Math.min(stockColor); 
-    for(let i = 1; i <= maxOptions; i++) {
-      const option = document.createElement('option');
-      option.value = i;
-      option.textContent = i;
-      cantidadSelect.appendChild(option);
-    }
-  }
-
-  const stockElement = document.getElementById('stockDisponible');
-  if (stockElement) {
-    stockElement.textContent = `Cantidad disponible: ${stockColor}`;
-  }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    const productRoot = document.getElementById('product-root');
-    
-    window.productData = {
-        stocksPorColor: JSON.parse(productRoot.dataset.productStocks || '{}'),
-        productId: productRoot.dataset.productId
-    };
-});
-
-function syncColorFromURL() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const color = urlParams.get('color');
-    if (color) {
-        const decodedColor = decodeURIComponent(color);
-        const colorSelect = document.getElementById('colorSeleccionado');
-        if (colorSelect) {colorSelect.value = decodedColor;
-            colorSelect.dispatchEvent(new Event('change', { bubbles: true }));
-        }
-    }
-}
-
-document.addEventListener('DOMContentLoaded', syncColorFromURL);
 
 document.addEventListener('DOMContentLoaded', function () {
     cargarCarrito();
