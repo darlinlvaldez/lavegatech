@@ -132,7 +132,6 @@ document.addEventListener('click', function(event) {
     const color = btn.dataset.color;
     let imagen = btn.dataset.imagen;
 
-    // Solo busca la imagen en slides si es necesario (para páginas de producto)
     if (!imagen && $('#product-main-img').length) {
         const currentSlide = $('#product-main-img').slick('slickCurrentSlide');
         const currentImg = $('#product-main-img .slick-slide').eq(currentSlide).find('img');

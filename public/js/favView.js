@@ -65,16 +65,16 @@ async function loadFavPage() {
                 <div class="fav-item" data-id="${productId}" data-color="${color}">
             <div class="action-buttons">
                 <button class="add-to-cart-btn"
-            data-id="${productId}" 
-            data-nombre="${item.nombre}" 
-            data-precio="${price}" 
-            data-color="${color}"
-            data-descuento="${discount}" 
-            data-stock="${item.stockPorColor || 1}"
-            data-imagen="${item.imagen}">
-            <i class="fa fa-shopping-cart"></i> Añadir al carrito
-        </button>
-                <i class="bi bi-trash remove-btn" onclick="removeFromFav('${productId}', '${color}')"></i>
+                data-id="${productId}" 
+                data-nombre="${item.nombre}" 
+                data-precio="${price}" 
+                data-color="${color}"
+                data-descuento="${discount}" 
+                data-stock="${item.stockPorColor || 1}"
+                data-imagen="${item.imagen}">
+                <i class="fa fa-shopping-cart"></i> Añadir al carrito
+                </button>
+            <i class="bi bi-trash remove-btn" onclick="removeFromFav('${productId}', '${color}')"></i>
             </div>
         </div>`;
         });
@@ -155,7 +155,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         }),
                         credentials: 'include'
                     });
-
+                    if (response.ok) {
+                        await checkFavorites();
+                    }
                     const result = await response.json();
                     if (!result.success) {
                         console.error('Error al agregar a favoritos:', result.message);
@@ -189,4 +191,50 @@ function showNotification(message) {
     }, 3000);
 }
 
-document.addEventListener('DOMContentLoaded', loadFavPage);
+// Suponiendo que tienes una función para cargar favoritos y una lista de productos en la página
+async function checkFavorites() {
+    try {
+        const authCheck = await fetch('/api/auth/status', { credentials: 'include' });
+        const authData = await authCheck.json();
+        
+        let favorites = [];
+        if (authData.authenticated) {
+            const response = await fetch('/fav/items', { credentials: 'include' });
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success && data.items) {
+                    favorites = data.items;
+                    // Recorre todos los productos de la página
+                    document.querySelectorAll('.add-to-wishlist').forEach(button => {
+                        const productId = button.getAttribute('data-product-id');
+                        const color = button.dataset.productColor || null;
+                        // Busca si el producto está en favoritos
+                        const isFav = favorites.some(item => 
+                            item.id == productId && item.colorSeleccionado == color
+                        );
+                        if (isFav) {
+                            button.innerHTML = '<i class="fa fa-heart"></i><span class="tooltipp">Agregado</span>';
+                            button.classList.add('added');
+                        }
+                    });
+                }
+            }
+        }
+        // Actualiza el contador del header aquí
+        document.querySelectorAll('.qty-fav').forEach(el => {
+            el.textContent = favorites.length;
+        });
+    } catch (error) {
+        console.error("Error al verificar favoritos:", error);
+        // Si hay error, intenta con localStorage
+        const favs = JSON.parse(localStorage.getItem('favoritos')) || [];
+        document.querySelectorAll('.qty-fav').forEach(el => {
+            el.textContent = favs.length;
+        });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    loadFavPage();
+    checkFavorites();
+});
