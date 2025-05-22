@@ -91,6 +91,7 @@ async function deleteProduct(id, color) {
     } catch (err) {
         console.error('Error al eliminar producto:', err);
     }
+    loadCartPage();
 }
 
 function formatPrice(price) {
