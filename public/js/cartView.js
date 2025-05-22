@@ -63,10 +63,6 @@ function parsePrice(priceString) {
     return parseFloat(priceString.replace(/[^0-9.-]+/g,""));
 }
 
-function formatPrice(price) {
-    return price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-}
-
 function updateCartTotal() {
     const items = document.querySelectorAll('.cart-item');
     let total = 0;

@@ -14,6 +14,7 @@ import store from './src/routes/productos.js';
 import auth from './src/routes/auth.js';
 import userProfile from './src/routes/userProfile.js';  
 import cart from './src/routes/cart.js';
+import fav from './src/routes/fav.js';
 
 const app = express();
 
@@ -38,6 +39,8 @@ app.use('/api/auth', auth);
 app.use('/user', userProfile); 
 
 app.use('/cart', cart);
+
+app.use('/fav', fav);
 
 app.use('/', store);
 
@@ -111,7 +114,7 @@ app.get('/cart', (req, res) => {
   res.render('store/cart');
 });
 
-app.get('/fav', (req, res) => {
+app.get('/fav', isAuth, (req, res) => {
   res.render('store/fav');
 });
 

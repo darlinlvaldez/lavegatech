@@ -111,39 +111,37 @@ async function deleteProduct(id, color) {
     }
 }
 
+function formatPrice(price) {
+    return price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+}
 
 document.addEventListener('DOMContentLoaded', function () {
     cargarCarrito();
     loadCartPage();
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const id = btn.dataset.id;
-      const nombre = btn.dataset.nombre;
-      const precio = parseFloat(btn.dataset.precio);
-      const descuento = parseFloat(btn.dataset.descuento) || 0;
-      const stock = parseInt(btn.dataset.stock) || 0;
-      const color = btn.dataset.color;
+document.addEventListener('click', function(event) {
+    const btn = event.target.closest('.add-to-cart-btn');
+    if (!btn) return;
 
-      let cantidad = 1;
-      let imagen = btn.dataset.imagen;
-    
-      if (!imagen) {
+    const id = btn.dataset.id;
+    const nombre = btn.dataset.nombre;
+    const precio = parseFloat(btn.dataset.precio);
+    const descuento = parseFloat(btn.dataset.descuento) || 0;
+    const stock = parseInt(btn.dataset.stock) || 0;
+    const color = btn.dataset.color;
+    let imagen = btn.dataset.imagen;
+
+    // Solo busca la imagen en slides si es necesario (para páginas de producto)
+    if (!imagen && $('#product-main-img').length) {
         const currentSlide = $('#product-main-img').slick('slickCurrentSlide');
         const currentImg = $('#product-main-img .slick-slide').eq(currentSlide).find('img');
-        if (currentImg.length) {
-          imagen = currentImg.attr('src');
-        }
-    }
-    
-    const cantidadInput = document.getElementById('cantidad');
-    if (cantidadInput) {
-        cantidad = parseInt(cantidadInput.value);
+        if (currentImg.length) imagen = currentImg.attr('src');
     }
 
-      addToCart(id, nombre, precio, cantidad, color, descuento, stock, imagen); 
-    });
-  });
-});  
+    let cantidad = 1;
+    const cantidadInput = document.getElementById('cantidad');
+    if (cantidadInput) cantidad = parseInt(cantidadInput.value);
+
+    addToCart(id, nombre, precio, cantidad, color, descuento, stock, imagen);
+});

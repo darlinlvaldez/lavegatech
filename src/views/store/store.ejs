@@ -4,31 +4,31 @@
 	<html lang="en">
 
 <script>
-		function actualizarProductos() {	
-			
-			const limite = document.getElementById('limite-select').value;
-			const orden = document.getElementById('ordenar-select').value;
-			const precioMin = document.getElementById('price-min').value;
-			const precioMax = document.getElementById('price-max').value;
+	function actualizarProductos() {
 
-			const categorias = Array.from(document.querySelectorAll('input[name="categoria"]:checked'))
-				.map(checkbox => checkbox.value)
-				.join(',');
+		const limite = document.getElementById('limite-select').value;
+		const orden = document.getElementById('ordenar-select').value;
+		const precioMin = document.getElementById('price-min').value;
+		const precioMax = document.getElementById('price-max').value;
 
-			const marcas = Array.from(document.querySelectorAll('input[name="marca"]:checked'))
-				.map(checkbox => checkbox.value)
-				.join(',');
+		const categorias = Array.from(document.querySelectorAll('input[name="categoria"]:checked'))
+			.map(checkbox => checkbox.value)
+			.join(',');
 
-			const pagina = 1;
+		const marcas = Array.from(document.querySelectorAll('input[name="marca"]:checked'))
+			.map(checkbox => checkbox.value)
+			.join(',');
 
-			window.location.href = `/store/${pagina}?limite=${limite}&orden=${orden}&categoria=${categorias}
+		const pagina = 1;
+
+		window.location.href = `/store/${pagina}?limite=${limite}&orden=${orden}&categoria=${categorias}
 			&marca=${marcas}&precioMin=${precioMin}&precioMax=${precioMax}`;
-		}
-		
-		document.addEventListener("DOMContentLoaded", function() {
-			document.getElementById("aplicar-filtro-precio").addEventListener("click", actualizarProductos);
-		});
-		</script>
+	}
+
+	document.addEventListener("DOMContentLoaded", function () {
+		document.getElementById("aplicar-filtro-precio").addEventListener("click", actualizarProductos);
+	});
+</script>
   
 	<!-- BREADCRUMB -->
 	<div id="breadcrumb" class="section">
@@ -191,10 +191,10 @@
 																		<% } %>
 																</div>
 																<div class="product-btns">
-																	<button class="add-to-wishlist"
-																		title="Agregar a la lista de deseos">
-																		<i class="fa fa-heart-o"></i><span class="tooltipp">Agregar a favoritos</span>
-																	</button>
+																	<button class="add-to-wishlist" data-product-id="<%= producto.id %>" data-product-name="<%= producto.nombre %>"
+																		data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
+																		data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>">
+																		<i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span></button>
 																	<button class="add-to-compare" title="Agregar a comparar">
 																		<i class="fa fa-exchange"></i><span
 																			class="tooltipp">Comparar</span>
