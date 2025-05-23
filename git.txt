@@ -1,0 +1,58 @@
+Claro, Darlin. Aquí tienes una lista de los **comandos más comunes e importantes de Git**, junto con su **función**. Te servirán tanto para manejar tu proyecto como para mantenerlo organizado:
+
+---
+
+## 🔧 Comandos básicos de Git
+
+| Comando                   | ¿Qué hace?                                                              |
+| ------------------------- | ----------------------------------------------------------------------- |
+| `git init`                | Crea un repositorio Git en tu carpeta actual.                           |
+| `git clone <url>`         | Descarga un repositorio remoto (como GitHub) a tu PC.                   |
+| `git status`              | Muestra el estado de los archivos (modificados, sin seguimiento, etc.). |
+| `git add <archivo>`       | Agrega un archivo al "staging area" (preparado para commit).            |
+| `git add .`               | Agrega **todos** los archivos modificados.                              |
+| `git commit -m "mensaje"` | Guarda los cambios con un mensaje descriptivo.                          |
+| `git log`                 | Muestra el historial de commits. Usa `q` para salir.                    |
+| `git diff`                | Muestra los cambios **no agregados aún**.                               |
+| `git restore <archivo>`   | Revierte los cambios hechos a ese archivo.                              |
+
+---
+
+## 📦 Ramas (branches)
+
+| Comando                    | ¿Qué hace?                             |
+| -------------------------- | -------------------------------------- |
+| `git branch`               | Lista todas las ramas.                 |
+| `git branch <nombre>`      | Crea una nueva rama.                   |
+| `git checkout <nombre>`    | Cambia a otra rama.                    |
+| `git checkout -b <nombre>` | Crea y cambia a una nueva rama.        |
+| `git merge <rama>`         | Fusiona esa rama con la actual.        |
+| `git branch -d <nombre>`   | Elimina una rama local.                |
+| `git switch <rama>`        | Otra forma moderna de cambiar de rama. |
+
+---
+
+## 🚀 Repositorio remoto (GitHub)
+
+| Comando                       | ¿Qué hace?                                           |
+| ----------------------------- | ---------------------------------------------------- |
+| `git remote -v`               | Muestra los repos remotos conectados.                |
+| `git remote add origin <url>` | Conecta el repo local con GitHub.                    |
+| `git push origin <rama>`      | Sube la rama actual a GitHub.                        |
+| `git push`                    | Sube tus commits al repositorio remoto.              |
+| `git pull`                    | Descarga los últimos cambios del repositorio remoto. |
+
+---
+
+## 🛠️ Otros útiles
+
+| Comando            | ¿Qué hace?                                       |
+| ------------------ | ------------------------------------------------ |
+| `git stash`        | Guarda temporalmente los cambios no confirmados. |
+| `git stash pop`    | Recupera los cambios guardados.                  |
+| `git reset --hard` | Elimina todos los cambios **no guardados**. ⚠️   |
+| `git show`         | Muestra los detalles del último commit.          |
+
+---
+
+### ¿Quieres que te lo deje en un archivo `.txt` o `.md` para tenerlo guardado en tu proyecto también?
