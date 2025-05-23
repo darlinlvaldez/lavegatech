@@ -52,7 +52,7 @@ async function cargarCarrito() {
                             <h3 class="product-nombres">${item.nombre}</h3></a>
                             <h4 class="product-precios">
                                 <span class="qty-cart">${item.cantidad}x</span> 
-                                $${precioConDescuento.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+                                $${formatPrice(precioConDescuento)}
                             </h4>
                         </div>
                         <button class="delete" onclick="deleteProduct('${item.producto_id || item.id}', '${item.colorSeleccionado}')"><i class="fa fa-close"></i></button>
