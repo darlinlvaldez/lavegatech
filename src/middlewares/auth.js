@@ -6,7 +6,7 @@ export function isAuth({ redirect = false } = {}) {
       return res.redirect('/');
     }
 
-    if (!Logged) {
+    if (!Logged && !redirect) {
       if (req.headers.accept?.includes("application/json") || req.xhr) {
         return res.status(401).json({ authenticated: false });
       }
@@ -16,6 +16,5 @@ export function isAuth({ redirect = false } = {}) {
     next();
   };
 }
-
 
 export default isAuth;
