@@ -55,19 +55,15 @@ app.post('/api/auth/enviar-codigo', (req, res) => {
   res.render('login/verify', { email });
 });
 
-app.get('/perfil', isAuth, (req, res) => {
-  res.render('perfil', { user: req.session.user });
-});
-
-app.get('/account', isAuth, (req, res) => {
+app.get('/account', isAuth(), (req, res) => {
   res.render('profile/account', { user: req.session.user, error: null, email: null });
 });
 
-app.get('/login', (req, res) => {
+app.get('/login', isAuth({ redirect: true }), (req, res) => {
   res.render('login/login', {error: null, email: null, validationErrors: {}});
 });
 
-app.get('/register', (req, res) => {
+app.get('/register', isAuth({ redirect: true }), (req, res) => {
   res.render('login/register', {error: null, email: '', username: '', validationErrors: {}});
 });
 
@@ -106,16 +102,16 @@ app.get('/about', (req, res) => {
   res.render('store/about');  
 });
 
-app.get('/order', isAuth, (req, res) => {
+app.get('/order', isAuth(), (req, res) => {
   res.render('store/order');  
+});
+
+app.get('/fav', isAuth(), (req, res) => {
+  res.render('store/fav');
 });
 
 app.get('/cart', (req, res) => {
   res.render('store/cart');
-});
-
-app.get('/fav', isAuth, (req, res) => {
-  res.render('store/fav');
 });
 
 app.get('/conditions', (req, res) => {

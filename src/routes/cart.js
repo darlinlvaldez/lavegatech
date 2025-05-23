@@ -4,10 +4,10 @@ import {isAuth} from '../middlewares/auth.js';
 
 const router = express.Router();
 
-router.post('/sync', isAuth, cart.syncCart);
-router.post('/add', isAuth, cart.addToCart);
-router.post('/update-quantity', isAuth, cart.updateQuantity);
-router.post('/remove-item', isAuth, cart.removeItem);
-router.get('/items', isAuth, cart.getCartItems);
+router.post('/sync', isAuth(), cart.syncCart);
+router.post('/add', isAuth(), cart.addToCart);
+router.post('/update-quantity', isAuth(), cart.updateQuantity);
+router.post('/remove-item', isAuth(), cart.removeItem);
+router.get('/items', isAuth(), cart.getCartItems);
 
 export default router;
