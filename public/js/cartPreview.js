@@ -9,7 +9,7 @@ async function cargarCarrito() {
         }
     } catch (error) {
     }
-
+    
     if (carrito.length === 0) {
         carrito = JSON.parse(localStorage.getItem('carrito')) || [];
     }
@@ -65,3 +65,5 @@ async function cargarCarrito() {
     if (cartSummary) cartSummary.textContent = `${carrito.length} producto(s) seleccionado(s)`;
     if (cartSubtotal) cartSubtotal.textContent = `SUBTOTAL: $${total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
 }
+
+export {cargarCarrito};

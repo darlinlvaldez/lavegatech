@@ -1,4 +1,4 @@
-import { fetchFav, checkAuth, updateFavCount } from './favUtils.js';
+import { fetchFav, checkAuth, updateFavCount } from './utils.js';
 
 function generateFavItemHTML(item) {
     const productId = item.id || item.producto_id;

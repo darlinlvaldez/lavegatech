@@ -1,7 +1,9 @@
-async function checkAuth() {
-    const res = await fetch('/api/auth/status', { credentials: 'include' });
-    return await res.json();
-}
+import { checkAuth } from './utils.js';
+import { loadCartPage } from './cartView.js';
+import { cargarCarrito } from './cartPreview.js';
+
+window.deleteProduct = deleteProduct;
+window.formatPrice = formatPrice;
 
 async function fetchCart(action, data = {}) {
     const options = {
@@ -70,8 +72,7 @@ async function deleteProduct(id, color) {
     }
     
     try {
-        const res = await fetch('/api/auth/status', { credentials: 'include' });
-        const { authenticated } = await res.json();
+        const { authenticated } = await checkAuth();
 
     if (!authenticated) {
         let carrito = JSON.parse(localStorage.getItem('carrito')) || [];

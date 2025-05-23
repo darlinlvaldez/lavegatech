@@ -1,3 +1,7 @@
+import { checkAuth } from './utils.js';
+
+window.updateQuantity = updateQuantity;
+
 async function updateQuantity(element, change, productId, color) {
     let newQuantity;
     if (element.tagName === 'SELECT') {
@@ -18,8 +22,7 @@ async function updateQuantity(element, change, productId, color) {
     }
 
     try {
-        const authRes = await fetch('/api/auth/status', { credentials: 'include' });
-        const authData = await authRes.json();
+        const authData = await checkAuth();
         
         if (authData.authenticated) {
             await fetch('/cart/update-quantity', {
@@ -86,8 +89,7 @@ async function loadCartPage() {
     let cart = JSON.parse(localStorage.getItem('carrito')) || [];
     
     try {
-        const authCheck = await fetch('/api/auth/status', { credentials: 'include' });
-        const authData = await authCheck.json();
+        const authData = await checkAuth();
         
         if (authData.authenticated) {
             const serverResponse = await fetch('/cart/items', { credentials: 'include' });
@@ -105,6 +107,9 @@ async function loadCartPage() {
     const container = document.getElementById('cart-items-container');
     const countElement = document.getElementById('cart-items-count');
     const totalElement = document.getElementById('cart-total');
+
+        if (!container || !countElement || !totalElement) return;
+
 
     if (cart.length > 0) {
         let html = '';
@@ -178,3 +183,5 @@ async function loadCartPage() {
         totalElement.textContent = '$0.00';
     }
 }
+
+export {loadCartPage};
