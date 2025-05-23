@@ -127,7 +127,7 @@ async function toggleFavorite(button) {
     try {
         const authData = await checkAuth();
         if (!authData.authenticated) {
-            showNotification('Debes iniciar sesión para usar favoritos');
+            notification('Debes iniciar sesión para usar favoritos');
             return;
         }
 
@@ -135,7 +135,7 @@ async function toggleFavorite(button) {
             await removeFromFav(productId, colorSelected);
             button.classList.remove('added');
             button.innerHTML = '<i class="fa fa-heart-o"></i><span class="tooltipp">Lista de deseo</span>';
-            showNotification('Producto eliminado de tu lista de deseos');
+            notification('Producto eliminado de tu lista de deseos');
         } else {
             await fetchFav('/fav/add', {
                 method: 'POST',
@@ -152,13 +152,13 @@ async function toggleFavorite(button) {
 
             button.classList.add('added');
             button.innerHTML = '<i class="fa fa-heart"></i><span class="tooltipp">Agregado</span>';
-            showNotification('Producto agregado a tu lista de deseos');
+            notification('Producto agregado a tu lista de deseos');
         }
 
         await checkFavorites();
     } catch (error) {
         console.error('Error en toggleFavorite:', error);
-        showNotification('Ocurrió un error. Intenta nuevamente.');
+        notification('Ocurrió un error. Intenta nuevamente.');
     } finally {
         button.disabled = false;
     }
@@ -206,7 +206,7 @@ function setupEventListeners() {
     });
 }
 
-function showNotification(message) {
+function notification(message) {
     const notification = document.createElement('div');
     notification.className = 'wishlist-notification';
     notification.textContent = message;

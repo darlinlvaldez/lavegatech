@@ -17,5 +17,4 @@ export function isAuth({ redirect = false } = {}) {
   };
 }
 
-
 export default isAuth;
