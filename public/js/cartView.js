@@ -107,9 +107,8 @@ async function loadCartPage() {
     const container = document.getElementById('cart-items-container');
     const countElement = document.getElementById('cart-items-count');
     const totalElement = document.getElementById('cart-total');
-
-        if (!container || !countElement || !totalElement) return;
-
+    
+    if (!container || !countElement || !totalElement) return;
 
     if (cart.length > 0) {
         let html = '';

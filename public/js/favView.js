@@ -13,6 +13,7 @@ function generateFavItemHTML(item) {
             <img src="${item.imagen}" alt="${item.nombre}" class="product-imagen">
             <div class="product-info">
                 <h5>${item.nombre}</h5>
+                <b>Precio:</b>
                 <span class="product-price">
                     <b>$${formatPrice(finalPrice)}</b>
                     ${discount > 0 ? `

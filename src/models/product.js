@@ -40,31 +40,38 @@ product.obtenerDetalles = async (id) => {
 };
 
 product.obtenerRelacionados = async (productoId, categoriaId) => {
-    const query = `
+  const ids = Array.isArray(productoId) ? productoId : [productoId];
+  const cats = Array.isArray(categoriaId) ? categoriaId : [categoriaId];
+
+  const placeholders = ids.map(() => "?").join(",");
+  const catPlaceholders = cats.map(() => "?").join(",");
+
+  const query = `
     SELECT 
-    p.id,
-    p.nombre,
-    p.precio,
-    p.descuento,
-    p.fecha,
-    c.categoria,
-    v.color AS color, 
-    v.stock AS stock,
-    v.img AS imagen
-    FROM productos p
+        p.id,
+        p.nombre,
+        p.precio,
+        p.descuento,
+        p.fecha,
+        c.categoria,
+        v.color AS color, 
+        v.stock AS stock,
+        v.img AS imagen
+        FROM productos p
     JOIN categorias c ON p.categoria_id = c.id
     LEFT JOIN variantes v ON p.id = v.producto_id 
-    WHERE p.id != ? AND p.categoria_id = ?
+    WHERE p.id NOT IN (${placeholders}) 
+    AND p.categoria_id IN (${catPlaceholders})
     GROUP BY p.id 
     LIMIT 4`;
-    
-    try {
-        const [results] = await db.query(query, [productoId, categoriaId]);
-        return results;
-    } catch (err) {
-        console.error("Error al obtener productos relacionados:", err);
-        return [];
-    }
+
+  try {
+    const [results] = await db.query(query, [...ids, ...cats]);
+    return results;
+  } catch (err) {
+    console.error("Error al obtener productos relacionados:", err);
+    return [];
+  }
 };
 
 export default product;

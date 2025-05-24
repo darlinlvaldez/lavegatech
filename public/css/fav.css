@@ -38,9 +38,7 @@
 }
 
 .color-item {
-    min-width: 63px; 
-    min-width: 59px; 
-    max-width: 1px; 
+    margin-right: 100% ;
     min-height: 3px;
     text-align: center;  
     align-items: center;
@@ -105,7 +103,7 @@ span.sale {
 }
 
 .add-to-cart-btn, .remove-btn, .color-item, .color-item p {
-  padding-left: 5%;
+    margin-left: 5%;
 }
 
 .add-to-cart-btn {
@@ -214,10 +212,12 @@ span.sale {
   }
 }
 
-@media screen and (max-width: 768px),
-screen and (min-width: 769px) and (max-width: 834px),
-screen and (min-width: 835px) and (max-width: 1024px) {
-  
+/* Solo iPads en modo retrato y paisaje, sin afectar Nest Hub */
+@media only screen 
+  and (min-device-width: 768px) 
+  and (max-device-width: 1024px) 
+  and (-webkit-min-device-pixel-ratio: 1) {
+
   .fav-item {
     flex-direction: column;
     align-items: center;

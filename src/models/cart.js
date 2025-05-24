@@ -35,13 +35,18 @@ cart.itemExists = async (usuario_id, producto_id, colorSeleccionado) => {
 
 cart.getByUserId = async (usuario_id) => {
   const [rows] = await db.query(
-    "SELECT id, producto_id as id, colorSeleccionado, cantidad, " +
-    "descuento, precio, imagen, nombre, stock " +
-    "FROM cart WHERE usuario_id = ?",
+    "SELECT c.id, c.producto_id as id, c.colorSeleccionado, c.cantidad, " +
+    "c.descuento, c.precio, c.imagen, c.nombre, c.stock, " +
+    "p.categoria_id, c.fecha_agregado " +
+    "FROM cart c " +
+    "JOIN productos p ON c.producto_id = p.id " +
+    "WHERE c.usuario_id = ? " +
+    "ORDER BY c.fecha_agregado DESC",
     [usuario_id]
   );
   return rows;
 };
+
 
 cart.getCount = async (usuario_id) => {
   const [rows] = await db.query(
