@@ -19,8 +19,8 @@ function generateFavItemHTML(item) {
                         <del class="product-old-price">$${formatPrice(price)}</del>
                         <span class="sale">-${discount.toFixed(2)}%</span>` : ''}
                 </span>
-            </div>
-        </a>
+             </a>
+        </div>
         <div class="product-items">
             <span class="label">Color</span>
             <div class="color-item">
@@ -38,10 +38,10 @@ function generateFavItemHTML(item) {
                 data-imagen="${item.imagen}">
                 <i class="fa fa-shopping-cart"></i> Añadir al carrito
             </button>
+            </div>
             <i class="bi bi-trash remove-btn" onclick="removeFromFav('${productId}', '${color}')"></i>
-        </div>
-    </div>`;
-}
+        </div>`;
+    }
 
 async function removeFromFav(productId, color) {
     const authData = await checkAuth();
