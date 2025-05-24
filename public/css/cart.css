@@ -205,3 +205,55 @@ span.sale {
     padding: 12px;
   }
 }
+
+@media screen and (min-width: 769px) and (max-width: 1366px) {
+  .cart-item {
+    gap: 25px;
+    padding: 8px;
+  }
+
+  .product-imagen {
+    width: 90px;
+    height: 90px;
+  }
+
+  .product-info {
+    margin-bottom: 5px;
+  }
+
+  .product-info h5 {
+    font-size: 15px;
+    width: 160px;
+  }
+
+  .product-items .label {
+    font-size: 13.5px;
+    margin-right: 20px;
+  }
+
+  .color-item {
+    min-width: 50px;
+  }
+
+  .qty-cantidad {
+    font-size: 13.5px;
+  }
+
+  span.sale {
+    font-size: 11px;
+    padding: 2px 8px;
+  }
+
+  .remove-btn {
+    font-size: 18px;
+    padding: 3px 5px;
+  }
+
+  .cart-suma .total-price {
+    font-size: 1.15rem;
+  }
+
+  .cart-suma .btn {
+    padding: 10px;
+  }
+}
