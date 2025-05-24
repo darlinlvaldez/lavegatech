@@ -79,7 +79,7 @@ cartController.addToCart = async (req, res) => {
 
     res.json({success: true, count: await cart.getCount(userId) });
   } catch (error) {console.error(error);
-    res.status(500).json({success: false, message: 'Error al Añadir al carrito'});
+    res.status(500).json({success: false, message: 'Error al agregar al carrito'});
   }
 };
 
