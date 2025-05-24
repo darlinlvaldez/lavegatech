@@ -38,11 +38,8 @@
 }
 
 .color-item {
-<<<<<<< HEAD
     min-width: 63px; 
-=======
     min-width: 59px; 
->>>>>>> feature/fav
     max-width: 1px; 
     min-height: 3px;
     text-align: center;  
@@ -50,13 +47,10 @@
     justify-content: center;
 }
 
-<<<<<<< HEAD
 .color-item p {
     margin: 0;
 }
 
-=======
->>>>>>> feature/fav
 .product-items .label {
     font-weight: bold; 
     color: #070606;
@@ -64,14 +58,11 @@
     margin-right: 60px;
 }
 
-<<<<<<< HEAD
 .color-item select:disabled {
     background-color: #f5f5f5;
     cursor: not-allowed;
 }
 
-=======
->>>>>>> feature/fav
 .product-old-price{
     color: #8D99AE;
     font-weight: normal;
@@ -113,13 +104,10 @@ span.sale {
     background-color: rgba(220, 38, 38, 0.1); 
 }
 
-<<<<<<< HEAD
-=======
 .add-to-cart-btn, .remove-btn, .color-item, .color-item p {
   padding-left: 5%;
 }
 
->>>>>>> feature/fav
 .add-to-cart-btn {
   font-size: 1.2rem;
   position: relative;
@@ -224,12 +212,7 @@ span.sale {
   span.sale {
     margin-top: 5px;
   }
-<<<<<<< HEAD
 }
-=======
-}
-<<<<<<< Updated upstream
-=======
 
 @media screen and (max-width: 768px),
 screen and (min-width: 769px) and (max-width: 834px),
@@ -295,5 +278,3 @@ screen and (min-width: 835px) and (max-width: 1024px) {
     margin-top: 5px;
   }
 }
->>>>>>> Stashed changes
->>>>>>> feature/fav
