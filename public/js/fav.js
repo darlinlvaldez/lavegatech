@@ -33,7 +33,10 @@ async function toggleFavorite(button) {
         }
 
         const authData = await checkAuth();
-        if (!authData.authenticated) return;
+        if (!authData.authenticated) {
+            window.location.href = "/login"; 
+            return;
+        }
 
         if (isAlreadyAdded) {
             await removeFromFav(productId, colorSelected);
