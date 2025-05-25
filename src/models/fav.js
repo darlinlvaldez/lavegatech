@@ -33,7 +33,8 @@ fav.getByUserId = async (usuario_id) => {
       f.precio, 
       f.imagen, 
       f.nombre,
-      v.stock as stockPorColor
+      v.stock as stockPorColor,
+      p.categoria_id
     FROM fav f
     LEFT JOIN productos p ON f.producto_id = p.id
     LEFT JOIN variantes v ON f.producto_id = v.producto_id AND f.colorSeleccionado = v.color
