@@ -58,6 +58,7 @@ window.addEventListener('load', async () => {
     } catch (error) {
         console.error('Sync Error:', error);
     }
+    cargarCarrito();
 });
 
 async function deleteProduct(id, color) {

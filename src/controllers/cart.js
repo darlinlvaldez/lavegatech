@@ -132,32 +132,29 @@ cartController.removeItem = async (req, res) => {
 };
 
 cartController.getCartPage = async (req, res) => {
-    try {
-        const userId = req.session.user?.id;
-        let cartItems = [];
+  try {
+    const userId = req.session.user?.id;
+    let cartItems = [];
 
-        if (userId) {
-            cartItems = await cart.getByUserId(userId);
-        }
-
-        const categoriaIds = [...new Set(cartItems.map(item => item.categoria_id).filter(Boolean))];
-        const productoIds = cartItems.map(item => item.id);
-        
-        let productRelacionados = [];
-        if (categoriaIds.length > 0) {
-            productRelacionados = await product.obtenerRelacionados(productoIds, categoriaIds);
-        }
-
-        res.render('store/cart', {
-            cartItems,
-            productRelacionados,
-            formatPrice: (price) => Number(price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-            isAuthenticated: !!userId
-        });
-    } catch (error) {
-        console.error('Error al cargar la página del carrito:', error);
-        res.status(500).render('error', { mensaje: error.message });
+    if (userId) {
+      cartItems = await cart.getByUserId(userId);
     }
+
+    const lastCart = cartItems[0];
+    let productRelacionados = [];
+
+    if (lastCart && lastCart.categoria_id) {
+      productRelacionados = await product.obtenerRelacionados(
+        [lastCart.id], [lastCart.categoria_id]);
+    }
+
+    res.render("store/cart", {
+      cartItems, productRelacionados, isAuthenticated: !!userId,
+    });
+  } catch (error) {
+    console.error("Error al cargar la página del carrito:", error);
+    res.status(500).render("error", { mensaje: error.message });
+  }
 };
 
 export default cartController;
