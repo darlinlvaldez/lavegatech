@@ -7,5 +7,6 @@ const router = express.Router();
 router.post('/add', isAuth(), favController.addToFav);
 router.post('/remove', isAuth(), favController.removeFromFav);
 router.get('/items', isAuth(), favController.getFavItems);
+router.get('/', isAuth(), favController.getFavPage);
 
 export default router;

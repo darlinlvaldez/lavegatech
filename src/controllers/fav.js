@@ -1,4 +1,5 @@
 import fav from "../models/fav.js"
+import product from "../models/product.js";
 
 const favController = {};
 
@@ -9,9 +10,7 @@ favController.addToFav = async (req, res) => {
 
     if (!producto_id || !nombre || !precio) {
       return res.status(400).json({ 
-        success: false, 
-        message: 'Datos inválidos'
-      });
+        success: false, message: 'Datos inválidos'});
     }
 
     const existingItem = await fav.itemExists(userId, producto_id, colorSeleccionado);
@@ -51,6 +50,32 @@ favController.getFavItems = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({success: false, message: 'Error al obtener favoritos'});
+  }
+};
+
+favController.getFavPage = async (req, res) => {
+  try {
+    const userId = req.session.user?.id;
+    let favItems = [];
+
+    if (userId) {
+      favItems = await fav.getByUserId(userId);
+    }
+
+    const lastFav = favItems[0]; 
+    let productRelacionados = [];
+
+    if (lastFav && lastFav.categoria_id) {
+      productRelacionados = await product.obtenerRelacionados(
+        [lastFav.id], [lastFav.categoria_id]);
+    }
+
+    res.render('store/fav', {
+      favItems, productRelacionados, isAuthenticated: true
+    });
+  } catch (error) {
+    console.error('Error al cargar la página del carrito:', error);
+    res.status(500).render('error', { mensaje: error.message });
   }
 };
 

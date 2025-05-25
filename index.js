@@ -106,7 +106,7 @@ app.get('/order', isAuth(), (req, res) => {
   res.render('store/order');  
 });
 
-app.get('/fav', isAuth(), (req, res) => {
+app.get('/fav', (req, res) => {
   res.render('store/fav');
 });
 
