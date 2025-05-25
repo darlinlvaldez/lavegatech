@@ -100,7 +100,11 @@
 					</div>
 				</div>  
 				<ul class="product-btns">
-					<li><a href="#"><i class="fa fa-heart-o"></i>Favoritos</a></li>
+					<a role="button" class="add-to-wishlist" data-product-id="<%= producto.id %>" data-product-name="<%= producto.nombre %>"
+						data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
+						data-product-image="<%= producto.imagen %>" data-product-color="<%= colorSeleccionado %>">
+						<i class="fa fa-heart-o"></i> Favoritos
+					</a>
 					<li><a href="#"><i class="fa fa-exchange"></i>Comparalo</a></li>
 				</ul>
 				<ul class="product-links">

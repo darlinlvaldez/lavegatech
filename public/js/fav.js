@@ -3,28 +3,41 @@ import { removeFromFav, loadFavPage } from './favView.js';
 
 window.removeFromFav = removeFromFav;
 
+const setButtonState = (button, isFavorite) => {
+    const icon = isFavorite ? 'fa-heart' : 'fa-heart-o';
+    const tooltip = isFavorite ? 'Agregado' : 'Favoritos';
+    button.innerHTML = `<i class="fa ${icon}"></i><span class="tooltipp">${tooltip}</span>`;
+    if (isFavorite) {
+        button.classList.add('added');
+    } else {
+        button.classList.remove('added');
+    }
+};
+
 async function toggleFavorite(button) {
     if (button.disabled) return;
     button.disabled = true;
 
-    const productId = button.getAttribute('data-product-id');
-    const productName = button.getAttribute('data-product-name');
-    const productPrice = button.getAttribute('data-product-price');
-    const productDiscount = button.getAttribute('data-product-discount');
-    const productImage = button.getAttribute('data-product-image');
-    const colorSelected = button.dataset.productColor || document.querySelector('.color-selected')?.textContent || null;
-    const isAlreadyAdded = button.classList.contains('added');
-
     try {
-        const authData = await checkAuth();
-        if (!authData.authenticated) {
-            return;
+        const productId = button.dataset.productId;
+        const productName = button.dataset.productName;
+        const productPrice = button.dataset.productPrice;
+        const productDiscount = button.dataset.productDiscount;
+        let productImage = button.dataset.productImage;
+        const colorSelected = button.dataset.productColor;
+        const isAlreadyAdded = button.classList.contains('added');
+
+        if (!productImage && document.getElementById('product-main-img')) {
+            const slider = $('#product-main-img');
+            if (slider.length) productImage = slider.find('.slick-current img').attr('src');
         }
+
+        const authData = await checkAuth();
+        if (!authData.authenticated) return;
 
         if (isAlreadyAdded) {
             await removeFromFav(productId, colorSelected);
-            button.classList.remove('added');
-            button.innerHTML = '<i class="fa fa-heart-o"></i><span class="tooltipp">Lista de deseo</span>';
+            setButtonState(button, false);
         } else {
             await fetchFav('/fav/add', {
                 method: 'POST',
@@ -35,12 +48,11 @@ async function toggleFavorite(button) {
                     nombre: productName,
                     precio: productPrice,
                     descuento: productDiscount,
-                    imagen: productImage
+                    imagen: productImage,
+                    stockPorColor: window.productData?.stocksPorColor?.[colorSelected] || 1
                 })
             });
-
-            button.classList.add('added');
-            button.innerHTML = '<i class="fa fa-heart"></i><span class="tooltipp">Agregado</span>';
+            setButtonState(button, true);
         }
 
         await checkFavorites();
@@ -55,23 +67,18 @@ async function checkFavorites() {
     try {
         const authData = await checkAuth();
         let favorites = [];
-        
         if (authData.authenticated) {
             const data = await fetchFav('/fav/items');
             if (data.success && data.items) favorites = data.items;
         }
-
         document.querySelectorAll('.add-to-wishlist').forEach(button => {
-            const productId = button.getAttribute('data-product-id');
-            const color = button.dataset.productColor || null;
-            const isFav = favorites.some(item => item.id == productId && item.colorSeleccionado == color);
-            
-            if (isFav) {
-                button.innerHTML = '<i class="fa fa-heart"></i><span class="tooltipp">Agregado</span>';
-                button.classList.add('added');
-            }
+            const productId = button.dataset.productId;
+            const currentColor = button.dataset.productColor;
+            const isFav = favorites.some(item => 
+                item.id == productId && item.colorSeleccionado == currentColor
+            );
+            setButtonState(button, isFav);
         });
-
         updateFavCount(favorites.length);
     } catch (error) {
         console.error("Error al verificar favoritos:", error);
@@ -80,10 +87,13 @@ async function checkFavorites() {
 }
 
 function setupEventListeners() {
-    document.querySelectorAll('[name="color"], .color-option').forEach(element => {
-        element.addEventListener('click', function() {
-            const selectedColor = this.value || this.textContent;
-            document.querySelector('.add-to-wishlist').dataset.productColor = selectedColor;
+    document.querySelectorAll('[name="color"], .color-option, #colorSeleccionado').forEach(element => {
+        element.addEventListener('change', function() {
+            const selectedColor = this.value || this.textContent || this.dataset.color;
+            document.querySelectorAll('.add-to-wishlist').forEach(button => {
+                button.dataset.productColor = selectedColor;
+            });
+            checkFavorites();
         });
     });
 
@@ -97,3 +107,5 @@ document.addEventListener('DOMContentLoaded', () => {
     loadFavPage();
     checkFavorites();
 });
+
+export { checkFavorites };

@@ -1,3 +1,5 @@
+import { checkFavorites } from './fav.js';
+
 (function ($) {
   "use strict";
 
@@ -55,8 +57,14 @@ function handleColorChange(event, slick, currentSlide) {
   var color = imgElement.attr('alt');
   var productId = '<%= producto.id %>';
   
-  if(color && productId) {
+  if (color && productId) {
     $('#colorSeleccionado').val(color).trigger('change');
+
+    document.querySelectorAll('.add-to-wishlist').forEach(button => {
+      button.dataset.productColor = color;
+    });
+
+    checkFavorites();
   }
 }
 
