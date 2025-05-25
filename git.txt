@@ -1,6 +1,25 @@
-Claro, Darlin. Aquí tienes una lista de los **comandos más comunes e importantes de Git**, junto con su **función**. Te servirán tanto para manejar tu proyecto como para mantenerlo organizado:
+Lista de los comandos más comunes e importantes de Git**, junto con su función.
 
----
+Pasos para guardar y subir.
+
+Desde la rama modificada:
+ 
+git status.
+git add .
+git commit -m "agrega un comentario aqui".
+git push origin desde la rama que hiciste cambios.
+
+Para subir a la rama pricipal (main):
+
+git checkout o switch en main para cambiar de rama.
+git pull origin main para asegúrarse de tener la última versión de main.
+git merge desde la rama donde quieres recibir los cambios hasta la que cambiaste.
+git push origin main para subir los cambios fusionados al repositorio remoto.
+
+Si estas en la rama equivocada y no quieres guardar los cambios en ella:
+
+git stash para guardar temporalmente los cambios.
+git stash pop para recuperar los cambios.
 
 ## 🔧 Comandos básicos de Git
 
@@ -16,8 +35,6 @@ Claro, Darlin. Aquí tienes una lista de los **comandos más comunes e important
 | `git diff`                | Muestra los cambios **no agregados aún**.                               |
 | `git restore <archivo>`   | Revierte los cambios hechos a ese archivo.                              |
 
----
-
 ## 📦 Ramas (branches)
 
 | Comando                    | ¿Qué hace?                             |
@@ -30,8 +47,6 @@ Claro, Darlin. Aquí tienes una lista de los **comandos más comunes e important
 | `git branch -d <nombre>`   | Elimina una rama local.                |
 | `git switch <rama>`        | Otra forma moderna de cambiar de rama. |
 
----
-
 ## 🚀 Repositorio remoto (GitHub)
 
 | Comando                       | ¿Qué hace?                                           |
@@ -42,8 +57,6 @@ Claro, Darlin. Aquí tienes una lista de los **comandos más comunes e important
 | `git push`                    | Sube tus commits al repositorio remoto.              |
 | `git pull`                    | Descarga los últimos cambios del repositorio remoto. |
 
----
-
 ## 🛠️ Otros útiles
 
 | Comando            | ¿Qué hace?                                       |
@@ -52,7 +65,3 @@ Claro, Darlin. Aquí tienes una lista de los **comandos más comunes e important
 | `git stash pop`    | Recupera los cambios guardados.                  |
 | `git reset --hard` | Elimina todos los cambios **no guardados**. ⚠️   |
 | `git show`         | Muestra los detalles del último commit.          |
-
----
-
-### ¿Quieres que te lo deje en un archivo `.txt` o `.md` para tenerlo guardado en tu proyecto también?
