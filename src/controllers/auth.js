@@ -52,40 +52,6 @@ auth.register = async (req, res) => {
   }
 };
 
-auth.verifyCode = async (req, res) => {
-  try {
-    const { email, code: userCode, type } = req.body;
-    const store = type === 'reset' ? code.resetPending : code.pendingUsers;
-
-    if (req.validationError) {
-      return renderError(res, 'login/verify', null, {
-        email, type, validationErrors: req.validationError.fields});
-    }
-
-    const result = code.validateCode(store, email, userCode);
-    if (!result.success) {
-      return renderError(res, 'login/verify', ERROR_MESSAGES.INVALID_CODE, {
-        email, type, validationErrors: {code: ERROR_MESSAGES.INVALID_CODE} });
-    }
-
-    if (type === 'reset') {
-      return res.render('login/forgotPass/newpass', { 
-        email, error: null, validationErrors: {} });
-    }
-
-    const { username, hashedPassword } = result.data;
-    await user.insertUser({ username, email, password: hashedPassword });
-    code.pendingUsers.delete(email);
-
-    return res.redirect('/login');
-
-  } catch (error) {
-    console.error(error);
-    return renderError(res, 'login/verify', ERROR_MESSAGES.VERIFICATION_ERROR, {
-      email: req.body.email, type: req.body.type, validationErrors: {} });
-  }
-};
-
 auth.showVerifyForm = (req, res) => res.render('login/verify', { email: req.query.email });
 
 auth.verifyCode = async (req, res) => {
@@ -110,10 +76,12 @@ auth.verifyCode = async (req, res) => {
     }
 
     const {username, hashedPassword} = result.data;
-    await user.insertUser({username, email, password: hashedPassword});
+    const newUser = await user.insertUser({ username, email, password: hashedPassword });
     code.pendingUsers.delete(email);
 
-    return res.redirect('/login');
+    req.session.user = {id: newUser.id, username: newUser.username, email: newUser.email};
+
+    return res.redirect('/');
 
   } catch (error) {
     console.error(error);
