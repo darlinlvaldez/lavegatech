@@ -20,8 +20,7 @@ auth.register = async (req, res) => {
     
     if (password !== confirmPassword) {
       return renderError(res, 'login/register', ERROR_MESSAGES.PASSWORDS_DONT_MATCH, {
-        email, username,
-        validationErrors: {password: ERROR_MESSAGES.PASSWORDS_DONT_MATCH, 
+        email, username, validationErrors: {password: ERROR_MESSAGES.PASSWORDS_DONT_MATCH, 
           confirmPassword: ERROR_MESSAGES.PASSWORDS_DONT_MATCH}
       });
     }
@@ -52,7 +51,7 @@ auth.register = async (req, res) => {
   }
 };
 
-auth.showVerifyForm = (req, res) => res.render('login/verify', { email: req.query.email });
+//auth.showVerifyForm = (req, res) => res.render('login/verify', { email: req.query.email });
 
 auth.verifyCode = async (req, res) => {
   try {
