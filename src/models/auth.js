@@ -17,8 +17,10 @@ user.userExists = async (email) => {
 user.insertUser = async ({ username, email, password }) => {
   await db.query(
     "INSERT INTO usuarios (username, email, password, is_verified) VALUES (?, ?, ?, 1)",
-    [username, email, password]
-  );
+    [username, email, password]);
+
+  const [rows] = await db.query("SELECT * FROM usuarios WHERE email = ?", [email]);
+  return rows[0];
 };
 
 user.forgotPassword = async (email, hashedPassword) => {
