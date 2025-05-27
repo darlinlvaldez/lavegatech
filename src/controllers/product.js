@@ -34,7 +34,7 @@ product.detallesController = async (req, res) => {
             currentUrl: req.originalUrl});
     } catch (error) {
         console.error('Error al obtener detalles del producto:', error);
-        res.status(500).render('error', { mensaje: error.message });
+        res.status(500).render('error', { message: error.message });
     }
 };
 

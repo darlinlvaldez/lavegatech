@@ -202,36 +202,143 @@ document.addEventListener('DOMContentLoaded', async function () {
 	<!-- /SECTION -->
 	 
 	 <script>
-	 document.addEventListener('DOMContentLoaded', function () {
-		const paypalRadio = document.getElementById('payment-3');
-		const paypalContainer = document.getElementById('paypal-button-container');
-		let buttonRendered = false;
-		
-		paypalRadio.addEventListener('change', function () {
-			if (paypalRadio.checked && !buttonRendered) {
-				const totalTexto = document.querySelector('.order-total').textContent;
-				const orderTotal = parseFloat(totalTexto.replace(/[^0-9.-]+/g, ''));
-				
-				paypal.Buttons({
-					createOrder: function(data, actions) {
-					return actions.order.create({
-						purchase_units: [{
-							amount: {
-								value: orderTotal.toFixed(2)
-							}
-						}]
-					});
-				},
-				
-				onApprove: function(data, actions) {
-					return actions.order.capture().then(function(details) {
-						alert('Transacción completada por ' + details.payer.name.given_name);
-					});
-				}
-			}).render('#paypal-button-container');
-			buttonRendered = true;
-		}
-	});
+document.addEventListener('DOMContentLoaded', function() {
+  const paypalRadio = document.getElementById('payment-3');
+  const paypalContainer = document.getElementById('paypal-button-container');
+  let buttonRendered = false;
+  
+  paypalRadio.addEventListener('change', function() {
+    if (paypalRadio.checked && !buttonRendered) {
+      const totalTexto = document.querySelector('.order-total').textContent;
+      const orderTotal = parseFloat(totalTexto.replace(/[^0-9.-]+/g, ''));
+      
+      paypal.Buttons({
+        createOrder: function(data, actions) {
+          // Validar campos requeridos
+          const requiredFields = [
+            'first-name', 'last-name', 'email', 
+            'address', 'city', 'district', 'tel'
+          ];
+
+          const missingFields = requiredFields.filter(field => {
+            return !document.querySelector(`input[name="${field}"]`).value.trim();
+          });
+
+          if (missingFields.length > 0) {
+            alert('Por favor complete todos los campos requeridos');
+            return Promise.reject('Campos requeridos faltantes');
+          }
+
+          // Validar términos y condiciones
+          if (!document.getElementById('terms').checked) {
+            alert('Debe aceptar los términos y condiciones');
+            return Promise.reject('Términos no aceptados');
+          }
+
+          // Primero guardamos la orden en nuestra base de datos
+          return fetch('/api/order', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include', // Importante para mantener la sesión
+            body: JSON.stringify({
+              nombre: document.querySelector('input[name="first-name"]').value.trim(),
+              apellido: document.querySelector('input[name="last-name"]').value.trim(),
+              email: document.querySelector('input[name="email"]').value.trim(),
+              direccion: document.querySelector('input[name="address"]').value.trim(),
+              ciudad: document.querySelector('input[name="city"]').value.trim(),
+              distrito: document.querySelector('input[name="district"]').value.trim(),
+              telefono: document.querySelector('input[name="tel"]').value.trim(),
+              horario_entrega: document.getElementById('delivery-time').value,
+              mensaje: document.querySelector('.order-notes textarea').value.trim()
+            })
+          })
+          .then(response => {
+            if (!response.ok) {
+              return response.json().then(err => { throw err; });
+            }
+            return response.json();
+          })
+          .then(data => {
+            if (!data.success) {
+              throw new Error(data.message || 'Error al crear la orden');
+            }
+            
+            // Guardamos el ID de la orden para usarlo después
+            window.currentOrderId = data.orderId;
+            
+            // Ahora creamos la orden de PayPal con el monto correcto
+            return actions.order.create({
+              purchase_units: [{
+                amount: {
+                  value: data.total.toFixed(2),
+                  currency_code: 'USD',
+                  description: `Orden #${data.orderId}`
+                }
+              }]
+            });
+          });
+        },
+        
+       onApprove: function(data, actions) {
+  return actions.order.capture().then(function(details) {
+    return fetch(`/api/order/${window.currentOrderId}/payment`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        paymentMethod: 'paypal',
+        paymentDetails: details,
+        payerId: details.payer.payer_id,
+        paymentId: details.id
+      })
+    })
+    .then(response => {
+      if (!response.ok) {
+        return response.json().then(err => { throw err; });
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (!data.success) {
+        throw new Error(data.message || 'Error al registrar el pago');
+      }
+      
+      // Redirigir a la URL proporcionada por el servidor
+      if (data.redirectUrl) {
+        window.location.href = data.redirectUrl;
+      } else {
+        // Redirección por defecto si no hay URL específica
+        window.location.href = `/user/orders`; // Ajusta esta ruta
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Error al procesar el pago: ' + error.message);
+    });
+  });
+},
+        
+        onError: function(err) {
+          console.error('Error en el pago con PayPal:', err);
+          let errorMessage = 'Ocurrió un error al procesar el pago';
+          
+          if (err.message.includes('Campos requeridos faltantes')) {
+            errorMessage = 'Por favor complete todos los campos requeridos';
+          } else if (err.message.includes('Términos no aceptados')) {
+            errorMessage = 'Debe aceptar los términos y condiciones';
+          }
+          
+          alert(errorMessage);
+        }
+      }).render('#paypal-button-container');
+      
+      buttonRendered = true;
+    }
+  });
 });
 </script>
 
