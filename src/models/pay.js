@@ -7,7 +7,6 @@ orders.createOrder = async (orderData, items) => {
   try {
     await conn.beginTransaction();
     
-    // Insertar la orden principal
     const [orderResult] = await conn.query(
       `INSERT INTO orders (user_id, nombre, apellido, email, direccion, ciudad, 
        distrito, telefono, horario_entrega, total, status) 
@@ -29,7 +28,6 @@ orders.createOrder = async (orderData, items) => {
     
     const orderId = orderResult.insertId;
     
-    // Insertar items de la orden
     for (const item of items) {
       await conn.query(
         `INSERT INTO order_items 
@@ -89,6 +87,33 @@ orders.getUserOrders = async (userId) => {
     [userId]
   );
   return orders;
+};
+
+orders.createPayment = async (orderId, paymentData) => {
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+    
+    const [result] = await conn.query(
+      `INSERT INTO payments 
+      (order_id, metodo_pago, estado_pago, paypal_order_id) 
+      VALUES (?, ?, ?, ?)`,
+      [
+        orderId,
+        paymentData.paymentMethod,
+        'completado', 
+        paymentData.paymentId
+      ]
+    );
+    
+    await conn.commit();
+    return result.insertId;
+  } catch (error) {
+    await conn.rollback();
+    throw error;
+  } finally {
+    conn.release();
+  }
 };
 
 export default orders;

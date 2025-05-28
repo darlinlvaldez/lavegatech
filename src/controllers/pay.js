@@ -7,43 +7,30 @@ payController.createOrder = async (req, res) => {
   try {
     if (!req.session.user) {
       return res.status(401).json({ 
-        success: false, 
-        message: 'No autorizado' 
-      });
+        success: false, message: 'No autorizado'});
     }
 
     const userId = req.session.user.id;
-    const { 
-      nombre, apellido, email, direccion, ciudad, 
-      distrito, telefono, horario_entrega, mensaje 
-    } = req.body;
+    const {nombre, apellido, email, direccion, ciudad, 
+      distrito, telefono, horario_entrega, mensaje} = req.body;
 
-    // Validación básica
     if (!nombre || !direccion || !telefono || !email) {
       return res.status(400).json({ 
-        success: false, 
-        message: 'Faltan datos requeridos' 
-      });
+        success: false, message: 'Faltan datos requeridos'});
     }
 
-    // Obtener items del carrito
-    const cartItems = await cart.getByUserId(userId);
+    const cartItems = await cart.getCartToPay(userId);
     if (cartItems.length === 0) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'El carrito está vacío' 
-      });
+      return res.status(400).json({
+        success: false, message: 'El carrito está vacío'});
     }
 
-    // Calcular total
     const total = cartItems.reduce((sum, item) => {
       const precioFinal = item.descuento > 0 
-        ? item.precio * (1 - item.descuento / 100)
-        : item.precio;
+      ? item.precio * (1 - item.descuento / 100) : item.precio;
       return sum + (precioFinal * item.cantidad);
     }, 0);
 
-    // Preparar datos de la orden
     const orderData = {
       user_id: userId,
       nombre,
@@ -59,7 +46,6 @@ payController.createOrder = async (req, res) => {
       status: 'pendiente'
     };
 
-    // Preparar items de la orden
     const orderItems = cartItems.map(item => ({
       producto_id: item.producto_id,
       nombre_producto: item.nombre,
@@ -69,7 +55,6 @@ payController.createOrder = async (req, res) => {
       subtotal: (item.precio * (1 - (item.descuento || 0) / 100)) * item.cantidad
     }));
 
-    // Crear la orden
     const orderId = await orders.createOrder(orderData, orderItems);
     
     res.json({ 
@@ -101,7 +86,6 @@ payController.processPayment = async (req, res) => {
 
     const userId = req.session.user.id;
 
-    // Verificar orden
     const order = await orders.getOrderById(orderId, userId);
     if (!order) {
       return res.status(404).json({ 
@@ -110,23 +94,31 @@ payController.processPayment = async (req, res) => {
       });
     }
 
-    // Registrar pago (si tienes tabla payments)
-    // await payment.createPayment(orderId, {paymentMethod, paymentId});
+    const totalReal = parseFloat(order.total);
+    const pagado = parseFloat(paymentDetails.purchase_units[0].amount.value);
 
-    // Actualizar estado de la orden
+    if (pagado !== totalReal) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Monto pagado no coincide con el total de la orden' 
+      });
+    }
+
+    await orders.createPayment(orderId, {
+      paymentMethod: 'paypal',
+      paymentId: paymentId,
+      payerId: payerId
+    });    
+
     await orders.updateOrderStatus(orderId, 'pagado');
 
-    // Vaciar carrito - usando removeItem para todos los items
-    const cartItems = await cart.getByUserId(userId);
-    for (const item of cartItems) {
-      await cart.removeItem(item.id, userId);
-    }
+    await cart.clearCart(userId);
 
     res.json({ 
       success: true, 
       message: 'Pago procesado correctamente',
       orderId,
-      redirectUrl: `/orders/${orderId}` // Cambia esto por tu ruta real
+      redirectUrl: `/orders/${orderId}`
     });
   } catch (error) {
     console.error('Error al procesar pago:', error);
@@ -137,6 +129,7 @@ payController.processPayment = async (req, res) => {
     });
   }
 };
+
 
 payController.getOrderDetails = async (req, res) => {
   try {

@@ -1,6 +1,7 @@
 <%- include('../partials/header.ejs') %>
 
 <script src="https://www.paypal.com/sdk/js?client-id=Adxx8fzjTmAkgRKTLil8ciSgRYaYZxTnJf96IAsdJVAvE8-fW3Rx2hbrDZ5VC662O1So9fgvFOPZd5IG&currency=USD"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
 <script>
 document.addEventListener('DOMContentLoaded', async function () {
@@ -202,46 +203,72 @@ document.addEventListener('DOMContentLoaded', async function () {
 	<!-- /SECTION -->
 	 
 	 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   const paypalRadio = document.getElementById('payment-3');
   const paypalContainer = document.getElementById('paypal-button-container');
   let buttonRendered = false;
-  
-  paypalRadio.addEventListener('change', function() {
+
+  function mostrarToast(texto, tipo = 'info') {
+    const colores = {
+      info: '#007bff',
+      error: '#dc3545',
+      success: '#28a745',
+      warning: '#ffc107'
+    };
+
+    Toastify({
+      text: texto,
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "right",
+      backgroundColor: colores[tipo] || '#007bff',
+      stopOnFocus: true
+    }).showToast();
+  }
+
+  function validarCampos() {
+    const requiredFields = [
+      'first-name', 'last-name', 'email',
+      'address', 'city', 'district', 'tel'
+    ];
+
+    const missingFields = requiredFields.filter(field => {
+      const input = document.querySelector(`input[name="${field}"]`);
+      return !input || !input.value.trim();
+    });
+
+    if (missingFields.length > 0) {
+      mostrarToast('Por favor complete todos los campos requeridos antes de seleccionar PayPal', 'warning');
+      return false;
+    }
+
+    if (!document.getElementById('terms').checked) {
+      mostrarToast('Debe aceptar los términos y condiciones antes de pagar con PayPal', 'warning');
+      return false;
+    }
+
+    return true;
+  }
+
+  paypalRadio.addEventListener('change', function () {
     if (paypalRadio.checked && !buttonRendered) {
+      if (!validarCampos()) {
+        paypalRadio.checked = false;
+        return;
+      }
+
       const totalTexto = document.querySelector('.order-total').textContent;
       const orderTotal = parseFloat(totalTexto.replace(/[^0-9.-]+/g, ''));
-      
+
       paypal.Buttons({
-        createOrder: function(data, actions) {
-          // Validar campos requeridos
-          const requiredFields = [
-            'first-name', 'last-name', 'email', 
-            'address', 'city', 'district', 'tel'
-          ];
-
-          const missingFields = requiredFields.filter(field => {
-            return !document.querySelector(`input[name="${field}"]`).value.trim();
-          });
-
-          if (missingFields.length > 0) {
-            alert('Por favor complete todos los campos requeridos');
-            return Promise.reject('Campos requeridos faltantes');
-          }
-
-          // Validar términos y condiciones
-          if (!document.getElementById('terms').checked) {
-            alert('Debe aceptar los términos y condiciones');
-            return Promise.reject('Términos no aceptados');
-          }
-
-          // Primero guardamos la orden en nuestra base de datos
+        createOrder: function (data, actions) {
           return fetch('/api/order', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            credentials: 'include', // Importante para mantener la sesión
+            credentials: 'include',
             body: JSON.stringify({
               nombre: document.querySelector('input[name="first-name"]').value.trim(),
               apellido: document.querySelector('input[name="last-name"]').value.trim(),
@@ -264,11 +291,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!data.success) {
               throw new Error(data.message || 'Error al crear la orden');
             }
-            
-            // Guardamos el ID de la orden para usarlo después
+
             window.currentOrderId = data.orderId;
-            
-            // Ahora creamos la orden de PayPal con el monto correcto
+
             return actions.order.create({
               purchase_units: [{
                 amount: {
@@ -280,71 +305,67 @@ document.addEventListener('DOMContentLoaded', function() {
             });
           });
         },
-        
-       onApprove: function(data, actions) {
-  return actions.order.capture().then(function(details) {
-    return fetch(`/api/order/${window.currentOrderId}/payment`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        paymentMethod: 'paypal',
-        paymentDetails: details,
-        payerId: details.payer.payer_id,
-        paymentId: details.id
-      })
-    })
-    .then(response => {
-      if (!response.ok) {
-        return response.json().then(err => { throw err; });
-      }
-      return response.json();
-    })
-    .then(data => {
-      if (!data.success) {
-        throw new Error(data.message || 'Error al registrar el pago');
-      }
-      
-      // Redirigir a la URL proporcionada por el servidor
-      if (data.redirectUrl) {
-        window.location.href = data.redirectUrl;
-      } else {
-        // Redirección por defecto si no hay URL específica
-        window.location.href = `/user/orders`; // Ajusta esta ruta
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      alert('Error al procesar el pago: ' + error.message);
-    });
-  });
-},
-        
-        onError: function(err) {
+
+        onApprove: function (data, actions) {
+          return actions.order.capture().then(function (details) {
+            return fetch(`/api/order/${window.currentOrderId}/payment`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              credentials: 'include',
+              body: JSON.stringify({
+                paymentMethod: 'paypal',
+                paymentDetails: details,
+                payerId: details.payer.payer_id,
+                paymentId: details.id
+              })
+            })
+            .then(response => {
+              if (!response.ok) {
+                return response.json().then(err => { throw err; });
+              }
+              return response.json();
+            })
+            .then(data => {
+              if (!data.success) {
+                throw new Error(data.message || 'Error al registrar el pago');
+              }
+
+              mostrarToast("✅ ¡Pago completado con éxito!", 'success');
+
+              setTimeout(() => {
+                if (data.redirectUrl) {
+                  window.location.href = data.redirectUrl;
+                } else {
+                  window.location.href = `/orders/${window.currentOrderId}`;
+                }
+              }, 3000);
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              mostrarToast(`❌ Error: ${error.message}`, 'error');
+            });
+          });
+        },
+
+        onError: function (err) {
           console.error('Error en el pago con PayPal:', err);
-          let errorMessage = 'Ocurrió un error al procesar el pago';
-          
-          if (err.message.includes('Campos requeridos faltantes')) {
-            errorMessage = 'Por favor complete todos los campos requeridos';
-          } else if (err.message.includes('Términos no aceptados')) {
-            errorMessage = 'Debe aceptar los términos y condiciones';
-          }
-          
-          alert(errorMessage);
+          mostrarToast('❌ Ocurrió un error al procesar el pago con PayPal', 'error');
         }
+
       }).render('#paypal-button-container');
-      
+
       buttonRendered = true;
     }
   });
 });
 </script>
 
-
 	<%- include('../partials/footer.ejs') %>
 
 		</body>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 	</html>

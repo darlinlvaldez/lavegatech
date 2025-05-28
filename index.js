@@ -46,7 +46,7 @@ app.use('/fav', fav);
 
 app.use('/api/order', pay);
 
-app.use('/orders', ordersRouter); // Agrega esta línea
+app.use('/orders', ordersRouter);
 
 app.use('/', store);
 

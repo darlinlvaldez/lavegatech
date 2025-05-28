@@ -25,6 +25,10 @@ cart.removeItem = async (id, usuario_id) => {
     [id, usuario_id]);
 };
 
+cart.clearCart = async (usuario_id) => {
+  await db.query("DELETE FROM cart WHERE usuario_id = ?", [usuario_id]);
+};
+
 cart.itemExists = async (usuario_id, producto_id, colorSeleccionado) => {
   const [rows] = await db.query(
     "SELECT id, producto_id, cantidad FROM cart WHERE usuario_id = ? AND producto_id = ? AND colorSeleccionado = ?",
@@ -47,19 +51,19 @@ cart.getByUserId = async (usuario_id) => {
   return rows;
 };
 
-// cart.getByUserId = async (usuario_id) => {
-//   const [rows] = await db.query(
-//     "SELECT c.id as cart_id, c.producto_id, c.colorSeleccionado, c.cantidad, " +
-//   "c.descuento, c.precio, c.imagen, c.nombre, c.stock, " +
-//   "p.categoria_id, c.fecha_agregado " +
-//   "FROM cart c " +
-//   "JOIN productos p ON c.producto_id = p.id " +
-//   "WHERE c.usuario_id = ? " +
-//   "ORDER BY c.fecha_agregado DESC",
-//   [usuario_id]
-//   );
-//   return rows;
-// };
+cart.getCartToPay = async (usuario_id) => {
+  const [rows] = await db.query(
+  "SELECT c.id as cart_id, c.producto_id, c.colorSeleccionado, c.cantidad, " +
+  "c.descuento, c.precio, c.imagen, c.nombre, c.stock, " +
+  "p.categoria_id, c.fecha_agregado " +
+  "FROM cart c " +
+  "JOIN productos p ON c.producto_id = p.id " +
+  "WHERE c.usuario_id = ? " +
+  "ORDER BY c.fecha_agregado DESC",
+  [usuario_id]
+  );
+  return rows;
+};
 
 cart.getCount = async (usuario_id) => {
   const [rows] = await db.query(
