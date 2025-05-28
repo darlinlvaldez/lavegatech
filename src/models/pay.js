@@ -6,7 +6,7 @@ orders.createOrder = async (orderData, items) => {
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
-    
+
     const [orderResult] = await conn.query(
       `INSERT INTO orders (user_id, nombre, apellido, email, direccion, ciudad, 
        distrito, telefono, horario_entrega, total, status) 
@@ -22,17 +22,17 @@ orders.createOrder = async (orderData, items) => {
         orderData.telefono,
         orderData.horario_entrega,
         orderData.total,
-        orderData.status || 'pendiente'
+        orderData.status || "pendiente",
       ]
     );
-    
+
     const orderId = orderResult.insertId;
-    
+
     for (const item of items) {
       await conn.query(
         `INSERT INTO order_items 
-         (order_id, producto_id, nombre_producto, cantidad, precio_unitario, descuento, subtotal) 
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+     (order_id, producto_id, nombre_producto, cantidad, precio_unitario, descuento, subtotal) 
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
         [
           orderId,
           item.producto_id,
@@ -40,11 +40,17 @@ orders.createOrder = async (orderData, items) => {
           item.cantidad,
           item.precio_unitario,
           item.descuento || 0,
-          item.subtotal
+          item.subtotal,
         ]
       );
+
+      await conn.query(
+        `UPDATE variantes SET stock = stock - ? 
+        WHERE producto_id = ? AND stock >= ?`,
+        [item.cantidad, item.producto_id, item.cantidad]
+      );
     }
-    
+
     await conn.commit();
     return orderId;
   } catch (error) {
@@ -60,25 +66,23 @@ orders.getOrderById = async (orderId, userId) => {
     `SELECT * FROM orders WHERE id = ? AND user_id = ?`,
     [orderId, userId]
   );
-  
+
   if (order.length === 0) return null;
-  
+
   const [items] = await db.query(
     `SELECT * FROM order_items WHERE order_id = ?`,
     [orderId]
   );
-  
+
   return {
     ...order[0],
-    items
+    items,
   };
 };
 
 orders.updateOrderStatus = async (orderId, status) => {
-  await db.query(
-    `UPDATE orders SET status = ? WHERE id = ?`,
-    [status, orderId]
-  );
+  await db.query(`UPDATE orders SET status = ? WHERE id = ?`, 
+    [status, orderId]);
 };
 
 orders.getUserOrders = async (userId) => {
@@ -93,19 +97,14 @@ orders.createPayment = async (orderId, paymentData) => {
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
-    
+
     const [result] = await conn.query(
       `INSERT INTO payments 
       (order_id, metodo_pago, estado_pago, paypal_order_id) 
       VALUES (?, ?, ?, ?)`,
-      [
-        orderId,
-        paymentData.paymentMethod,
-        'completado', 
-        paymentData.paymentId
-      ]
+      [orderId, paymentData.paymentMethod, "completado", paymentData.paymentId]
     );
-    
+
     await conn.commit();
     return result.insertId;
   } catch (error) {

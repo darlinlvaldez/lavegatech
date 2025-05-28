@@ -332,7 +332,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 throw new Error(data.message || 'Error al registrar el pago');
               }
 
-              mostrarToast("✅ ¡Pago completado con éxito!", 'success');
+              mostrarToast("¡Pago completado con éxito!", 'success');
 
               setTimeout(() => {
                 if (data.redirectUrl) {
@@ -344,14 +344,14 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => {
               console.error('Error:', error);
-              mostrarToast(`❌ Error: ${error.message}`, 'error');
+              mostrarToast(`Error: ${error.message}`, 'error');
             });
           });
         },
 
         onError: function (err) {
           console.error('Error en el pago con PayPal:', err);
-          mostrarToast('❌ Ocurrió un error al procesar el pago con PayPal', 'error');
+          mostrarToast('Ocurrió un error al procesar el pago con PayPal', 'error');
         }
 
       }).render('#paypal-button-container');
