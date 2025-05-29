@@ -38,15 +38,11 @@
 }
 
 .color-item {
-    margin-right: 100% ;
+    margin-right: 52% ;
     min-height: 3px;
     text-align: center;  
     align-items: center;
     justify-content: center;
-}
-
-.color-item p {
-    margin: 0;
 }
 
 .product-items .label {
