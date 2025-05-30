@@ -31,11 +31,22 @@ const formTemplates = {username: `<label class="text-modal">Nuevo nombre:</label
   <input class="modal-input" type="email" name="newEmail" placeholder="ejemplo@gmail.com" required>`,
 
   password: `<label class="text-modal">Contraseña actual:</label>
-  <input class="modal-input" type="password" name="oldPassword" placeholder="Tu contraseña actual" required>
+  <div class="password-wrapper">
+    <input class="modal-input" type="password" id="passwordInput" name="oldPassword" placeholder="Tu contraseña actual" required>
+    <i id="eyeIconPassword" class="fa fa-eye-slash eye-icon toggle-password" onclick="togglePassword('password')"></i>
+  </div>
+
   <label class="text-modal">Nueva contraseña:</label>
-  <input class="modal-input" type="password" name="newPassword" placeholder="Nueva contraseña" required>
+  <div class="password-wrapper">
+    <input class="modal-input" type="password" id="newPasswordInput" name="newPassword" placeholder="Nueva contraseña" required>
+    <i id="eyeIconNewPassword" class="fa fa-eye-slash eye-icon toggle-password" onclick="togglePassword('new')"></i>
+  </div>
+
   <label class="text-modal">Confirmar nueva contraseña:</label>
-  <input class="modal-input" type="password" name="confirmPassword" placeholder="Repite la nueva contraseña" required>`};
+  <div class="password-wrapper">
+    <input class="modal-input" type="password" id="confirmPasswordInput" name="confirmPassword" placeholder="Repite la nueva contraseña" required>
+    <i id="eyeIconConfirmPassword" class="fa fa-eye-slash eye-icon toggle-password" onclick="togglePassword('confirm')"></i>
+  </div>`};
 
 const titles = {username: 'Editar Nombre', email: 'Editar Correo', password: 'Editar Contraseña', 'verify-email': 'Verificar Código'};
 

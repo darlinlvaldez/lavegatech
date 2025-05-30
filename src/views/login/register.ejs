@@ -23,7 +23,7 @@
     <% if (validationErrors?.email) { %>
       <p class="field-error"><%= validationErrors.email %></p>
     <% } %>
-
+    
     <label>Contraseña:</label>
 <div class="password-wrapper">
   <input type="password" name="password" id="passwordInput" placeholder="Introducir contraseña" required
@@ -41,9 +41,9 @@
 <label>Confirmar contraseña:</label>
 <div class="password-wrapper">
   <input type="password" name="confirmPassword" id="confirmPasswordInput" placeholder="Repetir contraseña" required
-  class="password-input <%= validationErrors?.confirmPassword ? 'input-error' : '' %>">
-  
-  <span onclick="togglePassword('confirmPassword')" class="toggle-password">
+    class="password-input <%= validationErrors?.confirmPassword ? 'input-error' : '' %>">
+
+  <span onclick="togglePassword('confirm')" class="toggle-password">
     <i id="eyeIconConfirmPassword" class="fas fa-eye-slash"></i>
   </span>
 </div>

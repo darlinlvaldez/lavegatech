@@ -122,6 +122,22 @@
   gap: 10px;
 }
 
+.toggle-password {
+  position: absolute;
+  font-size: 2.0rem;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: gray;
+}
+
+.password-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
 @media (max-width: 600px){
   .titulo-user {
     display: inline-block;
