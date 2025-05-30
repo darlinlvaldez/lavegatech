@@ -8,4 +8,3 @@ export default session({
     store: sessionStore,
     cookie: { secure: false, maxAge: 3600000, httpOnly: true, sameSite: 'strict'} 
   });
-  

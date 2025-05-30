@@ -20,15 +20,23 @@ async function addToCart(product) {
     const safeStock = window.productData?.stocksPorColor?.[color] || stock || 0;
 
     if (safeStock <= 0) {
-        Toastify({
-            text: "Este producto no está disponible en el color seleccionado.",
-            duration: 3000,
-            gravity: "top",
-            position: "right",
-            backgroundColor: "#e74c3c",
-            stopOnFocus: true
-        }).showToast();
-        return;
+      Toastify({
+        text: `<i data-feather="info" style="vertical-align: middle; margin-right: 8px;"></i>Este producto no está disponible en el color seleccionado.`,
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "#e74c3c",
+        close: true,
+        stopOnFocus: true,
+        escapeMarkup: false,
+        className: "toast-notification",
+      }).showToast();
+
+      setTimeout(() => {
+        feather.replace();
+      }, 50);
+
+      return;
     }
 
     const safeQty = Math.min(parseInt(cantidad), safeStock);
@@ -55,19 +63,26 @@ async function addToCart(product) {
         } else {
             await fetchCart('add', cartItem);
         }
-
+        
         Toastify({
-            text: "Producto agregado al carrito.",
-            duration: 3000,
-            gravity: "top",
-            position: "right",
-            backgroundColor: "#27ae60",
-            stopOnFocus: true
-        }).showToast();
+         text: `<i data-feather="check-circle" style="vertical-align: middle; margin-right: 8px;"></i>Producto agregado al carrito.`,
+         duration: 3000,
+         gravity: "top",
+         position: "right",
+         backgroundColor: "#27ae60",
+         stopOnFocus: true,
+         escapeMarkup: false,
+         className: "toast-notification",
+       }).showToast();
 
-        setTimeout(() => {
-            window.location.href = '/cart';
-        }, 800); 
+       setTimeout(() => {
+         feather.replace();
+       }, 50);
+
+       setTimeout(() => {
+         window.location.href = "/cart";
+       }, 1000);
+
     } catch (error) {
         console.error('Checkout Error:', error);
     }

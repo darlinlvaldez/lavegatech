@@ -112,14 +112,6 @@ app.get('/order', isAuth(), (req, res) => {
   res.render('store/order');  
 });
 
-app.get('/fav', (req, res) => {
-  res.render('store/fav');
-});
-
-app.get('/cart', (req, res) => {
-  res.render('store/cart');
-});
-
 app.get('/conditions', (req, res) => {
   res.render('information/conditions');  
 });

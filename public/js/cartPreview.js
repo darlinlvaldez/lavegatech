@@ -44,7 +44,7 @@ async function cargarCarrito() {
         if (cartList) {
             cartList.innerHTML += `
                 <div class="product-widget">
-                    <a href="/product/${item.producto_id || item.id}${item.colorSeleccionado ? `?color=${encodeURIComponent(item.colorSeleccionado)}` : ''}">
+                    <a href="/product/${item.id}${item.colorSeleccionado ? `?color=${encodeURIComponent(item.colorSeleccionado)}` : ''}">
                         <div class="product-img">
                             <img src="${item.imagen}" alt="${item.nombre}">
                         </div>
@@ -55,7 +55,7 @@ async function cargarCarrito() {
                                 $${formatPrice(precioConDescuento)}
                             </h4>
                         </div>
-                        <button class="delete" onclick="deleteProduct('${item.producto_id || item.id}', '${item.colorSeleccionado}')"><i class="fa fa-close"></i></button>
+                        <button class="delete" onclick="deleteProduct('${item.id}', '${item.colorSeleccionado}')"><i class="fa fa-close"></i></button>
                 </div>
             `;
         }
@@ -63,7 +63,7 @@ async function cargarCarrito() {
 
     if (carritoCount) carritoCount.textContent = carrito.length;
     if (cartSummary) cartSummary.textContent = `${carrito.length} producto(s) seleccionado(s)`;
-    if (cartSubtotal) cartSubtotal.textContent = `SUBTOTAL: $${total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+    if (cartSubtotal) cartSubtotal.textContent = `SUBTOTAL: $${formatPrice(total)}`;
 }
 
 export {cargarCarrito};

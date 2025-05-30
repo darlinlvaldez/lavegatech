@@ -1,5 +1,5 @@
 import { fetchFav, checkAuth, updateFavCount } from './utils.js';
-import { removeFromFav, loadFavPage } from './favView.js';
+import { loadFavPage } from './loadFavPage.js';
 
 window.removeFromFav = removeFromFav;
 
@@ -52,7 +52,7 @@ async function toggleFavorite(button) {
                     precio: productPrice,
                     descuento: productDiscount,
                     imagen: productImage,
-                    stockPorColor: window.productData?.stocksPorColor?.[colorSelected] || 1
+                    stockPorColor: window.productData?.stocksPorColor?.[colorSelected]
                 })
             });
             setButtonState(button, true);
@@ -92,7 +92,7 @@ async function checkFavorites() {
 function setupEventListeners() {
     document.querySelectorAll('[name="color"], .color-option, #colorSeleccionado').forEach(element => {
         element.addEventListener('change', function() {
-            const selectedColor = this.value || this.textContent || this.dataset.color;
+            const selectedColor = this.dataset.color;
             document.querySelectorAll('.add-to-wishlist').forEach(button => {
                 button.dataset.productColor = selectedColor;
             });
@@ -110,5 +110,25 @@ document.addEventListener('DOMContentLoaded', () => {
     loadFavPage();
     checkFavorites();
 });
+
+async function removeFromFav(productId, color) {
+    const authData = await checkAuth();
+    if (!authData.authenticated) return;
+
+    try {
+        const data = await fetchFav('/fav/remove', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ producto_id: productId, colorSeleccionado: color })
+        });
+        
+        if (data.success) {
+            updateFavCount(data.count || 0);
+            loadFavPage();
+        }
+    } catch (error) {
+        console.error('Error al eliminar de favoritos:', error);
+    }
+}
 
 export { checkFavorites };

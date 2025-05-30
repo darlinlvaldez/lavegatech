@@ -51,22 +51,38 @@ document.addEventListener('DOMContentLoaded', () => {
   let buttonRendered = false;
 
   const mostrarToast = (texto, tipo = "info") => {
-    const colores = {
-      info: "#007bff",
-      error: "#dc3545",
-      success: "#28a745",
-      warning: "#ffc107",
-    };
-    Toastify({
-      text: texto,
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "right",
-      backgroundColor: colores[tipo] || "#007bff",
-      stopOnFocus: true,
-    }).showToast();
+  const colores = {
+    info: "#0d6efd",
+    error: "#dc3545",
+    success: "#198754",
+    warning: "#ffc107",
   };
+
+  const iconos = {
+    info: '<i data-feather="info" style="vertical-align: middle; margin-right: 8px;"></i>',
+    error: '<i data-feather="x-circle" style="vertical-align: middle; margin-right: 8px;"></i>',
+    success: '<i data-feather="check-circle" style="vertical-align: middle; margin-right: 8px;"></i>',
+    warning: '<i data-feather="alert-triangle" style="vertical-align: middle; margin-right: 8px;"></i>',
+  };
+
+  const icon = iconos[tipo] || iconos.info;
+
+  Toastify({
+    text: `${icon}${texto}`,
+    duration: 3000,
+    close: true,
+    gravity: "top",
+    position: "right",
+    backgroundColor: colores[tipo],
+    stopOnFocus: true,
+    escapeMarkup: false,
+    className: "toast-notification"
+  }).showToast();
+
+  setTimeout(() => {
+    feather.replace();
+  }, 50);
+};
 
   const validarCampos = () => {
     const fields = ['first-name', 'last-name', 'email', 'address', 'city', 'district', 'tel'];
