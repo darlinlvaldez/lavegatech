@@ -15,77 +15,128 @@ async function fetchCart(action, data = {}) {
     return await fetch(`/cart/${action}`, options);
 }
 
+function showToast(message, backgroundColor = "#27ae60", icon = "check-circle") {
+  Toastify({
+    text: `<i data-feather="${icon}" style="vertical-align: middle; margin-right: 8px;"></i> ${message}`,
+    duration: 3000,
+    gravity: "top",
+    position: "right",
+    backgroundColor,
+    close: true,
+    escapeMarkup: false,
+    className: "toast-notification",
+  }).showToast();
+
+setTimeout(() => {
+    feather.replace();
+  }, 100);
+}
+
 async function addToCart(product) {
-    const { id, nombre, precio, cantidad = 1, color, descuento = 0, stock, imagen } = product;
-    const safeStock = window.productData?.stocksPorColor?.[color] || stock || 0;
+  const { id, nombre, precio, cantidad = 1, color, descuento = 0, imagen } = product;
+  
+  try {
+    // Verificar stock primero
+    let stockReal;
+    try {
+      const stockResponse = await fetch(`/api/productos/stock?id=${id}&color=${encodeURIComponent(color)}`);
+      if (!stockResponse.ok) {
+        throw new Error('Error al verificar stock');
+      }
+      const stockData = await stockResponse.json();
+      stockReal = stockData.stock || 0;
+    } catch (error) {
+      console.error('Error al verificar stock:', error);
+      // Si falla la consulta de stock, asumimos 0 para no permitir la compra
+      stockReal = 0;
+    }
 
-    if (safeStock <= 0) {
-      Toastify({
-        text: `<i data-feather="info" style="vertical-align: middle; margin-right: 8px;"></i>Este producto no está disponible en el color seleccionado.`,
-        duration: 3000,
-        gravity: "top",
-        position: "right",
-        backgroundColor: "#e74c3c",
-        close: true,
-        stopOnFocus: true,
-        escapeMarkup: false,
-        className: "toast-notification",
-      }).showToast();
-
-      setTimeout(() => {
-        feather.replace();
-      }, 50);
-
+    if (stockReal <= 0) {
+      showToast("Este producto está agotado. Haz clic para ver otras variantes disponibles.", "#e74c3c", "info");
       return;
     }
 
-    const safeQty = Math.min(parseInt(cantidad), safeStock);
-
+    const safeQty = Math.min(parseInt(cantidad) || 1, stockReal);
     const cartItem = {
-        producto_id: id, nombre, precio, cantidad: safeQty, 
-        colorSeleccionado: color, descuento, stock: safeStock,imagen
+      id, 
+      producto_id: id, 
+      nombre, 
+      precio, 
+      cantidad: safeQty, 
+      colorSeleccionado: color, 
+      descuento, 
+      imagen
     };
 
-    try {
-        const { authenticated } = await checkAuth();
+    const { authenticated } = await checkAuth();
 
-        if (!authenticated) {
-            const localCart = JSON.parse(localStorage.getItem('carrito')) || [];
-            const existing = localCart.find(item => item.id === id && item.colorSeleccionado === color);
+    if (!authenticated) {
+      const localCart = JSON.parse(localStorage.getItem("carrito")) || [];
+      const existingIndex = localCart.findIndex(
+        item => item.id === id && item.colorSeleccionado === color
+      );
 
-            if (existing) {
-                existing.cantidad = Math.min(existing.cantidad + safeQty, safeStock);
-            } else {
-                localCart.unshift({ ...cartItem, id });
-            }
-
-            localStorage.setItem('carrito', JSON.stringify(localCart));
+      if (existingIndex !== -1) {
+        const newQty = Math.min(localCart[existingIndex].cantidad + safeQty, stockReal);
+        if (newQty <= 0) {
+          localCart.splice(existingIndex, 1);
         } else {
-            await fetchCart('add', cartItem);
+          localCart[existingIndex].cantidad = newQty;
         }
-        
-        Toastify({
-         text: `<i data-feather="check-circle" style="vertical-align: middle; margin-right: 8px;"></i>Producto agregado al carrito.`,
-         duration: 3000,
-         gravity: "top",
-         position: "right",
-         backgroundColor: "#27ae60",
-         stopOnFocus: true,
-         escapeMarkup: false,
-         className: "toast-notification",
-       }).showToast();
+      } else {
+        localCart.unshift(cartItem);
+      }
 
-       setTimeout(() => {
-         feather.replace();
-       }, 50);
+      localStorage.setItem("carrito", JSON.stringify(localCart));
+      showToast("Producto agregado al carrito local.", "#27ae60", "check-circle");
+    } else {
+      const response = await fetchCart("add", cartItem);
+      const data = await response.json();
 
-       setTimeout(() => {
-         window.location.href = "/cart";
-       }, 1000);
-
-    } catch (error) {
-        console.error('Checkout Error:', error);
+      if (!data.success) {
+        showToast(data.message || "Error al agregar al carrito", "#e74c3c", "info");
+        return;
+      }
+      
+      showToast("Producto agregado al carrito.", "#27ae60", "check-circle");
     }
+
+    updateCartCount();
+    setTimeout(() => (window.location.href = "/cart"), 1000);
+  } catch (error) {
+    console.error("Error al agregar al carrito:", error);
+    showToast("Error al agregar al carrito", "#e74c3c", "alert-circle");
+  }
+}
+
+// Agrega esta función en tu archivo cart.js
+function updateCartCount() {
+  // Para usuarios autenticados
+  if (document.body.classList.contains('user-authenticated')) {
+    fetch('/api/cart/count')
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          const cartCountElements = document.querySelectorAll('.cart-count, .cart-count-mobile');
+          cartCountElements.forEach(el => {
+            el.textContent = data.count;
+            el.style.display = data.count > 0 ? 'inline-block' : 'none';
+          });
+        }
+      })
+      .catch(error => console.error('Error al actualizar contador:', error));
+  } 
+  // Para usuarios no autenticados (carrito local)
+  else {
+    const localCart = JSON.parse(localStorage.getItem("carrito")) || [];
+    const totalCount = localCart.reduce((sum, item) => sum + item.cantidad, 0);
+    
+    const cartCountElements = document.querySelectorAll('.cart-count, .cart-count-mobile');
+    cartCountElements.forEach(el => {
+      el.textContent = totalCount;
+      el.style.display = totalCount > 0 ? 'inline-block' : 'none';
+    });
+  }
 }
 
 window.addEventListener('load', async () => {
@@ -106,7 +157,7 @@ window.addEventListener('load', async () => {
 
 async function deleteProduct(id, color) {
     const itemElement = document.querySelector(`.cart-item[data-id="${id}"][data-color="${color}"]`);
-    if (itemElement) {
+    if (itemElement) { 
         itemElement.remove();
     }
 
@@ -168,3 +219,5 @@ document.addEventListener('click', async (e) => {
         imagen: getImage()
     });
 });
+
+export {updateCartCount};

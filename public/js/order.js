@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       orderProducts.innerHTML += ` <div class="order-col">
       <div>${item.cantidad}x ${item.nombre}${item.colorSeleccionado || ""}</div>
-      <div>$${subtotal.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}</div>
+      <div>$${formatPrice(subtotal)}</div>
       </div>`; 
     });
 

@@ -9,20 +9,6 @@
     <link rel="stylesheet" href="/css/cart.css">
 </head>
 
-<!-- <script>
-    function cartServer() {
-        let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-        
-        fetch('/api/procesar-pago', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ carrito })
-        }).then(response => response.json())
-          .then(data => console.log(data))
-          .catch(error => console.error('Error:', error));
-    }
-</script> -->
-
 <body>
     <div class="container mt-5">
         <div class="row">
@@ -46,7 +32,7 @@
                         </li>
                     </ul>
                         <div class="total-price">
-                         <a href="/order" class="btn btn-checkout" onclick="cartServer()">Procesar Pago <i class="fa fa-arrow-circle-right"></i></a>
+                         <a href="/order" class="btn btn-checkout">Procesar Pago <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
