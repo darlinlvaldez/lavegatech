@@ -62,8 +62,7 @@ cart.getCartToPay = async (usuario_id) => {
   "FROM cart c " +
   "JOIN productos p ON c.producto_id = p.id " +
   "WHERE c.usuario_id = ? " +
-  "ORDER BY c.fecha_agregado DESC",
-  [usuario_id]
+  "ORDER BY c.fecha_agregado DESC",[usuario_id]
   );
   return rows;
 };
@@ -71,23 +70,20 @@ cart.getCartToPay = async (usuario_id) => {
 cart.getCount = async (usuario_id) => {
   const [rows] = await db.query(
     "SELECT COUNT(*) as count FROM cart WHERE usuario_id = ?",
-    [usuario_id]
-  );
+    [usuario_id]);
   return rows[0].count;
 };
 
 cart.incrementQuantity = async (id, usuario_id, cantidad) => {
   await db.query(
     "UPDATE cart SET cantidad = cantidad + ? WHERE id = ? AND usuario_id = ?",
-    [cantidad, id, usuario_id]
-  );
+    [cantidad, id, usuario_id]);
 };
 
 cart.getRealStock = async (producto_id, color) => {
   const [rows] = await db.query(
     "SELECT stock FROM variantes WHERE producto_id = ? AND color = ?",
-    [producto_id, color]
-  );
+    [producto_id, color]);
   return rows[0]?.stock || 0;
 };
 

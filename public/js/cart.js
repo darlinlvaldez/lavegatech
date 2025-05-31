@@ -36,7 +36,6 @@ async function addToCart(product) {
   const { id, nombre, precio, cantidad = 1, color, descuento = 0, imagen } = product;
   
   try {
-    // Verificar stock primero
     let stockReal;
     try {
       const stockResponse = await fetch(`/api/productos/stock?id=${id}&color=${encodeURIComponent(color)}`);
@@ -47,7 +46,6 @@ async function addToCart(product) {
       stockReal = stockData.stock || 0;
     } catch (error) {
       console.error('Error al verificar stock:', error);
-      // Si falla la consulta de stock, asumimos 0 para no permitir la compra
       stockReal = 0;
     }
 
@@ -58,15 +56,8 @@ async function addToCart(product) {
 
     const safeQty = Math.min(parseInt(cantidad) || 1, stockReal);
     const cartItem = {
-      id, 
-      producto_id: id, 
-      nombre, 
-      precio, 
-      cantidad: safeQty, 
-      colorSeleccionado: color, 
-      descuento, 
-      imagen
-    };
+      id, producto_id: id, nombre, precio, cantidad: safeQty, 
+      colorSeleccionado: color, descuento, imagen};
 
     const { authenticated } = await checkAuth();
 
@@ -101,7 +92,7 @@ async function addToCart(product) {
       showToast("Producto agregado al carrito.", "#27ae60", "check-circle");
     }
 
-    updateCartCount();
+    //updateCartCount();
     setTimeout(() => (window.location.href = "/cart"), 1000);
   } catch (error) {
     console.error("Error al agregar al carrito:", error);
@@ -109,35 +100,35 @@ async function addToCart(product) {
   }
 }
 
-// Agrega esta función en tu archivo cart.js
-function updateCartCount() {
-  // Para usuarios autenticados
-  if (document.body.classList.contains('user-authenticated')) {
-    fetch('/api/cart/count')
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          const cartCountElements = document.querySelectorAll('.cart-count, .cart-count-mobile');
-          cartCountElements.forEach(el => {
-            el.textContent = data.count;
-            el.style.display = data.count > 0 ? 'inline-block' : 'none';
-          });
-        }
-      })
-      .catch(error => console.error('Error al actualizar contador:', error));
-  } 
-  // Para usuarios no autenticados (carrito local)
-  else {
-    const localCart = JSON.parse(localStorage.getItem("carrito")) || [];
-    const totalCount = localCart.reduce((sum, item) => sum + item.cantidad, 0);
+// // Agrega esta función en tu archivo cart.js
+// function updateCartCount() {
+//   // Para usuarios autenticados
+//   if (document.body.classList.contains('user-authenticated')) {
+//     fetch('/api/cart/count')
+//       .then(response => response.json())
+//       .then(data => {
+//         if (data.success) {
+//           const cartCountElements = document.querySelectorAll('.cart-count, .cart-count-mobile');
+//           cartCountElements.forEach(el => {
+//             el.textContent = data.count;
+//             el.style.display = data.count > 0 ? 'inline-block' : 'none';
+//           });
+//         }
+//       })
+//       .catch(error => console.error('Error al actualizar contador:', error));
+//   } 
+//   // Para usuarios no autenticados (carrito local)
+//   else {
+//     const localCart = JSON.parse(localStorage.getItem("carrito")) || [];
+//     const totalCount = localCart.reduce((sum, item) => sum + item.cantidad, 0);
     
-    const cartCountElements = document.querySelectorAll('.cart-count, .cart-count-mobile');
-    cartCountElements.forEach(el => {
-      el.textContent = totalCount;
-      el.style.display = totalCount > 0 ? 'inline-block' : 'none';
-    });
-  }
-}
+//     const cartCountElements = document.querySelectorAll('.cart-count, .cart-count-mobile');
+//     cartCountElements.forEach(el => {
+//       el.textContent = totalCount;
+//       el.style.display = totalCount > 0 ? 'inline-block' : 'none';
+//     });
+//   }
+// }
 
 window.addEventListener('load', async () => {
     const localCart = JSON.parse(localStorage.getItem('carrito')) || [];
@@ -220,4 +211,4 @@ document.addEventListener('click', async (e) => {
     });
 });
 
-export {updateCartCount};
+//export {updateCartCount};

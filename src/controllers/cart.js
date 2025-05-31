@@ -9,53 +9,47 @@ cartController.syncCart = async (req, res) => {
     const localItems = req.body.items;
     const dbItems = await cart.getByUserId(userId);
 
-    // Primero sincronizamos eliminando items que no están en el local
     for (const dbItem of dbItems) {
-      const existsInLocal = localItems.some(item => 
-        item.id === dbItem.producto_id && 
-        item.colorSeleccionado === dbItem.colorSeleccionado);
-      
+      const existsInLocal = localItems.some(
+        (item) => item.id === dbItem.producto_id && item.colorSeleccionado === dbItem.colorSeleccionado);
+
       if (!existsInLocal) {
         await cart.removeItem(dbItem.id, userId);
       }
     }
 
-    // Luego procesamos los items locales
     for (const item of localItems) {
       const stockReal = await cart.getRealStock(item.id, item.colorSeleccionado);
       const existingItem = await cart.itemExists(userId, item.id, item.colorSeleccionado);
-      
+
       if (stockReal <= 0) {
         if (existingItem) await cart.removeItem(existingItem.id, userId);
         continue;
       }
-
+      
       if (existingItem) {
-        // No sumamos cantidades, usamos la mayor entre local y DB (o stock real)
-        const cantidadFinal = Math.min(
-          Math.max(existingItem.cantidad, item.cantidad),
-          stockReal
-        );
+        const nuevaCantidad = existingItem.cantidad + item.cantidad;
+        const cantidadFinal = Math.min(nuevaCantidad, stockReal);
+        
         await cart.updateQuantity(existingItem.id, userId, cantidadFinal);
       } else {
         const cantidadFinal = Math.min(item.cantidad, stockReal);
         await cart.addItem({
-          usuario_id: userId, 
+          usuario_id: userId,
           producto_id: item.id,
-          colorSeleccionado: item.colorSeleccionado, 
+          colorSeleccionado: item.colorSeleccionado,
           cantidad: cantidadFinal,
-          descuento: item.descuento, 
-          precio: item.precio, 
+          descuento: item.descuento,
+          precio: item.precio,
           imagen: item.imagen,
-          nombre: item.nombre
-        });
+          nombre: item.nombre});
+        }
       }
-    }
-      
+
     res.json({ success: true, count: await cart.getCount(userId) });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: 'Error al sincronizar carrito' });
+    res.status(500).json({ success: false, message: "Error al sincronizar carrito" });
   }
 };
 
@@ -71,10 +65,8 @@ cartController.addToCart = async (req, res) => {
     const stockReal = await cart.getRealStock(producto_id, colorSeleccionado);
     
     if (stockReal <= 0) {
-      return res.status(400).json({ 
-        success: false,
-        message: "Este producto está agotado. Haz clic para ver otras variantes disponibles."
-      });
+      return res.status(400).json({success: false,
+        message: "Este producto está agotado. Haz clic para ver otras variantes disponibles."});
     }
 
     const existingItem = await cart.itemExists(userId, producto_id, colorSeleccionado);
@@ -85,32 +77,20 @@ cartController.addToCart = async (req, res) => {
 
       await cart.updateQuantity(existingItem.id, userId, cantidadFinal);
       
-      return res.json({
-        success: true,
-        count: await cart.getCount(userId),
+      return res.json({success: true,
+        count: await cart.getCount(userId), 
         message: cantidadFinal !== nuevaCantidad 
-          ? `Solo se agregaron ${cantidadFinal - existingItem.cantidad} unidades (stock máximo: ${stockReal})`
-          : 'Producto actualizado en el carrito'
-      });
+        ? `Solo se agregaron ${cantidadFinal - existingItem.cantidad} unidades (stock máximo: ${stockReal})`
+        : 'Producto actualizado en el carrito'});
     } else {
       const cantidadFinal = Math.min(cantidad, stockReal);
       
       await cart.addItem({
-        usuario_id: userId, 
-        producto_id, 
-        colorSeleccionado, 
-        cantidad: cantidadFinal,
-        descuento, 
-        precio, 
-        imagen, 
-        nombre
-      }); 
+        usuario_id: userId, producto_id, colorSeleccionado, cantidad: cantidadFinal,
+        descuento, precio, imagen, nombre}); 
 
-      res.json({ 
-        success: true, 
-        count: await cart.getCount(userId),
-        message: 'Producto agregado al carrito'
-      });
+      res.json({success: true, count: await cart.getCount(userId),
+         message: 'Producto agregado al carrito'});
     }
   } catch (error) {
     console.error(error);
@@ -133,38 +113,11 @@ cartController.getCartItems = async (req, res) => {
 cartController.updateQuantity = async (req, res) => {
   try {
     const { producto_id, colorSeleccionado, cantidad } = req.body;
-    const userId = req.session.user.id;
-    
-    const stockReal = await cart.getRealStock(producto_id, colorSeleccionado);
-    
-    if (stockReal <= 0) {
-      // Si no hay stock, eliminamos el item del carrito
-      const existingItem = await cart.itemExists(userId, producto_id, colorSeleccionado);
-      if (existingItem) await cart.removeItem(existingItem.id, userId);
-      return res.json({ 
-        success: true, 
-        message: "El producto ya no está disponible y fue removido de tu carrito" 
-      });
-    }
-    
-    const cantidadFinal = Math.min(cantidad, stockReal);
-    
-    if (cantidadFinal <= 0) {
-      // Si la cantidad es 0, eliminamos el item
-      const existingItem = await cart.itemExists(userId, producto_id, colorSeleccionado);
-      if (existingItem) await cart.removeItem(existingItem.id, userId);
-      return res.json({ success: true });
-    }
-    
-    await cart.updateQuantity(producto_id, userId, cantidadFinal, colorSeleccionado);
-    res.json({ 
-      success: true,
-      message: cantidadFinal !== cantidad 
-        ? `Cantidad ajustada al stock disponible (${stockReal})`
-        : 'Cantidad actualizada'
-    });
-  } catch (error) {
-    res.status(500).json({success: false, message: 'Error al actualizar cantidad'});
+    await cart.updateQuantity(
+      producto_id, req.session.user.id, cantidad, colorSeleccionado);
+    res.json({ success: true });
+  } catch (error) {res.status(500).json({ 
+      success: false, message: 'Error al actualizar cantidad'});
   }
 };
 
@@ -214,6 +167,40 @@ cartController.getCartPage = async (req, res) => {
   } catch (error) {
     console.error("Error al cargar la página del carrito:", error);
     res.status(500).render("error", { mensaje: error.message });
+  }
+};
+
+cartController.getStock = async (req, res) => {
+  try {
+    const { id, color } = req.query;
+
+    if (!id || !color) {
+      return res.status(400).json({
+        success: false,
+        message: "Se requieren los parámetros id y color",
+      });
+    }
+
+    const stock = await cart.getRealStock(id, color);
+
+    if (stock === 0) {
+      return res.json({
+        success: true,
+        stock: 0,
+        message: "Variante no encontrada o sin stock",
+      });
+    }
+
+    res.json({
+      success: true,
+      stock,
+    });
+  } catch (error) {
+    console.error("Error al consultar stock:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error al consultar stock",
+    });
   }
 };
 
