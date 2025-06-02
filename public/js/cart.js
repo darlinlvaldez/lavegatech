@@ -36,17 +36,25 @@ async function addToCart(product) {
   const { id, nombre, precio, cantidad = 1, color, descuento = 0, imagen } = product;
   
   try {
+    const { authenticated } = await checkAuth();
     let stockReal;
-    try {
-      const stockResponse = await fetch(`/cart/stock?id=${id}&color=${encodeURIComponent(color)}`);
-      if (!stockResponse.ok) {
-        throw new Error('Error al verificar stock');
+
+    if (authenticated) {
+      // Usuario autenticado - verificar stock en el servidor
+      try {
+        const stockResponse = await fetch(`/cart/stock?id=${id}&color=${encodeURIComponent(color)}`);
+        if (!stockResponse.ok) {
+          throw new Error('Error al verificar stock');
+        }
+        stockReal = (await stockResponse.json()).stock || 0;
+      } catch (error) {
+        console.error('Error al verificar stock:', error);
+        showToast("Error al verificar disponibilidad", "#e74c3c", "alert-circle");
+        return;
       }
-      const stockData = await stockResponse.json();
-      stockReal = stockData.stock || 0;
-    } catch (error) {
-      console.error('Error al verificar stock:', error);
-      stockReal = 0;
+    } else {
+      // Usuario no autenticado - usar el stock del botón (si está disponible)
+      stockReal = product.stock || 0;
     }
 
     if (stockReal <= 0) {
@@ -56,15 +64,20 @@ async function addToCart(product) {
 
     const safeQty = Math.min(parseInt(cantidad) || 1, stockReal);
     const cartItem = {
-      id, producto_id: id, nombre, precio, cantidad: safeQty, 
-      colorSeleccionado: color, descuento, imagen};
-
-    const { authenticated } = await checkAuth();
+      id, 
+      producto_id: id, 
+      nombre, 
+      precio, 
+      cantidad: safeQty, 
+      colorSeleccionado: color, 
+      descuento, 
+      imagen
+    };
 
     if (!authenticated) {
       const localCart = JSON.parse(localStorage.getItem("carrito")) || [];
       const existingIndex = localCart.findIndex(
-        item => item.id === id && item.colorSeleccionado === color
+        item => (item.id === id || item.producto_id === id) && item.colorSeleccionado === color
       );
 
       if (existingIndex !== -1) {

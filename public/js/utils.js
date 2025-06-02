@@ -39,84 +39,72 @@ async function updateOrRemoveItem({ productId, color, newQuantity, element = nul
     let cart = JSON.parse(localStorage.getItem('carrito')) || [];
     const itemIndex = cart.findIndex(item => item.colorSeleccionado === color);
 
-    if (itemIndex >= 0) {
-      if (newQuantity <= 0) {
-        cart.splice(itemIndex, 1);
-      } else {
-        cart[itemIndex].cantidad = newQuantity;
-      }
+    const isRemove = newQuantity <= 0;
 
+    if (itemIndex >= 0) {
+      isRemove ? cart.splice(itemIndex, 1) : cart[itemIndex].cantidad = newQuantity;
       if (!authData.authenticated) {
         localStorage.setItem('carrito', JSON.stringify(cart));
       }
     }
 
     if (authData.authenticated) {
-      const action = newQuantity <= 0 ? 'remove-item' : 'update-quantity';
+      const action = isRemove ? 'remove-item' : 'update-quantity';
+      const body = {
+        producto_id: productId,
+        colorSeleccionado: color,
+        ...(action === 'update-quantity' && { cantidad: newQuantity })
+      };
+
       const response = await fetch(`/cart/${action}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({producto_id: productId, colorSeleccionado: color,
-          ...(action === 'update-quantity' && { cantidad: newQuantity })
-        }), credentials: 'include'
-    });
-    
-    if (!response.ok) {
-        throw new Error(`Error al ${action} item`);
-      }
+        body: JSON.stringify(body),
+        credentials: 'include'
+      });
+
+      if (!response.ok) throw new Error(`Error al ${action} item`);
     }
 
     if (element) {
-      if (newQuantity <= 0) {
-        element.closest('.cart-item')?.remove();
-      } else {
-        updateItemTotalPrice(productId, color);
-      }
+      isRemove ? element.closest('.cart-item')?.remove() : updateItemTotalPrice(productId, color);
     }
 
-    return {success: true, action: newQuantity <= 0 ? 'removed' : 'updated'};
+    return { success: true, action: isRemove ? 'removed' : 'updated' };
   } catch (error) {
     console.error('Error en updateOrRemoveItem:', error);
-    return { success: false, error: error.message};
+    return { success: false, error: error.message };
   }
 }
 
 async function filterItemsByStock(items, isServerCart = false) {
-  const verifiedItems = [];
-  
-  for (const item of items) {
+  const results = await Promise.all(items.map(async (item) => {
+    const { producto_id: productId, colorSeleccionado: color, cantidad } = item;
+    if (!productId) return null;
+
     try {
-      const productId = item.producto_id;
-      const color = item.colorSeleccionado;
-      
-      if (!productId) continue;
-
-      const response = await fetch(`/cart/stock?id=${productId}&color=${encodeURIComponent(color)}`,
-      { credentials: 'include' });
-      const stockData = await response.json();
-
-      if (!stockData.success) continue;
+      const res = await fetch(`/cart/stock?id=${productId}&color=${encodeURIComponent(color)}`, {
+        credentials: 'include'
+      });
+      const stockData = await res.json();
+      if (!stockData.success) return null;
 
       if (stockData.stock > 0) {
-        const newQuantity = stockData.adjusted ? 
-          stockData.newQuantity : Math.min(item.cantidad, stockData.stock);
-        
-        verifiedItems.push({...item, cantidad: newQuantity});
-
+        const newQuantity = stockData.adjusted ? stockData.newQuantity : Math.min(cantidad, stockData.stock);
+        return { ...item, cantidad: newQuantity };
       } else if (isServerCart) {
-        await updateOrRemoveItem({productId, color, newQuantity: 0});
+        await updateOrRemoveItem({ productId, color, newQuantity: 0 });
       }
-    } catch (error) {
-      console.error('Error al verificar stock:', error);
-      verifiedItems.push(item); 
+    } catch (e) {
+      console.error('Error al verificar stock:', e);
+      return item;
     }
-  }
-  
-  if (!isServerCart) {
-  localStorage.setItem('carrito', JSON.stringify(verifiedItems.filter(i => i.cantidad > 0)));
-}
+    return null;
+  }));
 
-return verifiedItems;
+  const filtered = results.filter(item => item && item.cantidad > 0);
+  if (!isServerCart) localStorage.setItem('carrito', JSON.stringify(filtered));
+  return filtered;
 }
 
 export {filterItemsByStock, updateOrRemoveItem, getRealStock};

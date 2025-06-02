@@ -146,24 +146,33 @@ cartController.removeItem = async (req, res) => {
 
 cartController.getStock = async (req, res) => {
   try {
-    const { id, color } = req.query;
+    const { id, color, bulk } = req.query;
+    const userId = req.session.user?.id;
+
+    if (bulk === 'true' && userId) {
+      const items = await cart.getByUserId(userId);
+      const stockInfo = {};
+      
+      for (const item of items) {
+        const stock = await cart.getRealStock(item.producto_id, item.colorSeleccionado);
+        stockInfo[`${item.producto_id}_${item.colorSeleccionado}`] = stock;
+      }
+      
+      return res.json({ success: true, stocks: stockInfo });
+    }
 
     if (!id || !color) {
-      return res.status(400).json({success: false,
-        message: "Se requieren los parámetros id y color"});
+      return res.status(400).json({
+        success: false,
+        message: "Se requieren los parámetros id y color"
+      });
     }
 
     const stock = await cart.getRealStock(id, color);
-
-    if (stock === 0) {
-      return res.json({success: true, stock: 0, 
-        message: "Variante no encontrada o sin stock"});
-    }
-
-    res.json({success: true, stock});
+    res.json({ success: true, stock });
   } catch (error) {
     console.error("Error al consultar stock:", error);
-    res.status(500).json({success: false, message: "Error al consultar stock"});
+    res.status(500).json({ success: false, message: "Error al consultar stock" });
   }
 };
 
@@ -188,32 +197,6 @@ cartController.getCartPage = async (req, res) => {
   } catch (error) {
     console.error("Error al cargar la página del carrito:", error);
     res.status(500).render("error", { mensaje: error.message });
-  }
-};
-
-cartController.verifyCartStock = async (req, res) => {
-  try {
-    const userId = req.session.user.id;
-    let items = await cart.getByUserId(userId);
-    let updatedItems = [];
-    
-    for (const item of items) {
-      const stockReal = await cart.getRealStock(item.producto_id, item.colorSeleccionado);
-      
-      if (stockReal <= 0) {
-        await cart.removeItem(item.id, userId);
-      } else if (item.cantidad > stockReal) {
-        await cart.updateQuantity(item.id, userId, stockReal);
-        updatedItems.push({...item, cantidad: stockReal});
-      } else {
-        updatedItems.push(item);
-      }
-    }
-    
-    res.json({ success: true, items: updatedItems });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Error al verificar stock" });
   }
 };
 

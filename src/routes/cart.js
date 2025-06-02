@@ -9,7 +9,6 @@ router.post('/add', isAuth(), cart.addToCart);
 router.post('/update-quantity', isAuth(), cart.updateQuantity);
 router.post('/remove-item', isAuth(), cart.removeItem);
 router.get('/items', isAuth(), cart.getCartItems);
-router.post('/verifyStock', isAuth(), cart.verifyCartStock);
 router.get('/stock', cart.getStock);
 router.get('/', cart.getCartPage);
 
