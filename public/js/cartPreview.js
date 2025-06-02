@@ -1,4 +1,5 @@
 import { checkAuth } from './utils.js';
+import { filterItemsByStock } from './utils.js';
 
 async function cargarCarrito() {
     let carrito = [];
@@ -7,26 +8,21 @@ async function cargarCarrito() {
     const cartSummary = document.getElementById('cart-summary');
     const cartSubtotal = document.getElementById('cart-subtotal');
 
-    // 1. Primero intentar con el carrito del servidor (solo si autenticado)
     try {
         const authData = await checkAuth();
         if (authData.authenticated) {
             const res = await fetch('/cart/items', { 
                 credentials: 'include',
-                headers: {
-                    'Accept': 'application/json'
-                }
+                headers: {'Accept': 'application/json'}
             });
             
-            // Verificar si la respuesta es JSON
             const contentType = res.headers.get('content-type');
             if (contentType && contentType.includes('application/json')) {
                 const data = await res.json();
                 if (data.success && Array.isArray(data.items)) {
-                    carrito = await processCartItems(data.items, true);
+                    carrito = await filterItemsByStock(data.items, true);
                 }
             } else {
-                // Si no es JSON, probablemente es un error o redirección
                 const text = await res.text();
                 console.error('Respuesta inesperada del servidor:', text.substring(0, 100));
             }
@@ -35,66 +31,12 @@ async function cargarCarrito() {
         console.error('Error al cargar carrito del servidor:', error);
     }
 
-    // 2. Si no hay carrito del servidor, usar localStorage
     if (carrito.length === 0) {
         const localCart = JSON.parse(localStorage.getItem('carrito')) || [];
-        carrito = await processCartItems(localCart, false);
+        carrito = await filterItemsByStock(localCart, false);
     }
 
-    // 3. Mostrar carrito
     renderCart(carrito, cartList, carritoCount, cartSummary, cartSubtotal);
-}
-
-async function processCartItems(items, isServerCart) {
-    const verifiedItems = [];
-    
-    for (const item of items) {
-        try {
-            const productId = item.id || item.producto_id;
-            const color = item.colorSeleccionado || item.colorSeleccionado;
-            
-            if (!productId) continue;
-
-            const stockRes = await fetch(`/api/productos/stock?id=${productId}&color=${encodeURIComponent(color)}`);
-            const stockData = await stockRes.json();
-            
-            if (stockData.stock > 0) {
-                verifiedItems.push(item);
-            } else if (isServerCart) {
-                // Solo intentar eliminar si es del servidor
-                try {
-                    await fetch('/cart/remove-item', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            producto_id: productId,
-                            colorSeleccionado: color
-                        }),
-                        credentials: 'include'
-                    });
-                } catch (error) {
-                    console.error('Error al eliminar producto agotado:', error);
-                }
-            }
-        } catch (error) {
-            console.error('Error al verificar stock:', error);
-            verifiedItems.push(item); // Mantener el item si hay error
-        }
-    }
-
-    // Para el carrito local, filtrar después de verificar
-    if (!isServerCart) {
-        const localCart = JSON.parse(localStorage.getItem('carrito')) || [];
-        const newCart = localCart.filter(item => 
-            verifiedItems.some(vi => 
-                (vi.id === item.id || vi.producto_id === item.id) && 
-                vi.colorSeleccionado === item.colorSeleccionado
-            )
-        );
-        localStorage.setItem('carrito', JSON.stringify(newCart));
-    }
-
-    return verifiedItems;
 }
 
 function renderCart(carrito, cartList, carritoCount, cartSummary, cartSubtotal) {

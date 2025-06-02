@@ -11,5 +11,6 @@ router.post('/remove-item', isAuth(), cart.removeItem);
 router.get('/items', isAuth(), cart.getCartItems);
 router.get('/stock', cart.getStock);
 router.get('/', cart.getCartPage);
+router.post('/verifyStock', isAuth(), cart.verifyCartStock);
 
 export default router;

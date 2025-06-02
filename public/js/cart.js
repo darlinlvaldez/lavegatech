@@ -38,7 +38,7 @@ async function addToCart(product) {
   try {
     let stockReal;
     try {
-      const stockResponse = await fetch(`/api/productos/stock?id=${id}&color=${encodeURIComponent(color)}`);
+      const stockResponse = await fetch(`/cart/stock?id=${id}&color=${encodeURIComponent(color)}`);
       if (!stockResponse.ok) {
         throw new Error('Error al verificar stock');
       }
@@ -92,43 +92,12 @@ async function addToCart(product) {
       showToast("Producto agregado al carrito.", "#27ae60", "check-circle");
     }
 
-    //updateCartCount();
     setTimeout(() => (window.location.href = "/cart"), 1000);
   } catch (error) {
     console.error("Error al agregar al carrito:", error);
     showToast("Error al agregar al carrito", "#e74c3c", "alert-circle");
   }
 }
-
-// // Agrega esta función en tu archivo cart.js
-// function updateCartCount() {
-//   // Para usuarios autenticados
-//   if (document.body.classList.contains('user-authenticated')) {
-//     fetch('/api/cart/count')
-//       .then(response => response.json())
-//       .then(data => {
-//         if (data.success) {
-//           const cartCountElements = document.querySelectorAll('.cart-count, .cart-count-mobile');
-//           cartCountElements.forEach(el => {
-//             el.textContent = data.count;
-//             el.style.display = data.count > 0 ? 'inline-block' : 'none';
-//           });
-//         }
-//       })
-//       .catch(error => console.error('Error al actualizar contador:', error));
-//   } 
-//   // Para usuarios no autenticados (carrito local)
-//   else {
-//     const localCart = JSON.parse(localStorage.getItem("carrito")) || [];
-//     const totalCount = localCart.reduce((sum, item) => sum + item.cantidad, 0);
-    
-//     const cartCountElements = document.querySelectorAll('.cart-count, .cart-count-mobile');
-//     cartCountElements.forEach(el => {
-//       el.textContent = totalCount;
-//       el.style.display = totalCount > 0 ? 'inline-block' : 'none';
-//     });
-//   }
-// }
 
 window.addEventListener('load', async () => {
     const localCart = JSON.parse(localStorage.getItem('carrito')) || [];
@@ -210,5 +179,3 @@ document.addEventListener('click', async (e) => {
         imagen: getImage()
     });
 });
-
-//export {updateCartCount};

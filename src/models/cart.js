@@ -38,12 +38,40 @@ cart.itemExists = async (usuario_id, producto_id, colorSeleccionado) => {
   return rows.length > 0 ? rows[0] : null;
 };
 
+// cart.getByUserId = async (usuario_id) => {
+//   const [rows] = await db.query(
+//     `SELECT c.id, c.producto_id as id, c.colorSeleccionado, c.cantidad, 
+//      c.descuento, c.precio, c.imagen, c.nombre, 
+//      v.stock as stock_real,
+//      p.categoria_id, c.fecha_agregado 
+//      FROM cart c 
+//      JOIN productos p ON c.producto_id = p.id 
+//      LEFT JOIN variantes v ON c.producto_id = v.producto_id AND c.colorSeleccionado = v.color
+//      WHERE c.usuario_id = ? 
+//      ORDER BY c.fecha_agregado DESC`,
+//     [usuario_id]
+//   );
+//   return rows;
+// };
+
 cart.getByUserId = async (usuario_id) => {
   const [rows] = await db.query(
-    `SELECT c.id, c.producto_id as id, c.colorSeleccionado, c.cantidad, 
-     c.descuento, c.precio, c.imagen, c.nombre, 
-     v.stock as stock_real,
-     p.categoria_id, c.fecha_agregado 
+    `SELECT 
+       c.id AS carrito_id,
+       c.producto_id,
+       c.colorSeleccionado,
+       c.cantidad,
+       c.descuento,
+       c.precio,
+       c.imagen,
+       c.nombre,
+       v.stock AS stock_real,
+       p.categoria_id,
+       c.fecha_agregado,
+       CASE 
+         WHEN v.stock IS NULL OR v.stock < c.cantidad THEN 0 
+         ELSE 1 
+       END AS stock_suficiente
      FROM cart c 
      JOIN productos p ON c.producto_id = p.id 
      LEFT JOIN variantes v ON c.producto_id = v.producto_id AND c.colorSeleccionado = v.color
@@ -51,6 +79,14 @@ cart.getByUserId = async (usuario_id) => {
      ORDER BY c.fecha_agregado DESC`,
     [usuario_id]
   );
+  
+  for (const item of rows) {
+    if (item.stock_real !== null && item.cantidad > item.stock_real) {
+      await cart.updateQuantity(item.carrito_id, usuario_id, item.stock_real);
+      item.cantidad = item.stock_real;
+    }
+  }
+
   return rows;
 };
 
@@ -86,5 +122,6 @@ cart.getRealStock = async (producto_id, color) => {
     [producto_id, color]);
   return rows[0]?.stock || 0;
 };
+
 
 export default cart;

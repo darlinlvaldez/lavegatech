@@ -1,77 +1,29 @@
 import { checkAuth } from './utils.js';
-//import { updateCartCount } from './cart.js';
-
-async function getRealStock(productId, color) {
-  try {
-    const response = await fetch(`/api/productos/stock?id=${productId}&color=${encodeURIComponent(color)}`);
-    if (!response.ok) throw new Error('Error al verificar stock');
-    const { stock = 0 } = await response.json();
-    return stock;
-  } catch (error) {
-    console.error('Error al obtener stock:', error);
-    return 0;
-  }
-}
+import { getRealStock, updateOrRemoveItem } from './utils.js';
 
 window.updateQuantity = async function(element, change, productId, color) {
   try {
     const stockReal = await getRealStock(productId, color);
     
-    let newQuantity = element.tagName === 'SELECT' 
-    ? parseInt(element.value) : Math.max(1, parseInt(element.value) + change);
+    const newQuantity = element.tagName === 'SELECT' 
+      ? parseInt(element.value) : Math.max(1, parseInt(element.value) + change);
     
-    newQuantity = Math.min(newQuantity, stockReal);
+    const finalQuantity = Math.min(newQuantity, stockReal);
     
-    const authData = await checkAuth();
-    let cart = JSON.parse(localStorage.getItem('carrito')) || [];
-    const itemIndex = cart.findIndex(item => 
-      (item.id === productId || item.producto_id === productId) && item.colorSeleccionado === color );
+    await updateOrRemoveItem({
+      productId, color, newQuantity: finalQuantity,
+      element: document.querySelector(`.cart-item[data-id="${productId}"][data-color="${color}"]`)
+    });
 
-    if (itemIndex >= 0) {
-      if (newQuantity <= 0) {
-        cart.splice(itemIndex, 1);
-      } else {
-        cart[itemIndex].cantidad = newQuantity;
-      }
-
-      if (!authData.authenticated) {
-        localStorage.setItem('carrito', JSON.stringify(cart));
-      }
-    }
-
-    if (authData.authenticated) {
-      const action = newQuantity <= 0 ? 'remove-item' : 'update-quantity';
-      
-      const response = await fetch(`/cart/${action}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({producto_id: productId, colorSeleccionado: color,
-          ...(action === 'update-quantity' && { cantidad: newQuantity })
-        }), credentials: 'include'});
-
-      if (!response.ok) {
-        throw new Error(`Error al ${action === 'update-quantity' ? 'actualizar' : 'eliminar'} item`);
-      }
-    }
-
-    if (newQuantity <= 0) {
-      document.querySelector(`.cart-item[data-id="${productId}"][data-color="${color}"]`)?.remove();
-    } else {
-      updateItemTotalPrice(productId, color);
-    }
-    
     updateCartTotal();
-    //updateCartCount();
-    
   } catch (error) {
     console.error('Error en updateQuantity:', error);
     showToast("Error al actualizar la cantidad. Intente nuevamente.", "#e74c3c", "alert-circle");
-    
     loadCartPage();
   }
 };
 
-function updateItemTotalPrice(id, color) {
+window.updateItemTotalPrice = function (id, color) {
   const itemElement = document.querySelector(`.cart-item[data-id="${id}"][data-color="${color}"]`);
   if (!itemElement) return;
 
@@ -80,7 +32,8 @@ function updateItemTotalPrice(id, color) {
   const totalElement = itemElement.querySelector('.item-total');
 
   if (priceElement && quantitySelect && totalElement) {
-    const unitPrice = parsePrice(priceElement.textContent.replace('Precio: $', '').trim());
+    const unitPriceString = priceElement.textContent.replace('Precio: $', '').trim();
+    const unitPrice = parseFloat(unitPriceString.replace(/[^0-9.-]+/g, ""));
     const quantity = parseInt(quantitySelect.value);
     totalElement.innerHTML = `<span><strong>Total:</strong></span> $${formatPrice(unitPrice * quantity)}`;
   }
