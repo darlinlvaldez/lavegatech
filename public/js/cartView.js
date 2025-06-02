@@ -27,31 +27,26 @@ window.updateItemTotalPrice = function (id, color) {
   const itemElement = document.querySelector(`.cart-item[data-id="${id}"][data-color="${color}"]`);
   if (!itemElement) return;
 
-  const priceElement = itemElement.querySelector('.product-price b');
-  const quantitySelect = itemElement.querySelector('select');
+  const priceText = itemElement.querySelector('.product-price b')?.textContent || '';
+  const quantityValue = itemElement.querySelector('select')?.value || '1';
   const totalElement = itemElement.querySelector('.item-total');
+  if (!totalElement) return;
 
-  if (priceElement && quantitySelect && totalElement) {
-    const unitPriceString = priceElement.textContent.replace('Precio: $', '').trim();
-    const unitPrice = parseFloat(unitPriceString.replace(/[^0-9.-]+/g, ""));
-    const quantity = parseInt(quantitySelect.value);
-    totalElement.innerHTML = `<span><strong>Total:</strong></span> $${formatPrice(unitPrice * quantity)}`;
-  }
-}
+  const unitPrice = parseFloat(priceText.replace(/[^0-9.-]+/g, '')) || 0;
+  const quantity = parseInt(quantityValue) || 1;
 
-function parsePrice(priceString) {
-  return parseFloat(priceString.replace(/[^0-9.-]+/g, ""));
-}
+  const totalPrice = unitPrice * quantity;
+  totalElement.innerHTML = `<span><strong>Total:</strong></span> $${formatPrice(totalPrice)}`;
+};
 
 function updateCartTotal() {
   const items = document.querySelectorAll('.cart-item');
   let total = 0;
 
   items.forEach(item => {
-    const totalElement = item.querySelector('.item-total');
-    if (totalElement) {
-      total += parsePrice(totalElement.textContent.split('$')[1]);
-    }
+    const totalText = item.querySelector('.item-total')?.textContent || '';
+    const cleanTotal = parseFloat(totalText.split('$')[1]?.replace(/[^0-9.-]+/g, '') || '0');
+    if (!isNaN(cleanTotal)) total += cleanTotal;
   });
 
   const cartTotalElement = document.getElementById('cart-total');

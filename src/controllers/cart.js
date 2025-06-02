@@ -34,8 +34,7 @@ cartController.syncCart = async (req, res) => {
         await cart.updateQuantity(existingItem.id, userId, cantidadFinal);
       } else {
         const cantidadFinal = Math.min(item.cantidad, stockReal);
-        await cart.addItem({
-          usuario_id: userId,
+        await cart.addItem({usuario_id: userId, 
           producto_id: item.id,
           colorSeleccionado: item.colorSeleccionado,
           cantidad: cantidadFinal,
@@ -182,7 +181,7 @@ cartController.getCartPage = async (req, res) => {
 
     if (lastCart && lastCart.categoria_id) {
       productRelacionados = await product.obtenerRelacionados(
-          [lastCart.carrito_id], [lastCart.categoria_id]);
+        [lastCart.carrito_id], [lastCart.categoria_id]);
     }
 
     res.render("store/cart", {cartItems, productRelacionados, isAuthenticated: !!userId});

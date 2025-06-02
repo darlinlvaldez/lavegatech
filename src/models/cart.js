@@ -38,36 +38,13 @@ cart.itemExists = async (usuario_id, producto_id, colorSeleccionado) => {
   return rows.length > 0 ? rows[0] : null;
 };
 
-// cart.getByUserId = async (usuario_id) => {
-//   const [rows] = await db.query(
-//     `SELECT c.id, c.producto_id as id, c.colorSeleccionado, c.cantidad, 
-//      c.descuento, c.precio, c.imagen, c.nombre, 
-//      v.stock as stock_real,
-//      p.categoria_id, c.fecha_agregado 
-//      FROM cart c 
-//      JOIN productos p ON c.producto_id = p.id 
-//      LEFT JOIN variantes v ON c.producto_id = v.producto_id AND c.colorSeleccionado = v.color
-//      WHERE c.usuario_id = ? 
-//      ORDER BY c.fecha_agregado DESC`,
-//     [usuario_id]
-//   );
-//   return rows;
-// };
-
 cart.getByUserId = async (usuario_id) => {
   const [rows] = await db.query(
     `SELECT 
-       c.id AS carrito_id,
-       c.producto_id,
-       c.colorSeleccionado,
-       c.cantidad,
-       c.descuento,
-       c.precio,
-       c.imagen,
-       c.nombre,
+       c.id AS carrito_id, c.producto_id, c.colorSeleccionado, c.cantidad,
+       c.fecha_agregado, c.descuento, c.precio, c.imagen, c.nombre, 
        v.stock AS stock_real,
        p.categoria_id,
-       c.fecha_agregado,
        CASE 
          WHEN v.stock IS NULL OR v.stock < c.cantidad THEN 0 
          ELSE 1 
@@ -93,7 +70,7 @@ cart.getByUserId = async (usuario_id) => {
 cart.getCartToPay = async (usuario_id) => {
   const [rows] = await db.query(
   "SELECT c.id as cart_id, c.producto_id, c.colorSeleccionado, c.cantidad, " +
-  "c.descuento, c.precio, c.imagen, c.nombre, c.stock, " +
+  "c.descuento, c.precio, c.imagen, c.nombre, " +
   "p.categoria_id, c.fecha_agregado " +
   "FROM cart c " +
   "JOIN productos p ON c.producto_id = p.id " +
@@ -122,6 +99,5 @@ cart.getRealStock = async (producto_id, color) => {
     [producto_id, color]);
   return rows[0]?.stock || 0;
 };
-
 
 export default cart;

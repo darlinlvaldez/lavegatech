@@ -37,10 +37,7 @@ async function updateOrRemoveItem({ productId, color, newQuantity, element = nul
   try {
     const authData = await checkAuth();
     let cart = JSON.parse(localStorage.getItem('carrito')) || [];
-    const itemIndex = cart.findIndex(item => 
-      (item.id === productId || item.producto_id === productId) && 
-      item.colorSeleccionado === color
-    );
+    const itemIndex = cart.findIndex(item => item.colorSeleccionado === color);
 
     if (itemIndex >= 0) {
       if (newQuantity <= 0) {
@@ -63,8 +60,8 @@ async function updateOrRemoveItem({ productId, color, newQuantity, element = nul
           ...(action === 'update-quantity' && { cantidad: newQuantity })
         }), credentials: 'include'
     });
-
-      if (!response.ok) {
+    
+    if (!response.ok) {
         throw new Error(`Error al ${action} item`);
       }
     }
@@ -84,69 +81,42 @@ async function updateOrRemoveItem({ productId, color, newQuantity, element = nul
   }
 }
 
-async function filterItemsByStock(items, isServerCart = false, userId = null) {
+async function filterItemsByStock(items, isServerCart = false) {
   const verifiedItems = [];
   
   for (const item of items) {
     try {
-      const productId = item.id || item.producto_id;
-      const color = item.colorSeleccionado || item.colorSeleccionado;
+      const productId = item.producto_id;
+      const color = item.colorSeleccionado;
       
       if (!productId) continue;
 
-      const response = await fetch(
-        `/cart/stock?id=${productId}&color=${encodeURIComponent(color)}`,
-        { credentials: 'include' }
-      );
+      const response = await fetch(`/cart/stock?id=${productId}&color=${encodeURIComponent(color)}`,
+      { credentials: 'include' });
       const stockData = await response.json();
 
       if (!stockData.success) continue;
 
       if (stockData.stock > 0) {
         const newQuantity = stockData.adjusted ? 
-          stockData.newQuantity : 
-          Math.min(item.cantidad || 1, stockData.stock);
+          stockData.newQuantity : Math.min(item.cantidad, stockData.stock);
         
-        verifiedItems.push({
-          ...item,
-          cantidad: newQuantity
-        });
+        verifiedItems.push({...item, cantidad: newQuantity});
 
-        // Mostrar notificación si se ajustó la cantidad
-        if (stockData.adjusted && newQuantity < item.cantidad) {
-          showToast(
-            `La cantidad de ${item.nombre} (${color}) se ajustó a ${newQuantity} por disponibilidad de stock`,
-            "#f39c12",
-            "info"
-          );
-        }
       } else if (isServerCart) {
-        await updateOrRemoveItem({
-          productId, 
-          color, 
-          newQuantity: 0
-        });
+        await updateOrRemoveItem({productId, color, newQuantity: 0});
       }
     } catch (error) {
       console.error('Error al verificar stock:', error);
       verifiedItems.push(item); 
     }
   }
-
+  
   if (!isServerCart) {
-    const localCart = JSON.parse(localStorage.getItem('carrito')) || [];
-    const newCart = localCart.map(item => {
-      const verifiedItem = verifiedItems.find(vi => 
-        (vi.id === item.id || vi.producto_id === item.id) && 
-        vi.colorSeleccionado === item.colorSeleccionado
-      );
-      return verifiedItem || item;
-    }).filter(item => item.cantidad > 0);
-    
-    localStorage.setItem('carrito', JSON.stringify(newCart));
-  }
+  localStorage.setItem('carrito', JSON.stringify(verifiedItems.filter(i => i.cantidad > 0)));
+}
 
-  return verifiedItems;
+return verifiedItems;
 }
 
 export {filterItemsByStock, updateOrRemoveItem, getRealStock};
