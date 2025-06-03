@@ -1,5 +1,6 @@
 import { checkAuth } from './utils.js';
-import { getRealStock, updateOrRemoveItem } from './utils.js';
+import { getRealStock, updateItem } from './utils.js';
+import { loadCartPreview } from './loadCartPreview.js';
 
 window.updateQuantity = async function(element, change, productId, color) {
   try {
@@ -10,12 +11,13 @@ window.updateQuantity = async function(element, change, productId, color) {
     
     const finalQuantity = Math.min(newQuantity, stockReal);
     
-    await updateOrRemoveItem({
+    await updateItem({
       productId, color, newQuantity: finalQuantity,
       element: document.querySelector(`.cart-item[data-id="${productId}"][data-color="${color}"]`)
     });
 
-    updateCartTotal();
+    totalCart();
+    await loadCartPreview();
   } catch (error) {
     console.error('Error en updateQuantity:', error);
     showToast("Error al actualizar la cantidad. Intente nuevamente.", "#e74c3c", "alert-circle");
@@ -23,7 +25,7 @@ window.updateQuantity = async function(element, change, productId, color) {
   }
 };
 
-window.updateItemTotalPrice = function (id, color) {
+window.totalForItem = function (id, color) {
   const itemElement = document.querySelector(`.cart-item[data-id="${id}"][data-color="${color}"]`);
   if (!itemElement) return;
 
@@ -39,7 +41,7 @@ window.updateItemTotalPrice = function (id, color) {
   totalElement.innerHTML = `<span><strong>Total:</strong></span> $${formatPrice(totalPrice)}`;
 };
 
-function updateCartTotal() {
+function totalCart() {
   const items = document.querySelectorAll('.cart-item');
   let total = 0;
 
@@ -109,7 +111,7 @@ async function loadCartPage() {
     
     total += itemTotal;
     totalItems += quantity;
-
+    
     html += `
     <div class="cart-item" data-id="${productId}" data-color="${color}">
       <a href="/product/${productId}${color ? `?color=${encodeURIComponent(color)}` : ''}">

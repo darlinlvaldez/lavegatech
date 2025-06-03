@@ -10,6 +10,6 @@ router.post('/update-quantity', isAuth(), cart.updateQuantity);
 router.post('/remove-item', isAuth(), cart.removeItem);
 router.get('/items', isAuth(), cart.getCartItems);
 router.get('/stock', cart.getStock);
-router.get('/', cart.getCartPage);
+router.get('/', cart.getRelated);
 
 export default router;

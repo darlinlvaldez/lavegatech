@@ -33,7 +33,7 @@ async function getRealStock(productId, color) {
   }
 }
 
-async function updateOrRemoveItem({ productId, color, newQuantity, element = null }) {
+async function updateItem({ productId, color, newQuantity, element = null }) {
   try {
     const authData = await checkAuth();
     let cart = JSON.parse(localStorage.getItem('carrito')) || [];
@@ -51,8 +51,7 @@ async function updateOrRemoveItem({ productId, color, newQuantity, element = nul
     if (authData.authenticated) {
       const action = isRemove ? 'remove-item' : 'update-quantity';
       const body = {
-        producto_id: productId,
-        colorSeleccionado: color,
+        producto_id: productId, colorSeleccionado: color,
         ...(action === 'update-quantity' && { cantidad: newQuantity })
       };
 
@@ -67,17 +66,17 @@ async function updateOrRemoveItem({ productId, color, newQuantity, element = nul
     }
 
     if (element) {
-      isRemove ? element.closest('.cart-item')?.remove() : updateItemTotalPrice(productId, color);
+      isRemove ? element.closest('.cart-item')?.remove() : totalForItem(productId, color);
     }
 
     return { success: true, action: isRemove ? 'removed' : 'updated' };
   } catch (error) {
-    console.error('Error en updateOrRemoveItem:', error);
+    console.error('Error en updateItem:', error);
     return { success: false, error: error.message };
   }
 }
 
-async function filterItemsByStock(items, isServerCart = false) {
+async function checkStock(items, isServerCart = false) {
   const results = await Promise.all(items.map(async (item) => {
     const { producto_id: productId, colorSeleccionado: color, cantidad } = item;
     if (!productId) return null;
@@ -93,7 +92,7 @@ async function filterItemsByStock(items, isServerCart = false) {
         const newQuantity = stockData.adjusted ? stockData.newQuantity : Math.min(cantidad, stockData.stock);
         return { ...item, cantidad: newQuantity };
       } else if (isServerCart) {
-        await updateOrRemoveItem({ productId, color, newQuantity: 0 });
+        await updateItem({ productId, color, newQuantity: 0 });
       }
     } catch (e) {
       console.error('Error al verificar stock:', e);
@@ -107,4 +106,4 @@ async function filterItemsByStock(items, isServerCart = false) {
   return filtered;
 }
 
-export {filterItemsByStock, updateOrRemoveItem, getRealStock};
+export {checkStock, updateItem, getRealStock};

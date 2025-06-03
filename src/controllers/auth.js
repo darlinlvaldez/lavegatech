@@ -3,8 +3,7 @@ import config from '../../config.js';
 import user from '../models/auth.js';
 import emailService from '../services/email.js';
 import code from '../utils/generateCode.js';
-import {ERROR_MESSAGES} from '../utils/error.js';
-import {renderError} from '../utils/error.js';
+import {ERROR_MESSAGES, renderError} from '../utils/error.js';
 import {CODE_EXPIRATION, RESEND_COOLDOWN} from '../utils/generateCode.js';
 
 const auth = {};
@@ -50,8 +49,6 @@ auth.register = async (req, res) => {
     });
   }
 };
-
-//auth.showVerifyForm = (req, res) => res.render('login/verify', { email: req.query.email });
 
 auth.verifyCode = async (req, res) => {
   try {
@@ -163,7 +160,7 @@ auth.login = async (req, res) => {
       email: req.body.email, validationErrors: {} });
     }
   };
-
+  
 auth.email = async (req, res) => {
   try {
     const { email } = req.body;

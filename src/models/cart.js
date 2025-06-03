@@ -41,19 +41,19 @@ cart.itemExists = async (usuario_id, producto_id, colorSeleccionado) => {
 cart.getByUserId = async (usuario_id) => {
   const [rows] = await db.query(
     `SELECT 
-       c.id AS carrito_id, c.producto_id, c.colorSeleccionado, c.cantidad,
-       c.fecha_agregado, c.descuento, c.precio, c.imagen, c.nombre, 
-       v.stock AS stock_real,
-       p.categoria_id,
-       CASE 
-         WHEN v.stock IS NULL OR v.stock < c.cantidad THEN 0 
-         ELSE 1 
-       END AS stock_suficiente
-     FROM cart c 
-     JOIN productos p ON c.producto_id = p.id 
-     LEFT JOIN variantes v ON c.producto_id = v.producto_id AND c.colorSeleccionado = v.color
-     WHERE c.usuario_id = ? 
-     ORDER BY c.fecha_agregado DESC`,
+    c.id AS carrito_id, c.producto_id, c.colorSeleccionado, c.cantidad,
+    c.fecha_agregado, c.descuento, c.precio, c.imagen, c.nombre, 
+    v.stock AS stock_real,
+    p.categoria_id,
+    CASE 
+    WHEN v.stock IS NULL OR v.stock < c.cantidad THEN 0 
+    ELSE 1 
+    END AS stock_suficiente
+    FROM cart c 
+    JOIN productos p ON c.producto_id = p.id 
+    LEFT JOIN variantes v ON c.producto_id = v.producto_id AND c.colorSeleccionado = v.color
+    WHERE c.usuario_id = ? 
+    ORDER BY c.fecha_agregado DESC`,
     [usuario_id]
   );
   
@@ -85,12 +85,6 @@ cart.getCount = async (usuario_id) => {
     "SELECT COUNT(*) as count FROM cart WHERE usuario_id = ?",
     [usuario_id]);
   return rows[0].count;
-};
-
-cart.incrementQuantity = async (id, usuario_id, cantidad) => {
-  await db.query(
-    "UPDATE cart SET cantidad = cantidad + ? WHERE id = ? AND usuario_id = ?",
-    [cantidad, id, usuario_id]);
 };
 
 cart.getRealStock = async (producto_id, color) => {

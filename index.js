@@ -17,7 +17,6 @@ import cart from './src/routes/cart.js';
 import fav from './src/routes/fav.js';
 import pay from './src/routes/pay.js';
 import ordersRouter from './src/routes/orders.js';
-import productoRoutes from './src/routes/cart.js'; 
 
 const app = express();
 
@@ -50,9 +49,6 @@ app.use('/api/order', pay);
 app.use('/orders', ordersRouter);
 
 app.use('/', store);
-
-// Después de crear tu app Express
-app.use('/api/productos', productoRoutes);
 
 app.post('/mant', async (req, res) => {
   const file = req.files.foto;

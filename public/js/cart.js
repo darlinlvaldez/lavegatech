@@ -1,27 +1,28 @@
 import { checkAuth } from './utils.js';
 import { loadCartPage } from './cartView.js';
-import { cargarCarrito } from './cartPreview.js';
+import { loadCartPreview } from './cartPreview.js';
 
 window.deleteProduct = deleteProduct;
 window.formatPrice = formatPrice;
 
 async function fetchCart(action, data = {}) {
-    const options = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(data)
-    };
-    return await fetch(`/cart/${action}`, options);
+  const options = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(data)
+  };
+  
+  return await fetch(`/cart/${action}`, options);
 }
 
-function showToast(message, backgroundColor = "#27ae60", icon = "check-circle") {
+function showToast(message, Color = "#27ae60", icon = "check-circle") {
   Toastify({
     text: `<i data-feather="${icon}" style="vertical-align: middle; margin-right: 8px;"></i> ${message}`,
     duration: 3000,
     gravity: "top",
     position: "right",
-    backgroundColor,
+    style: { background: Color },
     close: true,
     escapeMarkup: false,
     className: "toast-notification",
@@ -34,26 +35,16 @@ setTimeout(() => {
 
 async function addToCart(product) {
   const { id, nombre, precio, cantidad = 1, color, descuento = 0, imagen } = product;
-  
+
   try {
     const { authenticated } = await checkAuth();
     let stockReal;
 
     if (authenticated) {
-      // Usuario autenticado - verificar stock en el servidor
-      try {
-        const stockResponse = await fetch(`/cart/stock?id=${id}&color=${encodeURIComponent(color)}`);
-        if (!stockResponse.ok) {
-          throw new Error('Error al verificar stock');
-        }
-        stockReal = (await stockResponse.json()).stock || 0;
-      } catch (error) {
-        console.error('Error al verificar stock:', error);
-        showToast("Error al verificar disponibilidad", "#e74c3c", "alert-circle");
-        return;
-      }
+      const stockResponse = await fetch(`/cart/stock?id=${id}&color=${encodeURIComponent(color)}`);
+      if (!stockResponse.ok) throw new Error();
+      stockReal = (await stockResponse.json()).stock || 0;
     } else {
-      // Usuario no autenticado - usar el stock del botón (si está disponible)
       stockReal = product.stock || 0;
     }
 
@@ -63,16 +54,8 @@ async function addToCart(product) {
     }
 
     const safeQty = Math.min(parseInt(cantidad) || 1, stockReal);
-    const cartItem = {
-      id, 
-      producto_id: id, 
-      nombre, 
-      precio, 
-      cantidad: safeQty, 
-      colorSeleccionado: color, 
-      descuento, 
-      imagen
-    };
+    const cartItem = {id, producto_id: id, nombre, precio, cantidad: safeQty,
+      colorSeleccionado: color, descuento, imagen};
 
     if (!authenticated) {
       const localCart = JSON.parse(localStorage.getItem("carrito")) || [];
@@ -92,40 +75,34 @@ async function addToCart(product) {
       }
 
       localStorage.setItem("carrito", JSON.stringify(localCart));
-      showToast("Producto agregado al carrito local.", "#27ae60", "check-circle");
     } else {
       const response = await fetchCart("add", cartItem);
       const data = await response.json();
-
-      if (!data.success) {
-        showToast(data.message || "Error al agregar al carrito", "#e74c3c", "info");
-        return;
-      }
-      
-      showToast("Producto agregado al carrito.", "#27ae60", "check-circle");
+      if (!data.success) throw new Error(data.message);
     }
 
+    showToast("Producto agregado al carrito.", "#27ae60", "check-circle");
     setTimeout(() => (window.location.href = "/cart"), 1000);
   } catch (error) {
     console.error("Error al agregar al carrito:", error);
-    showToast("Error al agregar al carrito", "#e74c3c", "alert-circle");
+    showToast("Ocurrió un error al procesar tu solicitud. Intenta de nuevo.", "#e74c3c", "alert-circle");
   }
 }
 
 window.addEventListener('load', async () => {
-    const localCart = JSON.parse(localStorage.getItem('carrito')) || [];
-    if (!localCart.length) return;
+  const localCart = JSON.parse(localStorage.getItem('carrito')) || [];
+  if (!localCart.length) return;
 
-    try {
-        const { authenticated } = await checkAuth();
-        if (!authenticated) return;
+  try {
+      const { authenticated } = await checkAuth();
+      if (!authenticated) return;
 
-        const res = await fetchCart('sync', { items: localCart });
-        if (res.ok) localStorage.removeItem('carrito');
-    } catch (error) {
-        console.error('Sync Error:', error);
-    }
-    cargarCarrito();
+      const res = await fetchCart('sync', { items: localCart });
+      if (res.ok) localStorage.removeItem('carrito');
+  } catch (error) {
+      console.error('Sync Error:', error);
+  }
+  loadCartPreview();
 });
 
 async function deleteProduct(id, color) {
@@ -155,7 +132,7 @@ async function deleteProduct(id, color) {
         });
     }
 
-        await cargarCarrito();
+        await loadCartPreview();
     } catch (err) {
         console.error('Error al eliminar producto:', err);
     }
@@ -167,7 +144,7 @@ function formatPrice(price) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    cargarCarrito();
+    loadCartPreview();
     loadCartPage();
 });
 

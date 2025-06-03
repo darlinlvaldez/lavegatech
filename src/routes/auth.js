@@ -6,7 +6,6 @@ import request from './schemas/auth.js';
 const router = express.Router();
 
 // LOGIN
-//router.get('/verify', auth.showVerifyForm);
 router.post('/logout', auth.logout);
 router.post('/login', validate(request.login), auth.login); 
 router.post('/register', validate(request.register), auth.register);

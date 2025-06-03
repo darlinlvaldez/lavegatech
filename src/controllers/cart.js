@@ -163,9 +163,7 @@ cartController.getStock = async (req, res) => {
 
     if (!id || !color) {
       return res.status(400).json({
-        success: false,
-        message: "Se requieren los parámetros id y color"
-      });
+        success: false, message: "Se requieren los parámetros id y color"});
     }
 
     const stock = await cart.getRealStock(id, color);
@@ -176,7 +174,7 @@ cartController.getStock = async (req, res) => {
   }
 };
 
-cartController.getCartPage = async (req, res) => {
+cartController.getRelated = async (req, res) => {
   try {
     const userId = req.session.user?.id;
     let cartItems = [];
