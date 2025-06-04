@@ -163,7 +163,7 @@ payController.showUserOrders = async (req, res) => {
     const userId = req.session.user.id;
     const userOrders = await orders.getUserOrders(userId);
 
-    res.render('store/user-orders', {
+    res.render('store/showOrders', {
       user: req.session.user,
       orders: userOrders
     });
@@ -181,7 +181,7 @@ payController.showOrderDetails = async (req, res) => {
       return res.status(404).render('error', { message: 'Pedido no encontrado' });
     }
 
-    res.render('store/order-details', {
+    res.render('store/orderDetails', {
       user: req.session.user,
       order
     });

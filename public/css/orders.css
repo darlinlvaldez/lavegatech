@@ -1,0 +1,205 @@
+.container-user {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.container-user h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 2.2em;
+    font-weight: 700;
+}
+
+.alert-info-user {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    text-align: center;
+}
+
+.btn-user {
+    display: inline-block;
+    font-weight: 400;
+    color: #fff;
+    text-align: center;
+    user-select: none;
+    background-color: #007bff;
+    border: 1px solid #007bff;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.5rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    text-decoration: none;
+    cursor: pointer;
+    margin-top: 20px;
+    display: block;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}
+
+.btn-user:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+}
+
+.list-group-user {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+    border-radius: 0.5rem;
+}
+
+.list-group-product {
+    position: relative;
+    display: block;
+    padding: 15px 20px;
+    margin-bottom: -1px;
+    background-color: #fdfdfd;
+    border: 1px solid #e0e6ea;
+    text-decoration: none;
+    color: #333;
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.list-group-product:first-child {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.list-group-product:last-child {
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    margin-bottom: 0;
+}
+
+.list-group-product:hover {
+    background-color: #e9ecef;
+    transform: translateY(-2px);
+    z-index: 1;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.d-flex-user {
+    display: flex;
+}
+
+.w-100-user {
+    width: 100%;
+}
+
+.justify-content-user {
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.list-group-product h5 {
+    margin-bottom: 0;
+    font-size: 1.1em;
+    color: #2c3e50;
+}
+
+.text-muted-user {
+    color: #6c757d;
+    font-size: 0.85em;
+}
+
+.mb-1-user {
+    margin-bottom: 0.25rem;
+}
+
+.badge-user {
+    display: inline-block;
+    padding: 0.4em 0.8em;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.375rem;
+    color: #fff;
+    text-transform: capitalize;
+    margin-left: 0.5rem;
+}
+
+.bg-success-user {
+    background-color: #28a745;
+}
+
+.bg-warning-user {
+    background-color: #ffc107;
+    color: #333;
+}
+
+
+@media (max-width: 575.98px) {
+    .container-user {
+        margin: 20px auto;
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    .container-user h2 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    .list-group-product {
+        padding: 12px 15px;
+    }
+
+    .list-group-product h5 {
+        font-size: 1em;
+    }
+
+    .text-muted-user {
+        font-size: 0.8em;
+    }
+
+    .badge-user {
+        font-size: 0.7em;
+        padding: 0.3em 0.6em;
+    }
+
+    .justify-content-user {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .justify-content-user small {
+        margin-top: 5px;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .container-user {
+        margin: 30px auto;
+        padding: 20px;
+    }
+
+    .container-user h2 {
+        font-size: 2em;
+    }
+
+    .list-group-product {
+        padding: 15px 18px;
+    }
+}
+
+@media (min-width: 768px) {}
