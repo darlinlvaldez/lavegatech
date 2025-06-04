@@ -1,71 +1,88 @@
-<%- include('../partials/header.ejs') %>
+     <%- include('../partials/header.ejs') %>
 
-<div class="container mt-4">
-  <h2>Detalles del Pedido #<%= order.id %></h2>
-  
-  <div class="card mb-4">
-    <div class="card-header">
-      <h4>Información del Pedido</h4>
-    </div>
-    <div class="card-body">
-      <div class="row">
-        <div class="col-md-6">
-          <h5>Dirección de Envío</h5>
-          <p>
-            <%= order.nombre %> <%= order.apellido %><br>
-            <%= order.direccion %><br>
-            <%= order.ciudad %>, <%= order.distrito %><br>
-            Teléfono: <%= order.telefono %>
-          </p>
+</head>
+
+<link rel="stylesheet" href="/css/orderDetails.css">
+
+<body>
+
+    <div class="container-details">
+
+        <h2 class="tittle2">Detalles del Pedido #<%= order.id %></h2>
+
+        <div class="card-details mb-4">
+            <div class="card-header-details">
+                <h4 class="tittle4">Información del Pedido</h4>
+            </div>
+            <div class="card-body-details">
+                <div class="row-details">
+                    <div class="col-md-6-details">
+                        <h5 class="tittle5">Dirección de Envío</h5>
+                        <p class="Information-details">
+                            <%= order.nombre %> <%= order.apellido %><br>
+                            <%= order.direccion %><br>
+                            <%= order.ciudad %>, <%= order.distrito %><br>
+                            Teléfono: <%= order.telefono %>
+                        </p>
+                    </div>
+                    <div class="col-md-6-details">
+                        <h5 class="tittle5">Detalles</h5>
+                        <p class="Information-details">
+                            <strong>Fecha:</strong> <%= new Date(order.fecha_creacion).toLocaleString() %><br>
+                            <strong>Estado:</strong> <span class="badge-details <%= order.status === 'pagado' ? 'badge-success-details' : 'badge-warning-details' %>">
+                                <%= order.status %>
+                            </span><br>
+                            <strong class="strong-details">Total:</strong> $<%= Number(order.total).toFixed(2) %>
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-6">
-          <h5>Detalles</h5>
-          <p>
-            <strong>Fecha:</strong> <%= new Date(order.fecha_creacion).toLocaleString() %><br>
-            <strong>Estado:</strong> <span class="badge bg-<%= order.status === 'pagado' ? 'success' : 'warning' %>">
-              <%= order.status %>
-            </span><br>
-            <strong>Total:</strong> $<%= Number(order.total).toFixed(2) %>
-          </p>
+
+        <div class="card-details">
+            <div class="card-header-details">
+                <h4>Productos</h4>
+            </div>
+            <div class="card-body-details">
+              <div class="table-responsive-mobile">
+                <table class="table-details">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Color</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Descuento %</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% order.items.forEach(item => { %>
+                            <tr>
+                                <td><%= item.nombre_producto %></td>
+                                <td><%= item.colorSeleccionado %></td>
+                                <td><%= item.cantidad %></td>
+                                <td>$<%= Number(item.precio_unitario).toFixed(2) %></td>
+                                <td>$<%= Number(item.descuento).toFixed(2) %></td>
+                                <td>$<%= Number(item.subtotal).toFixed(2) %></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="5" style="text-align: right;">Total</th>
+                            <th>$<%= Number(order.total).toFixed(2) %></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <div class="card">
-    <div class="card-header">
-      <h4>Productos</h4>
+        <a href="/orders" class="btn-details">Volver a mis pedidos</a>
     </div>
-    <div class="card-body">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Producto</th>
-            <th>Cantidad</th>
-            <th>Precio Unitario</th>
-            <th>Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% order.items.forEach(item => { %>
-            <tr>
-              <td><%= item.nombre_producto %></td>
-              <td><%= item.cantidad %></td>
-              <td>$<%= Number(item.precio_unitario).toFixed(2) %></td>
-              <td>$<%= Number(item.subtotal).toFixed(2) %></td>
-            </tr>
-          <% }); %>
-        </tbody>
-        <tfoot>
-          <tr>
-            <th colspan="3">Total</th>
-            <th>$<%= Number(order.total).toFixed(2) %></th>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-  </div>
 
-<a href="/orders" class="btn btn-primary mt-3">Volver a mis pedidos</a></div>
+    <%- include('../partials/footer.ejs') %>
 
-<%- include('../partials/footer.ejs') %>
+</body>
+</html>

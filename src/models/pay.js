@@ -31,12 +31,13 @@ orders.createOrder = async (orderData, items) => {
     for (const item of items) {
       await conn.query(
         `INSERT INTO order_items 
-     (order_id, producto_id, nombre_producto, cantidad, precio_unitario, descuento, subtotal) 
-     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        (order_id, producto_id, nombre_producto, colorSeleccionado, cantidad, precio_unitario, descuento, subtotal) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           orderId,
           item.producto_id,
           item.nombre_producto,
+          item.colorSeleccionado,
           item.cantidad,
           item.precio_unitario,
           item.descuento || 0,

@@ -69,7 +69,7 @@ cart.getByUserId = async (usuario_id) => {
 
 cart.getCartToPay = async (usuario_id) => {
   const [rows] = await db.query(
-  "SELECT c.id as cart_id, c.producto_id, c.colorSeleccionado, c.cantidad, " +
+  "SELECT c.id as cart_id, c.producto_id, c.colorSeleccionado, c.cantidad," +
   "c.descuento, c.precio, c.imagen, c.nombre, " +
   "p.categoria_id, c.fecha_agregado " +
   "FROM cart c " +
