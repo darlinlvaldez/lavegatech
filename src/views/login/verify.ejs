@@ -1,4 +1,8 @@
 <%- include('../components/header.ejs') %>
+
+<link rel="stylesheet" href="/css/toastify.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
 <body>
   <div class="code-container">
     <h2>Ingresar el código de verificación</h2>
@@ -20,11 +24,19 @@
       </button>
     </form>
 
-    <form method="POST" action="/api/auth/resendCode">
+    <form method="POST" action="/api/auth/resendCode" id="resendForm">
       <input type="hidden" name="email" value="<%= email %>">
       <input type="hidden" name="type" value="<%= type %>">
-      <button type="submit">Reenviar código</button>
+      <button type="submit" id="resendButton">Reenviar código</button>
     </form>
+    
+    <p id="cooldown-timer" style="color: red; display: none;"></p>
   </div>
+
 </body>
+
+<script src='/js/resendCode.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://unpkg.com/feather-icons"></script>
+
 <%- include('../components/footer.ejs') %>

@@ -74,35 +74,77 @@ async function openCodeModal(newEmail) {
   form.dataset.type = 'verify-email';
   title.innerText = titles['verify-email'];
   form.innerHTML = `
-  <label class="text-modal">Código de verificación:</label>
-  <input class="modal-input" type="text" name="codeInput" placeholder="Introduce el código" required>
-  <input type="hidden" name="newEmail" value="${newEmail}">
+    <label class="text-modal">Código de verificación:</label>
+    <input class="modal-input" type="text" name="codeInput" placeholder="Introduce el código" required>
+    <input type="hidden" name="newEmail" value="${newEmail}">
   `;
 
   verificationMsg.style.display = 'block';
   verificationMsg.innerHTML = `Te hemos enviado un código de verificación a <strong>${newEmail}</strong>`;
 
   resendBtn.style.display = 'block';
+  resendBtn.disabled = false;
+  
+  const resendTimerKey = `resendTimer_${newEmail}`;
+  const resendTimerExpires = localStorage.getItem(resendTimerKey);
+  const remaining = resendTimerExpires ? Math.max(0, Math.ceil((parseInt(resendTimerExpires) - Date.now()) / 1000)) : 0;
+
+  if (remaining > 0) {
+    startCountdown(newEmail, remaining, resendBtn);
+  }
+
   resendBtn.onclick = async () => {
     try {
+      resendBtn.disabled = true;
+      
       const response = await fetch('/user/resend-email-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: newEmail, type: 'verify' })
+        body: JSON.stringify({ email: newEmail, type: 'profile' })
       });
+
+      const result = await response.json();
 
       if (response.ok) {
         showNotification('Código reenviado exitosamente', true);
         verificationMsg.innerHTML = `Te hemos enviado un nuevo código de verificación a <strong>${newEmail}</strong>`;
+        
+        if (result.resendTimer) {
+          startCountdown(newEmail, result.resendTimer, resendBtn);
+        }
       } else {
-        const errorData = await response.json();
-        const errorMessage = errorData.error || 'Error al reenviar el código';
-        showNotification(errorMessage, false);
+        showNotification(result.error || 'Error al reenviar el código', false);
+        resendBtn.disabled = false;
       }
-    } catch (error) {showNotification('Error de red: ' + error.message, false);
+    } catch (error) {
+      showNotification('Error de red: ' + error.message, false);
+      resendBtn.disabled = false;
     }
   };
+
   modal.style.display = 'flex';
+}
+
+function startCountdown(email, seconds, button) {
+  const resendTimerKey = `resendTimer_${email}`;
+  const expiresAt = Date.now() + seconds * 1000;
+  localStorage.setItem(resendTimerKey, expiresAt.toString());
+
+  let remaining = seconds;
+  button.disabled = true;
+  const originalText = button.textContent;
+
+  const interval = setInterval(() => {
+    remaining--;
+    button.textContent = `Reenviar (${remaining}s)`;
+
+    if (remaining <= 0) {
+      clearInterval(interval);
+      localStorage.removeItem(resendTimerKey);
+      button.textContent = originalText;
+      button.disabled = false;
+    }
+  }, 1000);
 }
 
 function closeModal() {

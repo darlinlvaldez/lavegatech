@@ -96,28 +96,51 @@ auth.resendCode = async (req, res) => {
     const now = Date.now();
 
     if (req.validationError) {
-      return renderError(res, 'login/verify', null, {email, type, 
-        validationErrors: req.validationError.fields });
+      if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+        return res.status(400).json({ error: 'Error de validación', validationErrors: req.validationError.fields });
+      }
+      return renderError(res, 'login/verify', null, {
+        email, type, validationErrors: req.validationError.fields
+      });
     }
 
     if (existing && existing.lastSent && existing.lastSent !== 0 && (now - existing.lastSent < RESEND_COOLDOWN)) {
       const remaining = Math.ceil((RESEND_COOLDOWN - (now - existing.lastSent)) / 1000);
       const msg = ERROR_MESSAGES.RESEND_COOLDOWN.replace('{seconds}', remaining);
-      return renderError(res, 'login/verify', msg, { email, type, validationErrors: {} });
+      
+      if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+        return res.status(429).json({ error: msg, cooldown: remaining });
+      }
+      
+      return renderError(res, 'login/verify', msg, {
+        email, type, validationErrors: {}, cooldown: remaining
+      });
     }
 
     const newCode = code.generateCode();
     const expiresAt = now + CODE_EXPIRATION;
 
-    store.set(email, {...existing, code: newCode, expiresAt, lastSent: now});
+    store.set(email, { ...existing, code: newCode, expiresAt, lastSent: now });
 
     const subject = isReset ? 'Nuevo código para recuperación de contraseña' : 'Nuevo código de verificación';
     await emailService.sendEmail(email, subject, `Tu nuevo código es: ${newCode}`);
 
-    return res.render('login/verify', { email, type, error: null, 
-      validationErrors: {}, info: isReset ? null : 'reenviado' });
+    const cooldown = Math.ceil(RESEND_COOLDOWN / 1000);
+
+    if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+      return res.json({ success: true, cooldown });
+    }
+
+    return res.render('login/verify', {
+      email, type, error: null, validationErrors: {}, 
+      info: isReset ? null : 'reenviado', cooldown
+    });
+
   } catch (error) {
     console.error(error);
+    if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+      return res.status(500).json({ error: ERROR_MESSAGES.RESEND_ERROR });
+    }
     return renderError(res, 'login/verify', ERROR_MESSAGES.RESEND_ERROR, {
       email: req.body.email, type: req.body.type, validationErrors: {}
     });

@@ -56,11 +56,6 @@ app.post('/mant', async (req, res) => {
   res.status(200).send('ok');
 });
 
-app.post('/api/auth/enviar-codigo', (req, res) => {
-  const { email } = req.body;
-  res.render('login/verify', { email });
-});
-
 app.get('/account', isAuth(), (req, res) => {
   res.render('profile/account', { user: req.session.user, error: null, email: null });
 });
@@ -73,10 +68,6 @@ app.get('/register', isAuth({ redirect: true }), (req, res) => {
   res.render('login/register', {error: null, email: '', username: '', validationErrors: {}});
 });
 
-app.get('/verify', (req, res) => {
-  res.render('login/verify', {email: req.query.email, error: null, info: null, validationErrors: {}});
-});
-
 app.get('/email', (req, res) => {
   res.render('login/forgotPass/email', { error: null, email: null, validationErrors: {}});
 });
@@ -86,12 +77,12 @@ app.get('/newpass', (req, res) => {
 });
 
 app.get('/verify', (req, res) => {
-  const {email, type, error} = req.query;
-  
+  const { email, type, error } = req.query;
+
   if (!email || !type) return res.redirect('/login');
 
-  res.render('login/verify', {
-    email, type, error: error || null, validationErrors: {} });
+  res.render('login/verify', {email, type, error: error || null,
+    validationErrors: {}, cooldown: 0});
 });
 
 app.get('/mant', (req, res) => {

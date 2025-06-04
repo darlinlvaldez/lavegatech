@@ -138,6 +138,12 @@
   width: 100%;
 }
 
+#resend-code-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 @media (max-width: 600px){
   .titulo-user {
     display: inline-block;

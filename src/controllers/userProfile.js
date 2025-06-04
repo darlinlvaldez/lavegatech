@@ -57,34 +57,37 @@ auth.updateEmail = async (req, res) => {
 };
 
 auth.resendCode = async (req, res) => {
-  const { email } = req.body;
+  const { email, type = 'profile' } = req.body;
   const now = Date.now();
-  const existing = code.pendingUsers.get(email); 
+  const store = code.pendingUsers;
 
   try {
-    if (existing?.lastSent && now - existing.lastSent < RESEND_COOLDOWN) {
-      const remaining = Math.ceil((RESEND_COOLDOWN - (now - existing.lastSent))) / 1000;
-      return res.status(429).json({error: ERROR_MESSAGES.RESEND_COOLDOWN.replace("{seconds}", remaining) 
-      });
+    const existing = store.get(email);
+    
+    if (existing?.lastSent && (now - existing.lastSent < RESEND_COOLDOWN)) {
+      const remaining = Math.ceil((RESEND_COOLDOWN - (now - existing.lastSent)) / 1000);
+      return res.status(429).json({
+        error: ERROR_MESSAGES.RESEND_COOLDOWN.replace('{seconds}', remaining),
+        resendTimer: remaining});
     }
 
     const newCode = code.generateCode();
-    code.pendingUsers.set(email, {  
-      code: newCode, expiresAt: now + CODE_EXPIRATION, lastSent: now, userId: existing?.userId});
+    const expiresAt = now + CODE_EXPIRATION;
 
-    try {
-      await emailService.sendEmail(
-        email,
-        'Nuevo código de verificación', `Tu nuevo código es: ${newCode}`
-      );
-      res.status(200).json({ message: 'Código reenviado exitosamente' });
-    } catch (error) {
-      console.error('Error al reenviar código:', error);
-      res.status(500).json({ error: ERROR_MESSAGES.RESEND_ERROR });
-    }
+    store.set(email, {
+      ...existing, code: newCode, expiresAt, lastSent: now,
+      userId: existing?.userId});
+
+    await emailService.sendEmail( 
+      email, 'Nuevo código de verificación', `Tu nuevo código es: ${newCode}`);
+
+    res.json({success: true, message: 'Código reenviado exitosamente',
+      resendTimer: Math.ceil(RESEND_COOLDOWN / 1000)
+    });
+
   } catch (error) {
-    console.error(error);
-    res.status(500).send(ERROR_MESSAGES.SERVER_ERROR);
+    console.error('Error en resendCode:', error);
+    res.status(500).json({error: ERROR_MESSAGES.RESEND_ERROR});
   }
 };
 
