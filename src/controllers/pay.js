@@ -49,7 +49,7 @@ payController.createOrder = async (req, res) => {
     const orderItems = cartItems.map(item => ({
       producto_id: item.producto_id,
       nombre_producto: item.nombre,
-      color: item.colorSeleccionado,
+      colorSeleccionado: item.colorSeleccionado,
       cantidad: item.cantidad,
       precio_unitario: item.precio,
       descuento: item.descuento || 0,
