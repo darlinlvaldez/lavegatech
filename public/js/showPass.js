@@ -1,23 +1,18 @@
 function togglePassword(field) {
-  let input, icon;
+  const ids = {
+    password: ['passwordInput', 'eyeIconPassword'],
+    new: ['newPasswordInput', 'eyeIconNewPassword'],
+    confirm: ['confirmPasswordInput', 'eyeIconConfirmPassword']
+  };
 
-  switch (field) {
-    case 'password':
-      input = document.getElementById('passwordInput');
-      icon = document.getElementById('eyeIconPassword');
-      break;
-    case 'new':
-      input = document.getElementById('newPasswordInput');
-      icon = document.getElementById('eyeIconNewPassword');
-      break;
-    case 'confirm':
-      input = document.getElementById('confirmPasswordInput');
-      icon = document.getElementById('eyeIconConfirmPassword');
-      break;
-    default:
-      console.warn('Campo inválido en togglePassword:', field);
-      return;
+  if (!ids[field]) {
+    console.warn('Campo inválido en togglePassword:', field);
+    return;
   }
+
+  const [inputId, iconId] = ids[field];
+  const input = document.getElementById(inputId);
+  const icon = document.getElementById(iconId);
 
   if (!input || !icon) {
     console.warn('No se encontró input o icono para:', field);

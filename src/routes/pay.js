@@ -1,11 +1,11 @@
 import express from 'express';
-import pay from '../controllers/pay.js';
+import orders from '../controllers/orders.js';
 import { isAuth } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-router.post('/', isAuth(), pay.createOrder);
-router.post('/:orderId/payment', isAuth(), pay.processPayment);
-router.get('/:orderId', isAuth(), pay.getOrderDetails);
+router.post('/', isAuth(), orders.createOrder);
+router.post('/:orderId/payment', isAuth(), orders.processPayment);
+router.get('/:orderId', isAuth(), orders.getOrderDetails);
 
 export default router;

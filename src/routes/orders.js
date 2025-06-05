@@ -1,10 +1,10 @@
 import express from 'express';
-import pay from '../controllers/pay.js';
+import orders from '../controllers/orders.js';
 import { isAuth } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-router.get('/', isAuth(), pay.showUserOrders);
-router.get('/:orderId', isAuth(), pay.showOrderDetails);
+router.get('/', isAuth(), orders.showUserOrders);
+router.get('/:orderId', isAuth(), orders.showOrderDetails);
 
 export default router;

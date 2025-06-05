@@ -44,12 +44,6 @@ orders.createOrder = async (orderData, items) => {
           item.subtotal,
         ]
       );
-
-      await conn.query(
-        `UPDATE variantes SET stock = stock - ? 
-        WHERE producto_id = ? AND stock >= ?`,
-        [item.cantidad, item.producto_id, item.cantidad]
-      );
     }
 
     await conn.commit();
@@ -62,23 +56,31 @@ orders.createOrder = async (orderData, items) => {
   }
 };
 
+orders.updateStock = async (orderId, userId) => {
+  const { items } = await orders.getOrderById(orderId, userId) || {};
+  if (!items) throw new Error(`Orden no encontrada`);
+
+  await Promise.all(items.map(async ({ cantidad, producto_id, colorSeleccionado, nombre_producto }) => {
+    const [result] = await db.query(
+      `UPDATE variantes SET stock = stock - ? 
+       WHERE producto_id = ? ${colorSeleccionado ? 'AND color = ?' : ''} AND stock >= ?`,
+      [cantidad, producto_id, ...(colorSeleccionado ? [colorSeleccionado] : []), cantidad]
+    );
+    if (!result.affectedRows) throw new Error(`Stock insuficiente: ${nombre_producto}${colorSeleccionado ? ` (${colorSeleccionado})` : ''}`);
+  }));
+};
+
 orders.getOrderById = async (orderId, userId) => {
   const [order] = await db.query(
-    `SELECT * FROM orders WHERE id = ? AND user_id = ?`,
-    [orderId, userId]
-  );
+    `SELECT * FROM orders WHERE id = ? AND user_id = ?`,[orderId, userId]);
 
   if (order.length === 0) return null;
 
   const [items] = await db.query(
-    `SELECT * FROM order_items WHERE order_id = ?`,
-    [orderId]
-  );
+    `SELECT * FROM order_items WHERE order_id = ?`, [orderId]);
 
   return {
-    ...order[0],
-    items,
-  };
+    ...order[0], items};
 };
 
 orders.updateOrderStatus = async (orderId, status) => {
@@ -89,8 +91,7 @@ orders.updateOrderStatus = async (orderId, status) => {
 orders.getUserOrders = async (userId) => {
   const [orders] = await db.query(
     `SELECT * FROM orders WHERE user_id = ? ORDER BY fecha_creacion DESC`,
-    [userId]
-  );
+    [userId]);
   return orders;
 };
 
