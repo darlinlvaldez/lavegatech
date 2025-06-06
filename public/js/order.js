@@ -140,7 +140,6 @@ paypalRadio.addEventListener('change', () => {
         .then(data => {
           if (!data.success) throw new Error(data.message || 'Error al crear la orden');
           
-          // Guardamos los datos de la orden temporalmente
           window.currentOrderData = {
             orderData: data.orderData,
             orderItems: data.orderItems

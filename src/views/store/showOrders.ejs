@@ -24,7 +24,7 @@
                             <small class="text-muted-user"><%= new Date(order.fecha_creacion).toLocaleDateString() %></small>
                         </div>
                         <p class="mb-1-user">
-                            <span class="strong-details">Total:</span> $<%= Number(order.total).toFixed(2) %>
+                            <span class="strong-details">Total:</span> $<%= Number(order.total).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %>
                             <span class="badge-user <%= order.status === 'pagado' ? 'bg-success-user' : 'bg-warning-user' %> ms-2">
                                 <%= order.status %>
                             </span>

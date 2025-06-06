@@ -6,7 +6,7 @@ import product from "../controllers/product.js";
 const router = express.Router();
 
 router.get('/', principal.productosController);
-router.get('/search', principal.buscarController);
+router.get('/search', principal.searchController);
 
 router.get('/store', store.storeController);
 router.get('/store/:pagina', store.storeController);

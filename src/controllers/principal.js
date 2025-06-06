@@ -14,7 +14,7 @@ principal.productosController = async (req, res) => {
   } 
 }
 
-principal.buscarController = async (req, res) => {
+principal.searchController = async (req, res) => {
   try {
       const { q: query } = req.query;
       const productos = await principal.buscarProductos(query);

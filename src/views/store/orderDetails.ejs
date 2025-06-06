@@ -33,7 +33,7 @@
                             <strong>Estado:</strong> <span class="badge-details <%= order.status === 'pagado' ? 'badge-success-details' : 'badge-warning-details' %>">
                                 <%= order.status %>
                             </span><br>
-                            <strong class="strong-details">Total:</strong> $<%= Number(order.total).toFixed(2) %>
+                            <strong class="strong-details">Total:</strong> $<%= Number(order.total).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %>
                         </p>
                     </div>
                 </div>
@@ -63,16 +63,16 @@
                                 <td><%= item.nombre_producto %></td>
                                 <td><%= item.colorSeleccionado %></td>
                                 <td><%= item.cantidad %></td>
-                                <td>$<%= Number(item.precio_unitario).toFixed(2) %></td>
-                                <td>$<%= Number(item.descuento).toFixed(2) %></td>
-                                <td>$<%= Number(item.subtotal).toFixed(2) %></td>
+                                <td>$<%= Number(item.precio_unitario).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></td>
+                                <td>$<%= Number(item.descuento).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></td>
+                                <td>$<%= Number(item.subtotal).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></td>
                             </tr>
                         <% }); %>
                     </tbody>
                     <tfoot>
                         <tr>
                             <th colspan="5" style="text-align: right;">Total</th>
-                            <th>$<%= Number(order.total).toFixed(2) %></th>
+                            <th>$<%= Number(order.total).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></th>
                         </tr>
                     </tfoot>
                 </table>
