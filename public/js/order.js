@@ -121,68 +121,76 @@ document.addEventListener('DOMContentLoaded', () => {
     return response.json();
   };
 
-  paypalRadio.addEventListener('change', () => {
-    if (paypalRadio.checked && !buttonRendered) {
-      if (!validarCampos()) {
-        paypalRadio.checked = false;
-        return;
-      }
+paypalRadio.addEventListener('change', () => {
+  if (paypalRadio.checked && !buttonRendered) {
+    if (!validarCampos()) {
+      paypalRadio.checked = false;
+      return;
+    }
 
-      paypal.Buttons({
-        createOrder: (data, actions) => 
-          fetch('/api/order', {
+    paypal.Buttons({
+      createOrder: (data, actions) => 
+        fetch('/api/order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(getFormData())
+        })
+        .then(handleApiError)
+        .then(data => {
+          if (!data.success) throw new Error(data.message || 'Error al crear la orden');
+          
+          // Guardamos los datos de la orden temporalmente
+          window.currentOrderData = {
+            orderData: data.orderData,
+            orderItems: data.orderItems
+          };
+          
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: data.total.toFixed(2),
+                currency_code: 'USD',
+                description: 'Compra en tu tienda'
+              }
+            }]
+          });
+        }),
+
+      onApprove: (data, actions) => 
+        actions.order.capture()
+          .then(details => fetch(`/api/order/payment`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
-            body: JSON.stringify(getFormData())
-          })
+            body: JSON.stringify({
+              orderData: window.currentOrderData.orderData,
+              orderItems: window.currentOrderData.orderItems,
+              paymentMethod: 'paypal',
+              paymentDetails: details,
+              payerId: details.payer.payer_id,
+              paymentId: details.id
+            })
+          }))
           .then(handleApiError)
           .then(data => {
-            if (!data.success) throw new Error(data.message || 'Error al crear la orden');
-            window.currentOrderId = data.orderId;
-            return actions.order.create({
-              purchase_units: [{
-                amount: {
-                  value: data.total.toFixed(2),
-                  currency_code: 'USD',
-                  description: `Orden #${data.orderId}`
-                }
-              }]
-            });
+            if (!data.success) throw new Error(data.message || 'Error al registrar el pago');
+            mostrarToast("¡Pago completado con éxito!", 'success');
+            setTimeout(() => window.location.href = data.redirectUrl || `/orders/${data.orderId}`, 3000);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            mostrarToast(`Error: ${error.message}`, 'error');
           }),
 
-        onApprove: (data, actions) => 
-          actions.order.capture()
-            .then(details => fetch(`/api/order/${window.currentOrderId}/payment`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              credentials: 'include',
-              body: JSON.stringify({
-                paymentMethod: 'paypal',
-                paymentDetails: details,
-                payerId: details.payer.payer_id,
-                paymentId: details.id
-              })
-            }))
-            .then(handleApiError)
-            .then(data => {
-              if (!data.success) throw new Error(data.message || 'Error al registrar el pago');
-              mostrarToast("¡Pago completado con éxito!", 'success');
-              setTimeout(() => window.location.href = data.redirectUrl || `/orders/${window.currentOrderId}`, 3000);
-            })
-            .catch(error => {
-              console.error('Error:', error);
-              mostrarToast(`Error: ${error.message}`, 'error');
-            }),
+      onError: err => {
+        console.error('Error en el pago con PayPal:', err);
+        mostrarToast('Ocurrió un error al procesar el pago con PayPal', 'error');
+      }
 
-        onError: err => {
-          console.error('Error en el pago con PayPal:', err);
-          mostrarToast('Ocurrió un error al procesar el pago con PayPal', 'error');
-        }
-
-      }).render('#paypal-button-container');
-      
-      buttonRendered = true;
-    }
-  });
+    }).render('#paypal-button-container');
+    
+    buttonRendered = true;
+  }
+});
 });

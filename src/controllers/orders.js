@@ -31,9 +31,10 @@ payController.createOrder = async (req, res) => {
       return sum + (precioFinal * item.cantidad);
     }, 0);
 
+    // Solo preparamos los datos de la orden pero no la guardamos aún
     const orderData = {
       user_id: userId, nombre, apellido, email, direccion, ciudad,
-      distrito, telefono, horario_entrega, mensaje, total, status: 'pendiente'
+      distrito, telefono, horario_entrega, mensaje, total
     };
 
     const orderItems = cartItems.map(item => ({
@@ -46,9 +47,13 @@ payController.createOrder = async (req, res) => {
       subtotal: (item.precio * (1 - (item.descuento || 0) / 100)) * item.cantidad
     }));
 
-    const orderId = await orders.createOrder(orderData, orderItems);
-    
-    res.json({success: true, orderId, total, tems: orderItems});
+    // Enviamos los datos necesarios para PayPal pero sin crear la orden en DB
+    res.json({
+      success: true, 
+      orderData, // Enviamos los datos de la orden
+      orderItems, // Enviamos los items
+      total
+    });
   } catch (error) {
     console.error('Error al crear orden:', error);
     res.status(500).json({ 
@@ -60,7 +65,7 @@ payController.createOrder = async (req, res) => {
 
 payController.processPayment = async (req, res) => {
   try {
-    const { orderId } = req.params;
+    const { orderData, orderItems } = req.body; 
     const { paymentMethod, paymentDetails, payerId, paymentId } = req.body;
     
     if (!req.session.user) {
@@ -69,13 +74,13 @@ payController.processPayment = async (req, res) => {
 
     const userId = req.session.user.id;
 
-    const order = await orders.getOrderById(orderId, userId);
-    if (!order) {
-      return res.status(404).json({ 
-        success: false, message: 'Orden no encontrada'});
+    const cartItems = await cart.getCartToPay(userId);
+    if (cartItems.length === 0) { 
+      return res.status(400).json({
+        success: false, message: 'El carrito está vacío'});
     }
 
-    const totalReal = parseFloat(order.total);
+    const totalReal = parseFloat(orderData.total);
     const pagado = parseFloat(paymentDetails.purchase_units[0].amount.value);
 
     if (pagado !== totalReal) {
@@ -84,26 +89,34 @@ payController.processPayment = async (req, res) => {
       });
     }
 
+    const orderId = await orders.createOrder({
+      ...orderData,
+      status: 'pagado'
+    }, orderItems);
+
     await orders.createPayment(orderId, {
       paymentMethod: 'paypal',
       paymentId: paymentId,
       payerId: payerId
     });    
 
-    await orders.updateOrderStatus(orderId, 'pagado');
-
     await orders.updateStock(orderId, userId);
 
     await cart.clearCart(userId);
 
-    res.json({success: true, message: 'Pago procesado correctamente',
-      orderId, redirectUrl: `/orders/${orderId}`
+    res.json({
+      success: true, 
+      message: 'Pago procesado correctamente',
+      orderId, 
+      redirectUrl: `/orders/${orderId}`
     });
   } catch (error) {
     console.error('Error al procesar pago:', error);
     res.status(500).json({ 
-      success: false, message: 'Error al procesar el pago',
-      error: error.message});
+      success: false, 
+      message: 'Error al procesar el pago',
+      error: error.message
+    });
   }
 };
 

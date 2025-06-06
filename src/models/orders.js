@@ -22,7 +22,7 @@ orders.createOrder = async (orderData, items) => {
         orderData.telefono,
         orderData.horario_entrega,
         orderData.total,
-        orderData.status || "pendiente",
+        orderData.status
       ]
     );
 
