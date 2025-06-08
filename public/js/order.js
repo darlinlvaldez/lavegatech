@@ -1,4 +1,4 @@
-import { checkAuth } from './utils.js';
+import { checkAuth, getRealStock } from './utils.js';
 
 document.addEventListener("DOMContentLoaded", async function () {
   const orderProducts = document.querySelector(".order-products");
@@ -18,6 +18,17 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     if (!cartData.success || !cartData.items || cartData.items.length === 0) {
       orderProducts.innerHTML = "<p>No hay productos en tu orden.</p>";
+      orderTotal.textContent = "$0.00";
+      return;
+    }
+
+    const validItems = await Promise.all(cartData.items.map(async item => {
+      const stock = await getRealStock(item.producto_id, item.colorSeleccionado);
+      return stock > 0 ? item : null;
+    })).then(items => items.filter(Boolean));
+
+    if (validItems.length === 0) {
+      orderProducts.innerHTML = "<p>No hay productos disponibles en tu orden.</p>";
       orderTotal.textContent = "$0.00";
       return;
     }
@@ -173,9 +184,9 @@ paypalRadio.addEventListener('change', () => {
           }))
           .then(handleApiError)
           .then(data => {
-            if (!data.success) throw new Error(data.message || 'Error al registrar el pago');
+            if (!data.success) throw new Error(data.message);
             mostrarToast("¡Pago completado con éxito!", 'success');
-            setTimeout(() => window.location.href = data.redirectUrl || `/orders/${data.orderId}`, 3000);
+            setTimeout(() => window.location.href = data.redirectUrl, 3000);
           })
           .catch(error => {
             console.error('Error:', error);

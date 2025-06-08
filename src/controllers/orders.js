@@ -31,7 +31,6 @@ payController.createOrder = async (req, res) => {
       return sum + (precioFinal * item.cantidad);
     }, 0);
 
-    // Solo preparamos los datos de la orden pero no la guardamos aún
     const orderData = {
       user_id: userId, nombre, apellido, email, direccion, ciudad,
       distrito, telefono, horario_entrega, mensaje, total
@@ -47,17 +46,10 @@ payController.createOrder = async (req, res) => {
       subtotal: (item.precio * (1 - (item.descuento || 0) / 100)) * item.cantidad
     }));
 
-    // Enviamos los datos necesarios para PayPal pero sin crear la orden en DB
-    res.json({
-      success: true, 
-      orderData, // Enviamos los datos de la orden
-      orderItems, // Enviamos los items
-      total
-    });
+    res.json({success: true, orderData, orderItems, total});
   } catch (error) {
     console.error('Error al crear orden:', error);
-    res.status(500).json({ 
-      success: false, 
+    res.status(500).json({success: false, 
       message: 'Error al procesar la orden' 
     });
   }
@@ -76,45 +68,40 @@ payController.processPayment = async (req, res) => {
 
     const cartItems = await cart.getCartToPay(userId);
     if (cartItems.length === 0) { 
-      return res.status(400).json({
-        success: false, message: 'El carrito está vacío'});
+      return res.status(400).json({success: false, message: 'El carrito está vacío'});
     }
+
+    await orders.checkStock(cartItems);
 
     const totalReal = parseFloat(orderData.total);
     const pagado = parseFloat(paymentDetails.purchase_units[0].amount.value);
 
     if (pagado !== totalReal) {
-      return res.status(400).json({ 
-        success: false, message: 'Monto pagado no coincide con el total de la orden' 
-      });
+      return res.status(400).json({success: false, 
+        message: 'Monto pagado no coincide con el total de la orden'});
     }
 
-    const orderId = await orders.createOrder({
-      ...orderData,
-      status: 'pagado'
-    }, orderItems);
+    const orderId = await orders.createOrder({...orderData, status: 'pagado'}, orderItems);
 
-    await orders.createPayment(orderId, {
-      paymentMethod: 'paypal',
-      paymentId: paymentId,
-      payerId: payerId
-    });    
+    await orders.createPayment(orderId, {paymentMethod: 'paypal',
+      paymentId: paymentId, payerId: payerId});    
 
     await orders.updateStock(orderId, userId);
 
     await cart.clearCart(userId);
 
-    res.json({
-      success: true, 
-      message: 'Pago procesado correctamente',
-      orderId, 
-      redirectUrl: `/orders/${orderId}`
+    res.json({success: true, message: 'Pago procesado correctamente',
+      orderId, redirectUrl: `/api/order/orderDetails/${orderId}`
     });
   } catch (error) {
     console.error('Error al procesar pago:', error);
-    res.status(500).json({ 
-      success: false, 
-      message: 'Error al procesar el pago',
+    
+    if (error.stockItems) {
+      return res.status(400).json({success: false,
+        message: error.message, stockItems: error.stockItems});
+    }
+    
+    res.status(500).json({success: false, message: 'Error al procesar el pago',
       error: error.message
     });
   }

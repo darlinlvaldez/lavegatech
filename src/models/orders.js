@@ -66,8 +66,36 @@ orders.updateStock = async (orderId, userId) => {
        WHERE producto_id = ? ${colorSeleccionado ? 'AND color = ?' : ''} AND stock >= ?`,
       [cantidad, producto_id, ...(colorSeleccionado ? [colorSeleccionado] : []), cantidad]
     );
-    if (!result.affectedRows) throw new Error(`Stock insuficiente: ${nombre_producto}${colorSeleccionado ? ` (${colorSeleccionado})` : ''}`);
+    if (!result.affectedRows) throw new Error(`Stock insuficiente: ${nombre_producto}
+      ${colorSeleccionado ? ` (${colorSeleccionado})` : ''}`);
   }));
+};
+
+orders.checkStock = async (items) => {
+  const stockItems = [];
+  
+  await Promise.all(items.map(async (item) => {
+    const [stock] = await db.query(
+      `SELECT stock FROM variantes 
+       WHERE producto_id = ? ${item.colorSeleccionado ? 'AND color = ?' : ''}`,
+      [item.producto_id, ...(item.colorSeleccionado ? [item.colorSeleccionado] : [])]
+    );
+    
+    if (stock.length === 0 || stock[0].stock < item.cantidad) {
+      stockItems.push({id: item.producto_id,
+        name: item.nombre,
+        color: item.colorSeleccionado,
+        requested: item.cantidad,
+        available: stock.length > 0 ? stock[0].stock : 0
+      });
+    }
+  }));
+
+  if (stockItems.length > 0) {
+    const error = new Error('Stock insuficiente para algunos productos');
+    error.stockItems = stockItems;
+    throw error;
+  }
 };
 
 orders.getOrderById = async (orderId, userId) => {

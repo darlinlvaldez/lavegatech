@@ -45,7 +45,8 @@ async function addToCart(product) {
       if (!stockResponse.ok) throw new Error();
       stockReal = (await stockResponse.json()).stock || 0;
     } else {
-      stockReal = product.stock || 0;
+      const colorStock = window.productData?.stocksPorColor?.[color];
+      stockReal = (colorStock !== undefined) ? colorStock : (product.stock || 0);
     }
 
     if (stockReal <= 0) {

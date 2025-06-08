@@ -15,8 +15,7 @@ import auth from './src/routes/auth.js';
 import userProfile from './src/routes/userProfile.js';  
 import cart from './src/routes/cart.js';
 import fav from './src/routes/fav.js';
-import pay from './src/routes/pay.js';
-import ordersRouter from './src/routes/orders.js';
+import orders from './src/routes/orders.js';
 
 const app = express();
 
@@ -44,9 +43,7 @@ app.use('/cart', cart);
 
 app.use('/fav', fav);
 
-app.use('/api/order', pay);
-
-app.use('/orders', ordersRouter);
+app.use('/api/order', orders);
 
 app.use('/', store);
 
