@@ -11,9 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
         loadReviews(1, 3, productId);
 
         reviewsContainer.addEventListener('click', e => {
-            if (e.target.matches('.reviews-pagination a')) {
+            const link = e.target.closest('.reviews-pagination a');
+            if (link) {
                 e.preventDefault();
-                const page = Number(e.target.dataset.page);
+                const page = Number(link.dataset.page);
                 if (page && productId) { 
                     loadReviews(page, 3, productId);
                 }
