@@ -1893,17 +1893,23 @@ textarea.input {
 }
 
 .rating li {
-  margin: 5px 0px;
+  display: flex;          
+  align-items: center;   
+  margin: 5px 0;
+  gap: 10px;             
+}
+
+.rating .rating-stars {
+  min-width: 80px;       
 }
 
 .rating .rating-progress {
-  position: relative;
-  display: inline-block;
+  flex-grow: 1;          
   height: 9px;
   background-color: #E4E7ED;
-  width: 120px;
-  margin: 0px 10px;
   border-radius: 5px;
+  overflow: hidden;       
+  position: relative;    
 }
 
 .rating .rating-progress>div {
@@ -1913,10 +1919,12 @@ textarea.input {
   top: 0;
   bottom: 0;
   border-radius: 5px;
+  max-width: 100%;       
 }
 
 .rating .sum {
-  display: inline-block;
+  min-width: 20px;       
+  text-align: right;
   font-size: 12px;
   color: #8D99AE;
 }

@@ -186,7 +186,13 @@
 															</a>
 															<div class="product-rating">
 															<% for (let i = 1; i <= 5; i++) { %>
-																<i class="fa fa-star<%= i <= Math.round(producto.averageRating) ? '' : '-o' %>"></i>
+															<% if (i <= Math.floor(producto.averageRating)) { %>
+															<i class="fa fa-star"></i>
+															<% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
+															<i class="fa fa-star-half-o"></i>
+															<% } else { %>
+															<i class="fa fa-star-o"></i>
+															<% } %>
 															<% } %>
 															</div>
 															<div class="product-btns">

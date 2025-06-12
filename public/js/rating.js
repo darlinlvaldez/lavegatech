@@ -75,9 +75,6 @@ async function loadReviews(page, limit, productId) {
 
         document.getElementById('reviews').innerHTML = reviewsHTML + paginationHTML;
 
-        if (data.averageRating !== undefined && data.ratingDistribution) {
-            updateRatingStats(data.averageRating, data.ratingDistribution);
-        }
     } catch (error) {
         console.error('Error al cargar reseñas:', error);
         document.getElementById('reviews').innerHTML = `
@@ -146,48 +143,6 @@ function renderPagination(currentPage, totalPages) {
 
     html += '</ul>';
     return html;
-}
-
-function updateRatingStats(averageRating, ratingDistribution) {
-    const avgSpan = document.querySelector('.rating-avg span');
-    const avgStarsContainer = document.querySelector('.rating-avg .rating-stars');
-    const distributionList = document.querySelectorAll('.rating li');
-
-    if (!avgSpan || !avgStarsContainer || distributionList.length === 0) return;
-
-    avgSpan.textContent = averageRating.toFixed(1);
-
-    avgStarsContainer.innerHTML = '';
-    for (let i = 1; i <= 5; i++) {
-        const star = document.createElement('i');
-        if (i <= Math.floor(averageRating)) {
-            star.className = 'fa fa-star';
-        } else if (i === Math.ceil(averageRating) && averageRating % 1 > 0.3) {
-            star.className = 'fa fa-star-half-o';
-        } else {
-            star.className = 'fa fa-star-o';
-        }
-        avgStarsContainer.appendChild(star);
-    }
-
-    const totalReviews = ratingDistribution.reduce((sum, item) => sum + item.count, 0);
-
-    for (let stars = 5; stars >= 1; stars--) {
-        const item = ratingDistribution.find(item => item.calificacion === stars) || { count: 0 };
-        const li = distributionList[5 - stars];
-
-        if (!li) continue;
-
-        const progressDiv = li.querySelector('.rating-progress div');
-        if (progressDiv) {
-            progressDiv.style.width = totalReviews > 0 ? (item.count / totalReviews * 100) + '%' : '0%';
-        }
-
-        const sumElem = li.querySelector('.sum');
-        if (sumElem) {
-            sumElem.textContent = item.count;
-        }
-    }
 }
 
 function showToast(message, color = "#27ae60", icon = "check-circle") {
