@@ -22,372 +22,357 @@
 					</div>
 				</div>
 
-				<!-- Product thumb imgs -->
-				<div class="col-md-2 col-md-pull-5">
-					<div id="product-imgs">
-						<% for (const [color, imagen] of Object.entries(imagenesPorColor)) { %>
-							<div class="product-preview"
-								onclick="changeColor({ value: '<%= color %>' }, '<%= producto.id %>')"
-								data-product-id="<%= producto.id %>">
-								<img src="<%= imagen %>" alt="<%= color %>" class="product-img">
-							</div>
-							<% } %>
-						</div>
-					</div>
-
-		<!-- Product details -->
-		<div class="col-md-5">
-			<div class="product-details">
-				<h2 class="product-name">
-					<%= producto.nombre %>
-				</h2>
-				<div>
-					<div class="product-rating">
-						<i class="fa fa-star"></i>
-						<i class="fa fa-star"></i>
-						<i class="fa fa-star"></i>
-						<i class="fa fa-star"></i>
-						<i class="fa fa-star-o"></i>
-					</div>
-					<a class="review-link" href="#">10 Reseña(s) | Agrega tu reseña</a>
-				</div>
-				<div>
-					<h3 class="product-price">
-						$<%= (Number(producto.precio) * (1 - (producto.descuento /
-							100))).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %>
-							<% if (producto.descuento> 0) { %>
-								<del class="product-old-price">$<%=
-										Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></del>
-								<% } %>
-					</h3>
-					<span class="product-available">
-						<p id="stockDisponible">
-							Cantidad disponible: <% if (stocksPorColor) { %>
-								<%= stocksPorColor %>
-									<% } else { %>0<% } %>
-						</p>
-					</span>
-				</div>
-				<!-- Product options -->
-				<% if (colores && colores.length> 0) { %>
-					<div class="product-options">
-						<label>
-							Color
-							<select class="input-select" id="colorSeleccionado"
-								onchange="changeColor(this, '<%= producto.id %>')">
-								<% colores.forEach(color=> { %>
-									<option value="<%= color %>" <%=color===colorSeleccionado ? 'selected' : '' %>>
-										<%= color %>
-									</option>
-									<% }); %>
-							</select>
-						</label>
-					</div>
-					<% } %>
-		
-						<div class="add-to-cart">
-							<div class="qty-label">
-								Cantidad
-								<div class="input-number product-quantity">
-									<select class="input-select" id="cantidad">
-										<% for(let i=1; i <=stocksPorColor; i++) { %>
-											<option value="<%= i %>">
-												<%= i %>
-											</option>
-											<% } %>
-									</select>
-								</div>
-							</div>
-							<br><br>
-							<div class="add-to-cart">
-								<button class="add-to-cart-btn" id="add-to-cart-btn" data-id="<%= producto.id %>"
-									data-nombre="<%= producto.nombre %>" data-precio="<%= producto.precio %>"
-									data-descuento="<%= producto.descuento %>" data-stock="<%= producto.stock %>"
-									data-color="<%= colorSeleccionado %>">
-									<i class="fa fa-shopping-cart"></i> Añadir al carrito
-								</button>
-							</div>
-						</div>
-						<ul class="product-btns">
-							<a role="button" class="add-to-wishlist" data-product-id="<%= producto.id %>"
-								data-product-name="<%= producto.nombre %>" data-product-price="<%= producto.precio %>"
-								data-product-discount="<%= producto.descuento || 0 %>"
-								data-product-image="<%= producto.imagen %>" data-product-color="<%= colorSeleccionado %>">
-								<i class="fa fa-heart-o"></i> Favoritos
-							</a>
-							<li><a href="#"><i class="fa fa-exchange"></i>Comparalo</a></li>
-						</ul>
-						<ul class="product-links">
-							<li>Categoría:</li>
-							<li><a href="#">
-									<%= producto.categoria==='moviles' ? 'Móviles' : producto.categoria.charAt(0).toUpperCase()
-										+ producto.categoria.slice(1) %>
-								</a>
-							</li>
-						</ul>
-						<ul class="product-links">
-							<li>Compartir:</li>
-							<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-							<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-							<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-							<li><a href="#"><i class="fa fa-envelope"></i></a></li>
-						</ul>
-					</div>
-				</div>
-				<!-- /Product details -->
-  
-				<!-- Product tab -->
-				<div class="col-md-12">
-					<div id="product-tab">
-						<!-- product tab nav -->
-						<ul class="tab-nav">
-							<li class="active"><a data-toggle="tab" href="#tab1">Descripción</a></li>
-							<li><a data-toggle="tab" href="#tab2">Detalles</a></li>
-							<li><a data-toggle="tab" href="#tab3">Reseñas</a></li>
-						</ul>
-						<!-- /product tab nav -->
-
-						<!-- product tab content -->
-						<div class="tab-content">
-							<!-- tab1  -->
-							<div id="tab1" class="tab-pane fade in active">
-								<div class="row">
-									<div class="col-md-12">
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-											tempor
-											incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-											nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-											consequat.
-											Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-											eu
-											fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
-											in
-											culpa qui officia deserunt mollit anim id est laborum.</p>
-									</div>
-								</div>
-							</div>
-							<!-- /tab1  -->
-
-							<!-- tab2  -->
-							<div id="tab2" class="tab-pane fade in">
-								<div class="row">
-									<div class="col-md-12">
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-											tempor
-											incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-											nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-											consequat.
-											Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-											eu
-											fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
-											in
-											culpa qui officia deserunt mollit anim id est laborum.</p>
-									</div>
-								</div>
-							</div>
-							<!-- /tab2  -->
-
-							<!-- tab3  -->
-							<div id="tab3" class="tab-pane fade in">
-								<div class="row">
-									<!-- Rating -->
-									<div class="col-md-3">
-										<div id="rating">
-											<div class="rating-avg">
-												<span>4.5</span>
-												<div class="rating-stars">
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star-o"></i>
-												</div>
-											</div>
-											<ul class="rating">
-												<li>
-													<div class="rating-stars">
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star"></i>
-													</div>
-													<div class="rating-progress">
-														<div style="width: 80%;"></div>
-													</div>
-													<span class="sum">3</span>
-												</li>
-												<li>
-													<div class="rating-stars">
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star-o"></i>
-													</div>
-													<div class="rating-progress">
-														<div style="width: 60%;"></div>
-													</div>
-													<span class="sum">2</span>
-												</li>
-												<li>
-													<div class="rating-stars">
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star-o"></i>
-														<i class="fa fa-star-o"></i>
-													</div>
-													<div class="rating-progress">
-														<div></div>
-													</div>
-													<span class="sum">0</span>
-												</li>
-												<li>
-													<div class="rating-stars">
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star-o"></i>
-														<i class="fa fa-star-o"></i>
-														<i class="fa fa-star-o"></i>
-													</div>
-													<div class="rating-progress">
-														<div></div>
-													</div>
-													<span class="sum">0</span>
-												</li>
-												<li>
-													<div class="rating-stars">
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star-o"></i>
-														<i class="fa fa-star-o"></i>
-														<i class="fa fa-star-o"></i>
-														<i class="fa fa-star-o"></i>
-													</div>
-													<div class="rating-progress">
-														<div></div>
-													</div>
-													<span class="sum">0</span>
-												</li>
-											</ul>
-										</div>
-									</div>
-									<!-- /Rating -->
-
-									<!-- Reviews -->
-									<div class="col-md-6">
-										<div id="reviews">
-											<ul class="reviews">
-												<li>
-													<div class="review-heading">
-														<h5 class="name">John</h5>
-														<p class="date">27 DEC 2018, 8:0 PM</p>
-														<div class="review-rating">
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star-o empty"></i>
-														</div>
-													</div>
-													<div class="review-body">
-														<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
-															do
-															eiusmod tempor incididunt ut labore et dolore magna aliqua
-														</p>
-													</div>
-												</li>
-												<li>
-													<div class="review-heading">
-														<h5 class="name">John</h5>
-														<p class="date">27 DEC 2018, 8:0 PM</p>
-														<div class="review-rating">
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star-o empty"></i>
-														</div>
-													</div>
-													<div class="review-body">
-														<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
-															do
-															eiusmod tempor incididunt ut labore et dolore magna aliqua
-														</p>
-													</div>
-												</li>
-												<li>
-													<div class="review-heading">
-														<h5 class="name">John</h5>
-														<p class="date">27 DEC 2018, 8:0 PM</p>
-														<div class="review-rating">
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star-o empty"></i>
-														</div>
-													</div>
-													<div class="review-body">
-														<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
-															do
-															eiusmod tempor incididunt ut labore et dolore magna aliqua
-														</p>
-													</div>
-												</li>
-											</ul>
-											<ul class="reviews-pagination">
-												<li class="active">1</li>
-												<li><a href="#">2</a></li>
-												<li><a href="#">3</a></li>
-												<li><a href="#">4</a></li>
-												<li><a href="#"><i class="fa fa-angle-right"></i></a></li>
-											</ul>
-										</div>
-									</div>
-									<!-- /Reviews -->
-
-									<!-- Review Form -->
-									<div class="col-md-3">
-										<div id="review-form">
-											<form class="review-form">
-												<input class="input" type="text" placeholder="Your Name">
-												<input class="input" type="email" placeholder="Your Email">
-												<textarea class="input" placeholder="Your Review"></textarea>
-												<div class="input-rating">
-													<span>Your Rating: </span>
-													<div class="stars">
-														<input id="star5" name="rating" value="5" type="radio"><label
-															for="star5"></label>
-														<input id="star4" name="rating" value="4" type="radio"><label
-															for="star4"></label>
-														<input id="star3" name="rating" value="3" type="radio"><label
-															for="star3"></label>
-														<input id="star2" name="rating" value="2" type="radio"><label
-															for="star2"></label>
-														<input id="star1" name="rating" value="1" type="radio"><label
-															for="star1"></label>
-													</div>
-												</div>
-												<button class="primary-btn">Submit</button>
-											</form>
-										</div>
-									</div>
-									<!-- /Review Form -->
-								</div>
-							</div>
-							<!-- /tab3  -->
-						</div>
-						<!-- /product tab content  -->
-					</div>
-				</div>
-				<!-- /product tab -->
+<!-- Product thumb imgs -->
+<div class="col-md-2 col-md-pull-5">
+	<div id="product-imgs">
+		<% for (const [color, imagen] of Object.entries(imagenesPorColor)) { %>
+			<div class="product-preview"
+				onclick="changeColor({ value: '<%= color %>' }, '<%= producto.id %>')"
+				data-product-id="<%= producto.id %>">
+				<img src="<%= imagen %>" alt="<%= color %>" class="product-img">
 			</div>
-		<!-- /row -->
+			<% } %>
 		</div>
-		<!-- /container -->
 	</div>
-	<!-- /SECTION -->
+
+	<!-- Product details -->
+	<div class="col-md-5">
+		<div class="product-details">
+			<h2 class="product-name"><%= producto.nombre %></h2>
+			<div>
+			<div class="product-rating">
+			<% for (let i = 1; i <= 5; i++) { %>
+				<% if (i <= Math.floor(producto.averageRating)) { %>
+				<i class="fa fa-star"></i>
+				<% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
+				<i class="fa fa-star-half-o"></i>
+				<% } else { %>
+				<i class="fa fa-star-o"></i>
+				<% } %>
+			<% } %>
+			</div>
+			<a class="review-link" href="#reviews-section">
+			<%= producto.reviews.length %> Reseña(s)
+			</a>
+			</div>
+			<div>
+				<h3 class="product-price">
+					$<%= (Number(producto.precio) * (1 - (producto.descuento /
+						100))).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %>
+						<% if (producto.descuento> 0) { %>
+							<del class="product-old-price">$<%=
+									Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></del>
+							<% } %>
+				</h3>
+				<span class="product-available">
+					<p id="stockDisponible">
+						Cantidad disponible: <% if (stocksPorColor) { %>
+						<%= stocksPorColor %>
+					<% } else { %>0<% } %>
+					</p>
+				</span>
+			</div>
+			<!-- Product options -->
+			<% if (colores && colores.length> 0) { %>
+				<div class="product-options">
+					<label>
+						Color
+						<select class="input-select" id="colorSeleccionado"
+							onchange="changeColor(this, '<%= producto.id %>')">
+							<% colores.forEach(color=> { %>
+								<option value="<%= color %>" <%=color===colorSeleccionado ? 'selected' : '' %>>
+									<%= color %>
+								</option>
+								<% }); %>
+						</select>
+					</label>
+				</div>
+				<% } %>
+
+				<div class="add-to-cart">
+					<div class="qty-label">
+						Cantidad
+						<div class="input-number product-quantity">
+							<select class="input-select" id="cantidad">
+								<% for(let i=1; i <=stocksPorColor; i++) { %>
+									<option value="<%= i %>">
+										<%= i %>
+									</option>
+									<% } %>
+							</select>
+						</div>
+					</div>
+					<br><br>
+					<div class="add-to-cart">
+						<button class="add-to-cart-btn" id="add-to-cart-btn" data-id="<%= producto.id %>"
+							data-nombre="<%= producto.nombre %>" data-precio="<%= producto.precio %>"
+							data-descuento="<%= producto.descuento %>" data-stock="<%= producto.stock %>"
+							data-color="<%= colorSeleccionado %>">
+							<i class="fa fa-shopping-cart"></i> Añadir al carrito
+						</button>
+					</div>
+				</div>
+				<ul class="product-btns">
+					<a role="button" class="add-to-wishlist" data-product-id="<%= producto.id %>"
+						data-product-name="<%= producto.nombre %>" data-product-price="<%= producto.precio %>"
+						data-product-discount="<%= producto.descuento || 0 %>"
+						data-product-image="<%= producto.imagen %>" data-product-color="<%= colorSeleccionado %>">
+						<i class="fa fa-heart-o"></i> Favoritos
+					</a>
+					<li><a href="#"><i class="fa fa-exchange"></i>Comparalo</a></li>
+				</ul>
+				<ul class="product-links">
+					<li>Categoría:</li>
+					<li><a href="#">
+							<%= producto.categoria==='moviles' ? 'Móviles' : producto.categoria.charAt(0).toUpperCase()
+								+ producto.categoria.slice(1) %>
+						</a>
+					</li>
+				</ul>
+				<ul class="product-links">
+					<li>Compartir:</li>
+					<li><a href="#"><i class="fa fa-facebook"></i></a></li>
+					<li><a href="#"><i class="fa fa-twitter"></i></a></li>
+					<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+					<li><a href="#"><i class="fa fa-envelope"></i></a></li>
+				</ul>
+			</div>
+		</div>
+		<!-- /Product details -->
+  
+		<!-- Product tab -->
+		<div class="col-md-12">
+			<div id="product-tab">
+				<!-- product tab nav -->
+				<ul class="tab-nav">
+					<li class="active"><a data-toggle="tab" href="#tab1">Descripción</a></li>
+					<li><a data-toggle="tab" href="#tab2">Detalles</a></li>
+					<li><a data-toggle="tab" href="#tab3">Reseñas (<%= producto.totalReviews %>)</a></li>
+				</ul>
+				<!-- /product tab nav -->
+
+				<!-- product tab content -->
+				<div class="tab-content">
+					<!-- tab1  -->
+					<div id="tab1" class="tab-pane fade in active">
+						<div class="row">
+							<div class="col-md-12">
+								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+									tempor
+									incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+									nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+									consequat.
+									Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+									eu
+									fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
+									in
+									culpa qui officia deserunt mollit anim id est laborum.</p>
+							</div>
+						</div>
+					</div>
+					<!-- /tab1  -->
+
+					<!-- tab2  -->
+					<div id="tab2" class="tab-pane fade in">
+						<div class="row">
+							<div class="col-md-12">
+								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+									tempor
+									incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+									nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+									consequat.
+									Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+									eu
+									fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
+									in
+									culpa qui officia deserunt mollit anim id est laborum.</p>
+							</div>
+						</div>
+					</div>
+					<!-- /tab2  -->
+
+					<!-- tab3  -->
+					<div id="tab3" class="tab-pane fade in">
+						<div class="row">
+							<!-- Rating -->
+							<div class="col-md-3">
+								<div id="rating">
+									<div class="rating-avg">
+										<span><%= producto.averageRating.toFixed(1) %></span>
+										<div class="rating-stars">
+											<% const avgRating = producto.averageRating || 0; %>
+											<% for(let i = 1; i <= 5; i++) { %>
+												<% if(i <= Math.floor(avgRating)) { %>
+													<i class="fa fa-star"></i>
+												<% } else if(i === Math.ceil(avgRating) && avgRating % 1 > 0.3) { %>
+													<i class="fa fa-star-half-o"></i>
+												<% } else { %>
+													<i class="fa fa-star-o"></i>
+												<% } %>
+											<% } %>
+										</div>
+									</div>
+									<ul class="rating">
+										<% 
+										const distribution = {};
+										for(let i = 1; i <= 5; i++) {
+											distribution[i] = 0;
+										}
+										
+										producto.ratingDistribution.forEach(item => {
+											distribution[item.calificacion] = item.count;
+										});
+										
+										const totalReviews = producto.reviews.length;
+										%>
+										
+										<% for(let stars = 5; stars >= 1; stars--) { %>
+											<li>
+												<div class="rating-stars">
+													<% for(let i = 1; i <= 5; i++) { %>
+														<% if(i <= stars) { %>
+															<i class="fa fa-star"></i>
+														<% } else { %>
+															<i class="fa fa-star-o"></i>
+														<% } %>
+													<% } %>
+												</div>
+												<div class="rating-progress">
+													<div style="width: <%= totalReviews > 0 ? (distribution[stars] / totalReviews * 100) : 0 %>%;"></div>
+												</div>
+												<span class="sum"><%= distribution[stars] %></span>
+											</li>
+										<% } %>
+									</ul>
+								</div>
+							</div>
+							<!-- /Rating -->
+
+							<!-- Reviews -->
+							<div class="col-md-6">
+								<div id="reviews" data-product-id="<%= producto.id %>">
+									<% if(producto.reviews.length > 0) { %>
+										<ul class="reviews">
+											<% producto.reviews.forEach(review => { %>
+												<li>
+													<div class="review-heading">
+														<h5 class="name"><%= review.username %></h5>
+														<p class="date"><%= new Date(review.fecha_creacion).toLocaleDateString() %></p>
+														<div class="review-rating">
+															<% for(let i = 1; i <= 5; i++) { %>
+																<% if(i <= review.calificacion) { %>
+																	<i class="fa fa-star"></i>
+																<% } else { %>
+																	<i class="fa fa-star-o empty"></i>
+																<% } %>
+															<% } %>
+														</div>
+													</div>
+													<div class="review-body">
+														<p><%= review.comentario || 'El usuario no dejó comentario' %></p>
+													</div>
+												</li>
+											<% }) %>
+										</ul>
+										<% if(producto.totalPagesReviews > 1) { %>
+											<ul class="reviews-pagination">
+												<% if(producto.currentPageReviews > 1) { %>
+													<li>
+														<a href="#" onclick="window.reviewSystem.loadReviews(<%= producto.currentPageReviews - 1 %>, <%= producto.limiteReviews %>); return false;">
+															<i class="fa fa-angle-left"></i>
+														</a>
+													</li>
+												<% } %>
+												
+												<% const start = Math.max(1, producto.currentPageReviews - 2); %>
+												<% const end = Math.min(producto.totalPagesReviews, producto.currentPageReviews + 2); %>
+												
+												<% if(start > 1) { %>
+													<li>
+														<a href="#" onclick="window.reviewSystem.loadReviews(1, <%= producto.limiteReviews %>); return false;">1</a>
+													</li>
+													<% if(start > 2) { %>
+														<li><span>...</span></li>
+													<% } %>
+												<% } %>
+												
+												<% for(let i = start; i <= end; i++) { %>
+													<li class="<%= i === producto.currentPageReviews ? 'active' : '' %>">
+														<a href="#" onclick="window.reviewSystem.loadReviews(<%= i %>, <%= producto.limiteReviews %>); return false;">
+															<%= i %>
+														</a>
+													</li>
+												<% } %>
+												
+												<% if(end < producto.totalPagesReviews) { %>
+													<% if(end < producto.totalPagesReviews - 1) { %>
+														<li><span>...</span></li>
+													<% } %>
+													<li>
+														<a href="#" onclick="window.reviewSystem.loadReviews(<%= producto.totalPagesReviews %>, <%= producto.limiteReviews %>); return false;">
+															<%= producto.totalPagesReviews %>
+														</a>
+													</li>
+												<% } %>
+												
+												<% if(producto.currentPageReviews < producto.totalPagesReviews) { %>
+													<li>
+														<a href="#" onclick="window.reviewSystem.loadReviews(<%= producto.currentPageReviews + 1 %>, <%= producto.limiteReviews %>); return false;">
+															<i class="fa fa-angle-right"></i>
+														</a>
+													</li>
+												<% } %>
+											</ul>
+										<% } %>
+									<% } else { %>
+										<p>No hay reseñas para este producto todavía.</p>
+									<% } %>
+								</div>
+							</div>
+							<!-- /Reviews -->
+
+							<!-- Review Form -->
+							<% if(typeof user !== 'undefined' && user) { %>            
+								<div class="col-md-3">
+											<div id="review-form">
+												<form class="review-form" id="reviewForm">
+													<input type="hidden" name="producto_id" value="<%= producto.id %>">
+													<textarea class="input" name="comentario" placeholder="Tu reseña" required></textarea>
+													<div class="input-rating">
+														<span>Tu calificación: </span>
+														<div class="stars">
+															<input id="star5" name="calificacion" value="5" type="radio" required><label for="star5"></label>
+															<input id="star4" name="calificacion" value="4" type="radio"><label for="star4"></label>
+															<input id="star3" name="calificacion" value="3" type="radio"><label for="star3"></label>
+															<input id="star2" name="calificacion" value="2" type="radio"><label for="star2"></label>
+															<input id="star1" name="calificacion" value="1" type="radio"><label for="star1"></label>
+														</div>
+													</div>
+													<button type="submit" class="primary-btn">Enviar</button>
+												</form>
+											</div>
+										</div>
+									<% } else { %>
+									<div class="col-md-3">
+										<p>Debes <a href="/login">iniciar sesión</a> para dejar una reseña.</p>
+									</div>
+								<% } %>
+								<!-- /Review Form -->
+							</div>
+						</div>
+						<!-- /tab3  -->
+					</div>
+					<!-- /product tab content  -->
+				</div>
+			</div>
+			<!-- /product tab -->
+		</div>
+	<!-- /row -->
+	</div>
+	<!-- /container -->
+</div>
+<!-- /SECTION -->
+	
 
 	<!-- Section -->
 	<div class="section">
@@ -459,8 +444,9 @@
 	<%- include('../partials/footer.ejs') %>
 
 	</body>
-
+	
 	    <script src="/js/stockColor.js"></script>
+	    <script src="/js/rating.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 		<script src="https://unpkg.com/feather-icons"></script>
 

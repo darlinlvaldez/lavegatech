@@ -90,11 +90,9 @@ document.querySelector(".tablink").click();
                                                 <% } %>
                                             </h4></a>
                                         <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
+                                        <% for (let i = 1; i <= 5; i++) { %>
+                                            <i class="fa fa-star<%= i <= Math.round(producto.averageRating) ? '' : '-o' %>"></i>
+                                        <% } %>
                                         </div>
                                         <div class="product-btns">
                                             <button class="add-to-wishlist" data-product-id="<%= producto.id %>" data-product-name="<%= producto.nombre %>" 
@@ -149,11 +147,9 @@ document.querySelector(".tablink").click();
                                                 <% } %>
                                             </h4></a>
                                         <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
+                                        <% for (let i = 1; i <= 5; i++) { %>
+                                            <i class="fa fa-star<%= i <= Math.round(producto.averageRating) ? '' : '-o' %>"></i>
+                                        <% } %>
                                         </div>
                                         <div class="product-btns">
                                             <button class="add-to-wishlist" data-product-id="<%= producto.id %>" data-product-name="<%= producto.nombre %>" 
@@ -208,11 +204,9 @@ document.querySelector(".tablink").click();
                                                 <% } %>
                                             </h4></a>
                                         <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
+                                        <% for (let i = 1; i <= 5; i++) { %>
+                                            <i class="fa fa-star<%= i <= Math.round(producto.averageRating) ? '' : '-o' %>"></i>
+                                        <% } %>
                                         </div>
                                         <div class="product-btns">
                                             <button class="add-to-wishlist" data-product-id="<%= producto.id %>" data-product-name="<%= producto.nombre %>" 
@@ -267,11 +261,9 @@ document.querySelector(".tablink").click();
                                                 <% } %>
                                             </h4></a>
                                         <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
+                                        <% for (let i = 1; i <= 5; i++) { %>
+                                            <i class="fa fa-star<%= i <= Math.round(producto.averageRating) ? '' : '-o' %>"></i>
+                                        <% } %>
                                         </div>
                                         <div class="product-btns">
                                             <button class="add-to-wishlist" data-product-id="<%= producto.id %>" data-product-name="<%= producto.nombre %>" 
@@ -325,11 +317,9 @@ document.querySelector(".tablink").click();
                                                 <% } %>
                                             </h4></a>
                                         <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
+                                        <% for (let i = 1; i <= 5; i++) { %>
+                                            <i class="fa fa-star<%= i <= Math.round(producto.averageRating) ? '' : '-o' %>"></i>
+                                        <% } %>
                                         </div>
                                         <div class="product-btns">
                                             <button class="add-to-wishlist" data-product-id="<%= producto.id %>" data-product-name="<%= producto.nombre %>"
@@ -446,12 +436,10 @@ document.querySelector(".tablink").click();
                                                         <% } %>
                                                     </h4></a>
                                                     <div class="product-rating">
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                    </div> 
+                                                    <% for (let i = 1; i <= 5; i++) { %>
+                                                        <i class="fa fa-star<%= i <= Math.round(producto.averageRating) ? '' : '-o' %>"></i>
+                                                    <% } %>
+                                                    </div>
                                                     <div class="product-btns">
                                                         <button class="add-to-wishlist" data-product-id="<%= producto.id %>"data-product-name="<%= producto.nombre %>" 
                                                             data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"

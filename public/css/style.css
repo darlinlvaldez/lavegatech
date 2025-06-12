@@ -1939,6 +1939,7 @@ textarea.input {
 
 .reviews .review-body {
   min-height: 70px;
+  word-break: break-word;
 }
 
 .reviews .review-heading .name {
