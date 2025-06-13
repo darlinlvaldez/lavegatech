@@ -1,0 +1,282 @@
+/* Estilos generales para el cuerpo de la página */
+.body-comparison {
+    font-family: 'Inter', sans-serif;
+
+    padding: 16px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Contenedor principal centrado y con sombra */
+.container-comparison {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+}
+
+/* Encabezado */
+.tittle-comparison {
+    font-size: 2.25rem;
+    font-weight: 800;
+    text-align: center;
+    color: #4338ca;
+    margin-bottom: 32px;
+}
+
+/* Párrafo descriptivo */
+.description-comparison {
+    text-align: center;
+    font-size: 1.125rem;
+    color: #4b5563;
+    margin-bottom: 40px;
+}
+
+/* Contenedor de las tarjetas de dispositivos */
+.device-cards-wrapper-comparison {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    justify-content: center;
+    align-items: stretch;
+}
+
+/* Estilos base para cada tarjeta de dispositivo */
+.device-card-comparison {
+    flex: 1;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+/* Estilos específicos para la Tarjeta 1 (Azul) */
+.device-card-comparison.blue-comparison {
+    background: linear-gradient(to bottom right, #eff6ff, #dbeafe);
+    border: 1px solid #bfdbfe;
+}
+
+.device-card-comparison.blue-comparison .tittle2-comparison {
+    color: #1e40af;
+}
+
+.device-card-comparison.blue-comparison .spec-header-comparison {
+    background-color: #bfdbfe;
+    color: #1f2937;
+}
+
+.device-card-comparison.blue-comparison .spec-value-comparison {
+    background-color: #eff6ff;
+    color: #1e40af;
+}
+
+.device-card-comparison.blue-comparison .btn-comparison {
+    background-color: #2563eb;
+}
+
+.device-card-comparison.blue-comparison .btn-comparison:hover {
+    background-color: #1d4ed8;
+}
+
+/* Estilos específicos para la Tarjeta 2 (Verde) */
+.device-card-comparison.green-comparison {
+    background: linear-gradient(to bottom right, #ecfdf5, #d1fae5);
+    border: 1px solid #a7f3d0;
+}
+
+.device-card-comparison.green-comparison .tittle2-comparison {
+    color: #065f46;
+}
+
+.device-card-comparison.green-comparison .spec-header-comparison {
+    background-color: #a7f3d0;
+    color: #1f2937;
+}
+
+.device-card-comparison.green-comparison .spec-value-comparison {
+    background-color: #ecfdf5;
+    color: #065f46;
+}
+
+.device-card-comparison.green-comparison .btn-comparison {
+    background-color: #059669;
+}
+
+.device-card-comparison.green-comparison .btn-comparison:hover {
+    background-color: #047857;
+}
+
+/* Imagen del dispositivo */
+.device-image-comparison {
+    width: 128px;
+    height: 128px;
+    margin-bottom: 24px;
+    border-radius: 9999px;
+    overflow: hidden;
+    border: 4px solid;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.device-card-comparison.blue-comparison .device-image-comparison {
+    border-color: #93c5fd;
+}
+
+.device-card-comparison.green-comparison .device-image-comparison {
+    border-color: #6ee7b7;
+}
+
+.device-image-comparison .img-comparison{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Grid para las especificaciones */
+.specs-grid-comparison {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    width: 100%;
+}
+
+.spec-item-comparison {
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 0.875rem;
+}
+
+.spec-header-comparison {
+    font-weight: 600;
+}
+
+/* Botón de acción */
+.btn-comparison {
+    margin-top: 32px;
+    padding: 12px 32px;
+    font-weight: 700;
+    color: #ffffff;
+    border-radius: 9999px;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border: none;
+    cursor: pointer;
+}
+
+.btn-comparison:hover {
+    transform: scale(1.05);
+}
+
+/* Separador "VS" para pantallas grandes */
+.vs-separator-large-comparison {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.vs-separator-large-comparison span {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: #6b7280;
+    background-color: #e5e7eb;
+    border-radius: 9999px;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* Separador "VS" para pantallas pequeñas */
+.vs-separator-small-comparison {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    position: relative;
+}
+
+.vs-separator-small-comparison hr {
+    border-top: 2px solid #d1d5db;
+    width: 100%;
+    max-width: 320px;
+}
+
+.vs-separator-small-comparison span {
+    position: absolute;
+    background-color: #f3f4f6;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #6b7280;
+    padding: 0 12px;
+    margin-top: -1px;
+}
+
+/* Pie de página */
+.footer-comparison {
+    margin-top: 48px;
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.footer-comparison .p-comparison {
+    margin-top: 8px;
+}
+
+/* Media Queries para responsividad */
+
+/* Pequeñas pantallas (sm) */
+@media (min-width: 640px) {
+    .body-comparison {
+        padding: 24px;
+    }
+
+    .container-comparison {
+        padding: 32px;
+    }
+
+    .tittle-comparison {
+        font-size: 2.5rem;
+    }
+}
+
+/* Pantallas medianas (md) */
+@media (min-width: 768px) {
+    .specs-grid-comparison {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Pantallas grandes (lg) */
+@media (min-width: 1024px) {
+    .body-comparison {
+        padding: 32px;
+    }
+
+    .container-comparison {
+        padding: 40px;
+    }
+
+    .device-cards-wrapper-comparison {
+        flex-direction: row;
+        gap: 32px;
+    }
+
+    .vs-separator-large-comparison {
+        display: flex;
+    }
+
+    .vs-separator-small-comparison {
+        display: none;
+    }
+}

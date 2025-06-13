@@ -103,6 +103,14 @@ app.get('/order', isAuth(), (req, res) => {
   res.render('store/order');  
 });
 
+app.get('/comparison', (req, res) => {
+  res.render('comparison/comparison');  
+});
+
+app.get('/device', (req, res) => {
+  res.render('comparison/device');  
+});
+
 app.get('/conditions', (req, res) => {
   res.render('information/conditions');  
 });
