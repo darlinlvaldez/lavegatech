@@ -1404,6 +1404,14 @@ textarea.input {
   font-size: 14px;
 }
 
+.products-slick {
+  visibility: hidden;
+}
+
+.products-slick.slick-initialized {
+  visibility: visible;
+}
+
 /*=========================================================
 	07 -> PRODUCTS PAGE
 ===========================================================*/

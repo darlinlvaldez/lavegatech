@@ -4,7 +4,6 @@
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
   
-  
 <!-- HTML TAB -->
 <script>
 function openCategory(evt, categoryName) {
@@ -20,9 +19,7 @@ function openCategory(evt, categoryName) {
     document.getElementById(categoryName).style.display = "block";
     evt.currentTarget.className += " active";
 
-    setTimeout(function () {
-    $("#" + categoryName + " .products-slick").slick("refresh");
-    }, 1);
+    $("#" + categoryName + " .products-slick").slick("setPosition");
 }
 
 document.addEventListener("DOMContentLoaded", function() {
