@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-06-2025 a las 02:41:43
+-- Tiempo de generación: 13-06-2025 a las 03:57:00
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -86,6 +86,15 @@ CREATE TABLE `cart` (
   `nombre` varchar(255) DEFAULT NULL,
   `fecha_agregado` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+--
+-- Volcado de datos para la tabla `cart`
+--
+
+INSERT INTO `cart` (`id`, `usuario_id`, `producto_id`, `colorSeleccionado`, `cantidad`, `descuento`, `precio`, `imagen`, `nombre`, `fecha_agregado`) VALUES
+(1214, 75, 1, 'azul', 2, 20.00, 15995.00, 'https://hsi.com.co/wp-content/uploads/2022/03/Apple-iPhone-12-128GB-Usado-B-Azul-400x400.jpg', 'iPhone 12 64GB', '2025-06-08 01:51:48'),
+(1215, 75, 2, 'blanco', 2, 0.00, 17995.00, 'https://rukminim2.flixcart.com/image/850/1000/kg8avm80/mobile/j/f/9/apple-iphone-12-dummyapplefsn-original-imafwg8dkyh2zgrh.jpeg?q=90&crop=false', 'iPhone 12 128GB', '2025-06-10 17:16:53'),
+(1217, 75, 1, 'blanco', 1, 20.00, 15995.00, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg', 'iPhone 12 64GB', '2025-06-11 23:33:44');
 
 -- --------------------------------------------------------
 
@@ -228,11 +237,11 @@ CREATE TABLE `fav` (
 --
 
 INSERT INTO `fav` (`id`, `usuario_id`, `producto_id`, `colorSeleccionado`, `descuento`, `precio`, `imagen`, `nombre`, `fecha_agregado`) VALUES
-(645, 75, 1, 'negro espacial', 20.00, 15995.00, 'https://www.trippodo.com/997943-medium_default/apple-iphone-12-155-cm-61-sim-doble-ios-14-5g-128-.jpg', 'iPhone 12 64GB', '2025-06-02 14:12:57'),
-(646, 75, 2, 'blanco', 0.00, 17995.00, 'https://rukminim2.flixcart.com/image/850/1000/kg8avm80/mobile/j/f/9/apple-iphone-12-dummyapplefsn-original-imafwg8dkyh2zgrh.jpeg?q=90&crop=false', 'iPhone 12 128GB', '2025-06-02 16:19:14'),
 (650, 67, 3, 'dorado', 0.00, 19495.00, 'https://www.cnet.com/a/img/resize/f3c42740a704792b25be68e230db619993cd564f/hub/2020/11/09/d0f15941-5210-4a0b-ab66-78a2e58dd245/16-iphone-12-pro-max.jpg?auto=webp&fit=crop&height=900&width=1200', 'iPhone 12 256GB', '2025-06-02 17:44:48'),
-(651, 75, 3, 'dorado', 0.00, 19495.00, 'https://www.cnet.com/a/img/resize/f3c42740a704792b25be68e230db619993cd564f/hub/2020/11/09/d0f15941-5210-4a0b-ab66-78a2e58dd245/16-iphone-12-pro-max.jpg?auto=webp&fit=crop&height=900&width=1200', 'iPhone 12 256GB', '2025-06-04 15:04:37'),
-(652, 75, 98, 'blanco', 0.00, 39995.00, 'https://globaliraq.net/cdn/shop/files/1bbcf8d6-eaea-4f46-96e5-e4aee2924baa_2048x.jpg?v=1710541301', 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', '2025-06-04 15:06:56');
+(664, 75, 1, 'purpura', 20.00, 15995.00, 'https://www.artefacta.com/media/catalog/product/1/4/148658_2_.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=400&width=400&canvas=400:400', 'iPhone 12 64GB', '2025-06-07 15:22:34'),
+(665, 75, 1, 'blanco', 20.00, 15995.00, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg', 'iPhone 12 64GB', '2025-06-07 22:48:01'),
+(666, 75, 1, 'negro espacial', 20.00, 15995.00, 'https://www.trippodo.com/997943-medium_default/apple-iphone-12-155-cm-61-sim-doble-ios-14-5g-128-.jpg', 'iPhone 12 64GB', '2025-06-12 00:29:26'),
+(667, 75, 2, 'blanco', 0.00, 17995.00, 'https://rukminim2.flixcart.com/image/850/1000/kg8avm80/mobile/j/f/9/apple-iphone-12-dummyapplefsn-original-imafwg8dkyh2zgrh.jpeg?q=90&crop=false', 'iPhone 12 128GB', '2025-06-13 00:02:03');
 
 -- --------------------------------------------------------
 
@@ -393,9 +402,8 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `user_id`, `nombre`, `apellido`, `email`, `direccion`, `ciudad`, `distrito`, `telefono`, `horario_entrega`, `total`, `status`, `fecha_creacion`) VALUES
-(89, 75, 'Nilrad', 'L. Valdez', 'nilradlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '8-12', 17995.00, 'pagado', '2025-06-04 19:59:56'),
-(90, 75, 'Nilrad', 'L. Valdez', 'nilradlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '2-5', 38990.00, 'pendiente', '2025-06-04 20:03:39'),
-(91, 75, 'Nilrad', 'L. Valdez', 'nilradlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '2-5', 38990.00, 'pagado', '2025-06-04 20:08:51');
+(129, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '8-12', 17995.00, 'pagado', '2025-06-07 20:27:28'),
+(130, 75, 'Nilrad', 'L. Valdez', 'nilradlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '8-12', 12796.00, 'pagado', '2025-06-07 20:33:14');
 
 -- --------------------------------------------------------
 
@@ -420,9 +428,8 @@ CREATE TABLE `order_items` (
 --
 
 INSERT INTO `order_items` (`id`, `order_id`, `producto_id`, `nombre_producto`, `cantidad`, `precio_unitario`, `descuento`, `subtotal`, `colorSeleccionado`) VALUES
-(80, 89, 2, 'iPhone 12 128GB', 1, 17995.00, 0.00, 17995.00, NULL),
-(81, 90, 3, 'iPhone 12 256GB', 2, 19495.00, 0.00, 38990.00, NULL),
-(82, 91, 3, 'iPhone 12 256GB', 2, 19495.00, 0.00, 38990.00, 'dorado');
+(138, 129, 2, 'iPhone 12 128GB', 1, 17995.00, 0.00, 17995.00, 'blanco'),
+(139, 130, 1, 'iPhone 12 64GB', 1, 15995.00, 20.00, 12796.00, 'azul');
 
 -- --------------------------------------------------------
 
@@ -444,8 +451,8 @@ CREATE TABLE `payments` (
 --
 
 INSERT INTO `payments` (`id`, `order_id`, `metodo_pago`, `estado_pago`, `paypal_order_id`, `fecha_pago`) VALUES
-(17, 89, 'paypal', 'completado', '1R617432H6916841B', '2025-06-04 20:00:25'),
-(18, 91, 'paypal', 'completado', '9FV59524XA122162S', '2025-06-04 20:21:47');
+(53, 129, 'paypal', 'completado', '5FG890261R382094E', '2025-06-07 20:27:28'),
+(54, 130, 'paypal', 'completado', '0EJ95689727963838', '2025-06-07 20:33:14');
 
 -- --------------------------------------------------------
 
@@ -472,10 +479,10 @@ INSERT INTO `productos` (`id`, `nombre`, `descripcion`, `precio`, `categoria_id`
 (1, 'iPhone 12 64GB', '', 15995.00, 1, 20.00, '2025-05-31 11:06:10', 1),
 (2, 'iPhone 12 128GB', '', 17995.00, 1, 0.00, '2025-05-31 08:00:00', 1),
 (3, 'iPhone 12 256GB', '', 19495.00, 1, 0.00, '2025-05-31 08:00:00', 1),
-(4, 'iPhone 12 Pro 128GB', '', 21995.00, 1, 0.00, '2025-05-01 08:00:00', 1),
-(5, 'iPhone 12 Pro 256GB', '', 23995.00, 1, 0.00, '2025-05-01 08:00:00', 1),
-(6, 'iPhone 12 Pro Max 128GB ', '', 27495.00, 1, 0.00, '2025-05-01 08:00:00', 1),
-(7, 'iPhone 12 Pro Max 256GB ', '', 28995.00, 1, 0.00, '2025-05-01 08:00:00', 1),
+(4, 'iPhone 12 Pro 128GB', '', 21995.00, 1, 0.00, '2025-05-31 08:00:00', 1),
+(5, 'iPhone 12 Pro 256GB', '', 23995.00, 1, 0.00, '2025-05-31 08:00:00', 1),
+(6, 'iPhone 12 Pro Max 128GB ', '', 27495.00, 1, 0.00, '2025-05-31 08:00:00', 1),
+(7, 'iPhone 12 Pro Max 256GB ', '', 28995.00, 1, 0.00, '2025-05-31 08:00:00', 1),
 (8, 'iPhone 12 Pro Max 512GB', '', 29995.00, 1, 0.00, '2025-05-01 08:00:00', 1),
 (9, 'iPhone 13 128GB ', '', 23995.00, 1, 0.00, '2025-05-01 08:00:00', 1),
 (10, 'iPhone 13 256GB ', '', 25495.00, 1, 0.00, '2025-05-01 08:00:00', 1),
@@ -712,6 +719,38 @@ INSERT INTO `p_marcas` (`id`, `nombre`, `logo`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `ratings`
+--
+
+CREATE TABLE `ratings` (
+  `id` int(11) NOT NULL,
+  `producto_id` int(11) NOT NULL,
+  `usuario_id` int(11) NOT NULL,
+  `calificacion` tinyint(3) UNSIGNED DEFAULT NULL COMMENT 'Valor del 1 al 5',
+  `comentario` text DEFAULT NULL,
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_actualizacion` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ;
+
+--
+-- Volcado de datos para la tabla `ratings`
+--
+
+INSERT INTO `ratings` (`id`, `producto_id`, `usuario_id`, `calificacion`, `comentario`, `fecha_creacion`, `fecha_actualizacion`) VALUES
+(29, 1, 75, 5, 'El CHECK en SQL es una restricción que se usa para asegurar que los datos que se ingresan en una columna cumplan ciertas condiciones. Es como una regla que impone el mismo motor de base de datos para evitar que se guarden datos inválidos.', '2025-06-11 19:31:49', '2025-06-12 14:04:45'),
+(30, 3, 75, 5, 'claro', '2025-06-11 20:11:27', '2025-06-12 14:04:48'),
+(31, 1, 75, 5, 'no sabe tu', '2025-06-11 21:24:23', '2025-06-12 14:04:51'),
+(33, 1, 75, 5, 'tengo hambre', '2025-06-11 21:26:16', '2025-06-12 14:04:54'),
+(34, 1, 75, 5, 'que duro', '2025-06-11 21:26:16', '2025-06-12 14:06:13'),
+(35, 1, 75, 4, 'potente', '2025-06-11 21:26:16', '2025-06-12 14:04:59'),
+(36, 1, 75, 4, 'te entro?', '2025-06-11 21:26:16', '2025-06-12 14:05:02'),
+(37, 1, 75, 4, 'que calor', '2025-06-11 21:26:16', '2025-06-12 14:06:35'),
+(38, 1, 75, 2, 'vete', '2025-06-11 21:26:16', '2025-06-12 14:05:08'),
+(39, 1, 75, 3, 'fo', '2025-06-11 21:26:16', '2025-06-12 14:05:12');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `sessions`
 --
 
@@ -720,13 +759,6 @@ CREATE TABLE `sessions` (
   `expires` int(11) UNSIGNED NOT NULL,
   `data` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
-
---
--- Volcado de datos para la tabla `sessions`
---
-
-INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('DSEjc9C3SsgOXDsSqGqVX4noutmfxToC', 1749086511, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-06-05T00:34:50.977Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":75,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}');
 
 -- --------------------------------------------------------
 
@@ -769,13 +801,13 @@ CREATE TABLE `variantes` (
 --
 
 INSERT INTO `variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
-(372, 1, 'negro espacial', 7, 'https://www.trippodo.com/997943-medium_default/apple-iphone-12-155-cm-61-sim-doble-ios-14-5g-128-.jpg'),
+(372, 1, 'negro espacial', 0, 'https://www.trippodo.com/997943-medium_default/apple-iphone-12-155-cm-61-sim-doble-ios-14-5g-128-.jpg'),
 (373, 1, 'azul', 5, 'https://hsi.com.co/wp-content/uploads/2022/03/Apple-iPhone-12-128GB-Usado-B-Azul-400x400.jpg'),
 (374, 98, 'blanco', 9, 'https://globaliraq.net/cdn/shop/files/1bbcf8d6-eaea-4f46-96e5-e4aee2924baa_2048x.jpg?v=1710541301'),
-(375, 1, 'purpura', 6, 'https://www.artefacta.com/media/catalog/product/1/4/148658_2_.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=400&width=400&canvas=400:400'),
+(375, 1, 'purpura', 3, 'https://www.artefacta.com/media/catalog/product/1/4/148658_2_.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=400&width=400&canvas=400:400'),
 (376, 2, 'blanco', 3, 'https://rukminim2.flixcart.com/image/850/1000/kg8avm80/mobile/j/f/9/apple-iphone-12-dummyapplefsn-original-imafwg8dkyh2zgrh.jpeg?q=90&crop=false'),
 (377, 3, 'dorado', 4, 'https://www.cnet.com/a/img/resize/f3c42740a704792b25be68e230db619993cd564f/hub/2020/11/09/d0f15941-5210-4a0b-ab66-78a2e58dd245/16-iphone-12-pro-max.jpg?auto=webp&fit=crop&height=900&width=1200'),
-(382, 1, 'blanco', 3, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg');
+(382, 1, 'blanco', 8, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg');
 
 --
 -- Índices para tablas volcadas
@@ -922,6 +954,14 @@ ALTER TABLE `p_marcas`
   ADD UNIQUE KEY `nombre` (`nombre`);
 
 --
+-- Indices de la tabla `ratings`
+--
+ALTER TABLE `ratings`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `producto_id` (`producto_id`),
+  ADD KEY `usuario_id` (`usuario_id`);
+
+--
 -- Indices de la tabla `sessions`
 --
 ALTER TABLE `sessions`
@@ -961,7 +1001,7 @@ ALTER TABLE `camara`
 -- AUTO_INCREMENT de la tabla `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1109;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1218;
 
 --
 -- AUTO_INCREMENT de la tabla `categorias`
@@ -1003,7 +1043,7 @@ ALTER TABLE `estados_pedido`
 -- AUTO_INCREMENT de la tabla `fav`
 --
 ALTER TABLE `fav`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=653;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=668;
 
 --
 -- AUTO_INCREMENT de la tabla `marcas`
@@ -1027,19 +1067,19 @@ ALTER TABLE `moviles`
 -- AUTO_INCREMENT de la tabla `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
 
 --
 -- AUTO_INCREMENT de la tabla `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=140;
 
 --
 -- AUTO_INCREMENT de la tabla `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
@@ -1052,6 +1092,12 @@ ALTER TABLE `productos`
 --
 ALTER TABLE `p_marcas`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT de la tabla `ratings`
+--
+ALTER TABLE `ratings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
@@ -1144,6 +1190,13 @@ ALTER TABLE `payments`
 ALTER TABLE `productos`
   ADD CONSTRAINT `productos_ibfk_1` FOREIGN KEY (`categoria_id`) REFERENCES `categorias` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `productos_ibfk_2` FOREIGN KEY (`marca_id`) REFERENCES `p_marcas` (`id`) ON DELETE SET NULL;
+
+--
+-- Filtros para la tabla `ratings`
+--
+ALTER TABLE `ratings`
+  ADD CONSTRAINT `ratings_ibfk_1` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `ratings_ibfk_2` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `variantes`
