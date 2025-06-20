@@ -43,6 +43,14 @@ document.addEventListener('DOMContentLoaded', function() {
       searchResults.style.display = 'block';
     }
 
+    searchInput.addEventListener("focus", async function () {
+      const query = this.value.trim();
+      if (query.length >= 2) {
+        const products = await searchProducts(query);
+        displayResults(products);
+      }
+    });
+
     searchInput.addEventListener('input', async function() {
       const query = this.value.trim();
       if (query.length >= 2) {

@@ -1,638 +1,332 @@
-<%- include('../components/header.ejs') %>
+<%- include('../partials/header.ejs') %>
+
+
+<head>
+    <link rel="stylesheet" href="/css/comparison.css">
+    <link rel="stylesheet" href="/css/search.css">
+</head>
+
 <body>
-  <div class="code-container">
-    <h2>
-      <%= type === 'reset' ? 'Ingresa el código de verificación' : 'Verifica tu correo' %>
-    </h2>
-    <p>
-      <%= type === 'reset'
-          ? 'Para tu seguridad, enviamos el código a tu correo electrónico'
-          : 'Hemos enviado un código a tu correo' %>
-      <strong><%= email %></strong>
-    </p>
-    <form method="POST" action="/api/auth/verifyCode">
-      <input type="hidden" name="email" value="<%= email %>">
-      <input type="hidden" name="type" value="<%= type %>">
-      <input type="text" name="code" placeholder="Código de verificación" required
-        class="<%= validationErrors?.code ? 'input-error' : '' %>">
-      <% if (validationErrors?.code) { %>
-        <p class="field-error"><%= validationErrors.code %></p>
-      <% } %>
-      <% if (error && !validationErrors?.code) { %>
-        <p class="general-error"><%= error %></p>
-      <% } %>
-      <button type="submit">
-        <%= type === 'reset' ? 'Verificar código' : 'Verificar' %>
-      </button>
-    </form>
-    <form method="POST" action="/api/auth/resendCode">
-      <input type="hidden" name="email" value="<%= email %>">
-      <input type="hidden" name="type" value="<%= type %>">
-      <button type="submit">Reenviar código</button>
-    </form>
-  </div>
+
+    <div id="comparison-page" class="body-comparison">
+        <div class="container-comparison">
+            <h1 class="tittle-comparison">Comparador de Dispositivos Móviles</h1>
+            <p class="description-comparison">
+                Compara especificaciones clave para tomar la mejor decisión.
+            </p>
+
+            <div class="search-comparison">
+                <form>
+                    <input class="input-comparison" placeholder="Buscar">
+                    <button class="search-comparison-btn">Comparar</button>
+                </form>
+            </div>
+
+            <!-- Contenedor principal para las tarjetas de los dispositivos -->
+            <div class="device-cards-wrapper-comparison">
+
+                <!-- Tarjeta del Dispositivo 1 -->
+                <div class="device-card blue-comparison">
+                    <h2 class="tittle2-comparison">Smartphone A</h2>
+                    <div class="device-image">
+                        <!-- Imagen de placeholder para el dispositivo -->
+                        <img class="img-comparison"
+                            src="https://placehold.co/128x128/ADD8E6/000000?text=Dispositivo+A"
+                            alt="Imagen del Smartphone A">
+                    </div>
+
+                    <div class="specs-grid">
+                        <!-- Fila de especificaciones: Pantalla -->
+                        <div class="spec-item spec-header">
+                            Pantalla:
+                        </div>
+                        <div class="spec-item spec-value">
+                            6.1" OLED
+                        </div>
+
+                        <!-- Fila de especificaciones: Procesador -->
+                        <div class="spec-item spec-header">
+                            Procesador:
+                        </div>
+                        <div class="spec-item spec-value">
+                            Chip UltraX
+                        </div>
+
+                        <!-- Fila de especificaciones: Cámara -->
+                        <div class="spec-item spec-header">
+                            Cámara:
+                        </div>
+                        <div class="spec-item spec-value">
+                            48MP (Principal)
+                        </div>
+
+                        <!-- Fila de especificaciones: Batería -->
+                        <div class="spec-item spec-header">
+                            Batería:
+                        </div>
+                        <div class="spec-item spec-value">
+                            4500 mAh
+                        </div>
+
+                        <!-- Fila de especificaciones: Almacenamiento -->
+                        <div class="spec-item spec-header">
+                            Almacenamiento:
+                        </div>
+                        <div class="spec-item spec-value">
+                            128GB
+                        </div>
+
+                        <!-- Fila de especificaciones: RAM -->
+                        <div class="spec-item spec-header">
+                            RAM:
+                        </div>
+                        <div class="spec-item spec-value">
+                            8GB
+                        </div>
+                    </div>
+
+                    <!-- Botón de acción -->
+                    <button class="btn-comparison">
+                        Ver Detalles
+                    </button>
+                </div>
+
+                <!-- Separador o "vs" en pantallas grandes -->
+                <div class="vs-separator-large-comparison">
+                    <span>VS</span>
+                </div>
+                <!-- Separador para pantallas pequeñas -->
+                <div class="vs-separator-small-comparison">
+                    <hr>
+                    <span>VS</span>
+                    <hr>
+                </div>
+
+                <!-- Tarjeta del Dispositivo 2 -->
+                <div class="device-card green-comparison">
+                    <h2 class="tittle2-comparison">Smartphone B</h2>
+                    <div class="device-image">
+                        <!-- Imagen de placeholder para el dispositivo -->
+                        <img class="img-comparison"
+                            src="https://placehold.co/128x128/90EE90/000000?text=Dispositivo+B"
+                            alt="Imagen del Smartphone B">
+                    </div>
+
+                    <div class="specs-grid">
+                        <!-- Fila de especificaciones: Pantalla -->
+                        <div class="spec-item spec-header">
+                            Pantalla:
+                        </div>
+                        <div class="spec-item spec-value">
+                            6.7" AMOLED
+                        </div>
+
+                        <!-- Fila de especificaciones: Procesador -->
+                        <div class="spec-item spec-header">
+                            Procesador:
+                        </div>
+                        <div class="spec-item spec-value">
+                            Snapdragon Gen 3
+                        </div>
+
+                        <!-- Fila de especificaciones: Cámara -->
+                        <div class="spec-item spec-header">
+                            Cámara:
+                        </div>
+                        <div class="spec-item spec-value">
+                            50MP (Principal)
+                        </div>
+
+                        <!-- Fila de especificaciones: Batería -->
+                        <div class="spec-item spec-header">
+                            Batería:
+                        </div>
+                        <div class="spec-item spec-value">
+                            5000 mAh
+                        </div>
+
+                        <!-- Fila de especificaciones: Almacenamiento -->
+                        <div class="spec-item spec-header">
+                            Almacenamiento:
+                        </div>
+                        <div class="spec-item spec-value">
+                            256GB
+                        </div>
+
+                        <!-- Fila de especificaciones: RAM -->
+                        <div class="spec-item spec-header">
+                            RAM:
+                        </div>
+                        <div class="spec-item spec-value">
+                            12GB
+                        </div>
+                    </div>
+
+                    <!-- Botón de acción -->
+                    <button class="btn-comparison">
+                        Ver Detalles
+                    </button>
+                </div>
+
+                <!-- Separador o "vs" en pantallas grandes -->
+                <div class="vs-separator-large-comparison">
+                    <span>VS</span>
+                </div>
+                <!-- Separador para pantallas pequeñas -->
+                <div class="vs-separator-small-comparison">
+                    <hr>
+                    <span>VS</span>
+                    <hr>
+                </div>
+
+                <!-- Tarjeta del Dispositivo 2 -->
+                <div class="device-card green-comparison">
+                    <h2 class="tittle2-comparison">Smartphone B</h2>
+                    <div class="device-image">
+                        <!-- Imagen de placeholder para el dispositivo -->
+                        <img class="img-comparison"
+                            src="https://placehold.co/128x128/90EE90/000000?text=Dispositivo+B"
+                            alt="Imagen del Smartphone B">
+                    </div>
+
+                    <div class="specs-grid">
+                        <!-- Fila de especificaciones: Pantalla -->
+                        <div class="spec-item spec-header">
+                            Pantalla:
+                        </div>
+                        <div class="spec-item spec-value">
+                            6.7" AMOLED
+                        </div>
+
+                        <!-- Fila de especificaciones: Procesador -->
+                        <div class="spec-item spec-header">
+                            Procesador:
+                        </div>
+                        <div class="spec-item spec-value">
+                            Snapdragon Gen 3
+                        </div>
+
+                        <!-- Fila de especificaciones: Cámara -->
+                        <div class="spec-item spec-header">
+                            Cámara:
+                        </div>
+                        <div class="spec-item spec-value">
+                            50MP (Principal)
+                        </div>
+
+                        <!-- Fila de especificaciones: Batería -->
+                        <div class="spec-item spec-header">
+                            Batería:
+                        </div>
+                        <div class="spec-item spec-value">
+                            5000 mAh
+                        </div>
+
+                        <!-- Fila de especificaciones: Almacenamiento -->
+                        <div class="spec-item spec-header">
+                            Almacenamiento:
+                        </div>
+                        <div class="spec-item spec-value">
+                            256GB
+                        </div>
+
+                        <!-- Fila de especificaciones: RAM -->
+                        <div class="spec-item spec-header">
+                            RAM:
+                        </div>
+                        <div class="spec-item spec-value">
+                            12GB
+                        </div>
+                    </div>
+
+                    <!-- Botón de acción -->
+                    <button class="btn-comparison">
+                        Ver Detalles
+                    </button>
+                </div>
+
+                <!-- Separador o "vs" en pantallas grandes -->
+                <div class="vs-separator-large-comparison">
+                    <span>VS</span>
+                </div>
+                <!-- Separador para pantallas pequeñas -->
+                <div class="vs-separator-small-comparison">
+                    <hr>
+                    <span>VS</span>
+                    <hr>
+                </div>
+
+                <!-- Tarjeta del Dispositivo 2 -->
+                <div class="device-card green-comparison">
+                    <h2 class="tittle2-comparison">Smartphone B</h2>
+                    <div class="device-image">
+                        <!-- Imagen de placeholder para el dispositivo -->
+                        <img class="img-comparison"
+                            src="https://placehold.co/128x128/90EE90/000000?text=Dispositivo+B"
+                            alt="Imagen del Smartphone B">
+                    </div>
+
+                    <div class="specs-grid">
+                        <!-- Fila de especificaciones: Pantalla -->
+                        <div class="spec-item spec-header">
+                            Pantalla:
+                        </div>
+                        <div class="spec-item spec-value">
+                            6.7" AMOLED
+                        </div>
+
+                        <!-- Fila de especificaciones: Procesador -->
+                        <div class="spec-item spec-header">
+                            Procesador:
+                        </div>
+                        <div class="spec-item spec-value">
+                            Snapdragon Gen 3
+                        </div>
+
+                        <!-- Fila de especificaciones: Cámara -->
+                        <div class="spec-item spec-header">
+                            Cámara:
+                        </div>
+                        <div class="spec-item spec-value">
+                            50MP (Principal)
+                        </div>
+
+                        <!-- Fila de especificaciones: Batería -->
+                        <div class="spec-item spec-header">
+                            Batería:
+                        </div>
+                        <div class="spec-item spec-value">
+                            5000 mAh
+                        </div>
+
+                        <!-- Fila de especificaciones: Almacenamiento -->
+                        <div class="spec-item spec-header">
+                            Almacenamiento:
+                        </div>
+                        <div class="spec-item spec-value">
+                            256GB
+                        </div>
+
+                        <!-- Fila de especificaciones: RAM -->
+                        <div class="spec-item spec-header">
+                            RAM:
+                        </div>
+                        <div class="spec-item spec-value">
+                            12GB
+                        </div>
+                    </div>
+
+                    <!-- Botón de acción -->
+                    <button class="btn-comparison">
+                        Ver Detalles
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/footer.ejs') %>
+
 </body>
-<%- include('../components/footer.ejs') %>
 
-
-import bcrypt from 'bcrypt';
-import config from '../../config.js';
-import user from '../models/auth.js';
-import emailService from '../services/email.js';
-import code from '../utils/generateCode.js';
-import { ERROR_MESSAGES } from '../utils/error.js';
-import { renderError } from '../utils/error.js';
-
-const auth = {};
-
-auth.register = async (req, res) => {
-  try {
-    const { username, email: correo, password, confirmPassword } = req.body;
-
-    if (req.validationError) {
-      return renderError(res, 'login/register', null, { 
-        email: correo, username, validationErrors: req.validationError.fields});
-    }
-
-    if (password !== confirmPassword) {
-      return renderError(res, 'login/register', 'Las contraseñas no coinciden', { 
-        email: correo, username, validationErrors: 
-        { password: ERROR_MESSAGES.PASSWORDS_DONT_MATCH, confirmPassword: ERROR_MESSAGES.PASSWORDS_DONT_MATCH }
-      });
-    }
-
-    const alreadyExists = await user.userExists(correo);
-    if (alreadyExists) {
-      return renderError(res, 'login/register', 'El correo ya está registrado', { 
-        email: correo, username,
-        validationErrors: { email: ERROR_MESSAGES.EMAIL_ALREADY_EXISTS }
-      });
-    }
-
-    const hashedPassword = await code.hashPassword(password);
-    const generatedCode = await code.generateCode();
-
-    code.pendingUsers.set(correo, {
-      username, hashedPassword, code: generatedCode, expiresAt: Date.now() + 10 * 60 * 1000
-    });
-
-     res.render('login/verify', {
-      title: 'Verifica tu correo',
-      description: 'Hemos enviado un código a tu correo electrónico.',
-      email: correo,
-      type: 'verify',
-      submitText: 'Verificar',
-      error: null,
-      validationErrors: {}
-    });
-  } catch (error) {
-    console.error(error);
-    return renderError(res, 'login/register', ERROR_MESSAGES.REGISTRATION_ERROR, {
-      email: req.body.email, username: req.body.username, validationErrors: {} 
-    });
-  }
-};
-
-auth.showVerifyForm = (req, res) => res.render('login/verify', { email: req.query.email });
-
-auth.verifyCode = async (req, res) => {
-  try {
-    const { email, code: userCode, type } = req.body;
-    const store = type === 'reset' ? code.resetPending : code.pendingUsers;
-
-    if (req.validationError) {
-      // Cambio aquí: Usar vista unificada para errores
-      return renderError(res, 'login/verify', null, {
-        title: type === 'reset' ? 'Verificación de seguridad' : 'Verifica tu correo',
-        description: type === 'reset' 
-          ? 'Ingresa el código para restablecer tu contraseña.' 
-          : 'Hemos enviado un código a tu correo electrónico.',
-        email,
-        type,
-        submitText: type === 'reset' ? 'Continuar' : 'Verificar',
-        validationErrors: req.validationError.fields
-      });
-    }
-
-    const result = code.validateCode(store, email, userCode);
-
-    if (!result.success) {
-      // Cambio aquí: Usar vista unificada para errores
-      return renderError(res, 'login/verify', ERROR_MESSAGES.INVALID_CODE, {
-        title: type === 'reset' ? 'Verificación de seguridad' : 'Verifica tu correo',
-        description: type === 'reset' 
-          ? 'Ingresa el código para restablecer tu contraseña.' 
-          : 'Hemos enviado un código a tu correo electrónico.',
-        email,
-        type,
-        submitText: type === 'reset' ? 'Continuar' : 'Verificar',
-        validationErrors: {code: ERROR_MESSAGES.INVALID_CODE}
-      });
-    }
-
-    if (type === 'reset') {
-      return res.render('login/forgotPass/newpass', { 
-        email, error: null, validationErrors: {} 
-      });
-    }
-
-    const { username, hashedPassword } = result.data;
-    await user.insertUser({ username, email, password: hashedPassword });
-    code.pendingUsers.delete(email);
-    
-    res.redirect('/login');
-
-  } catch (error) {
-    console.error(error);
-    // Cambio aquí: Usar vista unificada para errores
-    return renderError(res, 'login/verify', ERROR_MESSAGES.VERIFICATION_ERROR, {
-      title: req.body.type === 'reset' ? 'Verificación de seguridad' : 'Verifica tu correo',
-      description: req.body.type === 'reset' 
-        ? 'Ingresa el código para restablecer tu contraseña.' 
-        : 'Hemos enviado un código a tu correo electrónico.',
-      email: req.body.email,
-      type: req.body.type,
-      submitText: req.body.type === 'reset' ? 'Continuar' : 'Verificar',
-      validationErrors: {}
-    });
-  }
-};
-
-
-auth.resendCode = async (req, res) => {
-  try {
-    const { email, type } = req.body;
-    const isReset = type === 'reset';
-    const store = isReset ? code.resetPending : code.pendingUsers;
-    const existing = store.get(email);
-    const now = Date.now();
-
-    if (req.validationError) {
-      // Cambio aquí: Usar vista unificada para errores
-      return renderError(res, 'login/verify', null, {
-        title: isReset ? 'Verificación de seguridad' : 'Verifica tu correo',
-        description: isReset 
-          ? 'Ingresa el código para restablecer tu contraseña.' 
-          : 'Hemos enviado un código a tu correo electrónico.',
-        email,
-        type,
-        submitText: isReset ? 'Continuar' : 'Verificar',
-        validationErrors: req.validationError.fields
-      });
-    }
-
-    if (existing && existing.lastSent && now - existing.lastSent < 3 * 60 * 1000) {
-      const remaining = Math.ceil((3 * 60 * 1000 - (now - existing.lastSent)) / 1000);
-      const msg = ERROR_MESSAGES.RESEND_COOLDOWN.replace('{seconds}', remaining);
-
-      // Cambio aquí: Usar vista unificada para errores
-      return renderError(res, 'login/verify', msg, {
-        title: isReset ? 'Verificación de seguridad' : 'Verifica tu correo',
-        description: isReset 
-          ? 'Ingresa el código para restablecer tu contraseña.' 
-          : 'Hemos enviado un código a tu correo electrónico.',
-        email,
-        type,
-        submitText: isReset ? 'Continuar' : 'Verificar',
-        validationErrors: {}
-      });
-    }
-
-    const newCode = code.generateCode();
-    const expiresAt = now + 10 * 60 * 1000;
-
-    store.set(email, {...(existing || {}), code: newCode, expiresAt, lastSent: now});
-
-    const subject = isReset
-      ? 'Nuevo código para recuperación de contraseña' 
-      : 'Nuevo código de verificación';
-
-    const text = `Tu nuevo código es: ${newCode}`;
-    await emailService.sendEmail(email, subject, text);
-
-    // Cambio aquí: Usar vista unificada
-    return res.render('login/verify', {
-      title: isReset ? 'Verificación de seguridad' : 'Verifica tu correo',
-      description: isReset 
-        ? 'Ingresa el código para restablecer tu contraseña.' 
-        : 'Hemos enviado un código a tu correo electrónico.',
-      email,
-      type,
-      submitText: isReset ? 'Continuar' : 'Verificar',
-      error: null,
-      validationErrors: {},
-      info: isReset ? null : 'reenviado'
-    });
-
-  } catch (error) {
-    console.error(error);
-    // Cambio aquí: Usar vista unificada para errores
-    return renderError(res, 'login/verify', ERROR_MESSAGES.RESEND_ERROR, {
-      title: req.body.type === 'reset' ? 'Verificación de seguridad' : 'Verifica tu correo',
-      description: req.body.type === 'reset' 
-        ? 'Ingresa el código para restablecer tu contraseña.' 
-        : 'Hemos enviado un código a tu correo electrónico.',
-      email: req.body.email,
-      type: req.body.type,
-      submitText: req.body.type === 'reset' ? 'Continuar' : 'Verificar',
-      validationErrors: {}
-    });
-  }
-};
-
-auth.login = async (req, res) => {
-  try {
-    if (req.validationError) {
-      return renderError(res, 'login/login', null, {
-        email: req.body.email, validationErrors: req.validationError.fields
-      });
-    }
-
-    const { email, password } = req.body;
-
-    const foundUser = await user.findByEmail(email);
-    if (!foundUser) {
-      return renderError(res, 'login/login', ERROR_MESSAGES.USER_NOT_FOUND, { 
-        email,validationErrors: {email: ERROR_MESSAGES.USER_NOT_FOUND} });
-    }
-
-    const isMatch = await bcrypt.compare(password, foundUser.password);
-
-    if (!isMatch) {
-      return renderError(res, 'login/login', ERROR_MESSAGES.WRONG_PASSWORD, { 
-        email, validationErrors: {password: ERROR_MESSAGES.WRONG_PASSWORD} }); 
-    }
-
-    if (!foundUser.is_verified) {
-      return renderError(res, 'login/login', ERROR_MESSAGES.UNVERIFIED_EMAIL, { 
-        email, validationErrors: { email: ERROR_MESSAGES.UNVERIFIED_EMAIL} });
-    }
-      
-    req.session.user = {id: foundUser.id, email: foundUser.email, username: foundUser.username};
-      
-    res.redirect('/');
-  } catch (error) {console.error(error);
-    return renderError(res, 'login/login', ERROR_MESSAGES.LOGIN_ERROR, {
-      email: req.body.email, validationErrors: {} });
-    }
-  };
-
-auth.email = async (req, res) => {
-  try {
-    const { email } = req.body;
-
-    if (req.validationError) {
-      return renderError(res, 'login/forgotPass/email', null, { 
-        email: req.body.email, validationErrors: req.validationError.fields});
-    }
-    
-    const foundUser = await user.findByEmail(email);
-    if (!foundUser) {
-      return renderError(res, 'login/forgotPass/email', ERROR_MESSAGES.USER_NOT_FOUND, { 
-        email, validationErrors: {email: ERROR_MESSAGES.USER_NOT_FOUND} });
-      }
-        
-    const codeUser = code.generateCode();
-    code.resetPending.set(email, {code: codeUser, expiresAt: Date.now() + 10 * 60 * 1000});
-        
-    await emailService.sendEmail(email, 'Código para recuperación de contraseña', 
-      `Tu código es: ${codeUser}. Expira en 10 minutos.`);
-          
-     res.render('login/verify', {
-      title: 'Verificación de seguridad',
-      description: 'Ingresa el código para restablecer tu contraseña.',
-      email: email,
-      type: 'reset',
-      submitText: 'Continuar',
-      error: null,
-      validationErrors: {}
-    });
-  } catch (error) {
-    console.error(error);
-    return renderError(res, 'login/forgotPass/email', ERROR_MESSAGES.SERVER_ERROR, {
-      email: req.body.email, validationErrors: {} 
-    });
-  }
-};
-
-auth.forgotPassword = async (req, res) => {
-  try {
-    const { email, password, confirm } = req.body;
-
-    if (req.validationError) {
-      return renderError(res, 'login/forgotPass/newpass', null, { 
-        email, validationErrors: req.validationError.fields});
-    }
-
-    if (password !== confirm) {
-      return renderError(res, 'login/forgotPass/newpass', ERROR_MESSAGES.PASSWORDS_DONT_MATCH, { 
-        email, validationErrors: {password: ERROR_MESSAGES.PASSWORDS_DONT_MATCH,
-          confirm: ERROR_MESSAGES.PASSWORDS_DONT_MATCH} });
-       }
-
-    if (!code.resetPending.get(email)) {
-      return renderError(res, 'login/forgotPass/newpass', ERROR_MESSAGES.NO_RESET_REQUEST, { 
-        email, validationErrors: {email: ERROR_MESSAGES.NO_RESET_REQUEST} });
-     }
-
-    const hashed = await code.hashPassword(password);
-    await user.forgotPassword(email, hashed);
-    code.resetPending.delete(email);
-    
-    res.redirect('/login');
-  } catch (error) {console.error(error);
-    return renderError(res, 'login/forgotPass/newpass', ERROR_MESSAGES.PASSWORD_RESET_ERROR, { 
-      email: req.body.email, validationErrors: {} });
-  }
-};
-
-auth.logout = (req, res) => {
-  req.session.destroy(err => {
-    if (err) {console.error('Error al cerrar sesión:', err);
-      return res.status(500).send(ERROR_MESSAGES.SERVER_ERROR);
-    }
-    res.clearCookie('connect.sid');
-    res.redirect('/login');
-  });
-};
-
-auth.formEmail = async (req, res) => {
-  const { nombre, email, asunto, mensaje } = req.body;
-
-  if (req.validationError) {
-    return renderError(res, 'store/contact', null, {
-      nombre, email, asunto, mensaje, success: false,
-      validationErrors: req.validationError.fields
-    });
-  }
-
-  if (!nombre || !email || !asunto || !mensaje) {
-    return renderError(res, 'store/contact', ERROR_MESSAGES.MISSING_FIELDS, {
-      nombre, email, asunto, mensaje, success: false,
-      validationErrors: {nombre: !nombre && ERROR_MESSAGES.REQUIRED_FIELD,
-        email: !email && ERROR_MESSAGES.REQUIRED_FIELD,
-        asunto: !asunto && ERROR_MESSAGES.REQUIRED_FIELD,
-        mensaje: !mensaje && ERROR_MESSAGES.REQUIRED_FIELD}
-    });
-  }
-
-  try {
-    await emailService.sendEmail(config.EMAIL_SENDER, asunto, `Mensaje de ${nombre} <${email}>:\n\n${mensaje}`);
-      res.render('store/contact', {nombre: '', email: '', asunto: '', mensaje: '', 
-        success: true , error: null, validationErrors: {} });
-  } catch (error) {
-    console.error('Error al enviar correo:', error);
-    return renderError(res, 'store/contact', ERROR_MESSAGES.EMAIL_SEND_ERROR, {
-      nombre, email, asunto, mensaje, validationErrors: {} });
-  }
-};
-
-export default auth;
-
-// En tu archivo de rutas (index.js o similar)
-app.get('/verify', (req, res) => {
-  const { email, type, error, info } = req.query;
-  
-  if (!email || !type) return res.redirect('/login');
-
-  res.render('login/verify', {
-    title: type === 'verify' ? 'Verifica tu correo' : 'Verificación de seguridad',
-    description: type === 'verify' 
-      ? 'Hemos enviado un código a tu correo electrónico.' 
-      : 'Ingresa el código para restablecer tu contraseña.',
-    email,
-    type,
-    submitText: type === 'verify' ? 'Verificar' : 'Continuar',
-    error: error || null,
-    info: info || null,
-    validationErrors: {}
-  });
-});
-
-
-// async function updateQuantity(input, change = 0, productId = null, color = null) {
-//     const max = parseInt(input.max);
-//     const value = input.value = Math.max(1, Math.min(parseInt(input.value) + change, max));
-
-//     if (!(productId && color)) return value;
-
-//     const cart = JSON.parse(localStorage.getItem('carrito')) || [];
-//     const item = cart.find(i => i.id === productId && i.colorSeleccionado === color);
-//     if (item) {
-//         item.cantidad = value;
-//         localStorage.setItem('carrito', JSON.stringify(cart));
-//     }
-
-//     try {
-//         const res = await fetch('/cart/update-quantity', { 
-//             method: 'POST',
-//             headers: {'Content-Type': 'application/json'},
-//             body: JSON.stringify({ itemId: productId, colorSeleccionado: color, cantidad: value }),
-//             credentials: 'include'
-//         });
-
-//         if (res.status === 401) {
-//             console.log('No autenticado: solo se actualizó localStorage.');
-//         } else if (!res.ok) {
-//             throw new Error('Error en el servidor al actualizar cantidad.');
-//         }
-//     } catch (err) {
-//         console.error('Error actualizando cantidad:', err);
-//     }
-
-//     await loadCartPreview();
-//     return value;
-// }
-
-cartController.updateQuantity = async (req, res) => {
-//   try {
-//     const userId = req.session.user.id;
-//     const { itemId, cantidad } = req.body;
-    
-//     if (!itemId || cantidad < 1) {
-//       return res.status(400).json({ 
-//         success: false, message: 'Datos inválidos'});
-//     }
-    
-//     await cart.updateQuantity(itemId, userId, cantidad);
-    
-//     const cartItems = await cart.getByUserId(userId);
-//     const subtotal = cartItems.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
-//     const total = cartItems.reduce((sum, item) => sum + ((item.precio - item.descuento) * item.cantidad), 0);
-    
-//     res.json({success: true, subtotal, total, count: 
-//       await cart.getCount(userId)});
-//   } catch (error) {console.error(error);
-//     res.status(500).json({ 
-//       success: false, message: 'Error al actualizar cantidad'});
-//   }
-// };
-
-window.addEventListener('popstate', () => setTimeout(syncColorFromURL, 50));
-
-// async function updateCart() {
-//     try {
-//         const res = await fetch('/api/auth/status', { credentials: 'include' });
-//         const { authenticated } = await res.json();
-
-//         if (authenticated) {
-//             const cartRes = await fetch('/cart/items', { credentials: 'include' });
-//             const { items } = await cartRes.json();
-//             document.querySelector('.qty-cart').textContent = items.length;
-//         } else {
-//             const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-//             document.querySelector('.qty-cart').textContent = carrito.length;
-//         }
-//     } catch (e) {
-//         console.error('Error al actualizar carrito:', e);
-//     }
-// }
-
-
-
-<!-- Product main img -->
-				<div class="col-md-5 col-md-push-2">
-					<div id="product-main-img">
-					<% if (producto.imagenes) { 
-						const imagenes = producto.imagenes.split(','); 
-						for (const imagen of imagenes) { %>
-						<div class="product-preview">
-							<img src="<%= imagen %>" alt="<%= producto.nombre %>">
-						</div>
-					<% } } %>
-					</div>
-				</div>
-				<!-- Product thumb imgs -->
-				<div class="col-md-2 col-md-pull-5">
-					<div id="product-imgs">
-					<% for (const [color, imagen] of Object.entries(imagenesPorColor)) { %>
-						<div class="product-preview" onclick="changeColor({ value: '<%= color %>' }, '<%= producto.id %>')">
-						<img src="<%= imagen %>" alt="<%= color %>">
-						</div>
-					<% } %>
-				</div>
-			</div>
-			<!-- /Product thumb imgs -->
-
-      import { fetchFav, checkAuth, updateFavCount } from './utils.js';
-import { removeFromFav, loadFavPage } from './favView.js';
-
-window.removeFromFav = removeFromFav;
-
-async function toggleFavorite(button) {
-    if (button.disabled) return;
-    button.disabled = true;
-
-    const productId = button.getAttribute('data-product-id');
-    const productName = button.getAttribute('data-product-name');
-    const productPrice = button.getAttribute('data-product-price');
-    const productDiscount = button.getAttribute('data-product-discount');
-    
-    let productImage = button.getAttribute('data-product-image');
-    
-    if (!productImage && document.getElementById('product-main-img')) {
-        const slider = $('#product-main-img');
-        if (slider.length) {
-            productImage = slider.find('.slick-current img').attr('src');
-        }
-    }
-    
-    const colorSelected = button.dataset.productColor;
-    
-    const isAlreadyAdded = button.classList.contains('added');
-
-    try {
-        const authData = await checkAuth();
-        if (!authData.authenticated) {
-            return;
-        }
-
-        if (isAlreadyAdded) {
-            await removeFromFav(productId, colorSelected);
-            button.classList.remove('added');
-            button.innerHTML = '<i class="fa fa-heart-o"></i><span class="tooltipp">Lista de deseo</span>';
-        } else {
-            await fetchFav('/fav/add', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    producto_id: productId,
-                    colorSeleccionado: colorSelected,
-                    nombre: productName,
-                    precio: productPrice,
-                    descuento: productDiscount,
-                    imagen: productImage,
-                    stockPorColor: window.productData?.stocksPorColor?.[colorSelected] || 1
-                })
-            });
-
-            button.classList.add('added');
-            button.innerHTML = '<i class="fa fa-heart"></i><span class="tooltipp">Agregado</span>';
-        }
-
-        await checkFavorites();
-    } catch (error) {
-        console.error('Error en toggleFavorite:', error);
-    } finally {
-        button.disabled = false;
-    }
-}
-
-async function checkFavorites() {
-    try {
-        const authData = await checkAuth();
-        let favorites = [];
-        
-        if (authData.authenticated) {
-            const data = await fetchFav('/fav/items');
-            if (data.success && data.items) favorites = data.items;
-        }
-
-        document.querySelectorAll('.add-to-wishlist').forEach(button => {
-            const productId = button.getAttribute('data-product-id');
-            const currentColor = button.dataset.productColor ;
-            
-            const isFav = favorites.some(item => 
-                item.id == productId && 
-                item.colorSeleccionado == currentColor
-            );
-            
-            if (isFav) {
-                button.innerHTML = '<i class="fa fa-heart"></i><span class="tooltipp">Agregado</span>';
-                button.classList.add('added');
-            } else {
-                button.innerHTML = '<i class="fa fa-heart-o"></i><span class="tooltipp">Lista de deseo</span>';
-                button.classList.remove('added');
-            }
-        });
-
-        updateFavCount(favorites.length);
-    } catch (error) {
-        console.error("Error al verificar favoritos:", error);
-        updateFavCount(0);
-    }
-}
-
-function setupEventListeners() {
-    document.querySelectorAll('[name="color"], .color-option, #colorSeleccionado').forEach(element => {
-        element.addEventListener('change', function() {
-            const selectedColor = this.value || this.textContent || this.dataset.color;
-            document.querySelectorAll('.add-to-wishlist').forEach(button => {
-                button.dataset.productColor = selectedColor;
-            });
-            checkFavorites();
-        });
-    });
-
-    document.querySelectorAll('.add-to-wishlist').forEach(button => {
-        button.addEventListener('click', () => toggleFavorite(button));
-    });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    setupEventListeners();
-    loadFavPage();
-    checkFavorites();
-});
-
-export {checkFavorites};
+</html>

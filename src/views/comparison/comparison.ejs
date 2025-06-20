@@ -3,172 +3,42 @@
 
 <head>
     <link rel="stylesheet" href="/css/comparison.css">
+    <link rel="stylesheet" href="/css/search.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
 
-<body>  <!-- Sin estilos directos aquí -->
+<body>
   <div id="comparison-page" class="body-comparison">
     <div class="container-comparison">
-        <!-- Encabezado de la página -->
-        <h1 class="tittle-comparison">Comparador de Dispositivos Móviles</h1>
-        <p class="description-comparison">
-            Compara especificaciones clave para tomar la mejor decisión.
-        </p>
+      <h1 class="tittle-comparison">Comparador de Dispositivos Móviles</h1>
+      <p class="description-comparison">
+        Compara especificaciones clave para tomar la mejor decisión.
+      </p>
 
-        <!-- Contenedor principal para las tarjetas de los dispositivos -->
-        <div class="device-cards-wrapper-comparison">
-
-            <!-- Tarjeta del Dispositivo 1 -->
-            <div class="device-card-comparison blue-comparison">
-                <h2 class="tittle2-comparison">Smartphone A</h2>
-                <div class="device-image-comparison">
-                    <!-- Imagen de placeholder para el dispositivo -->
-                    <img class="img-comparison" src="https://placehold.co/128x128/ADD8E6/000000?text=Dispositivo+A"
-                         alt="Imagen del Smartphone A">
-                </div>
-
-                <div class="specs-grid-comparison">
-                    <!-- Fila de especificaciones: Pantalla -->
-                    <div class="spec-item-comparison spec-header-comparison">
-                        Pantalla:
-                    </div>
-                    <div class="spec-item-comparison spec-value-comparison">
-                        6.1" OLED
-                    </div>
-
-                    <!-- Fila de especificaciones: Procesador -->
-                    <div class="spec-item-comparison spec-header-comparison">
-                        Procesador:
-                    </div>
-                    <div class="spec-item-comparison spec-value-comparison">
-                        Chip UltraX
-                    </div>
-
-                    <!-- Fila de especificaciones: Cámara -->
-                    <div class="spec-item-comparison spec-header-comparison">
-                        Cámara:
-                    </div>
-                    <div class="spec-item-comparison spec-value-comparison">
-                        48MP (Principal)
-                    </div>
-
-                    <!-- Fila de especificaciones: Batería -->
-                    <div class="spec-item-comparison spec-header-comparison">
-                        Batería:
-                    </div>
-                    <div class="spec-item-comparison spec-value-comparison">
-                        4500 mAh
-                    </div>
-
-                    <!-- Fila de especificaciones: Almacenamiento -->
-                    <div class="spec-item-comparison spec-header-comparison">
-                        Almacenamiento:
-                    </div>
-                    <div class="spec-item-comparison spec-value-comparison">
-                        128GB
-                    </div>
-
-                    <!-- Fila de especificaciones: RAM -->
-                    <div class="spec-item-comparison spec-header-comparison">
-                        RAM:
-                    </div>
-                    <div class="spec-item-comparison spec-value-comparison">
-                        8GB
-                    </div>
-                </div>
-
-                <!-- Botón de acción -->
-                <button class="btn-comparison">
-                    Ver Detalles
-                </button>
+      <div class="search-comparison">
+        <form id="comparison-form">
+          <div class="search-container">
+            <div class="search-input-wrapper">
+              <input class="input-comparison mobile-search" placeholder="Buscar dispositivos para comparar"
+                id="comparison-search">
+              <div id="buscar-results" class="search-results-dropdown"></div>
             </div>
-
-            <!-- Separador o "vs" en pantallas grandes -->
-            <div class="vs-separator-large-comparison">
-                <span>VS</span>
-            </div>
-            <!-- Separador para pantallas pequeñas -->
-            <div class="vs-separator-small-comparison">
-                <hr>
-                <span>VS</span>
-                <hr>
-            </div>
-
-            <!-- Tarjeta del Dispositivo 2 -->
-            <div class="device-card-comparison green-comparison">
-                <h2 class="tittle2-comparison">Smartphone B</h2>
-                <div class="device-image-comparison">
-                    <!-- Imagen de placeholder para el dispositivo -->
-                    <img class="img-comparison" src="https://placehold.co/128x128/90EE90/000000?text=Dispositivo+B"
-                         alt="Imagen del Smartphone B">
-                </div>
-
-                <div class="specs-grid-comparison">
-                    <!-- Fila de especificaciones: Pantalla -->
-                    <div class="spec-item-comparison spec-header-comparison">
-                        Pantalla:
-                    </div>
-                    <div class="spec-item-comparison spec-value-comparison">
-                        6.7" AMOLED
-                    </div>
-
-                    <!-- Fila de especificaciones: Procesador -->
-                    <div class="spec-item-comparison spec-header-comparison">
-                        Procesador:
-                    </div>
-                    <div class="spec-item-comparison spec-value-comparison">
-                        Snapdragon Gen 3
-                    </div>
-
-                    <!-- Fila de especificaciones: Cámara -->
-                    <div class="spec-item-comparison spec-header-comparison">
-                        Cámara:
-                    </div>
-                    <div class="spec-item-comparison spec-value-comparison">
-                        50MP (Principal)
-                    </div>
-
-                    <!-- Fila de especificaciones: Batería -->
-                    <div class="spec-item-comparison spec-header-comparison">
-                        Batería:
-                    </div>
-                    <div class="spec-item-comparison spec-value-comparison">
-                        5000 mAh
-                    </div>
-
-                    <!-- Fila de especificaciones: Almacenamiento -->
-                    <div class="spec-item-comparison spec-header-comparison">
-                        Almacenamiento:
-                    </div>
-                    <div class="spec-item-comparison spec-value-comparison">
-                        256GB
-                    </div>
-
-                    <!-- Fila de especificaciones: RAM -->
-                    <div class="spec-item-comparison spec-header-comparison">
-                        RAM:
-                    </div>
-                    <div class="spec-item-comparison spec-value-comparison">
-                        12GB
-                    </div>
-                </div>
-
-                <!-- Botón de acción -->
-                <button class="btn-comparison">
-                    Ver Detalles
-                </button>
-            </div>
-
+            <button type="submit" class="search-comparison-btn">Comparar</button>
+          </div>
+          <div id="selected-devices" class="selected-devices-container"></div>
+          <input type="hidden" id="mobile-ids" name="mobileIds">
+        </form>
+        <div id="comparison-results" class="comparison-results-container">
+          <div class="device-cards-wrapper-comparison"></div>
         </div>
-
-        <!-- Sección de pie de página o información adicional -->
-        <div class="footer-comparison">
-            <p class="p-comparison">&copy; 2025 Comparador de Móviles. Todos los derechos reservados.</p>
-            <p class="p-comparison">Datos de especificaciones son de ejemplo y pueden no ser precisos.</p>
-        </div>
+      </div>
     </div>
-</div>
+  </div>
 
-  <%- include('../partials/footer.ejs') %>
+    <%- include('../partials/footer.ejs') %>
 
 </body>
+
+    <script src="/js/comparison.js"></script>
+
 </html>

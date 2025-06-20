@@ -17,6 +17,7 @@ import cart from './src/routes/cart.js';
 import fav from './src/routes/fav.js';
 import orders from './src/routes/orders.js';
 import rating from './src/routes/rating.js';
+import comparison from './src/routes/comparison.js'; 
 
 const app = express();
 
@@ -47,6 +48,8 @@ app.use('/fav', fav);
 app.use('/api/order', orders);
 
 app.use('/api/ratings', rating);
+
+app.use('/comparison', comparison);
 
 app.use('/', store);
 
@@ -105,10 +108,6 @@ app.get('/order', isAuth(), (req, res) => {
 
 app.get('/comparison', (req, res) => {
   res.render('comparison/comparison');  
-});
-
-app.get('/device', (req, res) => {
-  res.render('comparison/device');  
 });
 
 app.get('/conditions', (req, res) => {

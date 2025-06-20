@@ -1,40 +1,18 @@
-/* Estilos generales para el cuerpo de la página */
-.body-comparison {
-    font-family: 'Inter', sans-serif;
-
-    padding: 16px;
-    margin: 0;
-    line-height: 1.5;
-}
-
-/* Contenedor principal centrado y con sombra */
-.container-comparison {
-    max-width: 1200px;
-    margin: 0 auto;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    padding: 24px;
-}
-
-/* Encabezado */
 .tittle-comparison {
-    font-size: 2.25rem;
+    font-size: 2.50rem;
     font-weight: 800;
     text-align: center;
-    color: #4338ca;
+    color: #15181b;
     margin-bottom: 32px;
 }
 
-/* Párrafo descriptivo */
 .description-comparison {
     text-align: center;
-    font-size: 1.125rem;
+    font-size: 1.5rem;
     color: #4b5563;
     margin-bottom: 40px;
 }
 
-/* Contenedor de las tarjetas de dispositivos */
 .device-cards-wrapper-comparison {
     display: flex;
     flex-direction: column;
@@ -43,8 +21,7 @@
     align-items: stretch;
 }
 
-/* Estilos base para cada tarjeta de dispositivo */
-.device-card-comparison {
+.device-card {
     flex: 1;
     padding: 24px;
     border-radius: 16px;
@@ -57,64 +34,92 @@
     margin: 0 auto;
 }
 
-/* Estilos específicos para la Tarjeta 1 (Azul) */
-.device-card-comparison.blue-comparison {
+.device-card.blue-comparison {
     background: linear-gradient(to bottom right, #eff6ff, #dbeafe);
     border: 1px solid #bfdbfe;
 }
 
-.device-card-comparison.blue-comparison .tittle2-comparison {
+.device-card.blue-comparison .tittle2-comparison {
     color: #1e40af;
 }
 
-.device-card-comparison.blue-comparison .spec-header-comparison {
+.device-card.blue-comparison .spec-header {
     background-color: #bfdbfe;
     color: #1f2937;
 }
 
-.device-card-comparison.blue-comparison .spec-value-comparison {
+.device-card.blue-comparison .spec-value {
     background-color: #eff6ff;
     color: #1e40af;
 }
 
-.device-card-comparison.blue-comparison .btn-comparison {
+.device-card.blue-comparison .btn-comparison {
     background-color: #2563eb;
 }
 
-.device-card-comparison.blue-comparison .btn-comparison:hover {
+.device-card.blue-comparison .btn-comparison:hover {
     background-color: #1d4ed8;
 }
 
-/* Estilos específicos para la Tarjeta 2 (Verde) */
-.device-card-comparison.green-comparison {
+.device-card.green-comparison {
     background: linear-gradient(to bottom right, #ecfdf5, #d1fae5);
     border: 1px solid #a7f3d0;
 }
 
-.device-card-comparison.green-comparison .tittle2-comparison {
+.device-card.green-comparison .tittle2-comparison {
     color: #065f46;
 }
 
-.device-card-comparison.green-comparison .spec-header-comparison {
+.device-card.green-comparison .spec-header {
     background-color: #a7f3d0;
     color: #1f2937;
 }
 
-.device-card-comparison.green-comparison .spec-value-comparison {
+.device-card.green-comparison .spec-value {
     background-color: #ecfdf5;
     color: #065f46;
 }
 
-.device-card-comparison.green-comparison .btn-comparison {
+.device-card.green-comparison .btn-comparison {
     background-color: #059669;
 }
 
-.device-card-comparison.green-comparison .btn-comparison:hover {
+.device-card.green-comparison .btn-comparison:hover {
     background-color: #047857;
 }
 
-/* Imagen del dispositivo */
-.device-image-comparison {
+.device-card.yellow-comparison {
+    background: linear-gradient(to bottom right, #fefce8, #fef9c3);
+    border: 1px solid #fef08a;
+}
+
+.device-card.yellow-comparison .tittle2-comparison {
+    color: #ca8a04;
+}
+
+.device-card.yellow-comparison .spec-header {
+    background-color: #fef08a;
+    color: #1f2937;
+}
+
+.device-card.yellow-comparison .spec-value {
+    background-color: #fefce8;
+    color: #ca8a04;
+}
+
+.device-card.yellow-comparison .btn-comparison {
+    background-color: #facc15;
+}
+
+.device-card.yellow-comparison .btn-comparison:hover {
+    background-color: #eab308;
+}
+
+.device-card.yellow-comparison .device-image {
+    border-color: #fde047;
+}
+
+.device-image {
     width: 128px;
     height: 128px;
     margin-bottom: 24px;
@@ -124,39 +129,41 @@
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-.device-card-comparison.blue-comparison .device-image-comparison {
+.device-card.blue-comparison .device-image {
     border-color: #93c5fd;
 }
 
-.device-card-comparison.green-comparison .device-image-comparison {
+.device-card.green-comparison .device-image {
     border-color: #6ee7b7;
 }
 
-.device-image-comparison .img-comparison{
+.device-image .img-comparison{
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-/* Grid para las especificaciones */
-.specs-grid-comparison {
+.specs-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 16px;
     width: 100%;
 }
 
-.spec-item-comparison {
+.spec-item {
     padding: 8px 16px;
     border-radius: 12px;
-    font-size: 0.875rem;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
-.spec-header-comparison {
+.spec-header {
     font-weight: 600;
 }
 
-/* Botón de acción */
 .btn-comparison {
     margin-top: 32px;
     padding: 12px 32px;
@@ -173,7 +180,6 @@
     transform: scale(1.05);
 }
 
-/* Separador "VS" para pantallas grandes */
 .vs-separator-large-comparison {
     display: none;
     align-items: center;
@@ -195,7 +201,6 @@
     box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
 }
 
-/* Separador "VS" para pantallas pequeñas */
 .vs-separator-small-comparison {
     display: flex;
     align-items: center;
@@ -221,20 +226,6 @@
     margin-top: -1px;
 }
 
-/* Pie de página */
-.footer-comparison {
-    margin-top: 48px;
-    text-align: center;
-    color: #6b7280;
-    font-size: 0.875rem;
-}
-
-.footer-comparison .p-comparison {
-    margin-top: 8px;
-}
-
-/* Media Queries para responsividad */
-
 /* Pequeñas pantallas (sm) */
 @media (min-width: 640px) {
     .body-comparison {
@@ -252,7 +243,7 @@
 
 /* Pantallas medianas (md) */
 @media (min-width: 768px) {
-    .specs-grid-comparison {
+    .specs-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
