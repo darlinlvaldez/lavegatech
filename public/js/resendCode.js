@@ -1,3 +1,5 @@
+import { showToast } from "./toastify.js";
+
 document.addEventListener('DOMContentLoaded', () => {
   const resendForm = document.getElementById('resendForm');
   const resendButton = document.getElementById('resendButton');
@@ -43,20 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateUI(true);
       }
     }, 1000);
-  };
-
-  const showToast = (message, success = true) => {
-    Toastify({
-      text: `<span style="display: flex; align-items: center;"><i data-feather="check-circle" style="margin-right: 8px;"></i>${message}</span>`,
-      duration: 3000,
-      gravity: "top",
-      position: "right",
-      stopOnFocus: true,
-      backgroundColor: success ? "#4CAF50" : "#f44336",
-      escapeMarkup: false,
-      className: "toast-notification"
-    }).showToast();
-    setTimeout(feather.replace, 100);
   };
 
   emailInput.addEventListener('input', () => {

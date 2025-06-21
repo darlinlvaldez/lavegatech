@@ -1,4 +1,5 @@
 import { checkAuth, getRealStock } from './utils.js';
+import { showToast } from "./toastify.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
   const orderProducts = document.querySelector(".order-products");
@@ -61,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const paypalContainer = document.getElementById('paypal-button-container');
   let buttonRendered = false;
 
-  const mostrarToast = (texto, tipo = "info") => {
+const mostrarToast = (texto, tipo = "info") => {
   const colores = {
     info: "#0d6efd",
     error: "#dc3545",
@@ -70,29 +71,16 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const iconos = {
-    info: '<i data-feather="info" style="vertical-align: middle; margin-right: 8px;"></i>',
-    error: '<i data-feather="x-circle" style="vertical-align: middle; margin-right: 8px;"></i>',
-    success: '<i data-feather="check-circle" style="vertical-align: middle; margin-right: 8px;"></i>',
-    warning: '<i data-feather="alert-triangle" style="vertical-align: middle; margin-right: 8px;"></i>',
+    info: "info",
+    error: "x-circle",
+    success: "check-circle",
+    warning: "alert-triangle",
   };
 
+  const color = colores[tipo] || colores.info;
   const icon = iconos[tipo] || iconos.info;
 
-  Toastify({
-    text: `${icon}${texto}`,
-    duration: 3000,
-    close: true,
-    gravity: "top",
-    position: "right",
-    backgroundColor: colores[tipo],
-    stopOnFocus: true,
-    escapeMarkup: false,
-    className: "toast-notification"
-  }).showToast();
-
-  setTimeout(() => {
-    feather.replace();
-  }, 50);
+  showToast(texto, color, icon);
 };
 
   const validarCampos = () => {

@@ -1,6 +1,6 @@
-import { checkAuth } from './utils.js';
-import { getRealStock, updateItem } from './utils.js';
+import { checkAuth, getRealStock, updateItem } from './utils.js';
 import { loadCartPreview } from './loadCartPreview.js';
+import { showToast } from './toastify.js';
 
 window.updateQuantity = async function(element, change, productId, color) {
   try {

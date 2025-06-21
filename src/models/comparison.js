@@ -2,7 +2,7 @@ import db from "../database/mobiles.js";
 
 const comparison = {};
 
-comparison.buscarMoviles = async (query) => {
+comparison.searchDevice = async (query) => {
   let searchQuery = ` 
   SELECT
   p.id,
@@ -29,11 +29,11 @@ comparison.buscarMoviles = async (query) => {
   }
 };
 
-comparison.obtenerDispositivosParaComparar = async (ids) => {
+comparison.getDevice = async (ids) => {
   let query = `
     SELECT 
       m.id,
-      p.nombre,
+      MIN(p.nombre) AS nombre,
       p.precio,
       p.descuento,
       v.img AS imagen,
@@ -80,7 +80,7 @@ comparison.obtenerDispositivosParaComparar = async (ids) => {
     LEFT JOIN variantes_almacenamiento va ON m.id = va.movil_id
     LEFT JOIN almacenamiento alm ON va.almacenamiento_id = alm.id
     WHERE m.id IN (?)
-    GROUP BY m.movil_id
+    GROUP BY m.id
   `;
 
   try {

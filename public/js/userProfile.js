@@ -1,27 +1,12 @@
+import { showToast } from "./toastify.js";
+
+window.openModal = openModal;
+window.closeModal = closeModal;
+
 function showNotification(message, isSuccess) {
-  const icon = document.createElement("i");
-  icon.setAttribute("data-feather", isSuccess ? "check-circle" : "x-circle");
-  icon.style.verticalAlign = "middle";
-  icon.style.marginRight = "8px";
-
-  const span = document.createElement("span");
-  span.appendChild(icon);
-  span.appendChild(document.createTextNode(message));
-
-  Toastify({
-    node: span,
-    duration: 3000,
-    close: true,
-    gravity: "top",
-    position: "right",
-    backgroundColor: isSuccess ? "#4CAF50" : "#f44336",
-    stopOnFocus: true,
-    className: "toast-notification"
-  }).showToast();
-
-  setTimeout(() => {
-    feather.replace();
-  }, 100);
+  const color = isSuccess ? "#4CAF50" : "#f44336";
+  const icon = isSuccess ? "check-circle" : "x-circle";
+  showToast(message, color, icon);
 }
 
 const formTemplates = {username: `<label class="text-modal">Nuevo nombre:</label>

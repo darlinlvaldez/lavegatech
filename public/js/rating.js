@@ -1,3 +1,5 @@
+import { showToast } from './toastify.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('reviewForm');
     const reviewsContainer = document.getElementById('reviews');
@@ -24,36 +26,38 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function handleFormSubmit(e) {
-    e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
+  e.preventDefault();
+  const form = e.target;
+  const formData = new FormData(form);
 
-    const data = {
-        producto_id: formData.get('producto_id'),
-        calificacion: formData.get('calificacion'),
-        comentario: formData.get('comentario')
-    };
+  const data = {
+    producto_id: formData.get("producto_id"),
+    calificacion: formData.get("calificacion"),
+    comentario: formData.get("comentario"),
+  };
 
-    try {
-        const response = await fetch('/api/ratings', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-            credentials: 'include'
-        });
+  try {
+    const response = await fetch("/api/ratings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+      credentials: "include",
+    });
 
-        const result = await response.json();
+    const result = await response.json();
 
-                if (response.ok) {
-            showToast("Reseña enviada con éxito.", "#27ae60", "check-circle");
-            setTimeout(() => location.reload(), 1500);
-        } else {
-            showToast(result.error || 'Error al enviar la reseña', "#e74c3c", "alert-circle");
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showToast('Error al enviar la reseña', "#e74c3c", "alert-circle");
+    if (response.ok) {
+      showToast("Reseña enviada con éxito.", "#27ae60", "check-circle");
+      setTimeout(() => location.reload(), 1500);
+    } else {
+      showToast(
+        result.error || "Error al enviar la reseña", "#e74c3c", "alert-circle"
+      );
     }
+  } catch (error) {
+    console.error("Error:", error);
+    showToast("Error al enviar la reseña", "#e74c3c", "alert-circle");
+  }
 }
 
 async function loadReviews(page, limit, productId) {
@@ -143,21 +147,4 @@ function renderPagination(currentPage, totalPages) {
 
     html += '</ul>';
     return html;
-}
-
-function showToast(message, color = "#27ae60", icon = "check-circle") {
-  Toastify({
-    text: `<i data-feather="${icon}" style="vertical-align: middle; margin-right: 8px;"></i> ${message}`,
-    duration: 3000,
-    gravity: "top",
-    position: "right",
-    style: { background: color },
-    close: true,
-    escapeMarkup: false,
-    className: "toast-notification",
-  }).showToast();
-
-  setTimeout(() => {
-    feather.replace();
-  }, 100);
 }

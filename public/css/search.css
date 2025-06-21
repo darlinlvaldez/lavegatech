@@ -31,9 +31,9 @@
 
 .search-results-dropdown {
   position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
+  top: 91%;
+  left: 3%;
+  width: 94%;
   max-height: 400px;
   overflow-y: auto;
   background: #fff;

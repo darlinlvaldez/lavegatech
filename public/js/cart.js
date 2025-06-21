@@ -1,6 +1,7 @@
 import { checkAuth } from './utils.js';
 import { loadCartPage } from './cartView.js';
 import { loadCartPreview } from './cartPreview.js';
+import { showToast } from './toastify.js';
 
 window.deleteProduct = deleteProduct;
 window.formatPrice = formatPrice;
@@ -14,23 +15,6 @@ async function fetchCart(action, data = {}) {
   };
   
   return await fetch(`/cart/${action}`, options);
-}
-
-function showToast(message, Color = "#27ae60", icon = "check-circle") {
-  Toastify({
-    text: `<i data-feather="${icon}" style="vertical-align: middle; margin-right: 8px;"></i> ${message}`,
-    duration: 3000,
-    gravity: "top",
-    position: "right",
-    style: { background: Color },
-    close: true,
-    escapeMarkup: false,
-    className: "toast-notification",
-  }).showToast();
-
-setTimeout(() => {
-    feather.replace();
-  }, 100);
 }
 
 async function addToCart(product) {

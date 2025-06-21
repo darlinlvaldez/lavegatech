@@ -1,3 +1,5 @@
+import { showToast } from "./toastify.js";
+
 document.addEventListener('DOMContentLoaded', function() {
   const comparisonForm = document.getElementById('comparison-form');
   const searchInput = document.getElementById('comparison-search');
@@ -23,6 +25,32 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error('Error:', error);
     }
   }
+
+  function loadDevicesURL() {
+  const params = new URLSearchParams(window.location.search);
+  const ids = params.get('ids');
+
+  if (!ids) return;
+
+  const idList = ids.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+
+  if (idList.length < 2) return;
+
+  fetch(`/comparison/compare?ids=${idList.join(',')}`)
+    .then(response => response.json())
+    .then(devices => {
+      selectedDevices = devices.map(device => ({
+        id: device.id,
+        nombre: device.nombre,
+        imagen: device.imagen
+      }));
+      updateSelectedDevicesDisplay();
+      displayComparisonResults(devices);
+    })
+    .catch(err => {
+      console.error('Error al cargar desde URL:', err);
+    });
+}
   
   function displaySearchResults(products) {
     searchResults.innerHTML = '';
@@ -44,19 +72,20 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     availableProducts.forEach(product => {
+      const precioDescuento = Number(product.precio) * (1 - (product.descuento / 100));
       const productElement = document.createElement('div');
       productElement.className = 'search-result-item';
       productElement.innerHTML = `
-        <img src="${product.imagenes?.split(',')[0] || 'https://placehold.co/50x50'}" alt="${product.nombre}">
+        <img src="${product.imagenes?.split(',')[0]}" alt="${product.nombre}">
         <div class="product-info">
           <h4>${product.nombre}</h4>
           <div class="product-price">
-              $${(Number(product.precio) * (1 - (product.descuento / 100))).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-              ${product.descuento > 0 ? `<del class="product-old-price">$${Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</del>` : ''}
-            </div>
+            $${formatPrice(precioDescuento)}
+            ${product.descuento > 0 ? `<del class="product-old-price">$${formatPrice(Number(product.precio))}</del>` : ''}
+          </div>
         </div>
       `;
-      
+
       productElement.addEventListener('click', () => {
         addDeviceToComparison(product);
         searchInput.value = '';
@@ -75,14 +104,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     if (selectedDevices.length >= 3) {
-      alert('Solo puedes comparar hasta 3 dispositivos');
+      showToast("Solo puedes comparar hasta 3 dispositivos", "#e74c3c", "info");
       return;
     }
     
     selectedDevices.push({
       id: product.id,
       nombre: product.nombre,
-      imagen: product.imagenes?.split(',')[0] || 'https://placehold.co/50x50'
+      imagen: product.imagenes?.split(',')[0]
     });
     
     updateSelectedDevicesDisplay();
@@ -146,44 +175,49 @@ document.addEventListener('DOMContentLoaded', function() {
     e.preventDefault();
     
     if (selectedDevices.length < 2) {
-      alert('Por favor selecciona al menos 2 dispositivos para comparar');
+      showToast("Por favor selecciona al menos 2 dispositivos para comparar.", "#e74c3c", "info");
       return;
     }
-    
+
+    const idsString = mobileIdsInput.value;
+    window.history.pushState({}, '', `/comparison?ids=${idsString}`);
+
     try {
-      const response = await fetch(`/comparison/compare?ids=${mobileIdsInput.value}`);
+      const response = await fetch(`/comparison/compare?ids=${idsString}`);
       if (!response.ok) throw new Error('Error al comparar dispositivos');
       const devices = await response.json();
       displayComparisonResults(devices);
     } catch (error) {
       console.error('Error:', error);
-      alert('Error al comparar dispositivos');
+      showToast("Error al comparar dispositivos", "#e74c3c", "info");
     }
   });
   
   function displayComparisonResults(devices) {
-    comparisonResults.innerHTML = '';
-    
-    const wrapper = document.createElement('div');
-    wrapper.className = 'device-cards-wrapper-comparison';
-    
-   const comparisonColors = ['blue-comparison', 'green-comparison', 'yellow-comparison'];
-   
-   devices.forEach((device, index) => {
+  comparisonResults.innerHTML = '';
+  
+  const wrapper = document.createElement('div');
+  wrapper.className = 'device-cards-wrapper-comparison';
+  
+  const comparisonColors = ['blue-comparison', 'green-comparison', 'yellow-comparison'];
+  
+  devices.forEach((device, index) => {
     const colorClass = comparisonColors[index]; 
+    const precioConDescuento = Number(device.precio) * (1 - (device.descuento / 100));
     const deviceCard = document.createElement('div');
     deviceCard.className = `device-card ${colorClass}`;
 
-      deviceCard.innerHTML = `
-        <h2 class="tittle2-comparison">${device.nombre}</h2>
-        <div class="device-image">
-          <img class="img-comparison" src="${device.imagen}" alt="${device.nombre}">
+    deviceCard.innerHTML = `
+      <h2 class="tittle2-comparison">${device.nombre}</h2>
+      <div class="device-image">
+        <img class="img-comparison" src="${device.imagen}" alt="${device.nombre}">
+      </div>
+      
+        <div class="product-price">
+          $${formatPrice(precioConDescuento)}
+          ${device.descuento > 0 ? `<del class="product-old-price">$${formatPrice(Number(device.precio))}</del>` : ''}
         </div>
-        
-        <div class="price-info">
-          <span class="current-price">$${(Number(device.precio) * (1 - (device.descuento / 100))).toFixed(2)}</span>
-          ${device.descuento > 0 ? `<span class="original-price">$${Number(device.precio).toFixed(2)}</span>` : ''}
-        </div>
+      </div><br>
         
         <div class="specs-grid">
           <div class="spec-item spec-header">Pantalla:</div>
@@ -259,4 +293,5 @@ document.addEventListener('DOMContentLoaded', function() {
     
     comparisonResults.appendChild(wrapper);
   }
+  loadDevicesURL();
 });
