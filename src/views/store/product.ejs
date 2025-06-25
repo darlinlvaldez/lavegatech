@@ -1,7 +1,8 @@
 <%- include('../partials/header.ejs') %>	
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-  <link rel="stylesheet" href="/css/toastify.css">
+<link rel="stylesheet" href="/css/spec.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<link rel="stylesheet" href="/css/toastify.css">
 
 <!-- SECTION -->
 <div class="section">
@@ -176,20 +177,74 @@
 					<div id="tab2" class="tab-pane fade in">
 						<div class="row">
 							<div class="col-md-12">
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-									tempor
-									incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-									nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-									consequat.
-									Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-									eu
-									fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
-									in
-									culpa qui officia deserunt mollit anim id est laborum.</p>
+								<div class="device-card">
+								<% dispositivos.forEach(dispositivo=> { %>
+								<div class="specs-grid">
+									<div class="spec-item spec-header">Pantalla:</div>
+									<div class="spec-item spec-value">
+									<%= dispositivo.pantalla_tamaño %>" <%= dispositivo.pantalla_tipo %><br>
+									<%= dispositivo.pantalla_resolucion %><br>
+									<%= dispositivo.pantalla_frecuencia %>Hz
+									</div>
+
+									<div class="spec-item spec-header">Procesador:</div>
+									<div class="spec-item spec-value">
+									<%= dispositivo.cpu_nombre %><br>
+									<%= dispositivo.cpu_nucleos %> núcleos<br>
+									<%= dispositivo.cpu_velocidad %>
+									</div>
+
+									<div class="spec-item spec-header">GPU:</div>
+									<div class="spec-item spec-value">
+									<%= dispositivo.gpu_modelo %><br>
+									<%= dispositivo.gpu_nucleos %> núcleos
+									</div>
+
+									<div class="spec-item spec-header">RAM:</div>
+									<div class="spec-item spec-value"><%= dispositivo.ram_capacidades %></div>
+
+									<div class="spec-item spec-header">Almacenamiento:</div>
+									<div class="spec-item spec-value"><%= dispositivo.almacenamiento_capacidades %></div>
+
+									<div class="spec-item spec-header">Cámara:</div>
+									<div class="spec-item spec-value">
+									Principal: <%= dispositivo.camara_principal %><br>
+									Selfie: <%= dispositivo.camara_selfie %><br>
+									Video: <%= dispositivo.camara_video %>
+									</div>
+
+									<div class="spec-item spec-header">Batería:</div>
+									<div class="spec-item spec-value">
+									<%= dispositivo.bateria_capacidad %> mAh<br>
+									<%= dispositivo.bateria_tipo %><br>
+									<% if (dispositivo.bateria_carga_rapida) { %>
+										Carga rápida: <%= dispositivo.bateria_carga_rapida %><br>
+									<% } %>
+									<% if (dispositivo.bateria_carga_inalambrica) { %>
+										Carga inalámbrica
+									<% } %>
+									</div>
+
+									<div class="spec-item spec-header">Conectividad:</div>
+									<div class="spec-item spec-value">
+									<%= dispositivo.conectividad_red %><br>
+									WiFi: <%= dispositivo.conectividad_wifi %><br>
+									Bluetooth: <%= dispositivo.conectividad_bluetooth %>
+									<% if (dispositivo.conectividad_nfc) { %><br>NFC<% } %>
+									</div>
+
+									<div class="spec-item spec-header">Dimensiones:</div>
+									<div class="spec-item spec-value">
+									<%= dispositivo.dimensiones_altura %> x <%= dispositivo.dimensiones_anchura %> x <%= dispositivo.dimensiones_grosor %> mm<br>
+									Peso: <%= dispositivo.dimensiones_peso %> 
+									</div>
+								<% }) %>
+								</div>
 							</div>
 						</div>
 					</div>
-					<!-- /tab2  -->
+				</div>
+				<!-- /tab2  -->
 
 					<!-- tab3  -->
 					<div id="tab3" class="tab-pane fade in">
