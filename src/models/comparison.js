@@ -2,10 +2,11 @@ import db from "../database/mobiles.js";
 
 const comparison = {};
 
-comparison.searchDevice = async (query) => {
+comparison.searchDevice = async (query, excludeMovilIds = []) => {
   let searchQuery = ` 
   SELECT
   p.id,
+  p.movil_id,
   p.nombre,
   p.precio,
   p.descuento,
@@ -16,10 +17,14 @@ comparison.searchDevice = async (query) => {
   LEFT JOIN variantes v ON p.id = v.producto_id 
   WHERE p.categoria_id = (SELECT id FROM categorias WHERE categoria = 'moviles')
   AND (p.nombre LIKE ? OR p.descripcion LIKE ?)
+  ${excludeMovilIds.length > 0 ? 'AND p.movil_id NOT IN (?)' : ''}
   GROUP BY p.movil_id
   LIMIT 10`;
 
   const params = [`%${query}%`, `%${query}%`];
+  if (excludeMovilIds.length > 0) {
+    params.push(excludeMovilIds);
+  }
 
   try {
     const [results] = await db.query(searchQuery, params);
@@ -29,11 +34,23 @@ comparison.searchDevice = async (query) => {
   }
 };
 
+comparison.getProductMovilIds = async (productIds) => {
+  try {
+    const [movilIds] = await db.query(
+      'SELECT DISTINCT movil_id FROM productos WHERE id IN (?)',
+      [productIds]
+    );
+    return movilIds;
+  } catch (err) {
+    throw new Error("Error al obtener IDs de móviles: " + err.message);
+  }
+};
+
 comparison.getDevice = async (ids) => {
   let query = `
     SELECT 
       m.id,
-      MIN(p.nombre) AS nombre,
+      p.nombre,
       p.precio,
       p.descuento,
       v.img AS imagen,
@@ -63,8 +80,8 @@ comparison.getDevice = async (ids) => {
       dim.anchura AS dimensiones_anchura,
       dim.grosor AS dimensiones_grosor,
       dim.peso AS dimensiones_peso,
-      GROUP_CONCAT(DISTINCT ram.capacidad ORDER BY ram.capacidad SEPARATOR ', ') AS ram_capacidades,
-      GROUP_CONCAT(DISTINCT alm.capacidad ORDER BY alm.capacidad SEPARATOR ', ') AS almacenamiento_capacidades
+      GROUP_CONCAT(DISTINCT ram.capacidad ORDER BY ram.capacidad SEPARATOR ' / ') AS ram_capacidades,
+      GROUP_CONCAT(DISTINCT alm.capacidad ORDER BY alm.capacidad SEPARATOR ' / ') AS almacenamiento_capacidades
     FROM moviles m
     JOIN productos p ON m.id = p.id
     LEFT JOIN variantes v ON p.id = v.producto_id

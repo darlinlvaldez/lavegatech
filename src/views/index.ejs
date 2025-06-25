@@ -102,7 +102,8 @@ document.querySelector(".tablink").click();
                                                 data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
                                                 data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>">
                                                 <i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span></button>
-                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">Comparación</span></button>
+                                            <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
+                                                <span class="tooltipp">Comparar</span></button>
                                             <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
                                         </div>
                                     </div>
@@ -165,7 +166,8 @@ document.querySelector(".tablink").click();
                                                 data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
                                                 data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>">
                                                 <i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span></button>
-                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">Comparación</span></button>
+                                            <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
+                                                <span class="tooltipp">Comparar</span></button>
                                             <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
                                         </div>
                                     </div>
@@ -228,7 +230,8 @@ document.querySelector(".tablink").click();
                                                 data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
                                                 data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>">
                                                 <i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span></button>
-                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">Comparación</span></button>
+                                            <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
+                                                <span class="tooltipp">Comparar</span></button>
                                             <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
                                         </div>
                                     </div>
@@ -291,7 +294,8 @@ document.querySelector(".tablink").click();
                                                 data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
                                                 data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>">
                                                 <i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span></button>
-                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">Comparación</span></button>
+                                            <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
+                                                <span class="tooltipp">Comparar</span></button>
                                             <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
                                         </div>
                                     </div>
@@ -353,7 +357,8 @@ document.querySelector(".tablink").click();
                                                 data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
                                                 data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>">
                                                 <i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span></button>
-                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">Comparación</span></button>
+                                            <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
+                                                <span class="tooltipp">Comparar</span></button>
                                             <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
                                         </div>
                                     </div>
@@ -479,9 +484,8 @@ document.querySelector(".tablink").click();
                                                             data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>"> 
                                                             <i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span>
                                                         </button>
-                                                        <button class="add-to-compare"><i class="fa fa-exchange"></i>
-                                                            <span class="tooltipp">Comparación</span>
-                                                        </button>
+                                                        <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
+                                                <span class="tooltipp">Comparar</span></button>
                                                         <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
                                                     </div>
                                                 </div>
@@ -502,13 +506,13 @@ document.querySelector(".tablink").click();
                                     </div>
                                 </div>
                                 <!-- /Section -->
-        
+
         <%- include('./partials/footer.ejs') %>
         
 </body>
-        
+
+<script src="/js/buttonComparison.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="https://unpkg.com/feather-icons"></script>
 
-        
 </html>

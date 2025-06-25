@@ -200,10 +200,8 @@
 																	data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
 																	data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>">
 																	<i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span></button>
-																<button class="add-to-compare" title="Agregar a comparar">
-																	<i class="fa fa-exchange"></i><span
-																	class="tooltipp">Comparar</span>
-																</button>
+																<button class="add-to-compare" data-id="<%= producto.id %>" ><i class="fa fa-exchange"></i>
+                                                <span class="tooltipp">Comparar</span></button>
 																<button class="quick-view" title="Vista rápida">
 																	<i class="fa fa-eye"></i><span class="tooltipp">Vista rápida</span>
 																</button>
@@ -285,8 +283,9 @@
 	<%- include('../partials/footer.ejs') %>
 
 	</body>
-
-		<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-		<script src="https://unpkg.com/feather-icons"></script>
+	
+	<script src="/js/buttonComparison.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+	<script src="https://unpkg.com/feather-icons"></script>
 
 	</html>
