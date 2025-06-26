@@ -89,7 +89,6 @@
 					</label>
 				</div>
 				<% } %>
-
 				<div class="add-to-cart">
 					<div class="qty-label">
 						Cantidad
@@ -114,28 +113,52 @@
 					</div>
 				</div>
 				<ul class="product-btns">
-					<a role="button" class="add-to-wishlist" data-product-id="<%= producto.id %>"
-						data-product-name="<%= producto.nombre %>" data-product-price="<%= producto.precio %>"
-						data-product-discount="<%= producto.descuento || 0 %>"
-						data-product-image="<%= producto.imagen %>" data-product-color="<%= colorSeleccionado %>">
-						<i class="fa fa-heart-o"></i> Favoritos
-					</a>
-					<li><a href="#" class="add-to-compare" data-id="<%= producto.id %>">
-						<i class="fa fa-exchange"></i>Comparalo</a></li>
-					</ul>
-					<ul class="product-links">
-						<li>Categoría:</li>
-						<li><a href="#">
-							<%= producto.categoria==='moviles' ? 'Móviles' : producto.categoria.charAt(0).toUpperCase() + producto.categoria.slice(1) %>
-						</a>
-					</li>
-				</ul>
+				<a role="button" class="add-to-wishlist" data-product-id="<%= producto.id %>"
+					data-product-name="<%= producto.nombre %>" data-product-price="<%= producto.precio %>"
+					data-product-discount="<%= producto.descuento || 0 %>"
+					data-product-image="<%= producto.imagen %>" data-product-color="<%= colorSeleccionado %>">
+					<i class="fa fa-heart-o"></i> Favoritos
+				</a>
+
+				<% if (producto.esMovil) { %>
+				<li><a href="#" class="add-to-compare" data-id="<%= producto.id %>">
+					<i class="fa fa-exchange"></i>Comparalo</a></li>
+				<% } %>
+
+				<% if (['moviles', 'smarttv', 'laptops', 'consolas', 'tablets', 'otros'].includes(producto.categoria.toLowerCase())) { %>
 				<ul class="product-links">
-					<li>Compartir:</li>
-					<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-					<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-					<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-					<li><a href="#"><i class="fa fa-envelope"></i></a></li>
+				<li>Categoría:</li>
+				<li>
+				<a href="/store/1?categoria=<%= producto.categoriaId %>">
+					<%= producto.categoria.toLowerCase() === 'moviles' ? 'Móviles' :
+					producto.categoria.charAt(0).toUpperCase() + producto.categoria.slice(1) %>
+				</a>
+				</li>
+				</ul>
+				<% } %>
+
+				<ul class="product-links">
+				<li>Compartir:</li>
+				<li>
+					<a href="https://www.facebook.com/sharer/sharer.php?u=<%= encodeURIComponent('http://localhost:3000' + currentUrl) %>" target="_blank">
+					<i class="fa fa-facebook"></i>
+					</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent('Mira este producto: ' + producto.nombre) %>&url=<%= encodeURIComponent('http://localhost:3000' + currentUrl) %>" target="_blank">
+					<i class="fa fa-twitter"></i>
+					</a>
+				</li>
+				<li>
+					<a href="https://plus.google.com/share?url=<%= encodeURIComponent('http://localhost:3000' + currentUrl) %>" target="_blank">
+					<i class="fa fa-google-plus"></i>
+					</a>
+				</li>
+				<li>
+					<a href="mailto:?subject=<%= encodeURIComponent('Mira este producto: ' + producto.nombre) %>&body=<%= encodeURIComponent('Te comparto este producto que encontré: http://localhost:3000' + currentUrl) %>">
+					<i class="fa fa-envelope"></i>
+					</a>
+				</li>
 				</ul>
 			</div>
 		</div>
@@ -147,7 +170,9 @@
 				<!-- product tab nav -->
 				<ul class="tab-nav">
 					<li class="active"><a data-toggle="tab" href="#tab1">Descripción</a></li>
+					 <% if (producto.esMovil) { %>
 					<li><a data-toggle="tab" href="#tab2">Detalles</a></li>
+					<% } %>
 					<li><a data-toggle="tab" href="#tab3">Reseñas (<%= producto.totalReviews %>)</a></li>
 				</ul>
 				<!-- /product tab nav -->
@@ -174,6 +199,7 @@
 					<!-- /tab1  -->
 
 					<!-- tab2  -->
+					<% if (producto.esMovil) { %>
 					<div id="tab2" class="tab-pane fade in">
 						<div class="row">
 							<div class="col-md-12">
@@ -244,6 +270,7 @@
 						</div>
 					</div>
 				</div>
+				<% } %>
 				<!-- /tab2  -->
 
 					<!-- tab3  -->

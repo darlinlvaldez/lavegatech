@@ -102,8 +102,12 @@ document.querySelector(".tablink").click();
                                                 data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
                                                 data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>">
                                                 <i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span></button>
-                                            <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
+                                                 
+                                                <% if (producto.esMovil) { %>
+                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
                                                 <span class="tooltipp">Comparar</span></button>
+                                                <% } %>
+
                                             <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
                                         </div>
                                     </div>
@@ -166,8 +170,12 @@ document.querySelector(".tablink").click();
                                                 data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
                                                 data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>">
                                                 <i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span></button>
-                                            <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
+
+                                                <% if (producto.esMovil) { %>
+                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
                                                 <span class="tooltipp">Comparar</span></button>
+                                                <% } %>
+                                                
                                             <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
                                         </div>
                                     </div>
@@ -225,13 +233,18 @@ document.querySelector(".tablink").click();
                                         <% } %>
                                         <% } %>
                                         </div>
-                                        <div class="product-btns">
+                                        <div class="product-btns"> 
+
                                             <button class="add-to-wishlist" data-product-id="<%= producto.id %>" data-product-name="<%= producto.nombre %>" 
                                                 data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
                                                 data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>">
                                                 <i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span></button>
-                                            <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
+                                                
+                                                <% if (producto.esMovil) { %>
+                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
                                                 <span class="tooltipp">Comparar</span></button>
+                                                <% } %>
+
                                             <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
                                         </div>
                                     </div>
@@ -294,8 +307,12 @@ document.querySelector(".tablink").click();
                                                 data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
                                                 data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>">
                                                 <i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span></button>
-                                            <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
+
+                                                <% if (producto.esMovil) { %>
+                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
                                                 <span class="tooltipp">Comparar</span></button>
+                                                <% } %>
+                                                
                                             <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
                                         </div>
                                     </div>
@@ -357,8 +374,12 @@ document.querySelector(".tablink").click();
                                                 data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
                                                 data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>">
                                                 <i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span></button>
-                                            <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
+
+                                                <% if (producto.esMovil) { %>
+                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
                                                 <span class="tooltipp">Comparar</span></button>
+                                                <% } %>
+
                                             <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
                                         </div>
                                     </div>
@@ -409,7 +430,7 @@ document.querySelector(".tablink").click();
 							categoria.categoria === 'otros' ? 'Tech & Home' : 
 							categoria.categoria.charAt(0).toUpperCase() + categoria.categoria.slice(1) %>
 						</h3>
-					   <a href=" /store/1?&categoria=<%= categoria.id %>" class="cta-btn">Comprar ahora<i class="fa fa-arrow-circle-right"></i></a>
+					   <a href="/store/1?&categoria=<%= categoria.id %>" class="cta-btn">Comprar ahora<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -484,8 +505,12 @@ document.querySelector(".tablink").click();
                                                             data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>"> 
                                                             <i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span>
                                                         </button>
+                                                        
+                                                        <% if (producto.esMovil) { %>
                                                         <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
-                                                <span class="tooltipp">Comparar</span></button>
+                                                        <span class="tooltipp">Comparar</span></button>
+                                                        <% } %>
+
                                                         <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
                                                     </div>
                                                 </div>

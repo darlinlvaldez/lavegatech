@@ -15,6 +15,8 @@ principal.productosController = async (req, res) => {
       for (let producto of lista) {
         const avg = await rating.getAverageRating(producto.id);
         producto.averageRating = parseFloat(avg) || 0;
+        
+        producto.esMovil = producto.categoria?.toLowerCase() === "moviles";
       }
     }
 

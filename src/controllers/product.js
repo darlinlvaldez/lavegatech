@@ -1,6 +1,8 @@
 import product from "../models/product.js";
 import rating from "../models/rating.js";
 import comparison from "../models/comparison.js";
+import principal from '../models/principal.js';
+
 
 product.detallesController = async (req, res) => {
   try {
@@ -12,6 +14,10 @@ product.detallesController = async (req, res) => {
     if (!producto) {
       return res.status(404).render("error", { mensaje: "Producto no encontrado" });
     }
+
+    const categorias = await principal.obtenerCategorias();
+
+    producto.esMovil = producto.categoria?.toLowerCase() === "moviles";
 
     const colorActual = color && producto.imagenesPorColor[decodeURIComponent(color)]
     ? decodeURIComponent(color): producto.colores[0];
@@ -37,6 +43,7 @@ product.detallesController = async (req, res) => {
     res.render("store/product", {
       producto: {
         ...producto,
+        categorias,
         reviews,
         averageRating: averageRating || 0,
         ratingDistribution,
