@@ -170,9 +170,9 @@ auth.login = async (req, res) => {
         email, validationErrors: {password: ERROR_MESSAGES.WRONG_PASSWORD} }); 
     }
 
-    if (!foundUser.is_verified) {
-      return renderError(res, 'login/login', ERROR_MESSAGES.UNVERIFIED_EMAIL, { 
-        email, validationErrors: { email: ERROR_MESSAGES.UNVERIFIED_EMAIL} });
+    if (!foundUser.is_active) {
+      return renderError(res, 'login/login', ERROR_MESSAGES.ACCOUNT_BLOCKED, { 
+        email, validationErrors: { email: ERROR_MESSAGES.ACCOUNT_BLOCKED} });
     }
       
     req.session.user = {id: foundUser.id, email: foundUser.email, username: foundUser.username};

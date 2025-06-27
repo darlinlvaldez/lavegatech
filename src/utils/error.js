@@ -45,7 +45,7 @@ export const ERROR_MESSAGES = {
   
   INCORRECT_PASSWORD: 'Contraseña actual incorrecta.',
   WRONG_PASSWORD: 'Contraseña incorrecta.',
-  UNVERIFIED_EMAIL: 'Primero debes verificar tu correo.',
+  ACCOUNT_BLOCKED: 'Esta cuenta ha sido bloqueada.',
   LOGIN_ERROR: 'Error en el inicio de sesión.',
   EMAIL_REPEATED: 'No puedes actualizar al mismo correo',
 

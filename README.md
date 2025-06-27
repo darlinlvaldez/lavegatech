@@ -1,4 +1,4 @@
 Cantidad de metodos de pagos.
 Poder seguir una orden.
-Mostrar mensajes a carlos.
-Favoritos.
+Boton de agregar productos al carrito en Favoritos.
+Cambiar si está verificado le usuario "Este correo ya está registrado".
