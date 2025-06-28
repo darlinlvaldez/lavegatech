@@ -10,7 +10,8 @@
         class="form-input <%= validationErrors?.email ? 'input-error' : '' %>">
         
         <% if (validationErrors?.email) { %>
-          <div class="field-error"><%= validationErrors.email %></div>
+          <div class="field-error"><i class="fa-solid fa-circle-exclamation"></i>
+            <%= validationErrors.email %></div>
         <% } %>
       
       <% if (error && !validationErrors?.email) { %>

@@ -1,6 +1,5 @@
 /* contact.css */
 
-
 .contenedor-principal {
     display: flex;
     justify-content: center;
@@ -107,6 +106,10 @@ form .mb-3 {
 
 .boton-enviar:hover {
     background-color: #e40b0b;
+}
+
+.input-error {
+    border-color: #ff4444;
 }
 
 .field-error {

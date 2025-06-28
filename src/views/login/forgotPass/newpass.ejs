@@ -18,13 +18,13 @@
       </div>
 
         <% if (validationErrors?.password) { %>
-          <p class="field-error"><%= validationErrors.password %></p>
+          <p class="field-error"><i class="fa-solid fa-circle-exclamation"></i>
+            <%= validationErrors.password %></p>
         <% } %>
 
       <div class="password-wrapper">
         <input type="password" name="confirm" id="confirmPasswordInput" placeholder="Confirmar contraseña" required
           class="password-input <%= validationErrors?.confirm ? 'input-error' : '' %>">
-
 
           <span onclick="togglePassword('confirm')" class="toggle-password">
             <i id="eyeIconConfirmPassword" class="fas fa-eye-slash"></i>
@@ -32,7 +32,8 @@
         </div>
 
         <% if (validationErrors?.confirm) { %>
-          <p class="field-error"><%= validationErrors.confirm %></p>
+          <p class="field-error"><i class="fa-solid fa-circle-exclamation"></i>
+          <%= validationErrors.confirm %></p>
         <% } %>
       
       <% if (error && !validationErrors?.password && !validationErrors?.confirm) { %>
