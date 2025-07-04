@@ -6,7 +6,7 @@ const request = {};
 request.updateUsername = z.object({
   newUsername: z
     .string()
-    .min(3, { message: ERROR_ZOD.USERNAME_MIN })
+    .min(1, { message: ERROR_ZOD.USERNAME_REQUIRED })
     .max(40, { message: ERROR_ZOD.USERNAME_MAX }),
 }).strict();
 
@@ -14,14 +14,18 @@ request.updateEmail = z.object({
   newEmail: z
     .string()
     .email({ message: ERROR_ZOD.EMAIL_INVALID })
-    .min(15, { message: ERROR_ZOD.EMAIL_MIN }),
+    .min(1, { message: ERROR_ZOD.EMAIL_REQUIRED })
+    .refine(val => val.endsWith('@gmail.com'), {
+    message: ERROR_ZOD.EMAIL_DOMAIN}),
 }).strict();
 
 request.verifyEmailCode = z.object({
   newEmail: z
     .string()
     .email({ message: ERROR_ZOD.EMAIL_INVALID })
-    .min(15, { message: ERROR_ZOD.EMAIL_MIN }),
+    .min(1, { message: ERROR_ZOD.EMAIL_REQUIRED })
+    .refine(val => val.endsWith('@gmail.com'), {
+    message: ERROR_ZOD.EMAIL_DOMAIN}),
   codeInput: z
     .string()
     .min(6, { message: ERROR_ZOD.CODE_LENGTH })

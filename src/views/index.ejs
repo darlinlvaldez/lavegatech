@@ -88,23 +88,23 @@ document.querySelector(".tablink").click();
                                             </h4></a>
                                         <div class="product-rating">
                                         <% for (let i = 1; i <= 5; i++) { %>
-                                        <% if (i <= Math.floor(producto.averageRating)) { %>
-                                        <i class="fa fa-star"></i>
-                                        <% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
-                                        <i class="fa fa-star-half-o"></i>
-                                        <% } else { %>
-                                        <i class="fa fa-star-o"></i>
+                                            <% if (i <= Math.floor(producto.averageRating)) { %>
+                                                <i class="fa-solid fa-star"></i>
+                                            <% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
+                                                <i class="fa-regular fa-star-half-stroke"></i>
+                                            <% } else { %>
+                                                <i class="fa-regular fa-star"></i>
+                                            <% } %>
                                         <% } %>
-                                        <% } %>
-                                        </div>
+                                    </div>
                                         <div class="product-btns">
                                             <button class="add-to-wishlist" data-product-id="<%= producto.id %>" data-product-name="<%= producto.nombre %>" 
                                                 data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
                                                 data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>">
-                                                <i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span></button>
+                                                <i class="fa-regular fa-heart"></i> <span class="tooltipp">Lista de deseo</span></button>
                                                  
                                                 <% if (producto.esMovil) { %>
-                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
+                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
                                                 <span class="tooltipp">Comparar</span></button>
                                                 <% } %>
 
@@ -156,23 +156,23 @@ document.querySelector(".tablink").click();
                                             </h4></a>
                                         <div class="product-rating">
                                         <% for (let i = 1; i <= 5; i++) { %>
-                                        <% if (i <= Math.floor(producto.averageRating)) { %>
-                                        <i class="fa fa-star"></i>
-                                        <% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
-                                        <i class="fa fa-star-half-o"></i>
-                                        <% } else { %>
-                                        <i class="fa fa-star-o"></i>
+                                            <% if (i <= Math.floor(producto.averageRating)) { %>
+                                                <i class="fa-solid fa-star"></i>
+                                            <% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
+                                                <i class="fa-regular fa-star-half-stroke"></i>
+                                            <% } else { %>
+                                                <i class="fa-regular fa-star"></i>
+                                            <% } %>
                                         <% } %>
-                                        <% } %>
-                                        </div>
+                                    </div>
                                         <div class="product-btns">
                                             <button class="add-to-wishlist" data-product-id="<%= producto.id %>" data-product-name="<%= producto.nombre %>" 
                                                 data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
                                                 data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>">
-                                                <i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span></button>
+                                                <i class="fa-regular fa-heart"></i> <span class="tooltipp">Lista de deseo</span></button>
 
                                                 <% if (producto.esMovil) { %>
-                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
+                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
                                                 <span class="tooltipp">Comparar</span></button>
                                                 <% } %>
                                                 
@@ -223,25 +223,25 @@ document.querySelector(".tablink").click();
                                                 <% } %>
                                             </h4></a>
                                         <div class="product-rating">
-                                        <% for (let i = 1; i <= 5; i++) { %>
-                                        <% if (i <= Math.floor(producto.averageRating)) { %>
-                                        <i class="fa fa-star"></i>
-                                        <% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
-                                        <i class="fa fa-star-half-o"></i>
-                                        <% } else { %>
-                                        <i class="fa fa-star-o"></i>
-                                        <% } %>
-                                        <% } %>
+                                            <% for (let i = 1; i <= 5; i++) { %>
+                                                <% if (i <= Math.floor(producto.averageRating)) { %>
+                                                    <i class="fa-solid fa-star"></i>
+                                                <% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
+                                                    <i class="fa-regular fa-star-half-stroke"></i>
+                                                <% } else { %>
+                                                    <i class="fa-regular fa-star"></i>
+                                                <% } %>
+                                            <% } %>
                                         </div>
                                         <div class="product-btns"> 
 
                                             <button class="add-to-wishlist" data-product-id="<%= producto.id %>" data-product-name="<%= producto.nombre %>" 
                                                 data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
                                                 data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>">
-                                                <i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span></button>
+                                                <i class="fa-regular fa-heart"></i> <span class="tooltipp">Lista de deseo</span></button>
                                                 
                                                 <% if (producto.esMovil) { %>
-                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
+                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
                                                 <span class="tooltipp">Comparar</span></button>
                                                 <% } %>
 
@@ -292,24 +292,24 @@ document.querySelector(".tablink").click();
                                                 <% } %>
                                             </h4></a>
                                         <div class="product-rating">
-                                        <% for (let i = 1; i <= 5; i++) { %>
-                                        <% if (i <= Math.floor(producto.averageRating)) { %>
-                                        <i class="fa fa-star"></i>
-                                        <% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
-                                        <i class="fa fa-star-half-o"></i>
-                                        <% } else { %>
-                                        <i class="fa fa-star-o"></i>
-                                        <% } %>
-                                        <% } %>
+                                            <% for (let i = 1; i <= 5; i++) { %>
+                                                <% if (i <= Math.floor(producto.averageRating)) { %>
+                                                    <i class="fa-solid fa-star"></i>
+                                                <% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
+                                                    <i class="fa-regular fa-star-half-stroke"></i>
+                                                <% } else { %>
+                                                    <i class="fa-regular fa-star"></i>
+                                                <% } %>
+                                            <% } %>
                                         </div>
                                         <div class="product-btns">
                                             <button class="add-to-wishlist" data-product-id="<%= producto.id %>" data-product-name="<%= producto.nombre %>" 
                                                 data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
                                                 data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>">
-                                                <i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span></button>
+                                                <i class="fa-regular fa-heart"></i> <span class="tooltipp">Lista de deseo</span></button>
 
                                                 <% if (producto.esMovil) { %>
-                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
+                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
                                                 <span class="tooltipp">Comparar</span></button>
                                                 <% } %>
                                                 
@@ -359,24 +359,24 @@ document.querySelector(".tablink").click();
                                                 <% } %>
                                             </h4></a>
                                         <div class="product-rating">
-                                        <% for (let i = 1; i <= 5; i++) { %>
-                                        <% if (i <= Math.floor(producto.averageRating)) { %>
-                                        <i class="fa fa-star"></i>
-                                        <% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
-                                        <i class="fa fa-star-half-o"></i>
-                                        <% } else { %>
-                                        <i class="fa fa-star-o"></i>
-                                        <% } %>
-                                        <% } %>
+                                            <% for (let i = 1; i <= 5; i++) { %>
+                                                <% if (i <= Math.floor(producto.averageRating)) { %>
+                                                    <i class="fa-solid fa-star"></i>
+                                                <% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
+                                                    <i class="fa-regular fa-star-half-stroke"></i>
+                                                <% } else { %>
+                                                    <i class="fa-regular fa-star"></i>
+                                                <% } %>
+                                            <% } %>
                                         </div>
                                         <div class="product-btns">
                                             <button class="add-to-wishlist" data-product-id="<%= producto.id %>" data-product-name="<%= producto.nombre %>"
                                                 data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
                                                 data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>">
-                                                <i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span></button>
+                                                <i class="fa-regular fa-heart"></i> <span class="tooltipp">Lista de deseo</span></button>
 
                                                 <% if (producto.esMovil) { %>
-                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
+                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
                                                 <span class="tooltipp">Comparar</span></button>
                                                 <% } %>
 
@@ -490,24 +490,24 @@ document.querySelector(".tablink").click();
                                                     </h4></a>
                                                     <div class="product-rating">
                                                     <% for (let i = 1; i <= 5; i++) { %>
-                                                    <% if (i <= Math.floor(producto.averageRating)) { %>
-                                                    <i class="fa fa-star"></i>
-                                                    <% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
-                                                    <i class="fa fa-star-half-o"></i>
-                                                    <% } else { %>
-                                                    <i class="fa fa-star-o"></i>
+                                                        <% if (i <= Math.floor(producto.averageRating)) { %>
+                                                            <i class="fa-solid fa-star"></i>
+                                                        <% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
+                                                            <i class="fa-regular fa-star-half-stroke"></i>
+                                                        <% } else { %>
+                                                            <i class="fa-regular fa-star"></i>
+                                                        <% } %>
                                                     <% } %>
-                                                    <% } %>
-                                                    </div>
+                                                </div>
                                                     <div class="product-btns">
                                                         <button class="add-to-wishlist" data-product-id="<%= producto.id %>"data-product-name="<%= producto.nombre %>" 
                                                             data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
                                                             data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>"> 
-                                                            <i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span>
+                                                            <i class="fa-regular fa-heart"></i> <span class="tooltipp">Lista de deseo</span>
                                                         </button>
                                                         
                                                         <% if (producto.esMovil) { %>
-                                                        <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa fa-exchange"></i>
+                                                        <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
                                                         <span class="tooltipp">Comparar</span></button>
                                                         <% } %>
 

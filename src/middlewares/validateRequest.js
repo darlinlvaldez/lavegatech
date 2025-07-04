@@ -27,6 +27,7 @@ const validate = (schema) => (req, res, next) => {
     } else {
       req.validationError = {
         message: errorMessage,
+        errors: validation.errors,
         fields: validation.errors.reduce((acc, err) => {
           acc[err.path] = err.message;
           return acc;

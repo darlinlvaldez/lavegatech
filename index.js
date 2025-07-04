@@ -10,7 +10,7 @@ import session from './src/middlewares/session.js';
 import userLocals from './src/middlewares/userLocals.js';
 
 // Routes
-import store from './src/routes/productos.js';
+import store from './src/routes/product.js';
 import auth from './src/routes/auth.js';
 import userProfile from './src/routes/userProfile.js';  
 import cart from './src/routes/cart.js';

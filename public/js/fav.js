@@ -4,9 +4,11 @@ import { loadFavPage } from './loadFavPage.js';
 window.removeFromFav = removeFromFav;
 
 const setButtonState = (button, isFavorite) => {
-    const icon = isFavorite ? 'fa-heart' : 'fa-heart-o';
+    const iconClass = isFavorite ? 'fa-solid' : 'fa-regular';
+    const iconName = 'fa-heart';
     const tooltip = isFavorite ? 'Agregado' : 'Favoritos';
-    button.innerHTML = `<i class="fa ${icon}"></i><span class="tooltipp">${tooltip}</span>`;
+    button.innerHTML = `<i class="${iconClass} ${iconName}"></i><span class="tooltipp">${tooltip}</span>`;
+    
     if (isFavorite) {
         button.classList.add('added');
     } else {

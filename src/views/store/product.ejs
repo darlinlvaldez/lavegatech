@@ -42,14 +42,14 @@
 			<h2 class="product-name"><%= producto.nombre %></h2>
 			<div>
 			<div class="product-rating">
-			<% for (let i = 1; i <= 5; i++) { %>
-				<% if (i <= Math.floor(producto.averageRating)) { %>
-				<i class="fa fa-star"></i>
-				<% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
-				<i class="fa fa-star-half-o"></i>
-				<% } else { %>
-				<i class="fa fa-star-o"></i>
-				<% } %>
+			<% for (let i=1; i <=5; i++) { %>
+			<% if (i <=Math.floor(producto.averageRating)) { %>
+			<i class="fa-solid fa-star"></i>
+			<% } else if (i - producto.averageRating < 1 && i> producto.averageRating) { %>
+			<i class="fa-regular fa-star-half-stroke"></i>
+			<% } else { %>
+			<i class="fa-regular fa-star"></i>
+			<% } %>
 			<% } %>
 			</div>
 			<a class="review-link">
@@ -58,12 +58,11 @@
 			</div>
 			<div>
 				<h3 class="product-price">
-					$<%= (Number(producto.precio) * (1 - (producto.descuento /
-						100))).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %>
-						<% if (producto.descuento> 0) { %>
-							<del class="product-old-price">$<%=
-									Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></del>
-							<% } %>
+				$<%= (Number(producto.precio) * (1 - (producto.descuento /
+				100))).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %>
+				<% if (producto.descuento> 0) { %>
+				<del class="product-old-price">$<%=Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></del>
+				<% } %>
 				</h3>
 				<span class="product-available">
 					<p id="stockDisponible">
@@ -108,22 +107,24 @@
 							data-nombre="<%= producto.nombre %>" data-precio="<%= producto.precio %>"
 							data-descuento="<%= producto.descuento %>" data-stock="<%= producto.stock %>"
 							data-color="<%= colorSeleccionado %>">
-							<i class="fa fa-shopping-cart"></i> Añadir al carrito
+							<i class="fa fa-shopping-cart"></i>Añadir al carrito
 						</button>
 					</div>
 				</div>
 				<ul class="product-btns">
+				<li>
 				<a role="button" class="add-to-wishlist" data-product-id="<%= producto.id %>"
 					data-product-name="<%= producto.nombre %>" data-product-price="<%= producto.precio %>"
 					data-product-discount="<%= producto.descuento || 0 %>"
 					data-product-image="<%= producto.imagen %>" data-product-color="<%= colorSeleccionado %>">
-					<i class="fa fa-heart-o"></i> Favoritos
-				</a>
+					<i class="fa fa-heart-o"></i>Favoritos</a>
+				</li>
 
 				<% if (producto.esMovil) { %>
 				<li><a href="#" class="add-to-compare" data-id="<%= producto.id %>">
-					<i class="fa fa-exchange"></i>Comparalo</a></li>
+					<i class="fa-solid fa-arrow-right-arrow-left"></i>Comparalo</a></li>
 				<% } %>
+				</ul>
 
 				<% if (['moviles', 'smarttv', 'laptops', 'consolas', 'tablets', 'otros'].includes(producto.categoria.toLowerCase())) { %>
 				<ul class="product-links">
@@ -141,22 +142,27 @@
 				<li>Compartir:</li>
 				<li>
 					<a href="https://www.facebook.com/sharer/sharer.php?u=<%= encodeURIComponent('http://localhost:3000' + currentUrl) %>" target="_blank">
-					<i class="fa fa-facebook"></i>
+					<i class="fa-brands fa-facebook-f"></i>
+					</a>
+				</li>
+				<li>
+					<a href="https://api.whatsapp.com/send?text=<%= encodeURIComponent('http://localhost:3000' + currentUrl) %>" target="_blank">
+						<i class="fa-brands fa-whatsapp"></i>
 					</a>
 				</li>
 				<li>
 					<a href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent('Mira este producto: ' + producto.nombre) %>&url=<%= encodeURIComponent('http://localhost:3000' + currentUrl) %>" target="_blank">
-					<i class="fa fa-twitter"></i>
+					<i class="fa-brands fa-x-twitter"></i>
 					</a>
 				</li>
 				<li>
-					<a href="https://plus.google.com/share?url=<%= encodeURIComponent('http://localhost:3000' + currentUrl) %>" target="_blank">
-					<i class="fa fa-google-plus"></i>
+					<a href="https://t.me/share/url?url=<%= encodeURIComponent('http://localhost:3000' + currentUrl) %>" target="_blank">
+						<i class="fa-brands fa-telegram"></i>
 					</a>
 				</li>
 				<li>
 					<a href="mailto:?subject=<%= encodeURIComponent('Mira este producto: ' + producto.nombre) %>&body=<%= encodeURIComponent('Te comparto este producto que encontré: http://localhost:3000' + currentUrl) %>">
-					<i class="fa fa-envelope"></i>
+					<i class="fa-solid fa-envelope"></i>
 					</a>
 				</li>
 				</ul>
@@ -285,11 +291,11 @@
 											<% const avgRating = producto.averageRating || 0; %>
 											<% for(let i = 1; i <= 5; i++) { %>
 												<% if(i <= Math.floor(avgRating)) { %>
-													<i class="fa fa-star"></i>
+													<i class="fa-solid fa-star"></i>
 												<% } else if(i === Math.ceil(avgRating) && avgRating % 1 > 0.3) { %>
-													<i class="fa fa-star-half-o"></i>
+													<i class="fa-regular fa-star-half-stroke"></i>
 												<% } else { %>
-													<i class="fa fa-star-o"></i>
+													<i class="fa-regular fa-star"></i>
 												<% } %>
 											<% } %>
 										</div>
@@ -313,9 +319,9 @@
 												<div class="rating-stars">
 													<% for(let i = 1; i <= 5; i++) { %>
 														<% if(i <= stars) { %>
-															<i class="fa fa-star"></i>
+															<i class="fa-solid fa-star"></i>
 														<% } else { %>
-															<i class="fa fa-star-o"></i>
+															<i class="fa-regular fa-star"></i>
 														<% } %>
 													<% } %>
 												</div>

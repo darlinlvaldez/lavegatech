@@ -9,8 +9,8 @@ orders.createOrder = async (orderData, items) => {
 
     const [orderResult] = await conn.query(
       `INSERT INTO orders (user_id, nombre, apellido, email, direccion, ciudad, 
-       distrito, telefono, horario_entrega, total, status) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       distrito, telefono, total, status) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         orderData.user_id,
         orderData.nombre,
@@ -20,7 +20,6 @@ orders.createOrder = async (orderData, items) => {
         orderData.ciudad,
         orderData.distrito,
         orderData.telefono,
-        orderData.horario_entrega,
         orderData.total,
         orderData.status
       ]

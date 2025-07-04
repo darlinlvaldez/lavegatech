@@ -537,7 +537,7 @@ textarea.input {
 
 .search-icon-btn {
   position: absolute;
-  top: 50%;
+  top: 55%;
   right: 10px; 
   transform: translateY(-50%);
   background: none;
@@ -1121,7 +1121,7 @@ textarea.input {
   z-index: 10;
 }
 
-.product .product-body .product-rating>i.fa-star {
+.product .product-body .product-rating > i.fa-solid.fa-star {
   color: #ef233c;
 }
 
@@ -1658,7 +1658,7 @@ textarea.input {
   color: #E4E7ED;
 }
 
-.product-details .product-rating>i.fa-star {
+.product-details .product-rating>i.fa-solid.fa-star {
   color: #D10024;
 }
 
@@ -1865,8 +1865,13 @@ textarea.input {
   color: #E4E7ED;
 }
 
-.rating-avg .rating-stars>i.fa-star, .rating .rating-stars>i.fa-star {
+.rating-avg .rating-stars>i.fa-solid.fa-star, .rating .rating-stars>i.fa-solid.fa-star {
   color: #D10024;
+}
+
+.product-rating .fa-regular.fa-star,
+.review-rating .fa-regular.fa-star {
+  color: #E4E7ED;
 }
 
 .rating li {

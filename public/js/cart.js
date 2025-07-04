@@ -124,10 +124,6 @@ async function deleteProduct(id, color) {
     loadCartPage();
 }
 
-function formatPrice(price) {
-    return price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-}
-
 document.addEventListener('DOMContentLoaded', function () {
     loadCartPreview();
     loadCartPage();

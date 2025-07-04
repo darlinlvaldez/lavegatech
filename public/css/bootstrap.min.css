@@ -2850,6 +2850,17 @@ select[multiple].input-lg,
 textarea.input-lg {
   height: auto;
 }
+.form-group input.input-error {
+  border: 1px solid red;
+}
+.error-text {
+  color: red;
+  visibility: hidden;
+  font-size: 13px;
+}
+.error-text.visible {
+  visibility: visible;
+}
 .form-group-lg .form-control {
   height: 46px;
   padding: 10px 16px;

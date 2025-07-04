@@ -12,7 +12,7 @@ payController.createOrder = async (req, res) => {
 
     const userId = req.session.user.id;
     const {nombre, apellido, email, direccion, ciudad, 
-      distrito, telefono, horario_entrega, mensaje} = req.body;
+      distrito, telefono} = req.body;
 
     if (!nombre || !direccion || !telefono || !email) {
       return res.status(400).json({ 
@@ -21,8 +21,8 @@ payController.createOrder = async (req, res) => {
 
     const cartItems = await cart.getCartToPay(userId);
     if (cartItems.length === 0) { 
-      return res.status(400).json({
-        success: false, message: 'El carrito está vacío'});
+      return res.status(400).json({success: false,
+        message: 'El carrito está vacío'});
     }
 
     const total = cartItems.reduce((sum, item) => {
@@ -31,9 +31,8 @@ payController.createOrder = async (req, res) => {
       return sum + (precioFinal * item.cantidad);
     }, 0);
 
-    const orderData = {
-      user_id: userId, nombre, apellido, email, direccion, ciudad,
-      distrito, telefono, horario_entrega, mensaje, total
+    const orderData = { user_id: userId, nombre, apellido, email, 
+      direccion, ciudad, distrito, telefono, total
     };
 
     const orderItems = cartItems.map(item => ({

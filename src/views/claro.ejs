@@ -330,3 +330,36 @@
 </body>
 
 </html>
+
+email: z.string().superRefine((val, ctx) => {
+  if (!val || val.trim() === '') {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: ERROR_ZOD.EMAIL_REQUIRED,
+    });
+    return;
+  }
+
+  if (!val.includes('@') || !val.includes('.')) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: ERROR_ZOD.EMAIL_INVALID,
+    });
+    return;
+  }
+
+  if (!val.endsWith('@gmail.com')) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: ERROR_ZOD.EMAIL_DOMAIN,
+    });
+  }
+})
+
+email: z
+  .string()
+  .min(1, { message: ERROR_ZOD.EMAIL_REQUIRED })
+  .email({ message: ERROR_ZOD.EMAIL_INVALID })
+  .refine(val => val.endsWith('@gmail.com'), {
+    message: ERROR_ZOD.EMAIL_DOMAIN
+  }),

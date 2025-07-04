@@ -1,23 +1,10 @@
 export const renderError = (res, view, error, extras = {}) => {
-  let errorMessage;
-  let validationErrors = {};
+  const errorMessage = typeof error === 'string' 
+    ? error : error?.message || error?.error || 'Ocurrió un error';
   
-  if (typeof error === 'string') {
-    errorMessage = error;
-  } else if (error?.message) {
-    errorMessage = error.message;
-    validationErrors = error.fields || {};
-  } else if (error?.error) {
-    errorMessage = error.error;
-    if (error.errors) {
-      validationErrors = error.errors.reduce((acc, err) => {
-        acc[err.path] = err.message;
-        return acc;
-      }, {});
-    }
-  } else {
-    errorMessage = 'Ocurrió un error';
-  }
+  const validationErrors = error?.fields || 
+    (error?.errors?.reduce((acc, err) => 
+      ({ ...acc, [err.path]: err.message }), {})) || {};
   
   return res.render(view, { 
     error: errorMessage, 
@@ -64,13 +51,12 @@ export const ERROR_MESSAGES = {
 export const ERROR_ZOD = {
   // USERNAME
   USERNAME_REQUIRED: "El nombre es obligatorio",
-  USERNAME_MIN: "El nombre debe tener al menos 3 caracteres",
   USERNAME_MAX: "El nombre no debe superar los 40 caracteres",
 
   // EMAIL
   EMAIL_REQUIRED: "El correo es obligatorio",
   EMAIL_INVALID: "El formato del correo no es válido",
-  EMAIL_MIN: "El correo debe tener al menos 15 caracteres",
+  EMAIL_DOMAIN: "El correo  es obligatorio y debe terminar en @gmail.com",
 
   // CODE
   CODE_REQUIRED: "El código es obligatorio",
@@ -84,7 +70,24 @@ export const ERROR_ZOD = {
   CONFIRM_PASSWORD_REQUIRED: "Debes confirmar la nueva contraseña",
   CONFIRM_PASSWORD_MIN: "La confirmación debe tener al menos 6 caracteres",
 
-  // FORM CONTACT
-  MESSAGE_SUBJECT_MIN: "El asunto debe tener al menos 10 caracteres",
-  MESSAGE_MIN: "El mensaje debe tener al menos 10 caracteres"
+  // AFFAIR
+  AFFAIR_MIN: "El asunto debe tener al menos 10 caracteres",
+
+  // MESSAGE
+  MESSAGE_MIN: "El mensaje debe tener al menos 10 caracteres",
+
+  // FIRSNAME
+  FIRSNAME_REQUIRED: "El apellido es obligatorio",
+  
+  // ADDRESS
+  ADDRESS_MIN: "La dirección es obligatoria",
+
+  // CITY
+  CITY_MIN: "La ciudad es obligatoria ",
+
+  // DISTRICT
+  DISCTRIC_MIN: "El distrito es obligatoria",
+  
+  // PHONE NUMBER
+  NUMBER_MIN: "Debe tener exactamente 10 dígitos",
 };

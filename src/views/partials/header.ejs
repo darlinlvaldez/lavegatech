@@ -24,7 +24,7 @@
     <link type="text/css" rel="stylesheet" href="/css/nouislider.min.css"/>
 
     <!-- Font Awesome Icon -->
-    <link rel="stylesheet" href="/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <!-- Custom stlylesheet -->
     <link type="text/css" rel="stylesheet" href="/css/style.css" />
@@ -55,14 +55,14 @@
         <div class="container">
             <ul class="header-links pull-left">
                 <li><a href="#"><i class="fa fa-phone"></i>+1 809-277-2371</a></li>
-                <li><i class="fa fa-envelope-o"></i><a href="mailto:info@lavegatechgsrl.com" class="enlace">info@lavegatechgsrl.com</a></li>
-                <li><a href="https://maps.app.goo.gl/S85hspS9jMJGpPPt9"><i class="fa fa-map-marker"></i> Calle Libertad, La Vega 41000</a></li>
+                <li><i class="fa-solid fa-envelope"></i><a href="mailto:info@lavegatechgsrl.com" class="enlace">info@lavegatechgsrl.com</a></li>
+                <li><a href="https://maps.app.goo.gl/S85hspS9jMJGpPPt9"><i class="fa-solid fa-location-dot"></i></i> Calle Libertad, La Vega 41000</a></li>
             </ul>
             <ul class="header-links pull-right">
                 <li><a href="#"><i class="fa fa-dollar"></i>RD</a></li>
-                <li><a href="/api/order/showOrders" class="orders-button"><i class="fa fa-archive"></i> Mis pedidos</a></li>
+                <li><a href="/api/order/showOrders" class="orders-button"><i class="fa-solid fa-box-archive"></i> Mis pedidos</a></li>
                 <% if (usuario) { %>
-                    <li><a href="/account"><i class="fa fa-user-o"></i>Hola, <%= usuario.username.toUpperCase() %></a></li>
+                    <li><a href="/account"><i class="fa-solid fa-user"></i>Hola, <%= usuario.username.toUpperCase() %></a></li>
                 <li>
                 <form id="logout-form" action="/api/auth/logout" method="POST" style="display: none;"></form>
                 <a href="#" onclick="document.getElementById('logout-form').submit();">
@@ -118,7 +118,7 @@
                         <!-- Wishlist -->
                         <div>
                             <a href="/fav" id="fav-count">
-                                <i class="fa fa-heart-o"></i>
+                                <i class="fa-regular fa-heart"></i>
                                 <span>Tus Favoritos</span>
                                 <div class="qty-fav" id="wishlist-count">0</div>
                             </a>

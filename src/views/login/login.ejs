@@ -7,7 +7,8 @@
   
   <form action="/api/auth/login" method="POST">
     <label for="email">Correo electrónico:</label>
-    <input type="email" name="email" value="<%= email || '' %>" placeholder="ejemplo@gmail.com" required class="<%= validationErrors?.email ? 'input-error' : '' %>">
+    <input type="email" name="email" value="<%= email || '' %>" placeholder="ejemplo@gmail.com" 
+    required class="<%= validationErrors?.email ? 'input-error' : '' %>">
     
     <% if (validationErrors?.email) { %>
       <p class="field-error">

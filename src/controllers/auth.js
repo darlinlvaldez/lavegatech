@@ -177,12 +177,12 @@ auth.login = async (req, res) => {
       
     req.session.user = {id: foundUser.id, email: foundUser.email, username: foundUser.username};
       
-    res.redirect('/');
-  } catch (error) {console.error(error);
-    return renderError(res, 'login/login', ERROR_MESSAGES.LOGIN_ERROR, {
-      email: req.body.email, validationErrors: {} });
-    }
-  };
+  res.redirect('/');
+} catch (error) {console.error(error);
+  return renderError(res, 'login/login', ERROR_MESSAGES.LOGIN_ERROR, {
+    email: req.body.email, validationErrors: {} });
+  }
+};
   
 auth.email = async (req, res) => {
   try {
