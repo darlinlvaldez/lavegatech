@@ -15,6 +15,10 @@ fav.removeItem = async (usuario_id, producto_id, colorSeleccionado) => {
   );
 };
 
+fav.clearAll = async (usuario_id) => {
+  await db.query("DELETE FROM fav WHERE usuario_id = ?", [usuario_id]);
+};
+
 fav.itemExists = async (usuario_id, producto_id, colorSeleccionado) => {
   const [rows] = await db.query(
     "SELECT id FROM fav WHERE usuario_id = ? AND producto_id = ? AND colorSeleccionado = ?",

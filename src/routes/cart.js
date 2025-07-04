@@ -8,6 +8,7 @@ router.post('/sync', isAuth(), cart.syncCart);
 router.post('/add', isAuth(), cart.addToCart);
 router.post('/update-quantity', isAuth(), cart.updateQuantity);
 router.post('/remove-item', isAuth(), cart.removeItem);
+router.post('/clear', isAuth(), cart.clearAllCart);
 router.get('/items', isAuth(), cart.getCartItems);
 router.get('/stock', cart.getStock);
 router.get('/', cart.getRelated);

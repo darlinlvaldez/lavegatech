@@ -1,4 +1,5 @@
 import {checkAuth, checkStock} from './utils.js';
+import {handleClearCart} from './cart.js';
 
 async function loadCartPreview() {
     let carrito = [];
@@ -33,6 +34,26 @@ async function loadCartPreview() {
     if (carrito.length === 0) {
         const localCart = JSON.parse(localStorage.getItem('carrito')) || [];
         carrito = await checkStock(localCart, false);
+    }
+    
+    const clearCartContainer = document.getElementById('clear-cart-container');
+    if (clearCartContainer) {
+        if (carrito.length > 0) {
+            clearCartContainer.innerHTML = `
+                <button id="clear-cart-btn" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Vaciar
+                </button>`;
+            clearCartContainer.style.display = 'block';
+            document.getElementById('clear-cart-btn').addEventListener('click', handleClearCart);
+        } else {
+            clearCartContainer.innerHTML = '';
+            clearCartContainer.style.display = 'none';
+        }
+    }
+
+    const count = document.getElementById('cart-items-count');
+    if (count) {
+        count.textContent = `${carrito.length} ${carrito.length === 1 ? 'producto' : 'productos'}`;
     }
 
     renderCart(carrito, cartList, carritoCount, cartSummary, cartSubtotal);

@@ -2,13 +2,13 @@
     border-bottom: 1px solid #ddd;
     display: flex;
     align-items: center;
-    gap: 80px;
+    gap: 70px;
     border: 1px solid #ddd;
     border-radius: 8px;  
     padding: 10px;
     margin-bottom: 15px;
     background-color: #f9f9f9; 
-    width: 152%;
+    width: 100%;
 }
 
 .fav-item:last-child {
@@ -78,6 +78,53 @@ span.sale {
 
 .qty-cantidad{
     font-weight: bold;
+}
+
+.fav-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+#clear-fav-btn {
+  font-size: 1.2rem;
+  border: 2px solid transparent;
+  height: 40px;
+  padding: 0 30px;
+  background-color: #ef233c;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: 0.2s all;
+  white-space: nowrap;
+  position: relative;
+}
+
+#clear-fav-btn i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40px;
+  height: 40px;
+  line-height: 38px;
+  color: #d10024;
+  opacity: 0;
+  visibility: hidden;
+  text-align: center;
+}
+
+#clear-fav-btn:hover {
+  background-color: #fff;
+  color: #d10024;
+  border-color: #d10024;
+}
+
+#clear-fav-btn:hover i {
+  opacity: 1;
+  visibility: visible;
 }
 
 .remove-btn {

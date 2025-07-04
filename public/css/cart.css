@@ -81,7 +81,54 @@ span.sale {
 }
 
 .qty-cantidad{
-    font-weight: bold;
+  font-weight: bold;
+}
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+#clear-cart-btn {
+  font-size: 1.2rem;
+  border: 2px solid transparent;
+  height: 40px;
+  padding: 0 30px;
+  background-color: #ef233c;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: 0.2s all;
+  white-space: nowrap;
+  position: relative;
+}
+
+#clear-cart-btn i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40px;
+  height: 40px;
+  line-height: 38px;
+  color: #d10024;
+  opacity: 0;
+  visibility: hidden;
+  text-align: center;
+}
+
+#clear-cart-btn:hover {
+  background-color: #fff;
+  color: #d10024;
+  border-color: #d10024;
+}
+
+#clear-cart-btn:hover i {
+  opacity: 1;
+  visibility: visible;
 }
 
 .remove-btn {

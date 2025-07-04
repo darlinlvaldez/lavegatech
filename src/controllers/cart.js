@@ -144,6 +144,17 @@ cartController.removeItem = async (req, res) => {
   }
 };
 
+cartController.clearAllCart = async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+    await cart.clearCart(userId);
+    res.json({ success: true, count: 0 });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error al vaciar carrito' });
+  }
+};
+
 cartController.getStock = async (req, res) => {
   try {
     const { id, color, bulk } = req.query;

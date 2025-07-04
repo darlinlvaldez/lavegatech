@@ -20,7 +20,6 @@ function generateFavItemHTML(item) {
                 </span>
                 </a>
             </div>
-        
         <div class="product-items">
             <span class="label">Color</span>
             <div class="color-item">

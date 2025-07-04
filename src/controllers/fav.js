@@ -41,6 +41,17 @@ favController.removeFromFav = async (req, res) => {
   }
 };
 
+favController.clearAllFav = async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+    await fav.clearAll(userId);
+    res.json({ success: true, count: 0 });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error al vaciar favoritos' });
+  }
+};
+
 favController.getFavItems = async (req, res) => {
   try {
     const userId = req.session.user.id;
