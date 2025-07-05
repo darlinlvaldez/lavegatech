@@ -1,31 +1,38 @@
 import { fetchFav, checkAuth } from './utils.js';
 import {loadFavPage} from './loadFavPage.js';
+import { showConfirmDialog } from './sweetAlert2.js';
 
 window.renderButton = renderButton;
 
 async function handleClearFav() {
-    if (!confirm("¿Seguro que deseas eliminar todos los favoritos?")) return;
+  const confirmed = await showConfirmDialog({
+    title: "¿Vaciar favoritos?",
+    text: "¿Deseas eliminar todos los productos favoritos?",
+    confirmButtonText: "Aceptar",
+  });
 
-    try {
-        const authData = await checkAuth();
-    
-        if (!authData.authenticated) {
-          localStorage.removeItem("favoritos");
-          await loadCartPreview();
-          return;
-        }
+  if (!confirmed) return;
 
-        const data = await fetchFav('/fav/clear', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-        });
+  try {
+    const authData = await checkAuth();
 
-        if (data.success) {
-            await loadFavPage();
-        }
-    } catch (error) {
-        console.error("Error al vaciar favoritos:", error);
+    if (!authData.authenticated) {
+      localStorage.removeItem("favoritos");
+      await loadCartPreview();
+      return;
     }
+
+    const data = await fetchFav("/fav/clear", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (data.success) {
+      await loadFavPage();
+    }
+  } catch (error) {
+    console.error("Error al vaciar favoritos:", error);
+  }
 }
 
 function renderButton(favItems) {

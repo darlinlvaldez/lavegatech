@@ -1,5 +1,4 @@
 import { fetchFav, checkAuth, updateFavCount } from "./utils.js";
-import { generateFavItemHTML } from "./favView.js";
 
 async function loadFavPage() {
     const container = document.getElementById('fav-items-container');
