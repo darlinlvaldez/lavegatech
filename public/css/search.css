@@ -68,20 +68,45 @@
 }
 
 .search-comparison-btn {
+  font-size: 1.5rem;
+  border: 2px solid transparent;
   height: 50px;
   min-width: 120px;
-  background: #D10024;
-  color: #FFF;
+  padding: 0 30px;
+  background-color: #ef233c;
+  color: #fff;
+  text-transform: uppercase;
   font-weight: 700;
-  border: none;
-  border-radius: 30px;
+  border-radius: 40px;
   cursor: pointer;
-  transition: background-color 0.3s;
-  padding: 0 25px;
+  transition: 0.2s all;
+  white-space: nowrap;
+  position: relative;
+}
+
+.search-comparison-btn i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40px;
+  height: 50px;
+  line-height: 48px;
+  color: #d10024;
+  opacity: 0;
+  visibility: hidden;
+  text-align: center;
+  transition: 0.2s all;
 }
 
 .search-comparison-btn:hover {
-  background: #b0001d;
+  background-color: #fff;
+  color: #d10024;
+  border-color: #d10024;
+}
+
+.search-comparison-btn:hover i {
+  opacity: 1;
+  visibility: visible;
 }
 
 .selected-devices-container {
@@ -152,6 +177,7 @@
   .input-comparison {
     height: 45px;
     font-size: 14px;
+    padding-right: 50px;
   }
   
   .search-result-item {
@@ -161,5 +187,9 @@
   .search-result-item img {
     width: 35px;
     height: 35px;
+  }
+   .search-icon-btn-comparison {
+    font-size: 16px;
+    right: 12px;
   }
 }

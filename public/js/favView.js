@@ -7,7 +7,7 @@ window.renderButton = renderButton;
 async function handleClearFav() {
   const confirmed = await showConfirmDialog({
     title: "¿Vaciar favoritos?",
-    text: "¿Deseas eliminar todos los productos favoritos?",
+    text: "Se eliminarán todos los productos de favoritos.",
     confirmButtonText: "Aceptar",
   });
 
