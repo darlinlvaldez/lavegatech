@@ -59,7 +59,10 @@ function renderButton(favItems) {
     clearFavContainer.style.display = "none";
   }
 
-  countElement.textContent = `${favItems.length} ${favItems.length === 1 ? "producto" : "productos"}`;
+  countElement.innerHTML = `
+  <span class="count-num">${favItems.length}</span>
+  <span class="count-label">${favItems.length === 1 ? "producto" : "productos"}</span>
+`;
 }
 
 function generateFavItemHTML(item) {

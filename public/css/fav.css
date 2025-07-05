@@ -2,13 +2,20 @@
     border-bottom: 1px solid #ddd;
     display: flex;
     align-items: center;
-    gap: 70px;
+    gap: 30px;
     border: 1px solid #ddd;
     border-radius: 8px;  
     padding: 10px;
     margin-bottom: 15px;
     background-color: #f9f9f9; 
-    width: 100%;
+    width: 90%;
+    margin: 0 auto 15px auto;
+}
+
+.fav-title, #fav-items-container p, .related-products-container p{
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 20px;
 }
 
 .fav-item:last-child {
@@ -81,10 +88,12 @@ span.sale {
 }
 
 .fav-header {
+  width: 90%;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
-  width: 100%;
 }
 
 #clear-fav-btn {
