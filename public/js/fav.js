@@ -133,25 +133,4 @@ async function removeFromFav(productId, color) {
     }
 }
 
-async function handleClearFav() {
-    if (!confirm("¿Seguro que deseas eliminar todos los favoritos?")) return;
-
-    try {
-        const authData = await checkAuth();
-        if (!authData.authenticated) return location.href = "/login";
-
-        const data = await fetchFav('/fav/clear', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-        });
-
-        if (data.success) {
-            await loadFavPage();
-        }
-    } catch (error) {
-        console.error("Error al vaciar favoritos:", error);
-    }
-}
-
-
-export { checkFavorites, handleClearFav };
+export { checkFavorites };

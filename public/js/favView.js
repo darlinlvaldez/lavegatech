@@ -1,3 +1,60 @@
+import { fetchFav, checkAuth } from './utils.js';
+import {loadFavPage} from './loadFavPage.js';
+
+window.renderButton = renderButton;
+
+async function handleClearFav() {
+    if (!confirm("¿Seguro que deseas eliminar todos los favoritos?")) return;
+
+    try {
+        const authData = await checkAuth();
+    
+        if (!authData.authenticated) {
+          localStorage.removeItem("favoritos");
+          await loadCartPreview();
+          return;
+        }
+
+        const data = await fetchFav('/fav/clear', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (data.success) {
+            await loadFavPage();
+        }
+    } catch (error) {
+        console.error("Error al vaciar favoritos:", error);
+    }
+}
+
+function renderButton(favItems) {
+  const favContainer = document.getElementById("fav-items-container");
+  const clearFavContainer = document.getElementById("clear-fav-container");
+  const countElement = document.getElementById("fav-items-count");
+
+  if (!favContainer || !clearFavContainer || !countElement) return;
+
+  if (favItems.length > 0) {
+    favContainer.innerHTML = favItems.map(generateFavItemHTML).join("");
+    clearFavContainer.innerHTML = `
+      <button id="clear-fav-btn" class="btn btn-danger">
+        <i class="bi bi-trash"></i> Vaciar
+      </button>`;
+
+    clearFavContainer.style.display = "block";
+
+    document.getElementById("clear-fav-btn").addEventListener("click", handleClearFav);
+    
+  } else {
+    favContainer.innerHTML = "<p>No hay productos en tu lista de deseos.</p>";
+    clearFavContainer.innerHTML = "";
+    clearFavContainer.style.display = "none";
+  }
+
+  countElement.textContent = `${favItems.length} ${favItems.length === 1 ? "producto" : "productos"}`;
+}
+
 function generateFavItemHTML(item) {
     const productId = item.id || item.producto_id;
     const color = item.colorSeleccionado;

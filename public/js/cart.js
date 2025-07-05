@@ -4,7 +4,6 @@ import { loadCartPreview } from './cartPreview.js';
 import { showToast } from './toastify.js';
 
 window.deleteProduct = deleteProduct;
-window.formatPrice = formatPrice;
 
 async function fetchCart(action, data = {}) {
   const options = {
@@ -122,31 +121,6 @@ async function deleteProduct(id, color) {
         console.error('Error al eliminar producto:', err);
     }
     loadCartPage();
-}
-
-export async function handleClearCart() {
-  if (!confirm("¿Seguro que deseas eliminar todos los items del carrito?")) return;
-
-  try {
-    const authData = await checkAuth();
-    if (!authData.authenticated) return location.href = "/login";
-
-    const res = await fetch('/cart/clear', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include'
-    });
-
-    const data = await res.json();
-
-    if (data.success) {
-      await loadCartPreview();
-      await loadCartPage();
-
-    }
-  } catch (error) {
-    console.error("Error al vaciar el carrito:", error);
-  }
 }
 
 document.addEventListener('DOMContentLoaded', function () {

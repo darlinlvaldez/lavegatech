@@ -57,6 +57,38 @@ function totalCart() {
   }
 }
 
+async function handleClearCart() {
+  if (!confirm("¿Seguro que deseas eliminar todos los items del carrito?")) 
+    return;
+
+  try {
+    const authData = await checkAuth();
+    
+    if (!authData.authenticated) {
+      localStorage.removeItem('carrito');
+      await loadCartPreview();
+      await loadCartPage();
+      return;
+    }
+
+    const res = await fetch('/cart/clear', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include'
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      await loadCartPreview();
+      await loadCartPage();
+
+    }
+  } catch (error) {
+    console.error("Error al vaciar el carrito:", error);
+  }
+}
+
 async function loadCartPage() {
   let cart = JSON.parse(localStorage.getItem('carrito')) || [];
   
@@ -85,13 +117,6 @@ async function loadCartPage() {
   const totalElement = document.getElementById('cart-total');
   
   if (!container || !countElement || !totalElement) return;
-
-  if (cart.length === 0) {
-    container.innerHTML = '<p>No hay productos en el carrito.</p>';
-    countElement.textContent = '0 productos';
-    totalElement.textContent = '$0.00';
-    return;
-  }
 
   let html = '';
   let total = 0;
@@ -159,6 +184,21 @@ async function loadCartPage() {
   container.innerHTML = html || '<p>No hay productos disponibles en el carrito.</p>';
   countElement.textContent = `${totalItems} ${totalItems === 1 ? 'producto' : 'productos'}`;
   totalElement.textContent = `$${formatPrice(total)}`;
+
+  const clearCartContainer = document.getElementById('clear-cart-container');
+    if (clearCartContainer) {
+        if (totalItems > 0) {
+            clearCartContainer.innerHTML = `
+                <button id="clear-cart-btn" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Vaciar
+                </button>`;
+            clearCartContainer.style.display = 'block';
+            document.getElementById('clear-cart-btn').addEventListener('click', handleClearCart);
+        } else {
+            clearCartContainer.innerHTML = '';
+            clearCartContainer.style.display = 'none';
+        }
+    }
 }
 
 export { loadCartPage };
