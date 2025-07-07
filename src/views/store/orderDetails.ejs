@@ -14,6 +14,7 @@
         <div class="card-details mb-4">
             <div class="card-header-details">
                 <h4 class="tittle4">Información del Pedido</h4>
+                <a href="#" class="no-in-pdf" onclick="generatePDF()"><i class="fa-solid fa-file-pdf"></i> Descargar PDF</a>
             </div>
             <div class="card-body-details">
                 <div class="row-details">
@@ -78,10 +79,14 @@
             </div>
           </div>
         </div>
-        <a href="/api/order/showOrders" class="btn-details">Volver a mis pedidos</a>
+        <a href="/api/order/showOrders" class="btn-details no-in-pdf">Volver</a>
     </div>
 
     <%- include('../partials/footer.ejs') %>
 
 </body>
+
+	<script src="/js/PDF.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 </html>

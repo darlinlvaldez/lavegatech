@@ -10,18 +10,32 @@ rating.create = async ({producto_id, usuario_id, calificacion, comentario}) => {
   return result;
 };
 
-rating.findByProductId = async (producto_id, pagina = 1, limite = 3) => {
+rating.findByProductId = async (producto_id, pagina = 1, limite = 3, usuario_id = null) => {
   const offset = (pagina - 1) * limite;
-  const [rows] = await db.execute(
-    `SELECT r.*, u.username 
-     FROM ratings r 
-     JOIN usuarios u ON r.usuario_id = u.id 
-     WHERE producto_id = ? 
-     ORDER BY fecha_creacion DESC
-     LIMIT ? OFFSET ?`,
-    [producto_id, limite, offset]
-  );
+
+  const query = `
+    SELECT r.*, u.username,
+      CASE WHEN r.usuario_id = ? THEN 0 ELSE 1 END as orden_personal,
+      r.usuario_id = ? as isAuthor
+    FROM ratings r 
+    JOIN usuarios u ON r.usuario_id = u.id 
+    WHERE r.producto_id = ? 
+    ORDER BY orden_personal, r.fecha_creacion DESC
+    LIMIT ? OFFSET ?
+  `;
+
+  const [rows] = await db.execute(query, [
+    usuario_id ?? -1, usuario_id ?? -1, producto_id, limite, offset]);
+
   return rows;
+};
+
+rating.updateReview = async (id, usuario_id, comentario, calificacion) => {
+    const [result] = await db.execute(
+        "UPDATE ratings SET comentario = ?, calificacion = ? WHERE id = ? AND usuario_id = ?",
+        [comentario, calificacion, id, usuario_id]
+    );
+    return result;
 };
 
 rating.countByProductId = async (producto_id) => {

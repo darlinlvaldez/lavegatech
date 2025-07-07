@@ -338,84 +338,7 @@
 
 							<!-- Reviews -->
 							<div class="col-md-6">
-								<div id="reviews" data-product-id="<%= producto.id %>">
-									<% if(producto.reviews.length > 0) { %>
-										<ul class="reviews">
-											<% producto.reviews.forEach(review => { %>
-												<li>
-													<div class="review-heading">
-														<h5 class="name"><%= review.username %></h5>
-														<p class="date"><%= new Date(review.fecha_creacion).toLocaleDateString() %></p>
-														<div class="review-rating">
-															<% for(let i = 1; i <= 5; i++) { %>
-																<% if(i <= review.calificacion) { %>
-																	<i class="fa fa-star"></i>
-																<% } else { %>
-																	<i class="fa fa-star-o empty"></i>
-																<% } %>
-															<% } %>
-														</div>
-													</div>
-													<div class="review-body">
-														<p><%= review.comentario || 'El usuario no dejó comentario' %></p>
-													</div>
-												</li>
-											<% }) %>
-										</ul>
-										<% if(producto.totalPagesReviews > 1) { %>
-											<ul class="reviews-pagination">
-												<% if(producto.currentPageReviews > 1) { %>
-													<li>
-														<a href="#" onclick="window.reviewSystem.loadReviews(<%= producto.currentPageReviews - 1 %>, <%= producto.limiteReviews %>); return false;">
-															<i class="fa fa-angle-left"></i>
-														</a>
-													</li>
-												<% } %>
-												
-												<% const start = Math.max(1, producto.currentPageReviews - 2); %>
-												<% const end = Math.min(producto.totalPagesReviews, producto.currentPageReviews + 2); %>
-												
-												<% if(start > 1) { %>
-													<li>
-														<a href="#" onclick="window.reviewSystem.loadReviews(1, <%= producto.limiteReviews %>); return false;">1</a>
-													</li>
-													<% if(start > 2) { %>
-														<li><span>...</span></li>
-													<% } %>
-												<% } %>
-												
-												<% for(let i = start; i <= end; i++) { %>
-													<li class="<%= i === producto.currentPageReviews ? 'active' : '' %>">
-														<a href="#" onclick="window.reviewSystem.loadReviews(<%= i %>, <%= producto.limiteReviews %>); return false;">
-															<%= i %>
-														</a>
-													</li>
-												<% } %>
-												
-												<% if(end < producto.totalPagesReviews) { %>
-													<% if(end < producto.totalPagesReviews - 1) { %>
-														<li><span>...</span></li>
-													<% } %>
-													<li>
-														<a href="#" onclick="window.reviewSystem.loadReviews(<%= producto.totalPagesReviews %>, <%= producto.limiteReviews %>); return false;">
-															<%= producto.totalPagesReviews %>
-														</a>
-													</li>
-												<% } %>
-												
-												<% if(producto.currentPageReviews < producto.totalPagesReviews) { %>
-													<li>
-														<a href="#" onclick="window.reviewSystem.loadReviews(<%= producto.currentPageReviews + 1 %>, <%= producto.limiteReviews %>); return false;">
-															<i class="fa fa-angle-right"></i>
-														</a>
-													</li>
-												<% } %>
-											</ul>
-										<% } %>
-									<% } else { %>
-										<p>No hay reseñas para este producto todavía.</p>
-									<% } %>
-								</div>
+								<div id="reviews" data-product-id="<%= producto.id %>"></div>
 							</div>
 							<!-- /Reviews -->
 
@@ -425,7 +348,9 @@
 											<div id="review-form">
 												<form class="review-form" id="reviewForm">
 													<input type="hidden" name="producto_id" value="<%= producto.id %>">
-													<textarea class="input" name="comentario" placeholder="Tu reseña" required></textarea>
+													<input type="hidden" name="review_id" id="review_id" value="">
+													<textarea class="input" name="comentario" id="comentarioInput" placeholder="Tu reseña" required></textarea>
+													<input type="hidden" name="calificacion" id="calificacionInput">
 													<div class="input-rating">
 														<span>Tu calificación: </span>
 														<div class="stars">

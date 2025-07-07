@@ -1916,7 +1916,7 @@ textarea.input {
 .reviews li {
   position: relative;
   padding-left: 145px;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 
 .reviews .review-heading {
@@ -1951,7 +1951,7 @@ textarea.input {
   color: #E4E7ED;
 }
 
-.reviews .review-heading .review-rating>i.fa-star {
+.reviews .review-heading .review-rating>i.fa-solid.fa-star {
   color: #D10024;
 }
 
@@ -2028,6 +2028,44 @@ textarea.input {
 .review-form .input-rating .stars>input:checked label:before, .review-form .input-rating .stars>input:checked~label:before {
   content: "\f005";
   color: #D10024;
+}
+
+/*-- Review Button --*/
+
+.edit-review-btn {
+  font-size: 1.2rem;
+  border: 2px solid transparent;
+  height: 32px;
+  padding: 0 20px;
+  background-color: #ef233c;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.2s all;
+  white-space: nowrap;
+  position: relative;
+  top: 5px;
+}
+
+.edit-review-btn i {
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 20px;
+  line-height: 20px;
+  color: #ef233c;
+  opacity: 1;
+  visibility: visible;
+  text-align: center;
+}
+
+.edit-review-btn:hover {
+  background-color: #fff;
+  color: #d10024;
+  border-color: #d10024;
 }
 
 /*=========================================================
