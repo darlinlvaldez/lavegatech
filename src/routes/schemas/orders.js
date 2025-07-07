@@ -19,8 +19,7 @@ request.order = z.object({
   .min(1, { message: ERROR_ZOD.EMAIL_REQUIRED })
   .email({ message: ERROR_ZOD.EMAIL_INVALID })
   .refine(val => val.endsWith('@gmail.com'), {
-    message: ERROR_ZOD.EMAIL_DOMAIN
-  }),
+    message: ERROR_ZOD.EMAIL_DOMAIN}),
   direccion: z
     .string()
     .min(1, { message: ERROR_ZOD.ADDRESS_MIN }),
