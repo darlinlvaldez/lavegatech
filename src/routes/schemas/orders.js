@@ -6,8 +6,11 @@ const request = {}
 request.order = z.object({
   nombre: z
     .string()
-    .min(1, {message: ERROR_ZOD.USERNAME_REQUIRED})
-    .max(50, {message: ERROR_ZOD.USERNAME_MAX}),
+    .trim()
+    .min(1, { message: ERROR_ZOD.USERNAME_REQUIRED })
+    .max(40, { message: ERROR_ZOD.USERNAME_MAX })
+    .refine(val => val.trim().length > 0, {
+      message: ERROR_ZOD.USERNAME_REQUIRED}),
   apellido: z
     .string()
     .min(1, { message: ERROR_ZOD.FIRSNAME_REQUIRED}),

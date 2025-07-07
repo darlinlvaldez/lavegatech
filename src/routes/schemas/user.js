@@ -6,8 +6,11 @@ const request = {};
 request.updateUsername = z.object({
   newUsername: z
     .string()
+    .trim()
     .min(1, { message: ERROR_ZOD.USERNAME_REQUIRED })
-    .max(40, { message: ERROR_ZOD.USERNAME_MAX }),
+    .max(40, { message: ERROR_ZOD.USERNAME_MAX })
+    .refine(val => val.trim().length > 0, {
+      message: ERROR_ZOD.USERNAME_REQUIRED}),
 }).strict();
 
 request.updateEmail = z.object({

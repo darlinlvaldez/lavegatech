@@ -6,8 +6,11 @@ const request = {};
 request.register = z.object({
   username: z
     .string()
+    .trim()
     .min(1, { message: ERROR_ZOD.USERNAME_REQUIRED })
-    .max(40, { message: ERROR_ZOD.USERNAME_MAX }),
+    .max(40, { message: ERROR_ZOD.USERNAME_MAX })
+    .refine(val => val.trim().length > 0, {
+      message: ERROR_ZOD.USERNAME_REQUIRED}),
   email: z
     .string()
     .email({ message: ERROR_ZOD.EMAIL_INVALID })
@@ -78,7 +81,7 @@ request.forgotPassword = z.object({
 request.formEmail = z.object({
   nombre: z
     .string()
-    .min(2, { message: ERROR_ZOD.USERNAME_REQUIRED }),
+    .min(1, { message: ERROR_ZOD.USERNAME_REQUIRED }),
   email: z
     .string()
     .email({ message: ERROR_ZOD.EMAIL_INVALID })
