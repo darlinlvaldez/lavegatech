@@ -39,13 +39,23 @@ auth.updateEmail = async (req, res) => {
       return res.status(400).json({ error: ERROR_MESSAGES.EMAIL_ALREADY_EXISTS });
     }
 
+    const now = Date.now();
+    const existing = code.pendingUsers.get(newEmail);
+
+    if (existing?.lastSent && (now - existing.lastSent < RESEND_COOLDOWN)) {
+      const remaining = Math.ceil((RESEND_COOLDOWN - (now - existing.lastSent)) / 1000);
+      return res.status(429).json({error: ERROR_MESSAGES.RESEND_COOLDOWN.replace('{seconds}', remaining),
+        resendTimer: remaining});
+    }
+
     const verificationCode = code.generateCode();
-    code.pendingUsers.set(newEmail, {
-      code: verificationCode, expiresAt: Date.now() + CODE_EXPIRATION, userId: sessionUser.id});
+    code.pendingUsers.set(newEmail, {code: verificationCode,
+      expiresAt: now + CODE_EXPIRATION, lastSent: now, userId: sessionUser.id});
 
     try {
       await emailService.sendVerification(newEmail, verificationCode);
-      res.status(200).json({ success: true, message: 'Código enviado al nuevo correo.' });
+      res.status(200).json({ success: true, message: 'Código enviado al nuevo correo.', 
+        resendTimer: Math.ceil(RESEND_COOLDOWN / 1000) });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: ERROR_MESSAGES.EMAIL_SEND_ERROR });
@@ -74,9 +84,8 @@ auth.resendCode = async (req, res) => {
     const newCode = code.generateCode();
     const expiresAt = now + CODE_EXPIRATION;
 
-    store.set(email, {
-      ...existing, code: newCode, expiresAt, lastSent: now,
-      userId: existing?.userId});
+    store.set(email, { ...existing, code: newCode, expiresAt, 
+      lastSent: now, userId: existing?.userId});
 
     await emailService.sendEmail( 
       email, 'Nuevo código de verificación', `Tu nuevo código es: ${newCode}`);
@@ -91,6 +100,20 @@ auth.resendCode = async (req, res) => {
   }
 };
 
+auth.getResendTimer = (req, res) => {
+  const { email } = req.query;
+
+  const userCode = code.pendingUsers.get(email);
+  if (!userCode || !userCode.lastSent) {
+    return res.json({ resendTimer: 0 });
+  }
+
+  const now = Date.now();
+  const remaining = Math.max(0, Math.ceil((RESEND_COOLDOWN - (now - userCode.lastSent)) / 1000));
+
+  return res.json({ resendTimer: remaining });
+};
+
 auth.verifyEmailCode = async (req, res) => {
   const { newEmail, codeInput } = req.body;
   
@@ -102,7 +125,8 @@ auth.verifyEmailCode = async (req, res) => {
     await user.updateEmail(result.data.userId, newEmail);
     code.pendingUsers.delete(newEmail);
     req.session.user.email = newEmail; 
-    res.status(200).json({ success: true, message: 'Correo actualizado exitosamente.', redirectUrl: '/account' });
+    res.status(200).json({ success: true, 
+      message: 'Correo actualizado exitosamente.', redirectUrl: '/account' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: ERROR_MESSAGES.SERVER_ERROR });

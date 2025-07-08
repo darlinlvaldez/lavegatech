@@ -24,7 +24,7 @@ export const ERROR_MESSAGES = {
   VERIFICATION_ERROR: 'Error al verificar el código.',
 
   // RENSEND CODE
-  RESEND_COOLDOWN: 'Debes esperar {seconds} segundos antes de reenviar el código.',
+  RESEND_COOLDOWN: 'Debes esperar para reenviar el código.',
   RESEND_ERROR: 'Error al reenviar el código.',
 
   // LOGIN

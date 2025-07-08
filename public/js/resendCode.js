@@ -4,66 +4,38 @@ document.addEventListener('DOMContentLoaded', () => {
   const resendForm = document.getElementById('resendForm');
   const resendButton = document.getElementById('resendButton');
   const cooldownTimer = document.getElementById('cooldown-timer');
-  const emailInput = resendForm.querySelector('input[name="email"]');
   let countdownInterval;
-
-  const getCooldownKey = (email) => `cooldown_${email}`;
-
-  const getRemainingSeconds = (email) => {
-    const expiresAt = localStorage.getItem(getCooldownKey(email));
-    if (!expiresAt) return 0;
-    const diff = Math.floor((parseInt(expiresAt, 10) - Date.now()) / 1000);
-    return diff > 0 ? diff : 0;
-  };
-
-  const setCooldown = (email, seconds) => {
-    const expiresAt = Date.now() + seconds * 1000;
-    localStorage.setItem(getCooldownKey(email), expiresAt.toString());
-  };
-
-  const clearCooldown = (email) => {
-    localStorage.removeItem(getCooldownKey(email));
-  };
 
   const updateUI = (enabled) => {
     resendButton.disabled = !enabled;
     cooldownTimer.style.display = enabled ? 'none' : 'block';
   };
 
-  const startCountdown = (email, seconds) => {
-    setCooldown(email, seconds);
+  const startCountdown = (seconds) => {
     updateUI(false);
+
+    let remaining = seconds;
 
     clearInterval(countdownInterval);
     countdownInterval = setInterval(() => {
-      const remaining = getRemainingSeconds(email);
       cooldownTimer.textContent = `Espera ${remaining} segundos para reenviar`;
 
-      if (remaining <= 0) {
+      if (--remaining <= 0) {
         clearInterval(countdownInterval);
-        clearCooldown(email);
         updateUI(true);
       }
     }, 1000);
   };
 
-  emailInput.addEventListener('input', () => {
-    const email = emailInput.value.trim();
-    const remaining = getRemainingSeconds(email);
-    if (remaining > 0) {
-      startCountdown(email, remaining);
-    } else {
-      updateUI(true);
-    }
-  });
-
-  const initialEmail = emailInput.value.trim();
-  const initialRemaining = getRemainingSeconds(initialEmail);
-  if (initialRemaining > 0) startCountdown(initialEmail, initialRemaining);
+  const initialCooldown = window.initialCooldown || 0;
+  if (initialCooldown > 0) {
+    startCountdown(initialCooldown);
+  } else {
+    updateUI(true);
+  }
 
   resendForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = emailInput.value.trim();
     updateUI(false);
 
     try {
@@ -76,11 +48,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const result = await response.json();
 
       if (response.ok) {
-        if (result.cooldown) startCountdown(email, result.cooldown);
-        showToast('Código reenviado con exito');
+        if (result.cooldown) startCountdown(result.cooldown);
+        showToast('Código reenviado con éxito');
       } else {
         cooldownTimer.textContent = result.error || 'Error desconocido';
-        if (result.cooldown) startCountdown(email, result.cooldown);
+        if (result.cooldown) startCountdown(result.cooldown);
         else setTimeout(() => updateUI(true), 3000);
       }
     } catch (error) {

@@ -5,6 +5,7 @@ import request from './schemas/user.js';
 
 const router = express.Router();
 
+router.get('/resend-email-timer', user.getResendTimer);
 router.post('/update-username', validate(request.updateUsername), user.updateUsername);
 router.post('/update-email', validate(request.updateEmail), user.updateEmail);
 router.post('/verify-email-code', validate(request.verifyEmailCode), user.verifyEmailCode);

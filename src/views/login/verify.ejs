@@ -19,10 +19,9 @@
         <%= validationErrors.code %></p>
       <% } %>
 
-      <% if (error && !validationErrors?.code) { %>
-        <p class="general-error">
-        <%= error %></p>
-      <% } %>
+      <% if (error && !validationErrors?.code && !cooldown) { %>
+        <p class="general-error"><%= error %></p>
+        <% } %>
 
       <button type="submit">
         <%= type === 'reset' ? 'Verificar código' : 'Verificar' %>
@@ -37,6 +36,10 @@
     
     <p id="cooldown-timer" style="color: red; display: none;"></p>
   </div>
+
+<script>
+  window.initialCooldown = <%= typeof cooldown !== 'undefined' ? cooldown : 0 %>;
+</script>
 
 </body>
 
