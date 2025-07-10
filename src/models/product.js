@@ -18,7 +18,7 @@ product.obtenerDetalles = async (id) => {
         v.img
     FROM productos p
     JOIN categorias c ON p.categoria_id = c.id
-    LEFT JOIN variantes v ON p.id = v.producto_id
+    LEFT JOIN p_variantes v ON p.id = v.producto_id
     WHERE p.id = ?`;
 
     const [results] = await db.query(query, [id]);
@@ -62,7 +62,7 @@ product.obtenerRelacionados = async (productoId, categoriaId) => {
         v.img AS imagen
         FROM productos p
     JOIN categorias c ON p.categoria_id = c.id
-    LEFT JOIN variantes v ON p.id = v.producto_id 
+    LEFT JOIN p_variantes v ON p.id = v.producto_id 
     WHERE p.id NOT IN (${placeholders}) 
     AND p.categoria_id IN (${catPlaceholders})
     GROUP BY p.id 

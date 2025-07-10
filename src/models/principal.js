@@ -15,7 +15,7 @@ principal.buscarProductos = async (query) => {
   v.img AS imagenes
   FROM productos p
   JOIN categorias c ON p.categoria_id = c.id
-  LEFT JOIN variantes v ON p.id = v.producto_id 
+  LEFT JOIN p_variantes v ON p.id = v.producto_id 
   WHERE p.nombre LIKE ? OR p.descripcion LIKE ?
   GROUP BY p.id
   LIMIT 10`;
@@ -44,7 +44,7 @@ principal.obtenerProductos = async (categoria) => {
   v.img AS imagen
   FROM productos p
   JOIN categorias c ON p.categoria_id = c.id
-  LEFT JOIN variantes v ON p.id = v.producto_id 
+  LEFT JOIN p_variantes v ON p.id = v.producto_id 
   ${categoria ? `WHERE c.categoria = ?` : ''}
   GROUP BY p.id`;
   
@@ -82,7 +82,7 @@ principal.obtenerRecomendados = async () => {
   v.img AS imagen
   FROM productos p
   JOIN categorias c ON p.categoria_id = c.id
-  LEFT JOIN variantes v ON p.id = v.producto_id 
+  LEFT JOIN p_variantes v ON p.id = v.producto_id 
   GROUP BY p.id 
   LIMIT 20;`;
   

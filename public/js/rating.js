@@ -125,13 +125,13 @@ function handleEditReview(reviewId) {
 
 function renderReviewsList(reviews) {
     return `<ul class="reviews">
-            ${reviews.map(({ username, fecha_creacion, calificacion, comentario, isAuthor, id }) => `
+            ${reviews.map(({ username, fecha_creacion, calificacion, comentario, esAutor, id }) => `
                 <li>
                     <div class="review-heading">
                         <h5 class="name">${username}</h5>
                         <p class="date">${new Date(fecha_creacion).toLocaleDateString()}</p>
                         <div class="review-rating">${renderStars(calificacion)}</div>
-                        ${isAuthor ? `<button class="edit-review-btn" data-id="${id}"><i class="fa-solid fa-pen"></i> Editar</button>` : ''}
+                        ${esAutor ? `<button class="edit-review-btn" data-id="${id}"><i class="fa-solid fa-pen"></i> Editar</button>` : ''}
                     </div>
                     <div class="review-body">
                         <p>${comentario || 'El usuario no dejó comentario'}</p>

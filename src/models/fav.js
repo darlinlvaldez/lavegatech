@@ -41,7 +41,7 @@ fav.getByUserId = async (usuario_id) => {
       p.categoria_id
     FROM fav f
     LEFT JOIN productos p ON f.producto_id = p.id
-    LEFT JOIN variantes v ON f.producto_id = v.producto_id AND f.colorSeleccionado = v.color
+    LEFT JOIN p_variantes v ON f.producto_id = v.producto_id AND f.colorSeleccionado = v.color
     WHERE f.usuario_id = ? 
     ORDER BY f.fecha_agregado DESC`,
     [usuario_id]

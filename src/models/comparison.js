@@ -14,7 +14,7 @@ comparison.searchDevice = async (query, excludeMovilIds = []) => {
   v.color AS colores, 
   v.img AS imagenes
   FROM productos p
-  LEFT JOIN variantes v ON p.id = v.producto_id 
+  LEFT JOIN p_variantes v ON p.id = v.producto_id 
   WHERE p.categoria_id = (SELECT id FROM categorias WHERE categoria = 'moviles')
   AND (p.nombre LIKE ? OR p.descripcion LIKE ?)
   ${excludeMovilIds.length > 0 ? 'AND p.movil_id NOT IN (?)' : ''}
@@ -84,7 +84,7 @@ comparison.getDevice = async (ids) => {
       GROUP_CONCAT(DISTINCT alm.capacidad ORDER BY alm.capacidad SEPARATOR ' / ') AS almacenamiento_capacidades
     FROM moviles m
     JOIN productos p ON m.id = p.id
-    LEFT JOIN variantes v ON p.id = v.producto_id
+    LEFT JOIN p_variantes v ON p.id = v.producto_id
     LEFT JOIN cpu ON m.cpu_id = cpu.id
     LEFT JOIN gpu ON m.gpu_id = gpu.id
     LEFT JOIN camara cam ON m.camara_id = cam.id

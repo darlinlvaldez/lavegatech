@@ -60,7 +60,7 @@ store.obtenerStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], 
     v.color
     FROM productos p
     JOIN categorias c ON p.categoria_id = c.id
-    LEFT JOIN variantes v ON p.id = v.producto_id
+    LEFT JOIN p_variantes v ON p.id = v.producto_id
     ${whereClause}
     GROUP BY p.id
     ${orderByClause}

@@ -8,7 +8,7 @@ orders.createOrder = async (orderData, items) => {
     await conn.beginTransaction();
 
     const [orderResult] = await conn.query(
-      `INSERT INTO orders (user_id, nombre, apellido, email, direccion, ciudad, 
+      `INSERT INTO pedidos (user_id, nombre, apellido, email, direccion, ciudad, 
        distrito, telefono, total, status) 
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
@@ -29,7 +29,7 @@ orders.createOrder = async (orderData, items) => {
 
     for (const item of items) {
       await conn.query(
-        `INSERT INTO order_items 
+        `INSERT INTO detalles_pedido 
         (order_id, producto_id, nombre_producto, colorSeleccionado, cantidad, precio_unitario, descuento, subtotal) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
         [
@@ -61,7 +61,7 @@ orders.updateStock = async (orderId, userId) => {
 
   await Promise.all(items.map(async ({ cantidad, producto_id, colorSeleccionado, nombre_producto }) => {
     const [result] = await db.query(
-      `UPDATE variantes SET stock = stock - ? 
+      `UPDATE p_variantes SET stock = stock - ? 
        WHERE producto_id = ? ${colorSeleccionado ? 'AND color = ?' : ''} AND stock >= ?`,
       [cantidad, producto_id, ...(colorSeleccionado ? [colorSeleccionado] : []), cantidad]
     );
@@ -75,7 +75,7 @@ orders.checkStock = async (items) => {
   
   await Promise.all(items.map(async (item) => {
     const [stock] = await db.query(
-      `SELECT stock FROM variantes 
+      `SELECT stock FROM p_variantes 
        WHERE producto_id = ? ${item.colorSeleccionado ? 'AND color = ?' : ''}`,
       [item.producto_id, ...(item.colorSeleccionado ? [item.colorSeleccionado] : [])]
     );
@@ -99,25 +99,25 @@ orders.checkStock = async (items) => {
 
 orders.getOrderById = async (orderId, userId) => {
   const [order] = await db.query(
-    `SELECT * FROM orders WHERE id = ? AND user_id = ?`,[orderId, userId]);
+    `SELECT * FROM pedidos WHERE id = ? AND user_id = ?`,[orderId, userId]);
 
   if (order.length === 0) return null;
 
   const [items] = await db.query(
-    `SELECT * FROM order_items WHERE order_id = ?`, [orderId]);
+    `SELECT * FROM detalles_pedido WHERE order_id = ?`, [orderId]);
 
   return {
     ...order[0], items};
 };
 
 orders.updateOrderStatus = async (orderId, status) => {
-  await db.query(`UPDATE orders SET status = ? WHERE id = ?`, 
+  await db.query(`UPDATE pedidos SET status = ? WHERE id = ?`, 
     [status, orderId]);
 };
 
 orders.getUserOrders = async (userId) => {
   const [orders] = await db.query(
-    `SELECT * FROM orders WHERE user_id = ? ORDER BY fecha_creacion DESC`,
+    `SELECT * FROM pedidos WHERE user_id = ? ORDER BY fecha_creacion DESC`,
     [userId]);
   return orders;
 };
@@ -128,7 +128,7 @@ orders.createPayment = async (orderId, paymentData) => {
     await conn.beginTransaction();
 
     const [result] = await conn.query(
-      `INSERT INTO payments 
+      `INSERT INTO pagos 
       (order_id, metodo_pago, estado_pago, paypal_order_id) 
       VALUES (?, ?, ?, ?)`,
       [orderId, paymentData.paymentMethod, "completado", paymentData.paymentId]
