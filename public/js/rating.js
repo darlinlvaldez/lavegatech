@@ -124,22 +124,33 @@ function handleEditReview(reviewId) {
 }
 
 function renderReviewsList(reviews) {
-    return `<ul class="reviews">
-            ${reviews.map(({ username, fecha_creacion, calificacion, comentario, esAutor, id }) => `
-                <li>
-                    <div class="review-heading">
-                        <h5 class="name">${username}</h5>
-                        <p class="date">${new Date(fecha_creacion).toLocaleDateString()}</p>
-                        <div class="review-rating">${renderStars(calificacion)}</div>
-                        ${esAutor ? `<button class="edit-review-btn" data-id="${id}"><i class="fa-solid fa-pen"></i> Editar</button>` : ''}
-                    </div>
-                    <div class="review-body">
-                        <p>${comentario || 'El usuario no dejó comentario'}</p>
-                    </div>
-                </li>
-            `).join('')}
-        </ul> `;
-    }
+  const listItems = reviews.map(({ username, fecha_creacion, fecha_actualizacion, calificacion, comentario, esAutor, id }) => {
+    const creada = new Date(fecha_creacion);
+    const actualizada = new Date(fecha_actualizacion);
+    const esEditada = creada.getTime() !== actualizada.getTime();
+
+    const fechaMostrar = esEditada ? actualizada : creada;
+
+    return `
+      <li>
+        <div class="review-heading">
+          <h5 class="name">${username.toUpperCase()}</h5>
+          <p class="date">
+            ${fechaMostrar.toLocaleDateString()} 
+            ${esEditada ? `<span class="edited">(Editada)</span>` : ''}
+          </p>
+          <div class="review-rating">${renderStars(calificacion)}</div>
+          ${esAutor ? `<button class="edit-review-btn" data-id="${id}"><i class="fa-solid fa-pen"></i> Editar</button>` : ''}
+        </div>
+        <div class="review-body">
+          <p>${comentario || 'El usuario no dejó comentario'}</p>
+        </div>
+      </li>
+    `;
+  }).join('');
+
+  return `<ul class="reviews">${listItems}</ul>`;
+}
 
 function renderStars(rating) {
   return Array.from({ length: 5 }, (_, i) => {

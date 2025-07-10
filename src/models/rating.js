@@ -14,15 +14,15 @@ rating.findByProductId = async (producto_id, pagina = 1, limite = 3, usuario_id 
   const offset = (pagina - 1) * limite;
 
   const query = `
-    SELECT r.*, u.username,
-    CASE WHEN r.usuario_id = ? THEN 0 ELSE 1 END as orden_personal,
-    r.usuario_id = ? as esAutor
-    FROM clasificacion r 
-    JOIN usuarios u ON r.usuario_id = u.id 
-    WHERE r.producto_id = ? 
-    ORDER BY orden_personal, r.fecha_creacion DESC
+    SELECT c.*, u.username,
+    CASE WHEN c.usuario_id = ? THEN 0 ELSE 1 END as orden_personal,
+    c.usuario_id = ? as esAutor
+    FROM clasificacion c 
+    JOIN usuarios u ON c.usuario_id = u.id 
+    WHERE c.producto_id = ? 
+    ORDER BY orden_personal, c.fecha_creacion DESC
     LIMIT ? OFFSET ?
-  `;
+    `;
 
   const [rows] = await db.execute(query, [
     usuario_id ?? -1, usuario_id ?? -1, producto_id, limite, offset]);
