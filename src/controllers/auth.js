@@ -208,45 +208,31 @@ auth.email = async (req, res) => {
       const remaining = Math.ceil((RESEND_COOLDOWN - (now - existing.lastSent)) / 1000);
       const msg = ERROR_MESSAGES.RESEND_COOLDOWN.replace('{seconds}', remaining);
 
-      return res.render('login/verify', {
-        email,
-        type: 'reset',
-        error: msg,
-        validationErrors: {},
-        cooldown: remaining
-      });
+      return res.render('login/verify', {email, type: 'reset', 
+        error: msg, validationErrors: {}, cooldown: remaining});
     }
 
     const codeUser = code.generateCode();
     const expiresAt = now + CODE_EXPIRATION;
 
     code.resetPending.set(email, {
-      code: codeUser,
-      expiresAt,
-      lastSent: now
+      code: codeUser, expiresAt, lastSent: now
     });
 
-    await emailService.sendEmail(
-      email,
+    await emailService.sendEmail(email,
       'Código para recuperación de contraseña',
       `Tu código es: ${codeUser}. Expira en 10 minutos.`
     );
 
     const cooldown = Math.ceil(RESEND_COOLDOWN / 1000);
 
-    return res.render('login/verify', {
-      email,
-      type: 'reset',
-      error: null,
-      validationErrors: {},
-      cooldown
-    });
+    return res.render('login/verify', {email, type: 'reset',
+      error: null, validationErrors: {}, cooldown});
 
   } catch (error) {
     console.error(error);
     return renderError(res, 'login/forgotPass/email', ERROR_MESSAGES.SERVER_ERROR, {
-      email: req.body.email,
-      validationErrors: {}
+      email: req.body.email, validationErrors: {}
     });
   }
 };

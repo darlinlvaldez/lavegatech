@@ -18,6 +18,7 @@ import fav from './src/routes/fav.js';
 import orders from './src/routes/orders.js';
 import rating from './src/routes/rating.js';
 import comparison from './src/routes/comparison.js'; 
+import admin from './src/routes/admin.js';
 
 const app = express();
 
@@ -52,6 +53,8 @@ app.use('/api/ratings', rating);
 app.use('/comparison', comparison);
 
 app.use('/', store);
+
+app.use('/api/admin/productos', admin);
 
 app.post('/mant', async (req, res) => {
   const file = req.files.foto;
@@ -116,6 +119,10 @@ app.get('/conditions', (req, res) => {
 
 app.get('/warranty', (req, res) => {
   res.render('information/warranty');  
+});
+
+app.get('/productos', (req, res) => {
+  res.render('admin/productos');  
 });
 
 app.listen(config.PORT, () => {
