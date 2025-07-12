@@ -54,7 +54,7 @@ app.use('/comparison', comparison);
 
 app.use('/', store);
 
-app.use('/api/admin/productos', admin);
+app.use('/api/admin', admin);
 
 app.post('/mant', async (req, res) => {
   const file = req.files.foto;
@@ -123,6 +123,14 @@ app.get('/warranty', (req, res) => {
 
 app.get('/productos', (req, res) => {
   res.render('admin/productos');  
+});
+
+app.get('/usuarios', (req, res) => {
+  res.render('admin/usuarios');  
+});
+
+app.get('/variantes', (req, res) => {
+  res.render('admin/variantes');  
 });
 
 app.listen(config.PORT, () => {

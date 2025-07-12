@@ -142,12 +142,6 @@
     background-color: #28a745;
 }
 
-.bg-warning-user {
-    background-color: #ffc107;
-    color: #333;
-}
-
-
 @media (max-width: 575.98px) {
     .container-user {
         margin: 20px auto;

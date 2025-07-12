@@ -140,14 +140,12 @@ async function saveProduct(e) {
   if (id) {
     await fetch(`/api/admin/productos/${id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body,
+      headers: { "Content-Type": "application/json" },body,
     });
   } else {
     await fetch("/api/admin/productos", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body,
+      headers: { "Content-Type": "application/json" }, body,
     });
   }
 
@@ -165,8 +163,8 @@ addProductBtn.addEventListener("click", () => {
 
 async function loadCategoryBranch() {
   const [categoriasRes, marcasRes] = await Promise.all([
-    fetch("/api/admin/productos/categorias"),
-    fetch("/api/admin/productos/marcas"),
+    fetch("/api/admin/categorias"),
+    fetch("/api/admin/marcas"),
   ]);
 
   const categorias = await categoriasRes.json();
@@ -202,5 +200,4 @@ document.addEventListener("DOMContentLoaded", () => {
   loadCategoryBranch();
 });
 
-document.addEventListener("DOMContentLoaded", fetchProducts);
 productForm.addEventListener("submit", saveProduct);

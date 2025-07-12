@@ -1,0 +1,70 @@
+  <%- include('../admin/dashboard.ejs') %>
+
+<main class="main-content-area">
+    <div class="card">
+        <div class="card-header">
+            <h2>Lista de Variantes</h2>
+            <button id="addVarianteBtn" class="add-button">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Añadir Variante
+            </button>
+        </div>
+
+    <div class="table-container">
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Color</th>
+            <th>Stock</th>
+            <th>Imagen</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="variantesTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="varianteModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3 id="modalTitle" class="modal-title">Añadir Nueva Variante</h3>
+    <form id="varianteForm">
+      <input type="hidden" id="varianteId">
+
+      <div class="form-group">
+        <label for="productoSelect">Producto:</label>
+        <select id="productoSelect" required></select>
+      </div>
+
+      <div class="form-group">
+        <label for="varianteColor">Color:</label>
+        <input type="text" id="varianteColor" required>
+      </div>
+
+      <div class="form-group">
+        <label for="varianteStock">Stock:</label>
+        <input type="number" id="varianteStock" min="0" required>
+      </div>
+
+      <div class="form-group">
+        <label for="varianteImg">Imagen (URL):</label>
+        <input type="text" id="varianteImg">
+      </div>
+
+      <div class="modal-buttons">
+        <button type="button" id="cancelModalBtn" class="cancel-button">
+          Cancelar
+        </button>
+        <button type="submit" class="save-button">
+          Guardar Variante
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/js/adminVariantes.js"></script>

@@ -1,11 +1,18 @@
-<%- include('../partials/header.ejs') %>
+  <%- include('../admin/dashboard.ejs') %>
 
-<html>
-<link rel="stylesheet" href="/css/orderDetails.css">
-</html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del Pedido</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/orderDetails.css">
 
 </head>
 <body>
+
+    <main class="main-content-area">
 
     <div class="container-details">
 
@@ -79,14 +86,12 @@
             </div>
           </div>
         </div>
-        <a href="/api/order/showOrders" class="btn-details no-in-pdf">Volver</a>
+        <a href="/api/admin/pedidos" class="btn-details no-in-pdf">Volver</a>
     </div>
-
-    <%- include('../partials/footer.ejs') %>
+</main>
 
 </body>
 
 	<script src="/js/PDF.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
 </html>
