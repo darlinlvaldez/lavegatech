@@ -2,11 +2,12 @@ import express from 'express';
 import auth from '../controllers/auth.js';
 import validate from '../middlewares/validateRequest.js';
 import request from './schemas/auth.js';
+import { isAuth } from '../middlewares/auth.js';
 
 const router = express.Router();
 
 // LOGIN
-router.post('/logout', auth.logout);
+router.post('/logout', isAuth(), auth.logout);
 router.post('/login', validate(request.login), auth.login); 
 router.post('/register', validate(request.register), auth.register);
 

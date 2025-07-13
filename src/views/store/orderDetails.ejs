@@ -31,7 +31,7 @@
                         <h5 class="tittle5">Detalles</h5>
                         <p class="Information-details">
                             <strong>Fecha:</strong> <%= new Date(order.fecha_creacion).toLocaleString() %><br>
-                            <strong>Estado:</strong> <span class="badge-details <%= order.status === 'pagado' ? 'badge-success-details' : 'badge-warning-details' %>">
+                            <strong>Estado:</strong> <span class="badge-details <%= order.status === 'pagado' ? 'badge-success-details' : '' %>">
                                 <%= order.status %>
                             </span><br>
                             <strong class="strong-details">Total:</strong> $<%= Number(order.total).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %>

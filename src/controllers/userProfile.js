@@ -143,7 +143,7 @@ auth.updatePassword = async (req, res) => {
       return res.status(400).json({ error: ERROR_MESSAGES.PASSWORDS_DONT_MATCH });
 
     const foundUser = await user.findById(sessionUser.id);
-    if (!foundUser) return res.status(404).json({ error: ERROR_MESSAGES.USER_NOT_FOUND });
+    if (!foundUser) return res.status(404).json({ error: ERROR_MESSAGES.EMAIL_NOT_FOUND });
 
     const match = await bcrypt.compare(oldPassword, foundUser.password);
     if (!match) return res.status(400).json({ error: ERROR_MESSAGES.INCORRECT_PASSWORD });

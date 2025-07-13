@@ -28,7 +28,9 @@ export const ERROR_MESSAGES = {
   RESEND_ERROR: 'Error al reenviar el código.',
 
   // LOGIN
-  USER_NOT_FOUND: 'Correo no registrado.',
+  EMAIL_NOT_FOUND: 'Correo no registrado.',
+  
+  USER_NOT_FOUND: 'Usuario no registrado.',
   
   INCORRECT_PASSWORD: 'Contraseña actual incorrecta.',
   WRONG_PASSWORD: 'Contraseña incorrecta.',

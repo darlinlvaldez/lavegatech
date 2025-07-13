@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaVegaTech - Admin</title>
+    <link rel="icon" type="image/png" href="/img/lavegatech-logo.png">
+    <link type="text/css" rel="stylesheet" href="/css/adminAuth.css" />
+    <link type="text/css" rel="stylesheet" href="/css/error.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+  <div class="login-container">
+    <h2>Iniciar Sesión</h2>
+
+    <form action="/api/adminAuth/login" method="POST">
+      <label for="email">Nombre de usuario:</label>
+      <input type="text" name="username" value="<%= username || '' %>" placeholder="ejemplo" required
+        class="<%= validationErrors?.username ? 'input-error' : '' %>">
+
+      <% if (validationErrors?.username) { %>
+        <p class="field-error">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <%= validationErrors.username %>
+        </p>
+        <% } %>
+
+        <label for="password">Contraseña:</label>
+        <div class="password-wrapper">
+          <input type="password" name="password" id="passwordInput" placeholder="Introduce la contraseña" required
+            class="password-input <%= validationErrors?.password ? 'input-error' : '' %>">
+
+            <span onclick="togglePassword('password')" class="toggle-password">
+          <i id="eyeIconPassword" class="fas fa-eye-slash"></i>
+        </span>
+      </div>
+
+      <% if (validationErrors?.password) { %>
+        <p class="field-error">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <%= validationErrors.password %>
+        </p>
+      <% } %>
+
+      <% if (error && !validationErrors) { %>
+        <p class="general-error">
+          <%= error %>
+        </p>
+      <% } %>
+
+      <button type="submit">Entrar</button>
+    </form>
+  </div>
+
+</body>
+
+<script src="/js/showPass.js"></script>
+
+</html>

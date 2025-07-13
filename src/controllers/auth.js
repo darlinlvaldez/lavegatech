@@ -160,8 +160,8 @@ auth.login = async (req, res) => {
 
     const foundUser = await user.findByEmail(email);
     if (!foundUser) {
-      return renderError(res, 'login/login', ERROR_MESSAGES.USER_NOT_FOUND, { 
-        email,validationErrors: {email: ERROR_MESSAGES.USER_NOT_FOUND} });
+      return renderError(res, 'login/login', ERROR_MESSAGES.EMAIL_NOT_FOUND, { 
+        email,validationErrors: {email: ERROR_MESSAGES.EMAIL_NOT_FOUND} });
     }
 
     const isMatch = await bcrypt.compare(password, foundUser.password);
@@ -196,8 +196,8 @@ auth.email = async (req, res) => {
     }
 
     if (!await user.findByEmail(email)) {
-      return renderError(res, 'login/forgotPass/email', ERROR_MESSAGES.USER_NOT_FOUND, { 
-        email, validationErrors: { email: ERROR_MESSAGES.USER_NOT_FOUND }
+      return renderError(res, 'login/forgotPass/email', ERROR_MESSAGES.EMAIL_NOT_FOUND, { 
+        email, validationErrors: { email: ERROR_MESSAGES.EMAIL_NOT_FOUND }
       });
     }
 

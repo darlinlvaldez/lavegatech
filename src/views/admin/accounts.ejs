@@ -1,0 +1,63 @@
+<%- include('../admin/dashboard.ejs') %>
+
+<div class="main-content">
+  <header class="header">
+    <h1>Gestión de Administradores</h1>
+  </header>
+
+  <main class="main-content-area">
+    <div class="card">
+      <div class="card-header">
+        <h2>Lista de Administradores</h2>
+        <button id="addUserBtn" class="add-button">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          Añadir Administrador
+        </button>
+      </div>
+
+      <div class="table-container">
+        <table class="product-table">
+          <thead>
+            <tr>
+              <th>Nombre de Usuario</th>
+              <th>Fecha de Creación</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="adminTableBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="userModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3 id="modalTitle" class="modal-title">Añadir Administrador</h3>
+    <form id="userForm">
+      <input type="hidden" id="userId">
+      <div class="form-group">
+        <label for="username">Nombre de Usuario:</label>
+        <input type="text" id="username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password">
+      </div>
+      <div class="modal-buttons">
+        <button type="button" id="cancelModalBtn" class="cancel-button">
+          Cancelar
+        </button>
+        <button type="submit" class="save-button">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/js/adminAccounts.js"></script>

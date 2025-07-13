@@ -42,7 +42,7 @@ function renderVariantes() {
       <td>${vari.color}</td>
       <td>${vari.stock}</td>
       <td><img src="${vari.img || ''}" alt="Img" width="40" height="40"></td>
-      <td class="actions">
+      <td>
         <button onclick="editVariante(${vari.id})" class="edit-button">Editar</button>
         <button onclick="deleteVariante(${vari.id})" class="delete-button">Eliminar</button>
       </td>

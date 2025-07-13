@@ -5,9 +5,9 @@ import path from 'path';
 import config from './config.js'; 
 
 // Middleware
-import isAuth from './src/middlewares/auth.js';
+import {isAuth, isAdmin} from './src/middlewares/auth.js';
 import session from './src/middlewares/session.js';
-import userLocals from './src/middlewares/userLocals.js';
+import { userLocals, adminLocals } from './src/middlewares/userLocals.js';
 
 // Routes
 import store from './src/routes/product.js';
@@ -19,6 +19,7 @@ import orders from './src/routes/orders.js';
 import rating from './src/routes/rating.js';
 import comparison from './src/routes/comparison.js'; 
 import admin from './src/routes/admin.js';
+import adminAuth from './src/routes/adminAuth.js';
 
 const app = express();
 
@@ -27,6 +28,8 @@ app.use(express.json());
 app.use(session);
 
 app.use(userLocals);
+
+app.use(adminLocals);
 
 app.use(fileUpload({}));
 
@@ -39,6 +42,10 @@ app.use(express.static(path.join(process.cwd(), 'public')));
 app.disable('x-powered-by');
 
 app.use('/api/auth', auth); 
+
+app.use('/api/admin', admin);
+
+app.use('/api/adminAuth', adminAuth);
 
 app.use('/user', userProfile); 
 
@@ -53,8 +60,6 @@ app.use('/api/ratings', rating);
 app.use('/comparison', comparison);
 
 app.use('/', store);
-
-app.use('/api/admin', admin);
 
 app.post('/mant', async (req, res) => {
   const file = req.files.foto;
@@ -121,16 +126,24 @@ app.get('/warranty', (req, res) => {
   res.render('information/warranty');  
 });
 
-app.get('/productos', (req, res) => {
+app.get('/productos', isAdmin(), (req, res) => {
   res.render('admin/productos');  
 });
 
-app.get('/usuarios', (req, res) => {
+app.get('/usuarios', isAdmin(), (req, res) => {
   res.render('admin/usuarios');  
 });
 
-app.get('/variantes', (req, res) => {
+app.get('/variantes', isAdmin(), (req, res) => {
   res.render('admin/variantes');  
+});
+
+app.get('/admin/login', isAdmin({ redirect: true }), (req, res) => {
+  res.render('admin/login', { error: null, username: null, validationErrors: {} });
+});
+
+app.get('/admin/accounts', isAdmin(), (req, res) => {
+  res.render('admin/accounts');
 });
 
 app.listen(config.PORT, () => {

@@ -96,17 +96,6 @@ adminController.editarVariante = async (req, res) => {
   }
 };
 
-// Usuarios
-
-adminController.listarUsuarios = async (req, res) => {
-  try {
-    const usuarios = await admin.obtenerUsuarios();
-    res.json(usuarios);
-  } catch (error) {
-    res.status(500).json({ error: "Error al obtener usuarios" });
-  }
-};
-
 // Pedidos
 
 adminController.listarPedidos = async (req, res) => {
@@ -134,19 +123,6 @@ adminController.detallePedido = async (req, res) => {
   }
 };
 
-// Usuarios
-
-adminController.actualizarEstado = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { is_active } = req.body;
-    const success = await admin.estadoUsuario(id, is_active);
-    res.json({ success });
-  } catch (error) {
-    res.status(500).json({ error: 'Error al actualizar estado del usuario' });
-  }
-};
-
 adminController.listarCategorias = async (req, res) => {
   try {
     const categorias = await admin.obtenerCategorias();
@@ -162,6 +138,28 @@ adminController.listarMarcas = async (req, res) => {
     res.json(marcas);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener marcas' });
+  }
+};
+
+// Usuarios
+
+adminController.listarUsuarios = async (req, res) => {
+  try {
+    const usuarios = await admin.obtenerUsuarios();
+    res.json(usuarios);
+  } catch (error) {
+    res.status(500).json({ error: "Error al obtener usuarios" });
+  }
+};
+
+adminController.actualizarEstado = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { is_active } = req.body;
+    const success = await admin.estadoUsuario(id, is_active);
+    res.json({ success });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al actualizar estado del usuario' });
   }
 };
 
