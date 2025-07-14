@@ -3,7 +3,6 @@ import rating from "../models/rating.js";
 import comparison from "../models/comparison.js";
 import principal from '../models/principal.js';
 
-
 product.detallesController = async (req, res) => {
   try {
     const { id } = req.params;

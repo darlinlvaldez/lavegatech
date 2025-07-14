@@ -38,7 +38,7 @@ adminAuth.login = async (req, res) => {
 
     req.session.admin = {id: foundAdmin.id, username: foundAdmin.username};
 
-    return res.redirect('/productos');
+    return res.redirect('/admin/productos');
 
   } catch (error) {
     console.error(error);

@@ -1,3 +1,6 @@
+import { showToast } from './toastify.js';
+import { showConfirmDialog } from './sweetAlert2.js';
+
 let variantes = [];
 
 const variantesTableBody = document.getElementById("variantesTableBody");
@@ -89,7 +92,7 @@ varianteForm.addEventListener("submit", async (e) => {
   }
 });
 
-function editVariante(id) {
+window.editVariante = function (id) {
   const variante = variantes.find(v => v.id === id);
   if (!variante) return;
 
@@ -103,10 +106,45 @@ function editVariante(id) {
   varianteModal.classList.add("visible");
 }
 
-async function deleteVariante(id) {
-  if (confirm("¿Seguro que deseas eliminar esta variante?")) {
-    await fetch(`/api/admin/variantes/${id}`, { method: "DELETE" });
-    fetchVariantes();
+window.deleteVariante = async function(id) {
+  const confirmed = await showConfirmDialog({
+    title: "¿Eliminar Categoría?",
+    text: "Esta acción no se puede deshacer.",
+    confirmButtonText: "Aceptar",
+  });
+
+  if (!confirmed) return;
+
+  try {
+    const res = await fetch(`/api/admin/variantes/${id}`, { method: "DELETE" });
+    if (!res.ok) throw new Error();
+
+    await fetchVariantes();
+    showToast("Marca eliminada con éxito.", "#27ae60", "check-circle");
+
+  } catch (err) {
+    showToast("Error al eliminar la marca.", "#e74c3c", "alert-circle");
+  }
+}
+
+window.deleteProduct = async function(id) {
+  const confirmed = await showConfirmDialog({
+    title: "¿Eliminar Variante?",
+    text: "Esta acción no se puede deshacer.",
+    confirmButtonText: "Aceptar",
+  });
+
+  if (!confirmed) return;
+
+  try {
+    const res = await fetch(`/api/admin/productos/${id}`, { method: "DELETE" });
+    if (!res.ok) throw new Error();
+    
+    await fetchProducts();
+    showToast("Variante eliminada con éxito.", "#27ae60", "check-circle");
+
+  } catch (err) {
+    showToast("Error al eliminar la variante.", "#e74c3c", "alert-circle");
   }
 }
 

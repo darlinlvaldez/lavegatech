@@ -32,9 +32,9 @@ store.storeController = async (req, res) => {
           producto.esMovil = producto.categoria?.toLowerCase() === "moviles";
         }
 
-        res.render("store/store", {productos,  totalProduct, limite, pagina,  orden, categorias, marcas: marcasFiltradas,  
-            marcasFiltradas: marcasFiltradas, cantCategoria, cantMarcas, precioMin, precioMax, 
-            defaultMin: 1, defaultMax: 100000
+        res.render("store/store", {productos,  totalProduct, limite, pagina,  orden, categorias, 
+            marcas: marcasFiltradas, marcasFiltradas: marcasFiltradas, cantCategoria, cantMarcas, precioMin, 
+            precioMax, defaultMin: 1, defaultMax: 100000, req
         });
     } catch (err) {
         console.error('Error al obtener datos de productos:', err);

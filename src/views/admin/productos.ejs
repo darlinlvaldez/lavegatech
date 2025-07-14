@@ -1,5 +1,8 @@
 <%- include('../admin/dashboard.ejs') %>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<link rel="stylesheet" href="/css/sweetAlertAdmin.css">
+<link rel="stylesheet" href="/css/toastify.css">
 
     <div class="main-content">
         <header class="header">
@@ -60,12 +63,12 @@
                     <input type="number" id="productoDescuento">
                 </div>
                 <div class="form-group">
-                    <select id="productoCategoria" required></select>
-                    <input hidden type="text" id="productoCategoria">
+                    <label for="productName">Categoría:</label>
+                    <select id="productoCategoria"></select>
                 </div>
                 <div class="form-group">
-                    <select id="productoMarca" required></select>
-                    <input hidden type="text" id="productoMarca">
+                    <label for="productName">Marca:</label>
+                    <select id="productoMarca">Marca</select>
                 </div>
                 <div class="form-group" id="fechaGroup" style="display: none;">
                     <label for="productoFecha">Fecha:</label>
@@ -82,7 +85,9 @@
             </form>
         </div>
     </div>
-</body>
-</html>
 
-<script src="/js/adminProduct.js"></script>
+<script type="module" src="/js/adminProduct.js"></script>
+<script src="/js/formatPrice.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://unpkg.com/feather-icons"></script>

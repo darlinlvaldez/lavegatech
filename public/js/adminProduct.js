@@ -1,3 +1,6 @@
+import { showToast } from './toastify.js';
+import { showConfirmDialog } from './sweetAlert2.js';
+
 let products = [];
 
 const productsTableBody = document.getElementById("productsTableBody");
@@ -24,13 +27,13 @@ function renderProducts() {
       dateStyle: "short", timeStyle: "short"});
 
     row.innerHTML = `
-      <td>${product.nombre}</td>
-      <td>${product.descripcion}</td>
-      <td>$${parseFloat(product.precio).toFixed(2)}</td>
-      <td>$${parseFloat(product.descuento).toFixed(2)}</td>
-      <td>${product.categoria}</td>
-      <td>${product.marca}</td>
-      <td>${fechaFormateada}</td>
+      <td>${product.nombre || ''}</td>
+      <td>${product.descripcion || ''}</td>
+      <td>$${formatPrice(parseFloat(product.precio)) || 0}</td>
+      <td>$${(product.descuento != null ? parseFloat(product.descuento).toFixed(2) : '0.00')}</td>
+      <td>${product.categoria || ''}</td>
+      <td>${product.marca || ''}</td>
+      <td>${fechaFormateada || ''}</td>
       <td class="actions">
         <button onclick="editProduct(${product.id})" class="edit-button">
           Editar
@@ -67,7 +70,6 @@ productForm.addEventListener("submit", (e) => {
   const marca = marcaInput.value;
   const fecha = fechaInput?.value || null;
 
-
   if (id) {
     const productIndex = products.findIndex((p) => p.id === parseInt(id));
     if (productIndex !== -1) {
@@ -85,7 +87,7 @@ productForm.addEventListener("submit", (e) => {
   productModal.classList.remove("visible"); 
 });
 
-function editProduct(id) {
+window.editProduct = function  (id) {
   const product = products.find((p) => p.id === id);
   if (product) {
     modalTitle.textContent = "Editar Producto";
@@ -93,21 +95,14 @@ function editProduct(id) {
     precioInput.value = product.precio;
     descripcionInput.value = product.descripcion;
     descuentoInput.value = product.descuento;
-    categoriaInput.value = product.categoria;
-    marcaInput.value = product.marca;
-    
+    categoriaInput.value = product.categoria_id;
+    marcaInput.value = product.marca_id;
+
     document.getElementById("fechaGroup").style.display = "block"; 
     fechaInput.value = product.fecha?.slice(0, 16);
 
     productIdInput.value = product.id;
     productModal.classList.add("visible");
-  }
-}
-
-function deleteProduct(id) {
-  if (confirm("¿Estás seguro de que quieres eliminar este producto?")) {
-    products = products.filter((product) => product.id !== id);
-    renderProducts(); 
   }
 }
 
@@ -170,8 +165,8 @@ async function loadCategoryBranch() {
   const categorias = await categoriasRes.json();
   const marcas = await marcasRes.json();
 
-  categoriaInput.innerHTML = "";
-  marcaInput.innerHTML = "";
+  categoriaInput.innerHTML = "<option value=''>Seleccione una categoría</option>";
+  marcaInput.innerHTML = "<option value=''>Seleccione una marca</option>";
 
   categorias.forEach(cat => {
     const option = document.createElement("option");
@@ -188,10 +183,24 @@ async function loadCategoryBranch() {
   });
 }
 
-async function deleteProduct(id) {
-  if (confirm("¿Seguro que deseas eliminar este producto?")) {
-    await fetch(`/api/admin/productos/${id}`, { method: "DELETE" });
-    fetchProducts();
+window.deleteProduct = async function(id) {
+  const confirmed = await showConfirmDialog({
+    title: "¿Eliminar Producto?",
+    text: "Esta acción no se puede deshacer.",
+    confirmButtonText: "Aceptar",
+  });
+
+  if (!confirmed) return;
+
+  try {
+    const res = await fetch(`/api/admin/productos/${id}`, { method: "DELETE" });
+    if (!res.ok) throw new Error();
+    
+    await fetchProducts();
+    showToast("Producto eliminado con éxito.", "#27ae60", "check-circle");
+
+  } catch (err) {
+    showToast("Error al eliminar el producto.", "#e74c3c", "alert-circle");
   }
 }
 

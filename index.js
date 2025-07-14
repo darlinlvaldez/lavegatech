@@ -27,6 +27,11 @@ app.use(express.json());
 
 app.use(session);
 
+app.use((req, res, next) => {
+  res.locals.req = req;
+  next();
+});
+
 app.use(userLocals);
 
 app.use(adminLocals);
@@ -126,24 +131,28 @@ app.get('/warranty', (req, res) => {
   res.render('information/warranty');  
 });
 
-app.get('/productos', isAdmin(), (req, res) => {
+app.get('/admin/productos', isAdmin(), (req, res) => {
   res.render('admin/productos');  
 });
 
-app.get('/usuarios', isAdmin(), (req, res) => {
+app.get('/admin/usuarios', isAdmin(), (req, res) => {
   res.render('admin/usuarios');  
 });
 
-app.get('/variantes', isAdmin(), (req, res) => {
+app.get('/admin/variantes', isAdmin(), (req, res) => {
   res.render('admin/variantes');  
-});
-
-app.get('/admin/login', isAdmin({ redirect: true }), (req, res) => {
-  res.render('admin/login', { error: null, username: null, validationErrors: {} });
 });
 
 app.get('/admin/accounts', isAdmin(), (req, res) => {
   res.render('admin/accounts');
+});
+
+app.get('/admin/marcaCategoria', isAdmin(), (req, res) => {
+  res.render('admin/marcaCategoria');
+});
+
+app.get('/admin/login', isAdmin({ redirect: true }), (req, res) => {
+  res.render('admin/login', { error: null, username: null, validationErrors: {} });
 });
 
 app.listen(config.PORT, () => {

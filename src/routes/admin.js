@@ -11,8 +11,17 @@ router.get('/productos', admin.listarItems);
 router.post('/productos', admin.crearItems);
 router.put('/productos/:id', admin.editarItems);
 router.delete('/productos/:id', admin.borrarItems);
+
+// Cateogrias y Marcas
+
 router.get('/categorias', admin.listarCategorias);
 router.get('/marcas', admin.listarMarcas);
+router.post('/marcas', admin.crearMarca);
+router.put('/marcas/:id', admin.editarMarca);
+router.delete('/marcas/:id', admin.borrarMarca);
+router.post('/categorias', admin.agregarCategoria); 
+router.put('/categorias/:id', admin.editarCategoria); 
+router.delete('/categorias/:id', admin.borrarCategoria);
 
 // Usuarios
 router.get('/usuarios', admin.listarUsuarios);

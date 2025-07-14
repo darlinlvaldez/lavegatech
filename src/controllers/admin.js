@@ -141,6 +141,74 @@ adminController.listarMarcas = async (req, res) => {
   }
 };
 
+adminController.crearMarca = async (req, res) => {
+  try {
+    const { nombre, logo, categorias } = req.body;
+    await admin.crearMarca(nombre, logo, categorias || []);
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al crear la marca" });
+  }
+};
+
+adminController.editarMarca = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nombre, logo, categorias } = req.body;
+    await admin.editarMarca(id, nombre, logo, categorias || []);
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al editar la marca" });
+  }
+};
+
+adminController.borrarMarca = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await admin.eliminarMarca(id);
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al eliminar la categoría' });
+  }
+};
+
+adminController.agregarCategoria = async (req, res) => {
+  try {
+    const { categoria, imagen } = req.body;
+    await admin.crearCategoria(categoria, imagen);
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al crear la categoría' });
+  }
+};
+
+adminController.editarCategoria = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { categoria, imagen } = req.body;
+    await admin.actualizarCategoria(id, categoria, imagen);
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al editar la categoría' });
+  }
+};
+
+adminController.borrarCategoria = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await admin.eliminarCategoria(id);
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al eliminar la categoría' });
+  }
+};
+
 // Usuarios
 
 adminController.listarUsuarios = async (req, res) => {

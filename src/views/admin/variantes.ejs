@@ -1,5 +1,9 @@
 <%- include('../admin/dashboard.ejs') %>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<link rel="stylesheet" href="/css/sweetAlertAdmin.css">
+<link rel="stylesheet" href="/css/toastify.css">
+
   <div class="main-content">
     <header class="header">
       <h1>Gestión de Variantes</h1>
@@ -22,17 +26,19 @@
           <table class="product-table">
             <thead>
               <tr>
-                <th>Producto</th>
-                <th>Color</th>
-                <th>Cantidad</th>
-                <th>Imagen</th>
-                <th>Acciones</th>
+                <th style="width: 20%">Producto</th>
+                <th style="width: 20%">Color</th>
+                <th style="width: 20%">Cantidad</th>
+                <th style="width: 15%">Imagen</th>
+                <th style="width: 5%">Acciones</th>
               </tr>
             </thead>
             <tbody id="variantesTableBody"></tbody>
           </table>
         </div>
       </div>
+    </div>
+      
 
       <div id="varianteModal" class="modal-overlay">
         <div class="modal-content">
@@ -72,4 +78,7 @@
         </div>
       </div>
 
-      <script src="/js/adminVariantes.js"></script>
+<script type="module" src="/js/adminVariantes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://unpkg.com/feather-icons"></script>

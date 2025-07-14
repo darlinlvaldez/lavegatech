@@ -7,14 +7,16 @@ const admin = {};
 admin.obtenerItems = async () => {
   const query = `
     SELECT 
-      p.id, 
-      p.nombre, 
-      p.precio, 
-      p.descripcion, 
-      p.descuento, 
-      c.categoria AS categoria, 
-      m.nombre AS marca, 
-      p.fecha
+    p.id, 
+    p.nombre, 
+    p.precio, 
+    p.descripcion, 
+    p.descuento, 
+    p.categoria_id AS categoria_id,
+    p.marca_id AS marca_id,
+    c.categoria AS categoria,
+    m.nombre AS marca,
+    p.fecha
     FROM productos p
     LEFT JOIN categorias c ON p.categoria_id = c.id
     LEFT JOIN p_marcas m ON p.marca_id = m.id
@@ -57,13 +59,70 @@ admin.eliminarItems = async (id) => {
 };
 
 admin.obtenerCategorias = async () => {
-  const [rows] = await db.query("SELECT id, categoria FROM categorias ORDER BY categoria");
+  const [rows] = await db.query("SELECT id, categoria, imagen FROM categorias ORDER BY categoria");
   return rows;
 };
 
+admin.crearCategoria = async (nombre, imagen) => {
+  await db.query("INSERT INTO categorias (categoria, imagen) VALUES (?, ?)", [nombre, imagen]);
+};
+
+admin.actualizarCategoria = async (id, nombre, imagen) => {
+  await db.query("UPDATE categorias SET categoria = ?, imagen = ? WHERE id = ?", [nombre, imagen, id]);
+};
+
+admin.eliminarCategoria = async (id) => {
+  await db.query("DELETE FROM categorias WHERE id = ?", [id]);
+};
+
 admin.obtenerMarcas = async () => {
-  const [rows] = await db.query("SELECT id, nombre FROM p_marcas ORDER BY nombre");
+  const [rows] = await db.query("SELECT id, nombre, logo FROM p_marcas ORDER BY nombre");
   return rows;
+};
+
+admin.asociarCategoriasMarca = async (marcaId, categoriasIds) => {
+  await db.query("DELETE FROM marca_categoria WHERE marca_id = ?", [marcaId]);
+
+  const values = categoriasIds.map(catId => [marcaId, catId]);
+  if (values.length > 0) {
+    await db.query("INSERT INTO marca_categoria (marca_id, categoria_id) VALUES ?", [values]);
+  }
+};
+
+admin.obtenerMarcas = async () => {
+  const [marcas] = await db.query("SELECT id, nombre, logo FROM p_marcas ORDER BY nombre");
+
+  const [asociaciones] = await db.query(`
+    SELECT m.id AS marca_id, c.id AS categoria_id, c.categoria
+    FROM p_marcas m
+    JOIN marca_categoria mc ON m.id = mc.marca_id
+    JOIN categorias c ON mc.categoria_id = c.id
+  `);
+
+  return marcas.map(marca => {
+    const categorias = asociaciones
+      .filter(a => a.marca_id === marca.id)
+      .map(a => ({ id: a.categoria_id, categoria: a.categoria }));
+    return { ...marca, categorias };
+  });
+};
+
+admin.crearMarca = async (nombre, logo, categorias = []) => {
+  const [result] = await db.query("INSERT INTO p_marcas (nombre, logo) VALUES (?, ?)", [nombre, logo]);
+  const marcaId = result.insertId;
+  await admin.asociarCategoriasMarca(marcaId, categorias);
+  return marcaId;
+};
+
+admin.editarMarca = async (id, nombre, logo, categorias = []) => {
+  await db.query("UPDATE p_marcas SET nombre = ?, logo = ? WHERE id = ?", [nombre, logo, id]);
+  await admin.asociarCategoriasMarca(id, categorias);
+};
+
+admin.eliminarMarca = async (id) => {
+  await db.query("DELETE FROM marca_categoria WHERE marca_id = ?", [id]);
+
+  await db.query("DELETE FROM p_marcas WHERE id = ?", [id]);
 };
 
 // Variantes
@@ -72,6 +131,7 @@ admin.obtenerVariantes = async () => {
   const query = `
     SELECT 
       v.id,
+      v.producto_id,
       v.color,
       v.stock,
       v.img,
