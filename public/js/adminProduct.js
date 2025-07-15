@@ -27,8 +27,8 @@ function renderProducts() {
       dateStyle: "short", timeStyle: "short"});
 
     row.innerHTML = `
-      <td>${product.nombre || ''}</td>
-      <td>${product.descripcion || ''}</td>
+      <td class="truncate-cell">${product.nombre || ''}</td>
+      <td class="truncate-cell">${product.descripcion || ''}</td>
       <td>$${formatPrice(parseFloat(product.precio)) || 0}</td>
       <td>$${(product.descuento != null ? parseFloat(product.descuento).toFixed(2) : '0.00')}</td>
       <td>${product.categoria || ''}</td>
@@ -132,20 +132,27 @@ async function saveProduct(e) {
     ...(id ? { fecha } : {}),
   });
 
-  if (id) {
-    await fetch(`/api/admin/productos/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },body,
+  try {
+    const res = await fetch(id ? `/api/admin/productos/${id}` : "/api/admin/productos", {
+      method: id ? "PUT" : "POST",
+      headers: { "Content-Type": "application/json" },
+      body,
     });
-  } else {
-    await fetch("/api/admin/productos", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" }, body,
-    });
-  }
 
-  productModal.classList.remove("visible");
-  fetchProducts();
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data?.error || "Error desconocido");
+    }
+
+    showToast(id ? "Producto actualizado con éxito." : "Producto agregado con éxito.", "#27ae60", "check-circle");
+
+    productModal.classList.remove("visible");
+    fetchProducts();
+
+  } catch (err) {
+    showToast(err.message || "Error al guardar el producto.", "#e74c3c", "alert-circle");
+  }
 }
 
 addProductBtn.addEventListener("click", () => {

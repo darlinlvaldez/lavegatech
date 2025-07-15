@@ -1,0 +1,17 @@
+.estado-btn {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.estado-activo {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.estado-inactivo {
+  background-color: #f44336;
+  color: white;
+}

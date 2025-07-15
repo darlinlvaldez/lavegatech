@@ -58,6 +58,8 @@ admin.eliminarItems = async (id) => {
   return result.affectedRows;
 };
 
+// Categorias
+
 admin.obtenerCategorias = async () => {
   const [rows] = await db.query("SELECT id, categoria, imagen FROM categorias ORDER BY categoria");
   return rows;
@@ -75,11 +77,6 @@ admin.eliminarCategoria = async (id) => {
   await db.query("DELETE FROM categorias WHERE id = ?", [id]);
 };
 
-admin.obtenerMarcas = async () => {
-  const [rows] = await db.query("SELECT id, nombre, logo FROM p_marcas ORDER BY nombre");
-  return rows;
-};
-
 admin.asociarCategoriasMarca = async (marcaId, categoriasIds) => {
   await db.query("DELETE FROM marca_categoria WHERE marca_id = ?", [marcaId]);
 
@@ -88,6 +85,8 @@ admin.asociarCategoriasMarca = async (marcaId, categoriasIds) => {
     await db.query("INSERT INTO marca_categoria (marca_id, categoria_id) VALUES ?", [values]);
   }
 };
+
+// Marcas
 
 admin.obtenerMarcas = async () => {
   const [marcas] = await db.query("SELECT id, nombre, logo FROM p_marcas ORDER BY nombre");
@@ -165,7 +164,7 @@ admin.actualizarVariante = async ({ id, color, stock, img, producto_id }) => {
   return result.affectedRows > 0;
 };
 
-// Usuarios
+// Usuarios 
 
 admin.obtenerUsuarios = async () => {
   const query = `
@@ -197,6 +196,5 @@ admin.productoPedido = async (orderId) => {
   const [rows] = await db.query("SELECT * FROM detalles_pedido WHERE order_id = ?", [orderId]);
   return rows;
 };
-
 
 export default admin;

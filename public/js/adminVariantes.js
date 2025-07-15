@@ -27,6 +27,13 @@ async function fetchProductos() {
   const productos = await res.json();
 
   productoSelect.innerHTML = "";
+
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "Seleccione un producto";
+  defaultOption.selected = true;
+  productoSelect.appendChild(defaultOption);
+
   productos.forEach(prod => {
     const option = document.createElement("option");
     option.value = prod.id;
@@ -83,12 +90,15 @@ varianteForm.addEventListener("submit", async (e) => {
   const res = await fetch(url, {
     method,
     headers: { "Content-Type": "application/json" },
-    body
+    body,
   });
 
   if (res.ok) {
+    showToast("Variante guardada con éxito.", "#27ae60", "check-circle");
     varianteModal.classList.remove("visible");
     fetchVariantes();
+  } else {
+    showToast("Error al guardar la variante.", "#e74c3c", "alert-circle");
   }
 });
 
@@ -120,27 +130,6 @@ window.deleteVariante = async function(id) {
     if (!res.ok) throw new Error();
 
     await fetchVariantes();
-    showToast("Marca eliminada con éxito.", "#27ae60", "check-circle");
-
-  } catch (err) {
-    showToast("Error al eliminar la marca.", "#e74c3c", "alert-circle");
-  }
-}
-
-window.deleteProduct = async function(id) {
-  const confirmed = await showConfirmDialog({
-    title: "¿Eliminar Variante?",
-    text: "Esta acción no se puede deshacer.",
-    confirmButtonText: "Aceptar",
-  });
-
-  if (!confirmed) return;
-
-  try {
-    const res = await fetch(`/api/admin/productos/${id}`, { method: "DELETE" });
-    if (!res.ok) throw new Error();
-    
-    await fetchProducts();
     showToast("Variante eliminada con éxito.", "#27ae60", "check-circle");
 
   } catch (err) {

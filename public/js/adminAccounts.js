@@ -1,3 +1,5 @@
+import { showToast } from './toastify.js';
+
 let admins = [];
 
 async function fetchAdmins() {
@@ -34,7 +36,7 @@ function renderAdmins() {
   });
 }
 
-async function toggleEstado(id) {
+window.toggleEstado = async function (id) {
   const admin = admins.find(a => a.id === id);
   if (!admin) return;
 
@@ -62,7 +64,7 @@ function openAddModal() {
   document.getElementById("userModal").classList.add("visible");
 }
 
-function openEditModal(id) {
+window.openEditModal = function(id) {
   const admin = admins.find(a => a.id === id);
   if (!admin) return;
 
@@ -90,17 +92,26 @@ async function handleFormSubmit(event) {
   const body = { username };
   if (password) body.password = password;
 
-  const res = await fetch(url, {
-    method,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
 
-  if (res.ok) {
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data?.error || "Error al guardar los datos");
+    }
+
+    showToast(id ? "Administrador actualizado con éxito." : 
+      "Administrador creado con éxito.", "#27ae60", "check-circle");
+
     closeModal();
     fetchAdmins();
-  } else {
-    alert("Error al guardar los datos");
+  } catch (err) {
+    showToast( err.message || "Error al guardar los datos.", "#e74c3c", "alert-circle");
   }
 }
 
