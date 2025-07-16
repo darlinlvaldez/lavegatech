@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="/css/sweetAlertAdmin.css">
 <link rel="stylesheet" href="/css/toastify.css">
 <link rel="stylesheet" href="/css/adminTable.css">
+<link rel="stylesheet" href="/css/error.css">
 
   <div class="main-content">
     <header class="header">
@@ -43,27 +44,27 @@
       <div id="varianteModal" class="modal-overlay">
         <div class="modal-content">
           <h3 id="modalTitle" class="modal-title">Añadir Nueva Variante</h3>
-          <form id="varianteForm">
+          <form id="varianteForm" class="modal-form">
             <input type="hidden" id="varianteId">
-
             <div class="form-group">
               <label for="productoSelect">Producto:</label>
-              <select id="productoSelect" required></select>
+              <select id="productoSelect" name="producto_id"></select>
+              <div class="error-text" data-error-for="producto_id"></div>
             </div>
-
             <div class="form-group">
               <label for="varianteColor">Color:</label>
-              <input type="text" id="varianteColor" required>
+              <input type="text" id="varianteColor" name="color">
+              <div class="error-text" data-error-for="color"></div>
             </div>
-
             <div class="form-group">
               <label for="varianteStock">Stock:</label>
-              <input type="number" id="varianteStock" min="0" required>
+              <input type="number" id="varianteStock" name="stock" min="0">
+              <div class="error-text" data-error-for="stock"></div>
             </div>
-
             <div class="form-group">
               <label for="varianteImg">Imagen (URL):</label>
-              <input type="text" id="varianteImg">
+              <input type="text" id="varianteImg" name="img">
+              <div class="error-text" data-error-for="img"></div>
             </div>
 
             <div class="modal-buttons">
@@ -78,7 +79,7 @@
         </div>
       </div>
 
-<script type="module" src="/js/adminVariantes.js"></script>
+<script type="module" src="/js/adminVariant.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="https://unpkg.com/feather-icons"></script>

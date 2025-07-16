@@ -29,7 +29,6 @@ export const ERROR_MESSAGES = {
 
   // LOGIN
   EMAIL_NOT_FOUND: 'Correo no registrado.',
-  
   USER_NOT_FOUND: 'Usuario no registrado.',
   
   INCORRECT_PASSWORD: 'Contraseña actual incorrecta.',
@@ -50,46 +49,49 @@ export const ERROR_MESSAGES = {
   SERVER_ERROR: 'Error en el servidor. Por favor, inténtalo más tarde.'
 };
 
-export const ERROR_ZOD = {
+export const ERROR_ZOD = {  
+  
+  FIELD_REQUIRED: "Este campo es obligatorio",
+
   // USERNAME
-  USERNAME_REQUIRED: "El nombre es obligatorio",
   USERNAME_MAX: "El nombre no debe superar los 40 caracteres",
 
   // EMAIL
-  EMAIL_REQUIRED: "El correo es obligatorio",
   EMAIL_INVALID: "El formato del correo no es válido",
   EMAIL_DOMAIN: "El correo  es obligatorio y debe terminar en @gmail.com",
 
   // CODE
-  CODE_REQUIRED: "El código es obligatorio",
   CODE_LENGTH: "El código debe tener exactamente 6 caracteres",
 
   // PASSWORDS
-  OLD_PASSWORD_REQUIRED: "La contraseña actual es obligatoria",
-  OLD_PASSWORD_MIN: "La contraseña debe tener al menos 6 caracteres",
-  NEW_PASSWORD_REQUIRED: "La nueva contraseña es obligatoria",
-  NEW_PASSWORD_MIN: "La nueva contraseña debe tener al menos 6 caracteres",
-  CONFIRM_PASSWORD_REQUIRED: "Debes confirmar la nueva contraseña",
-  CONFIRM_PASSWORD_MIN: "La confirmación debe tener al menos 6 caracteres",
+  PASSWORD_MIN: "La contraseña debe tener al menos 6 caracteres",
 
   // AFFAIR
   AFFAIR_MIN: "El asunto debe tener al menos 10 caracteres",
 
   // MESSAGE
   MESSAGE_MIN: "El mensaje debe tener al menos 10 caracteres",
-
-  // FIRSNAME
-  FIRSNAME_REQUIRED: "El apellido es obligatorio",
-  
-  // ADDRESS
-  ADDRESS_MIN: "La dirección es obligatoria",
-
-  // CITY
-  CITY_MIN: "La ciudad es obligatoria ",
-
-  // DISTRICT
-  DISCTRIC_MIN: "El distrito es obligatoria",
   
   // PHONE NUMBER
   NUMBER_MIN: "Debe tener exactamente 10 dígitos",
+
+  // PRODUCT
+  PRODUCT_NAME_MAX: "El nombre del producto no debe superar los 100 caracteres",
+  PRODUCT_PRICE_POSITIVE: "El precio debe ser un número positivo",
+  PRODUCT_DISCOUNT_INVALID: "El descuento debe ser un número",
+  PRODUCT_DISCOUNT_NEGATIVE: "El descuento no puede ser negativo",
+  PRODUCT_DATE_INVALID: "La fecha del producto no es válida",
+
+  // CATEGORY
+  CATEGORY_NAME_MAX: "El nombre de la categoría no debe superar los 60 caracteres",
+
+  // VARIANT
+  STOCK_NEGATIVE: "El stock no puede ser negativo",
+  URL_INVALID: "La URL de la imagen no es válida",
+
+  // BRAND
+  BRAND_NAME_MAX: "El nombre de la marca no debe superar los 60 caracteres",
+  BRAND_LOGO_INVALID: "El logo debe ser una URL válida",
+  BRAND_CATEGORIES_REQUIRED: "Debes seleccionar al menos una categoría",
+  BRAND_CATEGORIES_INVALID: "Las categorías deben ser valores numéricos",
 };

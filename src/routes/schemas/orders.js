@@ -7,28 +7,28 @@ request.order = z.object({
   nombre: z
     .string()
     .trim()
-    .min(1, { message: ERROR_ZOD.USERNAME_REQUIRED })
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
     .max(40, { message: ERROR_ZOD.USERNAME_MAX })
     .refine(val => val.trim().length > 0, {
-      message: ERROR_ZOD.USERNAME_REQUIRED}),
+      message: ERROR_ZOD.FIELD_REQUIRED}),
   apellido: z
     .string()
-    .min(1, { message: ERROR_ZOD.FIRSNAME_REQUIRED}),
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED}),
   email: z
   .string()
-  .min(1, { message: ERROR_ZOD.EMAIL_REQUIRED })
+  .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
   .email({ message: ERROR_ZOD.EMAIL_INVALID })
   .refine(val => val.endsWith('@gmail.com'), {
     message: ERROR_ZOD.EMAIL_DOMAIN}),
   direccion: z
     .string()
-    .min(1, { message: ERROR_ZOD.ADDRESS_MIN }),
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
   ciudad: z
     .string()
-    .min(1, { message: ERROR_ZOD.CITY_MIN }),
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
   distrito: z
     .string()
-    .min(1, { message: ERROR_ZOD.DISCTRIC_MIN }),
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
   telefono: z
     .string()
     .length(10, { message: ERROR_ZOD.NUMBER_MIN })

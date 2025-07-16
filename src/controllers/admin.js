@@ -144,7 +144,7 @@ adminController.listarMarcas = async (req, res) => {
 adminController.crearMarca = async (req, res) => {
   try {
     const { nombre, logo, categorias } = req.body;
-    await admin.crearMarca(nombre, logo, categorias || []);
+    await admin.agregarMarca(nombre, logo, categorias || []);
     res.json({ success: true });
   } catch (error) {
     console.error(error);

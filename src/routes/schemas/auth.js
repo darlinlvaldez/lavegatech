@@ -7,46 +7,46 @@ request.register = z.object({
   username: z
     .string()
     .trim()
-    .min(1, { message: ERROR_ZOD.USERNAME_REQUIRED })
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
     .max(40, { message: ERROR_ZOD.USERNAME_MAX })
     .refine(val => val.trim().length > 0, {
-      message: ERROR_ZOD.USERNAME_REQUIRED}),
+      message: ERROR_ZOD.FIELD_REQUIRED}),
   email: z
     .string()
     .email({ message: ERROR_ZOD.EMAIL_INVALID })
-    .min(1, { message: ERROR_ZOD.EMAIL_REQUIRED })
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
     .refine(val => val.endsWith('@gmail.com'), {
     message: ERROR_ZOD.EMAIL_DOMAIN}),
   password: z
-    .string({ required_error: ERROR_ZOD.NEW_PASSWORD_REQUIRED })
-    .min(6, { message: ERROR_ZOD.NEW_PASSWORD_MIN }),
+    .string({ required_error: ERROR_ZOD.FIELD_REQUIRED })
+    .min(6, { message: ERROR_ZOD.PASSWORD_MIN }),
   confirmPassword: z
-    .string({ required_error: ERROR_ZOD.CONFIRM_PASSWORD_REQUIRED })
-    .min(6, { message: ERROR_ZOD.CONFIRM_PASSWORD_MIN }),
+    .string({ required_error: ERROR_ZOD.FIELD_REQUIRED })
+    .min(6, { message: ERROR_ZOD.PASSWORD_MIN }),
 }).strict();
 
 request.login = z.object({
   email: z
     .string()
     .email({ message: ERROR_ZOD.EMAIL_INVALID })
-    .min(1, { message: ERROR_ZOD.EMAIL_REQUIRED })
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
     .refine(val => val.endsWith('@gmail.com'), {
     message: ERROR_ZOD.EMAIL_DOMAIN}),
   password: z
-    .string({ required_error: ERROR_ZOD.OLD_PASSWORD_REQUIRED })
-    .min(6, { message: ERROR_ZOD.OLD_PASSWORD_MIN }),
+    .string({ required_error: ERROR_ZOD.FIELD_REQUIRED })
+    .min(6, { message: ERROR_ZOD.PASSWORD_MIN }),
 }).strict();
 
 request.verifyCode = z.object({
   email: z
     .string()
     .email({ message: ERROR_ZOD.EMAIL_INVALID })
-    .min(1, { message: ERROR_ZOD.EMAIL_REQUIRED })
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
     .refine(val => val.endsWith('@gmail.com'), {
     message: ERROR_ZOD.EMAIL_DOMAIN
   }),
   code: z
-    .string({ required_error: ERROR_ZOD.CODE_REQUIRED })
+    .string({ required_error: ERROR_ZOD.FIELD_REQUIRED })
     .min(6, { message: ERROR_ZOD.CODE_LENGTH })
     .max(6, { message: ERROR_ZOD.CODE_LENGTH }),
   type: z.string(),
@@ -56,7 +56,7 @@ request.email = z.object({
   email: z
     .string()
     .email({ message: ERROR_ZOD.EMAIL_INVALID })
-    .min(1, { message: ERROR_ZOD.EMAIL_REQUIRED })
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
     .refine(val => val.endsWith('@gmail.com'), {
     message: ERROR_ZOD.EMAIL_DOMAIN
   }),
@@ -66,26 +66,26 @@ request.forgotPassword = z.object({
   email: z
     .string()
     .email({ message: ERROR_ZOD.EMAIL_INVALID })
-    .min(1, { message: ERROR_ZOD.EMAIL_REQUIRED })
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
     .refine(val => val.endsWith('@gmail.com'), {
     message: ERROR_ZOD.EMAIL_DOMAIN
   }),
   password: z
-    .string({ required_error: ERROR_ZOD.NEW_PASSWORD_REQUIRED })
-    .min(6, { message: ERROR_ZOD.NEW_PASSWORD_MIN }),
+    .string({ required_error: ERROR_ZOD.FIELD_REQUIRED })
+    .min(6, { message: ERROR_ZOD.PASSWORD_MIN }),
   confirm: z
-    .string({ required_error: ERROR_ZOD.CONFIRM_PASSWORD_REQUIRED })
-    .min(6, { message: ERROR_ZOD.CONFIRM_PASSWORD_MIN }),
+    .string({ required_error: ERROR_ZOD.FIELD_REQUIRED })
+    .min(6, { message: ERROR_ZOD.PASSWORD_MIN }),
 }).strict();
 
 request.formEmail = z.object({
   nombre: z
     .string()
-    .min(1, { message: ERROR_ZOD.USERNAME_REQUIRED }),
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
   email: z
     .string()
     .email({ message: ERROR_ZOD.EMAIL_INVALID })
-    .min(1, { message: ERROR_ZOD.EMAIL_REQUIRED })
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
     .refine(val => val.endsWith('@gmail.com'), {
     message: ERROR_ZOD.EMAIL_DOMAIN
   }),

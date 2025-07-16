@@ -1,5 +1,6 @@
 import { showToast } from './toastify.js';
 import { showConfirmDialog } from './sweetAlert2.js';
+import { showValidation, clearError } from "./showValidation.js";
 
 let variantes = [];
 
@@ -15,6 +16,8 @@ const varianteColorInput = document.getElementById("varianteColor");
 const varianteStockInput = document.getElementById("varianteStock");
 const varianteImgInput = document.getElementById("varianteImg");
 const modalTitle = document.getElementById("modalTitle");
+
+const errorFields = ["producto_id", "color", "stock", "img"]
 
 async function fetchVariantes() {
   const res = await fetch("/api/admin/variantes");
@@ -71,13 +74,16 @@ addVarianteBtn.addEventListener("click", () => {
 
 cancelModalBtn.addEventListener("click", () => {
   varianteModal.classList.remove("visible");
+  clearError(errorFields, "#varianteForm");
 });
 
 varianteForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  clearError(errorFields, "#varianteForm");
+
   const id = varianteIdInput.value;
-  const producto_id = productoSelect.value;
+  const producto_id = parseInt(productoSelect.value);
   const color = varianteColorInput.value;
   const stock = parseInt(varianteStockInput.value);
   const img = varianteImgInput.value;
@@ -87,18 +93,30 @@ varianteForm.addEventListener("submit", async (e) => {
   const url = id ? `/api/admin/variantes/${id}` : "/api/admin/variantes";
   const method = id ? "PUT" : "POST";
 
-  const res = await fetch(url, {
-    method,
-    headers: { "Content-Type": "application/json" },
-    body,
-  });
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body,
+    });
 
-  if (res.ok) {
-    showToast("Variante guardada con éxito.", "#27ae60", "check-circle");
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (data.validationError && Array.isArray(data.errors)) {
+        showValidation(data.errors, "#varianteForm");
+      } else {
+        showToast(data.error || "Error al guardar la variante.", "#e74c3c", "alert-circle");
+      }
+      return;
+    }
+
+    showToast(id ? "Variante actualizada con éxito." : "Variante agregada con éxito.", "#27ae60", "check-circle");
     varianteModal.classList.remove("visible");
     fetchVariantes();
-  } else {
-    showToast("Error al guardar la variante.", "#e74c3c", "alert-circle");
+
+  } catch (err) {
+    showToast("Error inesperado al guardar la variante.", "#e74c3c", "alert-circle");
   }
 });
 

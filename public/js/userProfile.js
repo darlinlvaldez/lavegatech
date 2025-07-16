@@ -1,4 +1,5 @@
 import { showToast } from "./toastify.js";
+import { showValidation, clearError } from "./showValidation.js";
 
 window.openModal = openModal;
 window.closeModal = closeModal;
@@ -9,29 +10,42 @@ function showNotification(message, isSuccess) {
   showToast(message, color, icon);
 }
 
-const formTemplates = {username: `<label class="text-modal">Nuevo nombre:</label>
-  <input class="modal-input" type="text" name="newUsername" placeholder="Ingresa tu nuevo nombre" required>`,
+const formTemplates = {
+  username: `
+  <label class="text-modal">Nuevo nombre:</label>
+  <input class="modal-input" type="text" name="newUsername" placeholder="Ingresa tu nuevo nombre">
+  <div class="error-text" data-error-for="newUsername"></div>
+`,
 
-  email: `<label class="text-modal">Nuevo correo:</label> 
-  <input class="modal-input" type="email" name="newEmail" placeholder="ejemplo@gmail.com" required>`,
+  email: `
+  <label class="text-modal">Nuevo correo:</label>
+  <input class="modal-input" type="email" name="newEmail" placeholder="ejemplo@gmail.com" required>
+  <div class="error-text" data-error-for="newEmail"></div>
+`,
 
-  password: `<label class="text-modal">Contraseña actual:</label>
+  password: `
+  <label class="text-modal">Contraseña actual:</label>
   <div class="password-wrapper">
     <input class="modal-input" type="password" id="passwordInput" name="oldPassword" placeholder="Tu contraseña actual" required>
     <i id="eyeIconPassword" class="fa fa-eye-slash eye-icon toggle-password" onclick="togglePassword('password')"></i>
   </div>
+  <div class="error-text" data-error-for="oldPassword"></div>
 
   <label class="text-modal">Nueva contraseña:</label>
   <div class="password-wrapper">
     <input class="modal-input" type="password" id="newPasswordInput" name="newPassword" placeholder="Nueva contraseña" required>
     <i id="eyeIconNewPassword" class="fa fa-eye-slash eye-icon toggle-password" onclick="togglePassword('new')"></i>
   </div>
+  <div class="error-text" data-error-for="newPassword"></div>
 
   <label class="text-modal">Confirmar nueva contraseña:</label>
   <div class="password-wrapper">
     <input class="modal-input" type="password" id="confirmPasswordInput" name="confirmPassword" placeholder="Repite la nueva contraseña" required>
     <i id="eyeIconConfirmPassword" class="fa fa-eye-slash eye-icon toggle-password" onclick="togglePassword('confirm')"></i>
-  </div>`};
+  </div>
+  <div class="error-text" data-error-for="confirmPassword"></div>
+`,
+};
 
 const titles = {username: 'Editar Nombre', email: 'Editar Correo', password: 'Editar Contraseña', 'verify-email': 'Verificar Código'};
 
@@ -147,54 +161,50 @@ function closeModal() {
   document.getElementById('verification-message').style.display = 'none';
 }
 
-document.getElementById('modal-form').addEventListener('submit', async (e) => {
+document.getElementById("modal-form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  try {
-    const form = e.target;
-    const { type } = form.dataset;
-    const data = Object.fromEntries(new FormData(form));
+  const form = e.target;
+  const { type } = form.dataset;
+  const data = Object.fromEntries(new FormData(form));
 
+  clearError(Object.keys(data), "#modal-form");
+
+  try {
     const response = await fetch(urls[type], {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
     });
 
     const responseData = await response.json();
 
     if (response.ok) {
-      let successMessage;
-
-      if (type === 'verify-email') {
-        successMessage = 'Correo verificado';
-      } else if (type === 'email') {
+      if (type === "email") {
         openCodeModal(data.newEmail);
         return;
-      } else {
-        successMessage = 'Actualizado con éxito';
       }
 
-      showNotification(responseData.message || successMessage, true);
-
-      if (type !== 'email') {
-        setTimeout(() => {closeModal();
-          window.location.href = responseData.redirectUrl || '/account';
-        }, 2000);
-      }
+      showNotification(responseData.message || "Actualizado con éxito", true);
+      setTimeout(() => {closeModal();
+        window.location.href = responseData.redirectUrl || "/account";
+      }, 2000);
     } else {
-      if (type === 'email' && response.status === 429 && responseData.resendTimer) {
-        showNotification(responseData.error || 'Ya se envió un código. Espera para reenviar.', false);
-        openCodeModal(data.newEmail);
-        return;
+      if (responseData.validationError && Array.isArray(responseData.errors)) {
+        showValidation(responseData.errors, "#modal-form");
+      } else {
+        showNotification(
+          responseData.error || responseData.message || "Error desconocido",
+          false);
       }
-      showNotification(
-        responseData.error || responseData.message || responseData.errors?.[0]?.message ||
-        'Error desconocido', false);
+      if (
+        type === "email" && response.status === 429 && responseData.resendTimer
+      ) {
+        openCodeModal(data.newEmail);
+      }
     }
-
   } catch (error) {
-    showNotification(error.message || 'Error de red', false);
+    showNotification(error.message || "Error de red", false);
     closeModal();
   }
 });

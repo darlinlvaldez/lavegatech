@@ -1,5 +1,6 @@
 import { showToast } from './toastify.js';
 import { showConfirmDialog } from './sweetAlert2.js';
+import { showValidation, clearError } from "./showValidation.js";
 
 let categorias = [];
 let marcas = [];
@@ -23,6 +24,10 @@ const modalBrandTitle = document.getElementById("modalBrandTitle");
 const brandIdInput = document.getElementById("brandId");
 const brandNameInput = document.getElementById("brandName");
 const brandLogoInput = document.getElementById("brandLogo");
+
+const categoryErrorFields = ["categoria", "imagen"];
+
+const brandErrorFields = ["nombre", "logo"];
 
 function renderCategories() {
   categoriesTableBody.innerHTML = "";
@@ -61,32 +66,49 @@ addCategoryBtn.addEventListener("click", () => {
 
 cancelCategoryModalBtn.addEventListener("click", () => {
   categoryModal.classList.remove("visible");
+  clearError(categoryErrorFields,'#categoryForm');
+
 });
 
 categoryForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+
+  clearError(categoryErrorFields, "#categoryForm");
+
   const id = categoryIdInput.value;
   const categoria = categoryNameInput.value;
   const imagen = categoryImageInput.value;
 
   const body = JSON.stringify({ categoria, imagen });
 
-  if (id) {
-    await fetch(`/api/admin/categorias/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body,
-    });
-  } else {
-    await fetch("/api/admin/categorias", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body,
-    });
-  }
+  const url = id ? `/api/admin/categorias/${id}` : "/api/admin/categorias";
+  const method = id ? "PUT" : "POST";
 
-  categoryModal.classList.remove("visible");
-  fetchCategories();
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body,
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (data.validationError && Array.isArray(data.errors)) {
+        showValidation(data.errors, "#categoryForm");
+      } else {
+        showToast(data.error || "Error al guardar la categoría.", "#e74c3c", "alert-circle");
+      }
+      return;
+    }
+
+    showToast(id ? "Categoría actualizada con éxito." : "Categoría agregada con éxito.", "#27ae60", "check-circle");
+    categoryModal.classList.remove("visible");
+    fetchCategories();
+
+  } catch (err) {
+    showToast("Error inesperado al guardar la categoría.", "#e74c3c", "alert-circle");
+  }
 });
 
 window.editCategory = function (id) {
@@ -154,35 +176,51 @@ addBrandBtn.addEventListener("click", () => {
 
 cancelBrandModalBtn.addEventListener("click", () => {
   brandModal.classList.remove("visible");
+  clearError(brandErrorFields,'#brandForm');
 });
 
 brandForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+
+  clearError(brandErrorFields, "#brandForm");
+
   const id = brandIdInput.value;
   const nombre = brandNameInput.value;
   const logo = brandLogoInput.value;
-    const categoriasSeleccionadas = Array.from(
+  const categoriasSeleccionadas = Array.from(
     document.querySelectorAll('input[name="brandCategories"]:checked')
-    ).map((input) => parseInt(input.value));
+  ).map((input) => parseInt(input.value));
 
   const body = JSON.stringify({ nombre, logo, categorias: categoriasSeleccionadas });
 
-  if (id) {
-    await fetch(`/api/admin/marcas/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body,
-    });
-  } else {
-    await fetch("/api/admin/marcas", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body,
-    });
-  }
+  const url = id ? `/api/admin/marcas/${id}` : "/api/admin/marcas";
+  const method = id ? "PUT" : "POST";
 
-  brandModal.classList.remove("visible");
-  fetchBrands();
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body,
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (data.validationError && Array.isArray(data.errors)) {
+        showValidation(data.errors, "#brandForm");
+      } else {
+        showToast(data.error || "Error al guardar la marca.", "#e74c3c", "alert-circle");
+      }
+      return;
+    }
+
+    showToast(id ? "Marca actualizada con éxito." : "Marca agregada con éxito.", "#27ae60", "check-circle");
+    brandModal.classList.remove("visible");
+    fetchBrands();
+
+  } catch (err) {
+    showToast("Error inesperado al guardar la marca.", "#e74c3c", "alert-circle");
+  }
 });
 
 window.editBrand = function (id) {

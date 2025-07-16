@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="/css/sweetAlertAdmin.css">
 <link rel="stylesheet" href="/css/toastify.css">
 <link rel="stylesheet" href="/css/adminTable.css">
+<link rel="stylesheet" href="/css/error.css">
 
 <div class="main-content">
     <header class="header">
@@ -73,24 +74,22 @@
 <div id="brandModal" class="modal-overlay">
     <div class="modal-content">
         <h3 id="modalBrandTitle" class="modal-title">Añadir Nueva Marca</h3>
-        <form id="brandForm">
+        <form id="brandForm" class="modal-form">
             <input type="hidden" id="brandId">
-
             <div class="form-group">
                 <label for="brandName">Nombre de la Marca:</label>
-                <input type="text" id="brandName" required>
+                <input type="text" id="brandName" name="nombre">
+                <div class="error-text" data-error-for="nombre"></div>
             </div>
-
             <div class="form-group">
                 <label for="brandLogo">Logo:</label>
-                <input type="text" id="brandLogo">
+                <input type="text" id="brandLogo" name="logo">
+                <div class="error-text" data-error-for="logo"></div>
             </div>
-
             <div >
                 <label>Categorías Asociadas:
                 <div id="brandCategoriesCheckboxes" style="margin-top: 8px;"></div>
             </div>
-
             <div class="modal-buttons">
                 <button type="button" id="cancelBrandModalBtn" class="cancel-button">
                     Cancelar
@@ -107,19 +106,18 @@
 <div id="categoryModal" class="modal-overlay">
     <div class="modal-content">
         <h3 id="modalCategoryTitle" class="modal-title">Añadir Nueva Categoría</h3>
-        <form id="categoryForm">
+        <form id="categoryForm" class="modal-form">
             <input type="hidden" id="categoryId">
-
             <div class="form-group">
                 <label for="categoryName">Nombre de la Categoría:</label>
-                <input type="text" id="categoryName" required>
+                <input type="text" id="categoryName" name="categoria">
+                <div class="error-text" data-error-for="categoria"></div>
             </div>
-            
             <div class="form-group">
                 <label for="categoryImage">Imagen:</label>
-                <input type="text" id="categoryImage" name="categoryImage">
+                <input type="text" id="categoryImage" name="imagen">
+                <div class="error-text" data-error-for="imagen"></div>
             </div>
-
             <div class="modal-buttons">
                 <button type="button" id="cancelCategoryModalBtn" class="cancel-button">
                     Cancelar

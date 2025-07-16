@@ -6,11 +6,13 @@ import { isAuth } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-router.get('/resend-email-timer', isAuth(), user.getResendTimer);
-router.post('/update-username', isAuth(), validate(request.updateUsername), user.updateUsername);
-router.post('/update-email', isAuth(), validate(request.updateEmail), user.updateEmail);
-router.post('/verify-email-code', isAuth(), validate(request.verifyEmailCode), user.verifyEmailCode);
-router.post('/resend-email-code', isAuth(), user.resendCode);
-router.post('/update-password', isAuth(), validate(request.updatePassword), user.updatePassword);
+router.use(isAuth());
+
+router.get('/resend-email-timer', user.getResendTimer);
+router.post('/resend-email-code', user.resendCode);
+router.post('/update-username', validate(request.updateUsername), user.updateUsername);
+router.post('/update-email', validate(request.updateEmail), user.updateEmail);
+router.post('/verify-email-code', validate(request.verifyEmailCode), user.verifyEmailCode);
+router.post('/update-password', validate(request.updatePassword), user.updatePassword);
 
 export default router;

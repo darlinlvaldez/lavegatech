@@ -1,5 +1,6 @@
 import { showToast } from './toastify.js';
 import { showConfirmDialog } from './sweetAlert2.js';
+import { showValidation, clearError } from "./showValidation.js";
 
 let products = [];
 
@@ -17,6 +18,8 @@ const descuentoInput = document.getElementById("productoDescuento");
 const categoriaInput = document.getElementById("productoCategoria");
 const marcaInput = document.getElementById("productoMarca");
 const fechaInput = document.getElementById("productoFecha");
+
+const productErrorFields = ["nombre", "descripcion", "precio", "descuento", "categoria", "marca", "fecha"];
 
 function renderProducts() {
   productsTableBody.innerHTML = "";
@@ -56,35 +59,50 @@ addProductBtn.addEventListener("click", () => {
 
 cancelModalBtn.addEventListener("click", () => {
   productModal.classList.remove("visible");
+  clearError(productErrorFields,'#productForm');
 });
 
-productForm.addEventListener("submit", (e) => {
-  e.preventDefault(); 
+productForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  clearError(productErrorFields,'#productForm');
 
   const id = productIdInput.value;
-  const nombre = nombreInput.value;
-  const descripcion = descripcionInput.value;
-  const precio = parseFloat(precioInput.value);
-  const descuento = parseFloat(descuentoInput.value);
-  const categoria = categoriaInput.value;
-  const marca = marcaInput.value;
-  const fecha = fechaInput?.value || null;
+  const body = {
+    nombre: nombreInput.value.trim(),
+    descripcion: descripcionInput.value.trim(),
+    precio: precioInput.value ? parseFloat(precioInput.value) : 0,
+    descuento: descuentoInput.value ? parseFloat(descuentoInput.value) : 0,
+    categoria: categoriaInput.value ? parseInt(categoriaInput.value) : null,
+    marca: marcaInput.value ? parseInt(marcaInput.value) : null,
+    ...(id ? { fecha: fechaInput?.value || null } : {}),
+  };
 
-  if (id) {
-    const productIndex = products.findIndex((p) => p.id === parseInt(id));
-    if (productIndex !== -1) {
-      products[productIndex] = { id: parseInt(id), nombre, precio, descuento, 
-        descripcion, categoria, marca, fecha};
+  try {
+    const res = await fetch(id ? `/api/admin/productos/${id}` : "/api/admin/productos", {
+      method: id ? "PUT" : "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (data.validationError && Array.isArray(data.errors)) {
+        showValidation(data.errors, "#productForm");
+      } else {
+        showToast(data.error || "Error al guardar el producto.", "#e74c3c", "alert-circle");
+      }
+      return;
     }
-  } else {
-    const newId =
-      products.length > 0 ? Math.max(...products.map((p) => p.id)) + 1 : 1;
-      products.push({ id: newId, id, nombre, precio, descuento,
-        descripcion, categoria, marca});
-  }
 
-  renderProducts(); 
-  productModal.classList.remove("visible"); 
+    showToast(id ? "Producto actualizado con éxito." : "Producto agregado con éxito.", "#27ae60", "check-circle");
+    productModal.classList.remove("visible");
+    fetchProducts();
+
+  } catch (err) {
+    showToast("Error inesperado al guardar el producto.", "#e74c3c", "alert-circle");
+  }
 });
 
 window.editProduct = function  (id) {
@@ -113,46 +131,6 @@ async function fetchProducts() {
   const data = await res.json();
   products = data;
   renderProducts();
-}
-
-async function saveProduct(e) {
-  e.preventDefault();
-
-  const id = productIdInput.value;
-  const nombre = nombreInput.value;
-  const precio = parseFloat(precioInput.value);
-  const descripcion = descripcionInput.value;
-  const descuento = parseFloat(descuentoInput.value);
-  const categoria = parseFloat(categoriaInput.value);
-  const marca = parseFloat(marcaInput.value);
-  const fecha = fechaInput?.value || null;
-
-  const body = JSON.stringify({nombre, precio,
-    descuento, descripcion, categoria, marca,
-    ...(id ? { fecha } : {}),
-  });
-
-  try {
-    const res = await fetch(id ? `/api/admin/productos/${id}` : "/api/admin/productos", {
-      method: id ? "PUT" : "POST",
-      headers: { "Content-Type": "application/json" },
-      body,
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data?.error || "Error desconocido");
-    }
-
-    showToast(id ? "Producto actualizado con éxito." : "Producto agregado con éxito.", "#27ae60", "check-circle");
-
-    productModal.classList.remove("visible");
-    fetchProducts();
-
-  } catch (err) {
-    showToast(err.message || "Error al guardar el producto.", "#e74c3c", "alert-circle");
-  }
 }
 
 addProductBtn.addEventListener("click", () => {
@@ -215,5 +193,3 @@ document.addEventListener("DOMContentLoaded", () => {
   fetchProducts();
   loadCategoryBranch();
 });
-
-productForm.addEventListener("submit", saveProduct);

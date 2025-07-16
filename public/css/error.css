@@ -9,6 +9,11 @@
     margin-bottom: 1.0rem;
 }
 
+.modal-form .field-error {
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
 .general-error {
     color: #ff4444;
     margin: 0.5rem 0;

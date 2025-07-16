@@ -138,20 +138,28 @@ auth.updatePassword = async (req, res) => {
   const { oldPassword, newPassword, confirmPassword } = req.body;
 
   try {
-    if (!sessionUser) return res.status(401).json({ error: ERROR_MESSAGES.LOGIN_ERROR });
+    if (!sessionUser)
+      return res.status(401).json({ error: ERROR_MESSAGES.LOGIN_ERROR });
     if (!newPassword || newPassword !== confirmPassword)
-      return res.status(400).json({ error: ERROR_MESSAGES.PASSWORDS_DONT_MATCH });
+      return res.status(400).json({
+        validationError: true,errors: [{path: "confirmPassword", 
+          message: ERROR_MESSAGES.PASSWORDS_DONT_MATCH}]
+      });
 
     const foundUser = await user.findById(sessionUser.id);
-    if (!foundUser) return res.status(404).json({ error: ERROR_MESSAGES.EMAIL_NOT_FOUND });
+    if (!foundUser)
+      return res.status(404).json({ error: ERROR_MESSAGES.EMAIL_NOT_FOUND });
 
     const match = await bcrypt.compare(oldPassword, foundUser.password);
-    if (!match) return res.status(400).json({ error: ERROR_MESSAGES.INCORRECT_PASSWORD });
+    if (!match)return res.status(400).json({validationError: true,
+      errors: [{ path: "oldPassword", message: ERROR_MESSAGES.INCORRECT_PASSWORD }]
+    });
 
     const saltRounds = 10;
     const hashed = await bcrypt.hash(newPassword, saltRounds);
+    
     await user.updatePassword(sessionUser.id, hashed);
-    res.status(200).json({ success: true, redirectUrl: '/account' });
+    res.status(200).json({ success: true, redirectUrl: "/account" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: ERROR_MESSAGES.SERVER_ERROR });

@@ -1,6 +1,9 @@
 import { showToast } from './toastify.js';
+import { showValidation, clearError } from "./showValidation.js";
 
 let admins = [];
+
+const userErrorFields = ["username", "password"];
 
 async function fetchAdmins() {
   const res = await fetch("/api/adminAuth/usuarios");
@@ -61,7 +64,9 @@ function openAddModal() {
   document.getElementById("userId").value = "";
   document.getElementById("username").value = "";
   document.getElementById("password").value = "";
+  document.getElementById("passwordOptionalLabel").style.display = "none";
   document.getElementById("userModal").classList.add("visible");
+  document.getElementById("password").setAttribute("required", "true");
 }
 
 window.openEditModal = function(id) {
@@ -72,15 +77,22 @@ window.openEditModal = function(id) {
   document.getElementById("userId").value = admin.id;
   document.getElementById("username").value = admin.username;
   document.getElementById("password").value = "";
+  document.getElementById("passwordOptionalLabel").style.display = "inline";
   document.getElementById("userModal").classList.add("visible");
+  document.getElementById("password").removeAttribute("required");
 }
 
 function closeModal() {
   document.getElementById("userModal").classList.remove("visible");
+  clearError(userErrorFields, "#userForm");
 }
 
-async function handleFormSubmit(event) {
+const userForm = document.getElementById("userForm");
+
+userForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+
+  clearError(userErrorFields, "#userForm");
 
   const id = document.getElementById("userId").value;
   const username = document.getElementById("username").value;
@@ -102,18 +114,24 @@ async function handleFormSubmit(event) {
     const data = await res.json();
 
     if (!res.ok) {
-      throw new Error(data?.error || "Error al guardar los datos");
+      if (data.validationError && Array.isArray(data.errors)) {
+        showValidation(data.errors, "#userForm");
+      } else {
+        showToast(data.error || "Error al guardar los datos", "#e74c3c", "alert-circle");
+      }
+      return;
     }
 
-    showToast(id ? "Administrador actualizado con éxito." : 
+    showToast(id ? "Actualizado con éxito." : 
       "Administrador creado con éxito.", "#27ae60", "check-circle");
 
     closeModal();
     fetchAdmins();
+
   } catch (err) {
-    showToast( err.message || "Error al guardar los datos.", "#e74c3c", "alert-circle");
+    showToast(err.message || "Error al guardar los datos.", "#e74c3c", "alert-circle");
   }
-}
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   fetchAdmins();

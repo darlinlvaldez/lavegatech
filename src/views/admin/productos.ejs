@@ -4,6 +4,8 @@
 <link rel="stylesheet" href="/css/sweetAlertAdmin.css">
 <link rel="stylesheet" href="/css/toastify.css">
 <link rel="stylesheet" href="/css/adminTable.css">
+<link rel="stylesheet" href="/css/error.css">
+
 
     <div class="main-content">
         <header class="header">
@@ -41,46 +43,53 @@
             </div>
         </main>
     </div>
-
+    
     <div id="productModal" class="modal-overlay">
         <div class="modal-content">
             <h3 id="modalTitle" class="modal-title">Añadir Nuevo Producto</h3>
-            <form id="productForm">
+            <form id="productForm" class="modal-form">
                 <input type="hidden" id="productId">
                 <div class="form-group">
                     <label for="productName">Nombre del Producto:</label>
-                    <input type="text" id="productoNombre" required>
+                    <input type="text" id="productoNombre" name="nombre">
+                    <div class="error-text" data-error-for="nombre"></div>
                 </div>
                 <div class="form-group">
                     <label for="product">Descripción:</label>
-                    <textarea id="productoDescripcion" required></textarea>
+                    <textarea id="productoDescripcion" name="descripcion"></textarea>
+                    <div class="error-text" data-error-for="descripcion"></div>
                 </div>
                 <div class="form-group">
                     <label for="productPrice">Precio:</label>
-                    <input type="number" id="productoPrecio" step="0.01" required>
+                    <input type="number" id="productoPrecio" name="precio" step="0.01"  >
+                    <div class="error-text" data-error-for="precio"></div>
                 </div>
                 <div class="form-group">
                     <label for="productStock">Descuento:</label>
-                    <input type="number" id="productoDescuento">
+                    <input type="number" id="productoDescuento" name="descuento">
+                    <div class="error-text" data-error-for="descuento"></div>
                 </div>
                 <div class="form-group">
                     <label for="productName">Categoría:</label>
-                    <select id="productoCategoria"></select>
+                    <select id="productoCategoria" name="categoria"></select>
+                    <div class="error-text" data-error-for="categoria"></div>
                 </div>
                 <div class="form-group">
                     <label for="productName">Marca:</label>
-                    <select id="productoMarca">Marca</select>
+                    <select id="productoMarca" name="marca">Marca</select>
+                    <div class="error-text" data-error-for="marca"></div>
                 </div>
                 <div class="form-group" id="fechaGroup" style="display: none;">
                     <label for="productoFecha">Fecha:</label>
-                    <input type="datetime-local" id="productoFecha">
+                    <input type="datetime-local" id="productoFecha" name="fecha">
+                    <div class="error-text" data-error-for="fecha"></div>
                 </div>
                 <div class="modal-buttons">
                     <button type="button" id="cancelModalBtn" class="cancel-button">
                         Cancelar
                     </button>
                     <button type="submit" class="save-button">
-                        Guardar Producto
+                        Guardar
                     </button>
                 </div>
             </form>

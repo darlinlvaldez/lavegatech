@@ -65,12 +65,12 @@ admin.obtenerCategorias = async () => {
   return rows;
 };
 
-admin.crearCategoria = async (nombre, imagen) => {
-  await db.query("INSERT INTO categorias (categoria, imagen) VALUES (?, ?)", [nombre, imagen]);
+admin.crearCategoria = async (categoria, imagen) => {
+  await db.query("INSERT INTO categorias (categoria, imagen) VALUES (?, ?)", [categoria, imagen]);
 };
 
-admin.actualizarCategoria = async (id, nombre, imagen) => {
-  await db.query("UPDATE categorias SET categoria = ?, imagen = ? WHERE id = ?", [nombre, imagen, id]);
+admin.actualizarCategoria = async (id, categoria, imagen) => {
+  await db.query("UPDATE categorias SET categoria = ?, imagen = ? WHERE id = ?", [categoria, imagen, id]);
 };
 
 admin.eliminarCategoria = async (id) => {
@@ -106,7 +106,7 @@ admin.obtenerMarcas = async () => {
   });
 };
 
-admin.crearMarca = async (nombre, logo, categorias = []) => {
+admin.agregarMarca = async (nombre, logo, categorias = []) => {
   const [result] = await db.query("INSERT INTO p_marcas (nombre, logo) VALUES (?, ?)", [nombre, logo]);
   const marcaId = result.insertId;
   await admin.asociarCategoriasMarca(marcaId, categorias);

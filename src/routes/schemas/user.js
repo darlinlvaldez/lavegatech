@@ -7,17 +7,17 @@ request.updateUsername = z.object({
   newUsername: z
     .string()
     .trim()
-    .min(1, { message: ERROR_ZOD.USERNAME_REQUIRED })
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
     .max(40, { message: ERROR_ZOD.USERNAME_MAX })
     .refine(val => val.trim().length > 0, {
-      message: ERROR_ZOD.USERNAME_REQUIRED}),
+      message: ERROR_ZOD.FIELD_REQUIRED}),
 }).strict();
 
 request.updateEmail = z.object({
   newEmail: z
     .string()
     .email({ message: ERROR_ZOD.EMAIL_INVALID })
-    .min(1, { message: ERROR_ZOD.EMAIL_REQUIRED })
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
     .refine(val => val.endsWith('@gmail.com'), {
     message: ERROR_ZOD.EMAIL_DOMAIN}),
 }).strict();
@@ -26,7 +26,7 @@ request.verifyEmailCode = z.object({
   newEmail: z
     .string()
     .email({ message: ERROR_ZOD.EMAIL_INVALID })
-    .min(1, { message: ERROR_ZOD.EMAIL_REQUIRED })
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
     .refine(val => val.endsWith('@gmail.com'), {
     message: ERROR_ZOD.EMAIL_DOMAIN}),
   codeInput: z
@@ -38,13 +38,13 @@ request.verifyEmailCode = z.object({
 request.updatePassword = z.object({
   oldPassword: z
     .string()
-    .min(6, { message: ERROR_ZOD.OLD_PASSWORD_MIN }),
+    .min(6, { message: ERROR_ZOD.PASSWORD_MIN }),
   newPassword: z
     .string()
-    .min(6, { message: ERROR_ZOD.NEW_PASSWORD_MIN }),
+    .min(6, { message: ERROR_ZOD.PASSWORD_MIN }),
   confirmPassword: z
     .string()
-    .min(6, { message: ERROR_ZOD.CONFIRM_PASSWORD_MIN }),
+    .min(6, { message: ERROR_ZOD.PASSWORD_MIN }),
 }).strict();
 
 export default request;
