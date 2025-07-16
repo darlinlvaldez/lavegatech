@@ -1,7 +1,7 @@
 import { checkAuth, getRealStock, updateItem } from './utils.js';
 import { loadCartPreview } from './loadCartPreview.js';
 import { showToast } from './toastify.js';
-import { showConfirmDialog } from './sweetAlert2.js';
+import { sweetAlert } from './sweetAlert2.js';
 
 window.updateQuantity = async function(element, change, productId, color) {
   try {
@@ -59,7 +59,7 @@ function totalCart() {
 }
 
 async function handleClearCart() {
-  const confirmed = await showConfirmDialog({
+  const confirmed = await sweetAlert({
     title: "¿Vaciar el carrito?",
     text: "Se eliminarán todos los productos del carrito.",
     confirmButtonText: "Aceptar",

@@ -1,9 +1,10 @@
 import { showToast } from './toastify.js';
 import { showValidation, clearError } from "./showValidation.js";
+import { sweetAlert } from './sweetAlert2.js';
 
 let admins = [];
 
-const userErrorFields = ["username", "password"];
+const userErrorFields = ["username", "password", "confirmPassword"];
 
 async function fetchAdmins() {
   const res = await fetch("/api/adminAuth/usuarios");
@@ -22,6 +23,13 @@ function renderAdmins() {
     const estadoTexto = admin.is_active ? "Activo" : "Inactivo";
     const estadoClase = admin.is_active ? "estado-activo" : "estado-inactivo";
 
+    const botones = `
+      <button onclick="openEditModal(${admin.id})" class="edit-button">Editar</button>
+      ${admin.id !== currentAdminId ? `
+        <button onclick="deleteAdmin(${admin.id})" class="delete-button">Eliminar</button>
+      ` : ''}
+    `;
+
     row.innerHTML = `
       <td>${admin.username}</td>
       <td>${new Date(admin.created_at).toLocaleString()}</td>
@@ -30,13 +38,32 @@ function renderAdmins() {
           ${estadoTexto}
         </button>
       </td>
-      <td>
-        <button onclick="openEditModal(${admin.id})" class="edit-button">Editar</button>
-      </td>
+      <td>${botones}</td>
     `;
 
     tbody.appendChild(row);
   });
+}
+
+window.deleteAdmin = async function (id) {
+  const confirmed = await sweetAlert({
+    title: "¿Eliminar Producto?",
+    text: "Esta acción no se puede deshacer.",
+    confirmButtonText: "Aceptar",
+  });  
+  
+  if (!confirmed) return;
+
+  try {
+    const res = await fetch(`/api/adminAuth/usuarios/${id}`, { method: "DELETE" });
+    if (!res.ok) throw new Error()
+
+    await fetchAdmins();
+    showToast("Administrador eliminado con éxito.", "#27ae60", "check-circle");
+
+  } catch (err) {
+    showToast(err.message, "#e74c3c", "alert-circle");
+  }
 }
 
 window.toggleEstado = async function (id) {
@@ -97,6 +124,15 @@ userForm.addEventListener("submit", async (event) => {
   const id = document.getElementById("userId").value;
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+
+  if (password && password !== confirmPassword) {
+    showValidation([
+      { path: "password", message: "Las contraseñas no coinciden" },
+      { path: "confirmPassword", message: "Las contraseñas no coinciden" }
+    ], "#userForm");
+    return;
+  }
 
   const url = id ? `/api/adminAuth/usuarios/${id}` : "/api/adminAuth/usuarios";
   const method = id ? "PUT" : "POST";
@@ -115,7 +151,17 @@ userForm.addEventListener("submit", async (event) => {
 
     if (!res.ok) {
       if (data.validationError && Array.isArray(data.errors)) {
-        showValidation(data.errors, "#userForm");
+        let errors = data.errors;
+
+        const passwordError = errors.find(err => err.path === "password");
+        if (passwordError) {
+          errors = [
+            ...errors,
+            { path: "confirmPassword", message: passwordError.message }
+          ];
+        }
+
+        showValidation(errors, "#userForm");
       } else {
         showToast(data.error || "Error al guardar los datos", "#e74c3c", "alert-circle");
       }
@@ -137,5 +183,4 @@ document.addEventListener("DOMContentLoaded", () => {
   fetchAdmins();
   document.getElementById("addUserBtn").addEventListener("click", openAddModal);
   document.getElementById("cancelModalBtn").addEventListener("click", closeModal);
-  document.getElementById("userForm").addEventListener("submit", handleFormSubmit);
 });

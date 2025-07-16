@@ -1,8 +1,9 @@
 import { showToast } from './toastify.js';
-import { showConfirmDialog } from './sweetAlert2.js';
+import { sweetAlert } from './sweetAlert2.js';
 import { showValidation, clearError } from "./showValidation.js";
 
 let variantes = [];
+let filteredVariantes = [];
 
 const variantesTableBody = document.getElementById("variantesTableBody");
 const addVarianteBtn = document.getElementById("addVarianteBtn");
@@ -16,12 +17,14 @@ const varianteColorInput = document.getElementById("varianteColor");
 const varianteStockInput = document.getElementById("varianteStock");
 const varianteImgInput = document.getElementById("varianteImg");
 const modalTitle = document.getElementById("modalTitle");
+const varianteImgFileInput = document.getElementById("varianteImgFile");
 
 const errorFields = ["producto_id", "color", "stock", "img"]
 
 async function fetchVariantes() {
   const res = await fetch("/api/admin/variantes");
   variantes = await res.json();
+  filteredVariantes = [];
   renderVariantes();
 }
 
@@ -47,7 +50,10 @@ async function fetchProductos() {
 
 function renderVariantes() {
   variantesTableBody.innerHTML = "";
-  variantes.forEach(vari => {
+
+  const lista = filteredVariantes.length > 0 ? filteredVariantes : variantes;
+
+  lista.forEach(vari => {
     const row = document.createElement("tr");
 
     row.innerHTML = `
@@ -65,6 +71,24 @@ function renderVariantes() {
   });
 }
 
+const searchVarianteInput = document.getElementById("searchVarianteInput");
+
+searchVarianteInput.addEventListener("input", () => {
+  const query = searchVarianteInput.value.trim().toLowerCase();
+
+  if (query.length === 0) {
+    filteredVariantes = [];
+  } else {
+    filteredVariantes = variantes.filter(v =>
+      v.producto?.toLowerCase().includes(query) ||
+      v.color?.toLowerCase().includes(query) ||
+      String(v.stock).includes(query)
+    );
+  }
+
+  renderVariantes();
+});
+
 addVarianteBtn.addEventListener("click", () => {
   modalTitle.textContent = "Nueva Variante";
   varianteForm.reset();
@@ -79,17 +103,46 @@ cancelModalBtn.addEventListener("click", () => {
 
 varianteForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-
   clearError(errorFields, "#varianteForm");
 
   const id = varianteIdInput.value;
   const producto_id = parseInt(productoSelect.value);
   const color = varianteColorInput.value;
   const stock = parseInt(varianteStockInput.value);
-  const img = varianteImgInput.value;
 
-  const body = JSON.stringify({ producto_id, color, stock, img });
+  let imgPath = varianteImgInput.value.trim();
 
+  // Cambiar aquí para dar prioridad a archivo si existe
+  if (varianteImgFileInput.files.length > 0) {
+    const file = varianteImgFileInput.files[0];
+    const formData = new FormData();
+    formData.append("img", file);
+
+    try {
+      const uploadRes = await fetch("/api/admin/variantes/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!uploadRes.ok) {
+        showToast("Error al subir la imagen.", "#e74c3c", "alert-circle");
+        return;
+      }
+
+      const uploadData = await uploadRes.json();
+      imgPath = uploadData.path;
+    } catch {
+      showToast("Error inesperado al subir la imagen.", "#e74c3c", "alert-circle");
+      return;
+    }
+  }
+
+  if (!imgPath) {
+    showValidation([{ path: "img", message: "Debe proporcionar una imagen o URL" }], "#varianteForm");
+    return;
+  }
+
+  const body = JSON.stringify({ producto_id, color, stock, img: imgPath });
   const url = id ? `/api/admin/variantes/${id}` : "/api/admin/variantes";
   const method = id ? "PUT" : "POST";
 
@@ -135,7 +188,7 @@ window.editVariante = function (id) {
 }
 
 window.deleteVariante = async function(id) {
-  const confirmed = await showConfirmDialog({
+  const confirmed = await sweetAlert({
     title: "¿Eliminar Categoría?",
     text: "Esta acción no se puede deshacer.",
     confirmButtonText: "Aceptar",

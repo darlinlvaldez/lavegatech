@@ -14,9 +14,14 @@
         <div class="container-user">
         <h2>Pedidos</h2>
 
+        <div class="search-container">
+            <input type="text" id="searchPedidosInput" placeholder="Buscar pedidos..." class="input-search" />
+            <i class="fa fa-search search-icon"></i>
+        </div>
+
         <% if (orders.length === 0) { %>
             <div class="alert-info-user">
-                No has realizado ningún pedido aún.
+                No hay pedidos aún.
             </div>
             <a href="/" class="btn-user">Ir a la tienda</a>
         <% } else { %>
@@ -42,3 +47,18 @@
         <% } %>
     </div>
   </main>
+  
+<script>
+  const searchInput = document.getElementById("searchPedidosInput");
+  const pedidos = document.querySelectorAll(".list-group-product");
+
+  searchInput.addEventListener("input", () => {
+    const valor = searchInput.value.toLowerCase();
+
+    pedidos.forEach(pedido => {
+      const texto = pedido.textContent.toLowerCase();
+      const visible = texto.includes(valor);
+      pedido.style.display = visible ? "block" : "none";
+    });
+  });
+</script>

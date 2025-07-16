@@ -1,9 +1,11 @@
 import { showToast } from './toastify.js';
-import { showConfirmDialog } from './sweetAlert2.js';
+import { sweetAlert } from './sweetAlert2.js';
 import { showValidation, clearError } from "./showValidation.js";
 
 let categorias = [];
 let marcas = [];
+let filteredCategorias = [];
+let filteredMarcas = [];
 
 const categoriesTableBody = document.getElementById("categoriesTableBody");
 const addCategoryBtn = document.getElementById("addCategoryBtn");
@@ -31,7 +33,10 @@ const brandErrorFields = ["nombre", "logo"];
 
 function renderCategories() {
   categoriesTableBody.innerHTML = "";
-  categorias.forEach((cat) => {
+
+  const lista = filteredCategorias.length > 0 ? filteredCategorias : categorias;
+
+  lista.forEach((cat) => {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${cat.categoria}</td>
@@ -44,6 +49,22 @@ function renderCategories() {
     categoriesTableBody.appendChild(row);
   });
 }
+
+const searchCategoriaInput = document.getElementById("searchCategoriaInput");
+
+searchCategoriaInput.addEventListener("input", () => {
+  const query = searchCategoriaInput.value.trim().toLowerCase();
+
+  if (query.length === 0) {
+    filteredCategorias = [];
+  } else {
+    filteredCategorias = categorias.filter(c =>
+      c.categoria.toLowerCase().includes(query)
+    );
+  }
+
+  renderCategories();
+});
 
 function renderCategoryCheckboxes() {
   const container = document.getElementById("brandCategoriesCheckboxes");
@@ -122,7 +143,7 @@ window.editCategory = function (id) {
 }
 
 window.deleteCategory = async function (id) {
-  const confirmed = await showConfirmDialog({
+  const confirmed = await sweetAlert({
     title: "¿Eliminar Categoría?",
     text: "Esta acción no se puede deshacer.",
     confirmButtonText: "Aceptar",
@@ -150,7 +171,10 @@ async function fetchCategories() {
 
 function renderBrands() {
   brandsTableBody.innerHTML = "";
-  marcas.forEach((brand) => {
+
+  const lista = filteredMarcas.length > 0 ? filteredMarcas : marcas;
+
+  lista.forEach((brand) => {
     const row = document.createElement("tr");
     const categoriasNombres = brand.categorias?.map(c => c.categoria).join(", ") || "";
     row.innerHTML = `
@@ -165,6 +189,26 @@ function renderBrands() {
     brandsTableBody.appendChild(row);
   });
 }
+
+const searchMarcaInput = document.getElementById("searchMarcaInput");
+
+
+
+searchMarcaInput.addEventListener("input", () => {
+  const query = searchMarcaInput.value.trim().toLowerCase();
+
+  if (query.length === 0) {
+    filteredMarcas = [];
+  } else {
+    filteredMarcas = marcas.filter(m =>
+      m.nombre.toLowerCase().includes(query) ||
+      m.categorias?.some(c => c.categoria.toLowerCase().includes(query))
+    );
+  }
+
+  renderBrands();
+});
+
 
 addBrandBtn.addEventListener("click", () => {
   modalBrandTitle.textContent = "Añadir Nueva Marca";
@@ -244,7 +288,7 @@ window.editBrand = function (id) {
 }
 
 window.deleteBrand = async function(id) {
-   const confirmed = await showConfirmDialog({
+   const confirmed = await sweetAlert({
     title: "¿Eliminar Categoría?",
     text: "Esta acción no se puede deshacer.",
     confirmButtonText: "Aceptar",

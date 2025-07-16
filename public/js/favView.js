@@ -1,11 +1,11 @@
 import { fetchFav, checkAuth } from './utils.js';
 import {loadFavPage} from './loadFavPage.js';
-import { showConfirmDialog } from './sweetAlert2.js';
+import { sweetAlert } from './sweetAlert2.js';
 
 window.renderButton = renderButton;
 
 async function handleClearFav() {
-  const confirmed = await showConfirmDialog({
+  const confirmed = await sweetAlert({
     title: "¿Vaciar favoritos?",
     text: "Se eliminarán todos los productos de favoritos.",
     confirmButtonText: "Aceptar",

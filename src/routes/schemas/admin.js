@@ -43,21 +43,17 @@ request.product = z.object({
   .optional(),
 }).strict();
 
+const IMG_REGEX = /^\/uploads\/.+\.(png|jpg|jpeg)$/i;
+
 request.variant = z.object({
-  producto_id: z
-  .number({required_error: ERROR_ZOD.FIELD_REQUIRED, 
-    invalid_type_error: ERROR_ZOD.FIELD_REQUIRED}),
-  color: z
-    .string()
-    .trim()
-    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
-  stock: z
-    .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED })
-    .min(0, { message: ERROR_ZOD.STOCK_NEGATIVE }),
-  img: z
-    .string()
+  producto_id: z.number({ required_error: ERROR_ZOD.FIELD_REQUIRED }),
+  color: z.string().trim().min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
+  stock: z.number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }).min(0, { message: ERROR_ZOD.STOCK_NEGATIVE }),
+  img: z.string()
     .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
-    .url({ message: ERROR_ZOD.URL_INVALID }),
+    .refine(val => {
+      return /^(https?:\/\/)/.test(val) || IMG_REGEX.test(val);
+    }, { message: ERROR_ZOD.URL_INVALID }),
 }).strict();
 
 request.category = z.object({
@@ -98,7 +94,7 @@ request.user = z.object({
   password: z
     .string()
     .min(6, { message: ERROR_ZOD.PASSWORD_MIN })
-    .optional(),
-}).strict();
+    .optional()
+  }).strict();
 
 export default request;

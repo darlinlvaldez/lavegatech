@@ -40,4 +40,7 @@ router.get('/pedidos/:id', admin.detallePedido);
 router.get('/usuarios', admin.listarUsuarios);
 router.patch('/usuarios/:id/estado', admin.actualizarEstado);
 
+// Cargar Imagen
+router.post('/variantes/upload', admin.cargarImagen);
+
 export default router;

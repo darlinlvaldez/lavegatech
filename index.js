@@ -144,7 +144,9 @@ app.get('/admin/variantes', isAdmin(), (req, res) => {
 });
 
 app.get('/admin/accounts', isAdmin(), (req, res) => {
-  res.render('admin/accounts');
+  res.render('admin/accounts', {
+    currentAdminId: req.session.admin.id
+  });
 });
 
 app.get('/admin/marcaCategoria', isAdmin(), (req, res) => {

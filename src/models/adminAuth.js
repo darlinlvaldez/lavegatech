@@ -49,4 +49,8 @@ admin.estadoAdmin = async (id, is_active) => {
   return result.affectedRows > 0;
 };
 
+admin.eliminarAdmin = async (id) => {
+  return await db.query(`DELETE FROM admin WHERE id = ?`, [id]);
+};
+
 export default admin;

@@ -1,4 +1,4 @@
-export async function showConfirmDialog(options = {}) {
+export async function sweetAlert(options = {}) {
   const {
     title = '¿Estás seguro?',
     text = 'Esta acción no se puede deshacer.',

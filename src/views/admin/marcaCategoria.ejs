@@ -1,148 +1,160 @@
 <%- include('../admin/dashboard.ejs') %>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-<link rel="stylesheet" href="/css/sweetAlertAdmin.css">
-<link rel="stylesheet" href="/css/toastify.css">
-<link rel="stylesheet" href="/css/adminTable.css">
-<link rel="stylesheet" href="/css/error.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="/css/sweetAlertAdmin.css">
+    <link rel="stylesheet" href="/css/toastify.css">
+    <link rel="stylesheet" href="/css/adminTable.css">
+    <link rel="stylesheet" href="/css/error.css">
 
-<div class="main-content">
-    <header class="header">
-        <h1>Gestión de Marcas y Categorías</h1>
-    </header>
+    <div class="main-content">
+        <header class="header">
+            <h1>Gestión de Marcas y Categorías</h1>
+        </header>
 
-    <main class="main-content-area">
+        <main class="main-content-area">
 
-        <!-- Sección de Categorías -->
-        <div class="card">
-            <div class="card-header">
-                <h2>Lista de Categorías</h2>
-                <button id="addCategoryBtn" class="add-button">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                    Añadir Categoría
-                </button>
+            <!-- Sección de Categorías -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Lista de Categorías</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchCategoriaInput" placeholder="Buscar categorías..."
+                            class="input-search" />
+                        <i class="fa fa-search search-icon"></i>
+                    </div>
+                    <button id="addCategoryBtn" class="add-button">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6">
+                            </path>
+                        </svg>
+                        Añadir Categoría
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 45%">Nombre</th>
+                                <th style="width: 45%">Imagen</th>
+                                <th style="width: 10%">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categoriesTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div><br><br><br>
+
+            <!-- Sección de Marcas -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Lista de Marcas</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchMarcaInput" placeholder="Buscar marcas..."
+                        class="input-search"/><i class="fa fa-search search-icon"></i>
+                    </div>
+                    <button id="addBrandBtn" class="add-button">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Añadir Marca
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 30%">Nombre</th>
+                                <th style="width: 30%">Logo</th>
+                                <th style="width: 30%">Asociadas</th>
+                                <th style="width: 10%">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="brandsTableBody">
+                        </tbody>
+                    </table>
+                </div>
             </div>
+        </main>
+    </div>
 
-            <div class="table-container">
-                <table class="product-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 45%">Nombre</th>
-                            <th style="width: 45%">Imagen</th>
-                            <th style="width: 10%">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="categoriesTableBody">
-                    </tbody>
-                </table>
-            </div>
-        </div><br><br><br>
-
-        <!-- Sección de Marcas -->
-        <div class="card">
-            <div class="card-header">
-                <h2>Lista de Marcas</h2>
-                <button id="addBrandBtn" class="add-button">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                    Añadir Marca
-                </button>
-            </div>
-
-            <div class="table-container">
-                <table class="product-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 30%">Nombre</th>
-                            <th style="width: 30%">Logo</th>
-                            <th style="width: 30%">Asociadas</th>
-                            <th style="width: 10%">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="brandsTableBody">
-                    </tbody>
-                </table>
-            </div>
+    <!-- Modal de Marca -->
+    <div id="brandModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modalBrandTitle" class="modal-title">Añadir Nueva Marca</h3>
+            <form id="brandForm" class="modal-form">
+                <input type="hidden" id="brandId">
+                <div class="form-group">
+                    <label for="brandName">Nombre de la Marca:</label>
+                    <input type="text" id="brandName" name="nombre">
+                    <div class="error-text" data-error-for="nombre"></div>
+                </div>
+                <div class="form-group">
+                    <label for="brandLogo">Logo:</label>
+                    <input type="text" id="brandLogo" name="logo">
+                    <div class="error-text" data-error-for="logo"></div>
+                </div>
+                <div>
+                    <label>Categorías Asociadas:
+                        <div id="brandCategoriesCheckboxes" style="margin-top: 8px;"></div>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" id="cancelBrandModalBtn" class="cancel-button">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="save-button">
+                        Guardar
+                    </button>
+                </div>
+            </form>
         </div>
-    </main>
-</div>
-
-<!-- Modal de Marca -->
-<div id="brandModal" class="modal-overlay">
-    <div class="modal-content">
-        <h3 id="modalBrandTitle" class="modal-title">Añadir Nueva Marca</h3>
-        <form id="brandForm" class="modal-form">
-            <input type="hidden" id="brandId">
-            <div class="form-group">
-                <label for="brandName">Nombre de la Marca:</label>
-                <input type="text" id="brandName" name="nombre">
-                <div class="error-text" data-error-for="nombre"></div>
-            </div>
-            <div class="form-group">
-                <label for="brandLogo">Logo:</label>
-                <input type="text" id="brandLogo" name="logo">
-                <div class="error-text" data-error-for="logo"></div>
-            </div>
-            <div >
-                <label>Categorías Asociadas:
-                <div id="brandCategoriesCheckboxes" style="margin-top: 8px;"></div>
-            </div>
-            <div class="modal-buttons">
-                <button type="button" id="cancelBrandModalBtn" class="cancel-button">
-                    Cancelar
-                </button>
-                <button type="submit" class="save-button">
-                    Guardar
-                </button>
-            </div>
-        </form>
     </div>
-</div>
 
-<!-- Modal de Categoría -->
-<div id="categoryModal" class="modal-overlay">
-    <div class="modal-content">
-        <h3 id="modalCategoryTitle" class="modal-title">Añadir Nueva Categoría</h3>
-        <form id="categoryForm" class="modal-form">
-            <input type="hidden" id="categoryId">
-            <div class="form-group">
-                <label for="categoryName">Nombre de la Categoría:</label>
-                <input type="text" id="categoryName" name="categoria">
-                <div class="error-text" data-error-for="categoria"></div>
-            </div>
-            <div class="form-group">
-                <label for="categoryImage">Imagen:</label>
-                <input type="text" id="categoryImage" name="imagen">
-                <div class="error-text" data-error-for="imagen"></div>
-            </div>
-            <div class="modal-buttons">
-                <button type="button" id="cancelCategoryModalBtn" class="cancel-button">
-                    Cancelar
-                </button>
-                <button type="submit" class="save-button">
-                    Guardar
-                </button>
-            </div>
-        </form>
+    <!-- Modal de Categoría -->
+    <div id="categoryModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modalCategoryTitle" class="modal-title">Añadir Nueva Categoría</h3>
+            <form id="categoryForm" class="modal-form">
+                <input type="hidden" id="categoryId">
+                <div class="form-group">
+                    <label for="categoryName">Nombre de la Categoría:</label>
+                    <input type="text" id="categoryName" name="categoria">
+                    <div class="error-text" data-error-for="categoria"></div>
+                </div>
+                <div class="form-group">
+                    <label for="categoryImage">Imagen:</label>
+                    <input type="text" id="categoryImage" name="imagen">
+                    <div class="error-text" data-error-for="imagen"></div>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" id="cancelCategoryModalBtn" class="cancel-button">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="save-button">
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<style>
-input[type="checkbox"] {
-    width: auto;
-    margin-right: 5px;
-    transform: scale(1.2);
-}
-</style>
+    <style>
+        input[type="checkbox"] {
+            width: auto;
+            margin-right: 5px;
+            transform: scale(1.2);
+        }
+    </style>
 
-</body>
+    </body>
 
-<script type="module" src="/js/adminMC.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-<script src="https://unpkg.com/feather-icons"></script>
+    <script type="module" src="/js/adminMC.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
 
-</html>
+    </html>

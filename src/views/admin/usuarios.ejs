@@ -1,33 +1,38 @@
 <%- include('../admin/dashboard.ejs') %>
 
-<link rel="stylesheet" href="/css/adminTable.css">
-<link rel="stylesheet" href="/css/state.css">
+    <link rel="stylesheet" href="/css/adminTable.css">
+    <link rel="stylesheet" href="/css/state.css">
 
-<div class="main-content">
-    <header class="header">
-        <h1>Gestión de Usuarios</h1>
-    </header>
-    <main class="main-content-area">
-        <div class="card">
-            <div class="card-header">
-                <h2>Lista de Usuarios</h2>
+    <div class="main-content">
+        <header class="header">
+            <h1>Gestión de Usuarios</h1>
+        </header>
+        <main class="main-content-area">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Lista de Usuarios</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchUserInput" placeholder="Buscar variantes..."
+                            class="input-search"/>
+                        <i class="fa fa-search search-icon"></i>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 30%">Nombre de usuario</th>
+                                <th style="width: 30%">Correo</th>
+                                <th style="width: 30%">Fecha de creación</th>
+                                <th style="width: 10%">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody">
+                        </tbody>
+                    </table>
+                </div>
             </div>
+        </main>
 
-            <div class="table-container">
-                <table class="product-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 30%">Nombre de usuario</th>
-                            <th style="width: 30%">Correo</th>
-                            <th style="width: 30%">Fecha de creación</th>
-                            <th style="width: 10%">Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody id="productsTableBody">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
-
-    <script src="/js/adminUsers.js"></script>
+        <script src="/js/adminUsers.js"></script>

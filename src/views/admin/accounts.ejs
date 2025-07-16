@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="/css/adminTable.css">
 <link rel="stylesheet" href="/css/state.css">
 <link rel="stylesheet" href="/css/error.css">
+<link rel="stylesheet" href="/css/sweetAlertAdmin.css">
 
 <div class="main-content">
   <header class="header">
@@ -22,7 +23,6 @@
           Añadir Administrador
         </button>
       </div>
-
       <div class="table-container">
         <table class="product-table">
           <thead>
@@ -58,6 +58,11 @@
         <input type="password" id="password" name="password" required>
         <div class="error-text" data-error-for="password"></div>
       </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirmar Contraseña:</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required>
+        <div class="error-text" data-error-for="confirmPassword"></div>
+      </div>
       <div class="modal-buttons">
         <button type="button" id="cancelModalBtn" class="cancel-button">
           Cancelar
@@ -70,6 +75,11 @@
   </div>
 </div>
 
+<script>
+  const currentAdminId = <%= currentAdminId %>;
+</script>
+    
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="module" src="/js/adminAccounts.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="https://unpkg.com/feather-icons"></script>

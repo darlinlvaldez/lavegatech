@@ -1,3 +1,5 @@
+import path from 'path';
+import fs from 'fs';
 import admin from '../models/admin.js';
 
 const adminController = {};
@@ -93,6 +95,39 @@ adminController.editarVariante = async (req, res) => {
     res.json({ success });
   } catch (error) {
     res.status(500).json({ error: 'Error al editar variante' });
+  }
+};
+
+adminController.cargarImagen = async (req, res) => {
+  try {
+    if (!req.files || !req.files.img) {
+      return res.status(400).json({ error: 'No se ha subido ningún archivo' });
+    }
+
+    const imgFile = req.files.img;
+
+    const allowedExtensions = /png|jpg|jpeg/;
+    const ext = path.extname(imgFile.name).toLowerCase();
+
+    if (!allowedExtensions.test(ext)) {
+      return res.status(400).json({ error: 'Formato de imagen no permitido' });
+    }
+
+    const uploadPath = path.join(process.cwd(), 'public', 'uploads');
+
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+
+    const fileName = `${Date.now()}_${imgFile.name}`;
+
+    await imgFile.mv(path.join(uploadPath, fileName));
+
+    return res.status(200).json({ path: `/uploads/${fileName}` });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Error al subir la imagen' });
   }
 };
 

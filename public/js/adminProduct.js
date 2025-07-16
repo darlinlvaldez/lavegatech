@@ -1,8 +1,9 @@
 import { showToast } from './toastify.js';
-import { showConfirmDialog } from './sweetAlert2.js';
+import { sweetAlert } from './sweetAlert2.js';
 import { showValidation, clearError } from "./showValidation.js";
 
 let products = [];
+let filteredProducts = [];
 
 const productsTableBody = document.getElementById("productsTableBody");
 const addProductBtn = document.getElementById("addProductBtn");
@@ -23,11 +24,13 @@ const productErrorFields = ["nombre", "descripcion", "precio", "descuento", "cat
 
 function renderProducts() {
   productsTableBody.innerHTML = "";
-  products.forEach((product) => {
+
+  (filteredProducts.length ? filteredProducts : products).forEach((product) => {
     const row = document.createElement("tr");
     const fecha = new Date(product.fecha);
     const fechaFormateada = fecha.toLocaleString("es-DO", {
-      dateStyle: "short", timeStyle: "short"});
+      dateStyle: "short", timeStyle: "short"
+    });
 
     row.innerHTML = `
       <td class="truncate-cell">${product.nombre || ''}</td>
@@ -49,6 +52,25 @@ function renderProducts() {
     productsTableBody.appendChild(row);
   });
 }
+
+const searchProductInput = document.getElementById("searchProductInput");
+
+searchProductInput.addEventListener("input", () => {
+  const query = searchProductInput.value.trim().toLowerCase();
+
+  if (query.length === 0) {
+    filteredProducts = [];
+  } else {
+    filteredProducts = products.filter(product =>
+      product.nombre?.toLowerCase().includes(query) ||
+      product.descripcion?.toLowerCase().includes(query) ||
+      product.categoria?.toLowerCase().includes(query) ||
+      product.marca?.toLowerCase().includes(query)
+    );
+  }
+
+  renderProducts();
+});
 
 addProductBtn.addEventListener("click", () => {
   modalTitle.textContent = "Añadir Nuevo Producto";
@@ -130,6 +152,7 @@ async function fetchProducts() {
   const res = await fetch("/api/admin/productos");
   const data = await res.json();
   products = data;
+  filteredProducts = [];
   renderProducts();
 }
 
@@ -169,7 +192,7 @@ async function loadCategoryBranch() {
 }
 
 window.deleteProduct = async function(id) {
-  const confirmed = await showConfirmDialog({
+  const confirmed = await sweetAlert({
     title: "¿Eliminar Producto?",
     text: "Esta acción no se puede deshacer.",
     confirmButtonText: "Aceptar",
