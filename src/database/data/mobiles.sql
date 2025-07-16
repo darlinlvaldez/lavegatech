@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-07-2025 a las 20:30:45
+-- Tiempo de generación: 16-07-2025 a las 22:13:20
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,6 +20,27 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `mobiles`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `admin`
+--
+
+CREATE TABLE `admin` (
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_active` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `admin`
+--
+
+INSERT INTO `admin` (`id`, `username`, `password`, `created_at`, `is_active`) VALUES
+(1, 'darlin', '$2b$10$Ok1XvBwTGA.u.fapoo2L0ekADvsCq.a8Pkka6Pf3b.iFETqF.1Ia6', '2025-07-13 16:39:48', 1);
 
 -- --------------------------------------------------------
 
@@ -147,10 +168,10 @@ INSERT INTO `camara` (`id`, `principal`, `selfie`, `video`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `cart`
+-- Estructura de tabla para la tabla `carrito`
 --
 
-CREATE TABLE `cart` (
+CREATE TABLE `carrito` (
   `id` int(11) NOT NULL,
   `usuario_id` int(11) NOT NULL,
   `producto_id` int(11) NOT NULL,
@@ -163,13 +184,6 @@ CREATE TABLE `cart` (
   `fecha_agregado` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `cart`
---
-
-INSERT INTO `cart` (`id`, `usuario_id`, `producto_id`, `colorSeleccionado`, `cantidad`, `descuento`, `precio`, `imagen`, `nombre`, `fecha_agregado`) VALUES
-(1241, 75, 98, 'blanco', 1, 0.00, 39995.00, 'https://globaliraq.net/cdn/shop/files/1bbcf8d6-eaea-4f46-96e5-e4aee2924baa_2048x.jpg?v=1710541301', 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', '2025-07-02 19:10:51');
-
 -- --------------------------------------------------------
 
 --
@@ -179,7 +193,7 @@ INSERT INTO `cart` (`id`, `usuario_id`, `producto_id`, `colorSeleccionado`, `can
 CREATE TABLE `categorias` (
   `id` int(11) NOT NULL,
   `categoria` varchar(100) NOT NULL,
-  `imagen` varchar(150) NOT NULL
+  `imagen` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -193,6 +207,29 @@ INSERT INTO `categorias` (`id`, `categoria`, `imagen`) VALUES
 (4, 'consolas', 'img/consolas.png'),
 (5, 'tablets', 'img/tablets.png'),
 (6, 'otros', 'img/otros.png');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `clasificacion`
+--
+
+CREATE TABLE `clasificacion` (
+  `id` int(11) NOT NULL,
+  `producto_id` int(11) NOT NULL,
+  `usuario_id` int(11) NOT NULL,
+  `calificacion` tinyint(3) UNSIGNED DEFAULT NULL COMMENT 'Valor del 1 al 5',
+  `comentario` mediumtext DEFAULT NULL,
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_actualizacion` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `clasificacion`
+--
+
+INSERT INTO `clasificacion` (`id`, `producto_id`, `usuario_id`, `calificacion`, `comentario`, `fecha_creacion`, `fecha_actualizacion`) VALUES
+(45, 1, 75, 2, 'el wason', '2025-07-09 21:00:43', '2025-07-09 21:09:24');
 
 -- --------------------------------------------------------
 
@@ -269,6 +306,43 @@ INSERT INTO `cpu` (`id`, `nombre`, `nucleos`, `velocidad`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `detalles_pedido`
+--
+
+CREATE TABLE `detalles_pedido` (
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `producto_id` int(11) DEFAULT NULL,
+  `nombre_producto` varchar(150) NOT NULL,
+  `cantidad` int(11) NOT NULL,
+  `precio_unitario` decimal(10,2) NOT NULL,
+  `descuento` decimal(10,2) DEFAULT 0.00,
+  `subtotal` decimal(10,2) NOT NULL,
+  `colorSeleccionado` varchar(25) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `detalles_pedido`
+--
+
+INSERT INTO `detalles_pedido` (`id`, `order_id`, `producto_id`, `nombre_producto`, `cantidad`, `precio_unitario`, `descuento`, `subtotal`, `colorSeleccionado`) VALUES
+(145, 134, 3, 'iPhone 12 256GB', 1, 19495.00, 0.00, 19495.00, 'dorado'),
+(146, 135, 1, 'iPhone 12 64GB', 1, 15995.00, 20.00, 12796.00, 'negro espacial'),
+(147, 136, 1, 'iPhone 12 64GB', 1, 15995.00, 20.00, 12796.00, 'negro espacial'),
+(148, 137, 98, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 1, 39995.00, 0.00, 39995.00, 'blanco'),
+(149, 138, 3, 'iPhone 12 256GB', 1, 19495.00, 0.00, 19495.00, 'dorado'),
+(150, 139, 1, 'iPhone 12 64GB', 1, 15995.00, 20.00, 12796.00, 'negro espacial'),
+(151, 140, 98, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 1, 39995.00, 0.00, 39995.00, 'blanco'),
+(152, 141, 1, 'iPhone 12 64GB', 1, 15995.00, 20.00, 12796.00, 'negro espacial'),
+(153, 141, 98, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 1, 39995.00, 0.00, 39995.00, 'blanco'),
+(154, 142, 98, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 1, 39995.00, 0.00, 39995.00, 'blanco'),
+(155, 143, 3, 'iPhone 12 256GB', 1, 19495.00, 0.00, 19495.00, 'dorado'),
+(156, 143, 98, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 1, 39995.00, 0.00, 39995.00, 'blanco'),
+(157, 144, NULL, 'claro', 1, 17000.00, 5.00, 16150.00, 'rojo');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `dimensionespeso`
 --
 
@@ -329,17 +403,6 @@ CREATE TABLE `fav` (
   `nombre` varchar(255) DEFAULT NULL,
   `fecha_agregado` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `fav`
---
-
-INSERT INTO `fav` (`id`, `usuario_id`, `producto_id`, `colorSeleccionado`, `descuento`, `precio`, `imagen`, `nombre`, `fecha_agregado`) VALUES
-(664, 75, 1, 'purpura', 20.00, 15995.00, 'https://www.artefacta.com/media/catalog/product/1/4/148658_2_.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=400&width=400&canvas=400:400', 'iPhone 12 64GB', '2025-06-07 15:22:34'),
-(687, 75, 1, 'negro espacial', 20.00, 15995.00, 'https://www.trippodo.com/997943-medium_default/apple-iphone-12-155-cm-61-sim-doble-ios-14-5g-128-.jpg', 'iPhone 12 64GB', '2025-06-30 17:09:22'),
-(693, 75, 2, 'blanco', 0.00, 17995.00, 'https://rukminim2.flixcart.com/image/850/1000/kg8avm80/mobile/j/f/9/apple-iphone-12-dummyapplefsn-original-imafwg8dkyh2zgrh.jpeg?q=90&crop=false', 'iPhone 12 128GB', '2025-06-30 18:57:52'),
-(694, 75, 3, 'dorado', 0.00, 19495.00, 'https://www.cnet.com/a/img/resize/f3c42740a704792b25be68e230db619993cd564f/hub/2020/11/09/d0f15941-5210-4a0b-ab66-78a2e58dd245/16-iphone-12-pro-max.jpg?auto=webp&fit=crop&height=900&width=1200', 'iPhone 12 256GB', '2025-07-01 18:31:46'),
-(695, 75, 98, 'blanco', 0.00, 39995.00, 'https://globaliraq.net/cdn/shop/files/1bbcf8d6-eaea-4f46-96e5-e4aee2924baa_2048x.jpg?v=1710541301', 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', '2025-07-01 23:28:22');
 
 -- --------------------------------------------------------
 
@@ -419,10 +482,12 @@ INSERT INTO `marca_categoria` (`marca_id`, `categoria_id`) VALUES
 (15, 4),
 (15, 6),
 (16, 4),
+(17, 4),
 (18, 6),
 (19, 1),
 (19, 6),
-(20, 1);
+(20, 1),
+(21, 3);
 
 -- --------------------------------------------------------
 
@@ -512,73 +577,34 @@ INSERT INTO `moviles` (`id`, `año`, `cpu_id`, `camara_id`, `bateria_id`, `gpu_i
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `orders`
+-- Estructura de tabla para la tabla `pagos`
 --
 
-CREATE TABLE `orders` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `nombre` varchar(100) NOT NULL,
-  `apellido` varchar(100) NOT NULL,
-  `email` varchar(150) NOT NULL,
-  `direccion` mediumtext NOT NULL,
-  `ciudad` varchar(100) NOT NULL,
-  `distrito` varchar(100) NOT NULL,
-  `telefono` varchar(20) NOT NULL,
-  `horario_entrega` varchar(20) NOT NULL,
-  `total` decimal(10,2) NOT NULL,
-  `status` varchar(50) DEFAULT 'pendiente',
-  `fecha_creacion` datetime DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `orders`
---
-
-INSERT INTO `orders` (`id`, `user_id`, `nombre`, `apellido`, `email`, `direccion`, `ciudad`, `distrito`, `telefono`, `horario_entrega`, `total`, `status`, `fecha_creacion`) VALUES
-(134, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '2-5', 19495.00, 'pagado', '2025-07-01 12:17:01'),
-(135, 75, 'N', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '', 12796.00, 'pagado', '2025-07-01 13:01:26'),
-(136, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '', 12796.00, 'pagado', '2025-07-01 13:03:23'),
-(137, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '', 39995.00, 'pagado', '2025-07-01 14:31:26'),
-(138, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '', 19495.00, 'pagado', '2025-07-01 19:26:59'),
-(139, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '', 12796.00, 'pagado', '2025-07-01 21:24:27'),
-(140, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295542244', '', 39995.00, 'pagado', '2025-07-01 21:51:48'),
-(141, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295542244', '', 52791.00, 'pagado', '2025-07-02 12:50:29'),
-(142, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295542244', '', 39995.00, 'pagado', '2025-07-02 14:16:01');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `order_items`
---
-
-CREATE TABLE `order_items` (
+CREATE TABLE `pagos` (
   `id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
-  `producto_id` int(11) DEFAULT NULL,
-  `nombre_producto` varchar(150) NOT NULL,
-  `cantidad` int(11) NOT NULL,
-  `precio_unitario` decimal(10,2) NOT NULL,
-  `descuento` decimal(10,2) DEFAULT 0.00,
-  `subtotal` decimal(10,2) NOT NULL,
-  `colorSeleccionado` varchar(25) DEFAULT NULL
+  `metodo_pago` varchar(50) NOT NULL,
+  `estado_pago` varchar(50) DEFAULT 'pendiente',
+  `paypal_order_id` varchar(100) DEFAULT NULL,
+  `fecha_pago` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `order_items`
+-- Volcado de datos para la tabla `pagos`
 --
 
-INSERT INTO `order_items` (`id`, `order_id`, `producto_id`, `nombre_producto`, `cantidad`, `precio_unitario`, `descuento`, `subtotal`, `colorSeleccionado`) VALUES
-(145, 134, 3, 'iPhone 12 256GB', 1, 19495.00, 0.00, 19495.00, 'dorado'),
-(146, 135, 1, 'iPhone 12 64GB', 1, 15995.00, 20.00, 12796.00, 'negro espacial'),
-(147, 136, 1, 'iPhone 12 64GB', 1, 15995.00, 20.00, 12796.00, 'negro espacial'),
-(148, 137, 98, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 1, 39995.00, 0.00, 39995.00, 'blanco'),
-(149, 138, 3, 'iPhone 12 256GB', 1, 19495.00, 0.00, 19495.00, 'dorado'),
-(150, 139, 1, 'iPhone 12 64GB', 1, 15995.00, 20.00, 12796.00, 'negro espacial'),
-(151, 140, 98, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 1, 39995.00, 0.00, 39995.00, 'blanco'),
-(152, 141, 1, 'iPhone 12 64GB', 1, 15995.00, 20.00, 12796.00, 'negro espacial'),
-(153, 141, 98, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 1, 39995.00, 0.00, 39995.00, 'blanco'),
-(154, 142, 98, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 1, 39995.00, 0.00, 39995.00, 'blanco');
+INSERT INTO `pagos` (`id`, `order_id`, `metodo_pago`, `estado_pago`, `paypal_order_id`, `fecha_pago`) VALUES
+(58, 134, 'paypal', 'completado', '73D50044F8587682E', '2025-07-01 12:17:01'),
+(59, 135, 'paypal', 'completado', '3VG068255U807713R', '2025-07-01 13:01:26'),
+(60, 136, 'paypal', 'completado', '8TS99958KK340951V', '2025-07-01 13:03:23'),
+(61, 137, 'paypal', 'completado', '2RD31520A5065735N', '2025-07-01 14:31:26'),
+(62, 138, 'paypal', 'completado', '2B930113XV6486323', '2025-07-01 19:26:59'),
+(63, 139, 'paypal', 'completado', '9SV308349P603690S', '2025-07-01 21:24:27'),
+(64, 140, 'paypal', 'completado', '6UY75528XK265480K', '2025-07-01 21:51:48'),
+(65, 141, 'paypal', 'completado', '0174712251777870F', '2025-07-02 12:50:29'),
+(66, 142, 'paypal', 'completado', '96M74879SP885025R', '2025-07-02 14:16:01'),
+(67, 143, 'paypal', 'completado', '9DN90904UU546225W', '2025-07-09 20:06:53'),
+(68, 144, 'paypal', 'completado', '49M34316M51887250', '2025-07-13 21:42:57');
 
 -- --------------------------------------------------------
 
@@ -598,32 +624,41 @@ CREATE TABLE `pantalla` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `payments`
+-- Estructura de tabla para la tabla `pedidos`
 --
 
-CREATE TABLE `payments` (
+CREATE TABLE `pedidos` (
   `id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `metodo_pago` varchar(50) NOT NULL,
-  `estado_pago` varchar(50) DEFAULT 'pendiente',
-  `paypal_order_id` varchar(100) DEFAULT NULL,
-  `fecha_pago` datetime DEFAULT current_timestamp()
+  `user_id` int(11) DEFAULT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `apellido` varchar(100) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `direccion` mediumtext NOT NULL,
+  `ciudad` varchar(100) NOT NULL,
+  `distrito` varchar(100) NOT NULL,
+  `telefono` varchar(20) NOT NULL,
+  `horario_entrega` varchar(20) NOT NULL,
+  `total` decimal(10,2) NOT NULL,
+  `status` varchar(50) DEFAULT 'pendiente',
+  `fecha_creacion` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `payments`
+-- Volcado de datos para la tabla `pedidos`
 --
 
-INSERT INTO `payments` (`id`, `order_id`, `metodo_pago`, `estado_pago`, `paypal_order_id`, `fecha_pago`) VALUES
-(58, 134, 'paypal', 'completado', '73D50044F8587682E', '2025-07-01 12:17:01'),
-(59, 135, 'paypal', 'completado', '3VG068255U807713R', '2025-07-01 13:01:26'),
-(60, 136, 'paypal', 'completado', '8TS99958KK340951V', '2025-07-01 13:03:23'),
-(61, 137, 'paypal', 'completado', '2RD31520A5065735N', '2025-07-01 14:31:26'),
-(62, 138, 'paypal', 'completado', '2B930113XV6486323', '2025-07-01 19:26:59'),
-(63, 139, 'paypal', 'completado', '9SV308349P603690S', '2025-07-01 21:24:27'),
-(64, 140, 'paypal', 'completado', '6UY75528XK265480K', '2025-07-01 21:51:48'),
-(65, 141, 'paypal', 'completado', '0174712251777870F', '2025-07-02 12:50:29'),
-(66, 142, 'paypal', 'completado', '96M74879SP885025R', '2025-07-02 14:16:01');
+INSERT INTO `pedidos` (`id`, `user_id`, `nombre`, `apellido`, `email`, `direccion`, `ciudad`, `distrito`, `telefono`, `horario_entrega`, `total`, `status`, `fecha_creacion`) VALUES
+(134, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '2-5', 19495.00, 'pagado', '2025-07-01 12:17:01'),
+(135, 75, 'N', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '', 12796.00, 'pagado', '2025-07-01 13:01:26'),
+(136, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '', 12796.00, 'pagado', '2025-07-01 13:03:23'),
+(137, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '', 39995.00, 'pagado', '2025-07-01 14:31:26'),
+(138, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '', 19495.00, 'pagado', '2025-07-01 19:26:59'),
+(139, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '', 12796.00, 'pagado', '2025-07-01 21:24:27'),
+(140, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295542244', '', 39995.00, 'pagado', '2025-07-01 21:51:48'),
+(141, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295542244', '', 52791.00, 'pagado', '2025-07-02 12:50:29'),
+(142, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295542244', '', 39995.00, 'pagado', '2025-07-02 14:16:01'),
+(143, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295542244', '', 59490.00, 'pagado', '2025-07-09 20:06:53'),
+(144, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295542244', '', 16150.00, 'pagado', '2025-07-13 21:42:57');
 
 -- --------------------------------------------------------
 
@@ -677,8 +712,6 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (27, 11, 'iPhone 15 256GB ', '', 37995.00, 1, 0.00, '2023-01-01 08:00:00', 1),
 (28, 12, 'iPhone 15 Plus 128GB ', '', 38995.00, 1, 0.00, '2023-01-01 08:00:00', 1),
 (29, 12, 'iPhone 15 Plus 512GB ', '', 42995.00, 1, 0.00, '2023-01-01 08:00:00', 1),
-(30, 13, 'iPhone 15 Pro 128GB ', '', 41995.00, 1, 0.00, '2023-01-01 08:00:00', 1),
-(31, 14, 'iPhone 15 Pro Max 256GB ', '', 52995.00, 1, 0.00, '2023-01-01 08:00:00', 1),
 (32, 14, 'iPhone 15 Pro Max 256GB', '', 54995.00, 1, 0.00, '2023-01-01 08:00:00', 1),
 (33, 14, 'iPhone 15 Pro Max 512GB ', '', 57995.00, 1, 0.00, '2023-01-01 08:00:00', 1),
 (34, 14, 'iPhone 15 Pro Max 1TB ', '', 61995.00, 1, 0.00, '2023-01-01 08:00:00', 1),
@@ -718,22 +751,22 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (68, 45, 'ZTE NUBIA NEO 2 5G 8+256GB', '', 11995.00, 1, 0.00, '2023-01-01 08:00:00', 20),
 (69, 46, 'MOTOROLA E14 2+64GB', '', 4995.00, 1, 0.00, '2023-01-01 08:00:00', NULL),
 (70, 47, 'MOTOROLA G04 4+128GB', '', 5995.00, 1, 0.00, '2023-01-01 08:00:00', NULL),
-(71, 48, 'IPAD PRO 12.9-INCH 6TA GEN 128GB', '', 45995.00, 5, 0.00, '2023-01-01 08:00:00', 1),
-(72, 48, 'IPAD PRO 12.9 6TA GEN 256GB', '', 47495.00, 5, 0.00, '2023-01-01 08:00:00', 1),
-(73, 49, 'IPAD PRO M2 512GB 12.9 6TA GEN ', '', 49995.00, 5, 0.00, '2023-01-01 08:00:00', 1),
-(74, 50, 'IPAD PRO 13 PULGADAS M4 512GB', '', 57995.00, 5, 0.00, '2023-01-01 08:00:00', 1),
-(75, 50, 'IPAD PRO 13 PULGADAS M4 256GB', '', 54995.00, 5, 0.00, '2023-01-01 08:00:00', 1),
-(76, 51, 'IPAD 10 GEN 64GB', '', 23495.00, 5, 0.00, '2023-01-01 08:00:00', 1),
-(79, 52, 'AMAZON FIRE 8 32GB', '', 2995.00, 5, 0.00, '2023-01-01 08:00:00', 5),
-(80, 52, 'AMAZON FIRE 8 64GB', '', 3495.00, 5, 0.00, '2023-01-01 08:00:00', 5),
-(81, 53, 'ASTRO 8R 32G', '', 3495.00, 5, 0.00, '2025-03-30 08:00:00', NULL),
-(82, 54, 'XIAOMI REDMI PAD SE 8.7 128GB ', '', 8495.00, 5, 0.00, '2023-01-01 08:00:00', 3),
-(83, 55, 'VORTEX T10 32GB ', '', 3495.00, 5, 0.00, '2023-01-01 08:00:00', 6),
-(84, 56, 'HOTPEPPER 32GB ', '', 3495.00, 5, 0.00, '2023-01-01 08:00:00', NULL),
-(85, 57, 'X10MAX 64GB ', '', 3995.00, 5, 0.00, '2023-01-01 08:00:00', NULL),
-(86, 58, 'VORTEX T10 PRO MAX 64GB ', '', 3995.00, 5, 0.00, '2023-01-01 08:00:00', 6),
-(87, 59, 'SKYPAD 10 32GB ', '', 3495.00, 5, 0.00, '2023-01-01 08:00:00', 7),
-(88, 60, 'SKYPAD 10 PRO MAX 64GB ', '', 3995.00, 5, 0.00, '2023-01-01 08:00:00', 7),
+(71, 0, 'IPAD PRO 12.9-INCH 6TA GEN 128GB', '', 45995.00, 5, 0.00, '2023-01-01 08:00:00', 1),
+(72, 0, 'IPAD PRO 12.9 6TA GEN 256GB', '', 47495.00, 5, 0.00, '2023-01-01 08:00:00', 1),
+(73, 0, 'IPAD PRO M2 512GB 12.9 6TA GEN ', '', 49995.00, 5, 0.00, '2023-01-01 08:00:00', 1),
+(74, 0, 'IPAD PRO 13 PULGADAS M4 512GB', '', 57995.00, 5, 0.00, '2023-01-01 08:00:00', 1),
+(75, 0, 'IPAD PRO 13 PULGADAS M4 256GB', '', 54995.00, 5, 0.00, '2023-01-01 08:00:00', 1),
+(76, 0, 'IPAD 10 GEN 64GB', '', 23495.00, 5, 0.00, '2023-01-01 08:00:00', 1),
+(79, 0, 'AMAZON FIRE 8 32GB', '', 2995.00, 5, 0.00, '2023-01-01 08:00:00', 5),
+(80, 0, 'AMAZON FIRE 8 64GB', '', 3495.00, 5, 0.00, '2023-01-01 08:00:00', 5),
+(81, 0, 'ASTRO 8R 32G', '', 3495.00, 5, 0.00, '2025-03-30 08:00:00', NULL),
+(82, 0, 'XIAOMI REDMI PAD SE 8.7 128GB ', '', 8495.00, 5, 0.00, '2023-01-01 08:00:00', 3),
+(83, 0, 'VORTEX T10 32GB ', '', 3495.00, 5, 0.00, '2023-01-01 08:00:00', 6),
+(84, 0, 'HOTPEPPER 32GB ', '', 3495.00, 5, 0.00, '2023-01-01 08:00:00', NULL),
+(85, 0, 'X10MAX 64GB ', '', 3995.00, 5, 0.00, '2023-01-01 08:00:00', NULL),
+(86, 0, 'VORTEX T10 PRO MAX 64GB ', '', 3995.00, 5, 0.00, '2023-01-01 08:00:00', 6),
+(87, 0, 'SKYPAD 10 32GB ', '', 3495.00, 5, 0.00, '2023-01-01 08:00:00', 7),
+(88, 0, 'SKYPAD 10 PRO MAX 64GB ', '', 3995.00, 5, 0.00, '2023-01-01 08:00:00', 7),
 (89, 0, 'Macbook Pro 13-Inch 2020 i5-8ram 512GB', '', 31995.00, 3, 0.00, '2023-01-01 08:00:00', 1),
 (90, 0, 'Macbook Air 13-Inch 2020 i3-8ram 256GB', '', 29495.00, 3, 0.00, '2023-01-01 08:00:00', 1),
 (91, 0, 'Macbook Pro 16-Inch 2019 i7-16ram 512GB', '', 34995.00, 3, 0.00, '2023-01-01 08:00:00', 1),
@@ -746,8 +779,8 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (98, 0, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', '', 39995.00, 3, 0.00, '2025-06-23 08:00:00', 9),
 (99, 0, 'HP 15.6Inch i5 12GEN 8+256GB ', '', 23995.00, 3, 0.00, '2023-01-01 08:00:00', 8),
 (100, 0, 'HP i5 13GEN 8+256GB ', '', 24995.00, 3, 0.00, '2023-01-01 08:00:00', 8),
-(108, 61, 'SAMSUNG GALAXY TAB A9+ 64GB ', '', 11495.00, 5, 0.00, '2023-01-01 08:00:00', 2),
-(109, 61, 'SAMSUNG GALAXY TAB A9+ 128GB ', '', 13495.00, 5, 0.00, '2023-01-01 08:00:00', 2),
+(108, 0, 'SAMSUNG GALAXY TAB A9+ 64GB ', '', 11495.00, 5, 0.00, '2023-01-01 08:00:00', 2),
+(109, 0, 'SAMSUNG GALAXY TAB A9+ 128GB ', '', 13495.00, 5, 0.00, '2023-01-01 08:00:00', 2),
 (120, 0, 'Macbook Pro 13-Inch 2020 i5 8+512GB', '', 31995.00, 3, 0.00, '2023-01-01 08:00:00', 1),
 (121, 0, 'Macbook Air 13-Inch 2020 i3 8+256GB ', '', 29495.00, 3, 0.00, '2023-01-01 08:00:00', 1),
 (122, 0, 'Macbook Pro 16-Inch 2019 i7 16+512GB ', '', 34995.00, 3, 0.00, '2023-01-01 08:00:00', 1),
@@ -798,7 +831,7 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (169, 0, 'Smart TV HISENSE A7 Google 50 Pulgadas', '', 21495.00, 2, 0.00, '2023-01-01 08:00:00', 12),
 (170, 0, 'Smart TV HISENSE QLED QD5 2024 55 Pulgadas', '', 27495.00, 2, 0.00, '2023-01-01 08:00:00', 12),
 (171, 0, 'Smart TV HISENSE QLED D5 GOOGLE 65 Pulgadas', '', 37495.00, 2, 0.00, '2023-01-01 08:00:00', 12),
-(172, 0, 'Smart TV HISENSE S7N CANVAS QLED GOOGLE 65 Pulgadas', '', 62495.00, 2, 0.00, '2023-01-01 08:00:00', 12),
+(172, 0, 'Smart TV HISENSE S7N CANVAS QLED GOOGLE 65 Pulgadas', 'siuuuusaddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd', 62495.00, 2, 0.00, '2023-01-01 12:00:00', 12),
 (173, 0, 'Smart TV HISENSE A7 Google 75 Pulgadas', '', 42995.00, 2, 0.00, '2023-01-01 08:00:00', 12),
 (174, 0, 'Smart TV HISENSE QLED QD6 GOOGLE 75 Pulgadas', '', 49995.00, 2, 0.00, '2023-01-01 08:00:00', 12),
 (175, 0, 'Smart TV HISENSE A7 Google 85 Pulgadas', '', 82995.00, 2, 0.00, '2023-01-01 08:00:00', 12),
@@ -831,9 +864,8 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (202, 0, 'SOUNDCORE BOOM 2 PLUS', '', 14995.00, 6, 0.00, '2023-01-01 08:00:00', NULL),
 (203, 0, 'Monitor Asus VG1B 27 Pulgada 165HZ', '', 14995.00, 2, 0.00, '2023-01-01 08:00:00', 9),
 (204, 0, 'Monitor LG Ultragear 34 Pulgada 160HZ', '', 24995.00, 2, 0.00, '2023-01-01 08:00:00', NULL),
-(205, 0, 'Monitor Samsung G3 ODYSSEY 27 Pulgada 165HZ', '', 17495.00, 2, 0.00, '2023-01-01 08:00:00', 2),
 (206, 0, 'Monitor Samsung G4 ODYSSEEY 27 Pulgada 240HZ', '', 19995.00, 2, 0.00, '2023-01-01 08:00:00', 2),
-(207, 0, 'Monitor Samsung G5 ODYSSEY 32 Pulgada 165HZ', '', 22995.00, 2, 0.00, '2023-01-01 08:00:00', 2);
+(207, 0, 'Monitor Samsung G5 ODYSSEY 32 Pulgada 165HZ', 'siuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasd', 22995.00, 2, 0.00, '2023-01-02 08:00:00', 2);
 
 -- --------------------------------------------------------
 
@@ -871,7 +903,35 @@ INSERT INTO `p_marcas` (`id`, `nombre`, `logo`) VALUES
 (17, 'Nintendo', 'img/marcas/nintendo.png'),
 (18, 'JBL', 'img/marcas/jbl.png'),
 (19, 'Infinix', 'img/marcas/jbl.png'),
-(20, 'ZTE', 'img/marcas/jbl.png');
+(20, 'ZTE', 'img/marcas/jbl.png'),
+(21, 'cocacola', 'no sabe tu');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `p_variantes`
+--
+
+CREATE TABLE `p_variantes` (
+  `id` int(11) NOT NULL,
+  `producto_id` int(11) NOT NULL,
+  `color` varchar(50) NOT NULL,
+  `stock` int(11) NOT NULL DEFAULT 0,
+  `img` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `p_variantes`
+--
+
+INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
+(372, 1, 'negro espacial', 5, 'https://www.trippodo.com/997943-medium_default/apple-iphone-12-155-cm-61-sim-doble-ios-14-5g-128-.jpg'),
+(373, 1, 'azul', 6, 'https://hsi.com.co/wp-content/uploads/2022/03/Apple-iPhone-12-128GB-Usado-B-Azul-400x400.jpg'),
+(374, 98, 'blanco', 4, 'https://globaliraq.net/cdn/shop/files/1bbcf8d6-eaea-4f46-96e5-e4aee2924baa_2048x.jpg?v=1710541301'),
+(375, 1, 'purpura', 3, 'https://www.artefacta.com/media/catalog/product/1/4/148658_2_.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=400&width=400&canvas=400:400'),
+(376, 2, 'blanco', 9, 'https://rukminim2.flixcart.com/image/850/1000/kg8avm80/mobile/j/f/9/apple-iphone-12-dummyapplefsn-original-imafwg8dkyh2zgrh.jpeg?q=90&crop=false'),
+(377, 3, 'dorado', 3, '/uploads/1752696100534_modal.PNG'),
+(382, 1, 'blanco', 5, 'https://images-na.ssl-images-amazon.com/images/I/7199VOAdkRL._AC_UL495_SR435,495_.jpg');
 
 -- --------------------------------------------------------
 
@@ -903,39 +963,6 @@ INSERT INTO `ram` (`id`, `capacidad`, `tipo`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `ratings`
---
-
-CREATE TABLE `ratings` (
-  `id` int(11) NOT NULL,
-  `producto_id` int(11) NOT NULL,
-  `usuario_id` int(11) NOT NULL,
-  `calificacion` tinyint(3) UNSIGNED DEFAULT NULL COMMENT 'Valor del 1 al 5',
-  `comentario` mediumtext DEFAULT NULL,
-  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
-  `fecha_actualizacion` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ;
-
---
--- Volcado de datos para la tabla `ratings`
---
-
-INSERT INTO `ratings` (`id`, `producto_id`, `usuario_id`, `calificacion`, `comentario`, `fecha_creacion`, `fecha_actualizacion`) VALUES
-(29, 1, 75, 5, 'El CHECK en SQL es una restricción que se usa para asegurar que los datos que se ingresan en una columna cumplan ciertas condiciones. Es como una regla que impone el mismo motor de base de datos para evitar que se guarden datos inválidos.', '2025-06-11 19:31:49', '2025-06-12 14:04:45'),
-(30, 3, 75, 5, 'claro', '2025-06-11 20:11:27', '2025-06-12 14:04:48'),
-(31, 1, 75, 5, 'no sabe tu', '2025-06-11 21:24:23', '2025-06-12 14:04:51'),
-(33, 1, 75, 5, 'tengo hambre', '2025-06-11 21:26:16', '2025-06-12 14:04:54'),
-(34, 1, 75, 5, 'que duro', '2025-06-11 21:26:16', '2025-06-12 14:06:13'),
-(35, 1, 75, 4, 'potente', '2025-06-11 21:26:16', '2025-06-12 14:04:59'),
-(36, 1, 75, 4, 'te entro?', '2025-06-11 21:26:16', '2025-06-12 14:05:02'),
-(37, 1, 75, 4, 'que calor', '2025-06-11 21:26:16', '2025-06-12 14:06:35'),
-(38, 1, 75, 2, 'vete', '2025-06-11 21:26:16', '2025-06-12 14:05:08'),
-(39, 1, 75, 3, 'fo', '2025-06-11 21:26:16', '2025-06-12 14:05:12'),
-(41, 2, 75, 3, 'Muy duro', '2025-06-27 20:38:57', '2025-06-27 20:38:57');
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `sessions`
 --
 
@@ -950,7 +977,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('tOoedcMo5d9A-1WTuSfm_urAcv4NLgDS', 1751570820, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-07-03T19:17:23.285Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":75,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}');
+('5zkcxlNcEN_4DA5Ied5Cm463wB3HebfB', 1752699288, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-07-16T20:00:46.276Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\"}}'),
+('LgMskVkqnyXn593tAqs-aXazDQAJ2vKl', 1752700350, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-07-16T21:09:43.240Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\"}}');
 
 -- --------------------------------------------------------
 
@@ -972,34 +1000,7 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `username`, `email`, `password`, `is_active`, `created_at`) VALUES
-(75, 'darlin', 'darlinlvaldez@gmail.com', '$2b$10$Kr.Sw9mOWxeq9yephxfgwu3qsGIucQvVyiZH25O3CK.2B/advYZuu', 1, '2025-05-26 00:18:31');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `variantes`
---
-
-CREATE TABLE `variantes` (
-  `id` int(11) NOT NULL,
-  `producto_id` int(11) NOT NULL,
-  `color` varchar(50) NOT NULL,
-  `stock` int(11) NOT NULL DEFAULT 0,
-  `img` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `variantes`
---
-
-INSERT INTO `variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
-(372, 1, 'negro espacial', 0, 'https://www.trippodo.com/997943-medium_default/apple-iphone-12-155-cm-61-sim-doble-ios-14-5g-128-.jpg'),
-(373, 1, 'azul', 3, 'https://hsi.com.co/wp-content/uploads/2022/03/Apple-iPhone-12-128GB-Usado-B-Azul-400x400.jpg'),
-(374, 98, 'blanco', 5, 'https://globaliraq.net/cdn/shop/files/1bbcf8d6-eaea-4f46-96e5-e4aee2924baa_2048x.jpg?v=1710541301'),
-(375, 1, 'purpura', 3, 'https://www.artefacta.com/media/catalog/product/1/4/148658_2_.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=400&width=400&canvas=400:400'),
-(376, 2, 'blanco', 0, 'https://rukminim2.flixcart.com/image/850/1000/kg8avm80/mobile/j/f/9/apple-iphone-12-dummyapplefsn-original-imafwg8dkyh2zgrh.jpeg?q=90&crop=false'),
-(377, 3, 'dorado', 1, 'https://www.cnet.com/a/img/resize/f3c42740a704792b25be68e230db619993cd564f/hub/2020/11/09/d0f15941-5210-4a0b-ab66-78a2e58dd245/16-iphone-12-pro-max.jpg?auto=webp&fit=crop&height=900&width=1200'),
-(382, 1, 'blanco', 8, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg');
+(75, 'darlin', 'darlinlvaldez@gmail.com', '$2b$10$daPgRMDJ07ah/gGuXRNP5unuAaS0HPGRBeVMQQx43y6.xe7o1D9ze', 1, '2025-05-26 00:18:31');
 
 -- --------------------------------------------------------
 
@@ -1164,6 +1165,13 @@ INSERT INTO `variantes_ram` (`movil_id`, `ram_id`) VALUES
 --
 
 --
+-- Indices de la tabla `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`);
+
+--
 -- Indices de la tabla `almacenamiento`
 --
 ALTER TABLE `almacenamiento`
@@ -1182,9 +1190,9 @@ ALTER TABLE `camara`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `cart`
+-- Indices de la tabla `carrito`
 --
-ALTER TABLE `cart`
+ALTER TABLE `carrito`
   ADD PRIMARY KEY (`id`),
   ADD KEY `usuario_id` (`usuario_id`),
   ADD KEY `fk_cart_producto` (`producto_id`);
@@ -1194,6 +1202,14 @@ ALTER TABLE `cart`
 --
 ALTER TABLE `categorias`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `clasificacion`
+--
+ALTER TABLE `clasificacion`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `producto_id` (`producto_id`),
+  ADD KEY `usuario_id` (`usuario_id`);
 
 --
 -- Indices de la tabla `conectividad`
@@ -1206,6 +1222,14 @@ ALTER TABLE `conectividad`
 --
 ALTER TABLE `cpu`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `detalles_pedido`
+--
+ALTER TABLE `detalles_pedido`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `fk_order_items` (`producto_id`);
 
 --
 -- Indices de la tabla `dimensionespeso`
@@ -1249,19 +1273,11 @@ ALTER TABLE `moviles`
   ADD KEY `fk_moviles_pantalla` (`pantalla_id`);
 
 --
--- Indices de la tabla `orders`
+-- Indices de la tabla `pagos`
 --
-ALTER TABLE `orders`
+ALTER TABLE `pagos`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_orders_usuario` (`user_id`);
-
---
--- Indices de la tabla `order_items`
---
-ALTER TABLE `order_items`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `order_id` (`order_id`),
-  ADD KEY `fk_order_items` (`producto_id`);
+  ADD KEY `order_id` (`order_id`);
 
 --
 -- Indices de la tabla `pantalla`
@@ -1270,11 +1286,11 @@ ALTER TABLE `pantalla`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `payments`
+-- Indices de la tabla `pedidos`
 --
-ALTER TABLE `payments`
+ALTER TABLE `pedidos`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `order_id` (`order_id`);
+  ADD KEY `fk_orders_usuario` (`user_id`);
 
 --
 -- Indices de la tabla `productos`
@@ -1293,18 +1309,17 @@ ALTER TABLE `p_marcas`
   ADD UNIQUE KEY `nombre` (`nombre`);
 
 --
+-- Indices de la tabla `p_variantes`
+--
+ALTER TABLE `p_variantes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `producto_id` (`producto_id`);
+
+--
 -- Indices de la tabla `ram`
 --
 ALTER TABLE `ram`
   ADD PRIMARY KEY (`id`);
-
---
--- Indices de la tabla `ratings`
---
-ALTER TABLE `ratings`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `producto_id` (`producto_id`),
-  ADD KEY `usuario_id` (`usuario_id`);
 
 --
 -- Indices de la tabla `sessions`
@@ -1318,13 +1333,6 @@ ALTER TABLE `sessions`
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`);
-
---
--- Indices de la tabla `variantes`
---
-ALTER TABLE `variantes`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `producto_id` (`producto_id`);
 
 --
 -- Indices de la tabla `variantes_almacenamiento`
@@ -1345,6 +1353,12 @@ ALTER TABLE `variantes_ram`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `admin`
+--
+ALTER TABLE `admin`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
 -- AUTO_INCREMENT de la tabla `almacenamiento`
 --
 ALTER TABLE `almacenamiento`
@@ -1363,22 +1377,34 @@ ALTER TABLE `camara`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
--- AUTO_INCREMENT de la tabla `cart`
+-- AUTO_INCREMENT de la tabla `carrito`
 --
-ALTER TABLE `cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1242;
+ALTER TABLE `carrito`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1247;
 
 --
 -- AUTO_INCREMENT de la tabla `categorias`
 --
 ALTER TABLE `categorias`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+
+--
+-- AUTO_INCREMENT de la tabla `clasificacion`
+--
+ALTER TABLE `clasificacion`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT de la tabla `conectividad`
 --
 ALTER TABLE `conectividad`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT de la tabla `detalles_pedido`
+--
+ALTER TABLE `detalles_pedido`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=158;
 
 --
 -- AUTO_INCREMENT de la tabla `dimensionespeso`
@@ -1390,7 +1416,7 @@ ALTER TABLE `dimensionespeso`
 -- AUTO_INCREMENT de la tabla `fav`
 --
 ALTER TABLE `fav`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=696;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=698;
 
 --
 -- AUTO_INCREMENT de la tabla `moviles`
@@ -1399,16 +1425,10 @@ ALTER TABLE `moviles`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
--- AUTO_INCREMENT de la tabla `orders`
+-- AUTO_INCREMENT de la tabla `pagos`
 --
-ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=143;
-
---
--- AUTO_INCREMENT de la tabla `order_items`
---
-ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
+ALTER TABLE `pagos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT de la tabla `pantalla`
@@ -1417,52 +1437,60 @@ ALTER TABLE `pantalla`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `payments`
+-- AUTO_INCREMENT de la tabla `pedidos`
 --
-ALTER TABLE `payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+ALTER TABLE `pedidos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=208;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=217;
 
 --
 -- AUTO_INCREMENT de la tabla `p_marcas`
 --
 ALTER TABLE `p_marcas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
--- AUTO_INCREMENT de la tabla `ratings`
+-- AUTO_INCREMENT de la tabla `p_variantes`
 --
-ALTER TABLE `ratings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `p_variantes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=390;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
-
---
--- AUTO_INCREMENT de la tabla `variantes`
---
-ALTER TABLE `variantes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=383;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- Restricciones para tablas volcadas
 --
 
 --
--- Filtros para la tabla `cart`
+-- Filtros para la tabla `carrito`
 --
-ALTER TABLE `cart`
-  ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`),
-  ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`),
+ALTER TABLE `carrito`
+  ADD CONSTRAINT `carrito_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`),
+  ADD CONSTRAINT `carrito_ibfk_2` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`),
   ADD CONSTRAINT `fk_cart_producto` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `clasificacion`
+--
+ALTER TABLE `clasificacion`
+  ADD CONSTRAINT `clasificacion_ibfk_1` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `clasificacion_ibfk_2` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `detalles_pedido`
+--
+ALTER TABLE `detalles_pedido`
+  ADD CONSTRAINT `detalles_pedido_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `pedidos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_order_items` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE SET NULL;
 
 --
 -- Filtros para la tabla `fav`
@@ -1491,58 +1519,16 @@ ALTER TABLE `moviles`
   ADD CONSTRAINT `fk_moviles_pantalla` FOREIGN KEY (`pantalla_id`) REFERENCES `pantalla` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `orders`
+-- Filtros para la tabla `pagos`
 --
-ALTER TABLE `orders`
+ALTER TABLE `pagos`
+  ADD CONSTRAINT `pagos_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `pedidos` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `pedidos`
+--
+ALTER TABLE `pedidos`
   ADD CONSTRAINT `fk_orders_usuario` FOREIGN KEY (`user_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
-
---
--- Filtros para la tabla `order_items`
---
-ALTER TABLE `order_items`
-  ADD CONSTRAINT `fk_order_items` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE;
-
---
--- Filtros para la tabla `payments`
---
-ALTER TABLE `payments`
-  ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE;
-
---
--- Filtros para la tabla `productos`
---
-ALTER TABLE `productos`
-  ADD CONSTRAINT `fk_productos_moviles` FOREIGN KEY (`movil_id`) REFERENCES `moviles` (`id`),
-  ADD CONSTRAINT `productos_ibfk_1` FOREIGN KEY (`categoria_id`) REFERENCES `categorias` (`id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `productos_ibfk_2` FOREIGN KEY (`marca_id`) REFERENCES `p_marcas` (`id`) ON DELETE SET NULL;
-
---
--- Filtros para la tabla `ratings`
---
-ALTER TABLE `ratings`
-  ADD CONSTRAINT `ratings_ibfk_1` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `ratings_ibfk_2` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
-
---
--- Filtros para la tabla `variantes`
---
-ALTER TABLE `variantes`
-  ADD CONSTRAINT `variantes_ibfk_1` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE CASCADE;
-
---
--- Filtros para la tabla `variantes_almacenamiento`
---
-ALTER TABLE `variantes_almacenamiento`
-  ADD CONSTRAINT `variantes_almacenamiento_ibfk_1` FOREIGN KEY (`movil_id`) REFERENCES `moviles` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `variantes_almacenamiento_ibfk_2` FOREIGN KEY (`almacenamiento_id`) REFERENCES `almacenamiento` (`id`) ON DELETE CASCADE;
-
---
--- Filtros para la tabla `variantes_ram`
---
-ALTER TABLE `variantes_ram`
-  ADD CONSTRAINT `variantes_ram_ibfk_1` FOREIGN KEY (`movil_id`) REFERENCES `moviles` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `variantes_ram_ibfk_2` FOREIGN KEY (`ram_id`) REFERENCES `ram` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
