@@ -1,0 +1,61 @@
+.form-group {
+  position: relative;
+}
+
+.suggestions-list {
+  position: absolute;
+  top: 100%; 
+  left: 0;
+  width: 100%; 
+  z-index: 10;
+  background-color: white;
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: none;
+}
+
+.suggestions-list:not(:empty) {
+    display: block;
+}
+
+.suggestions-list div {
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.suggestions-list div:hover {
+    background-color: #f1f1f1;
+}
+
+.file-input-wrapper input[type="file"] {
+    width: 100%;
+    padding-right: 30px;
+}
+
+.file-input-wrapper {
+    position: relative;
+}
+
+.clear-file-btn {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 2px 6px;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.clear-file-btn:hover {
+    background-color: #c0392b;
+}

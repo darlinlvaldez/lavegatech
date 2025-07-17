@@ -5,6 +5,48 @@ import { showValidation, clearError } from "./showValidation.js";
 let variantes = [];
 let filteredVariantes = [];
 
+let productos = [];
+let productoIdSeleccionado = null;
+
+async function fetchProductos() {
+  const res = await fetch("/api/admin/productos");
+  productos = await res.json();
+}
+
+const productoInput = document.getElementById("productoInput");
+const sugerenciasProducto = document.getElementById("sugerenciasProducto");
+
+productoInput.addEventListener("input", () => {
+  const query = productoInput.value.toLowerCase();
+  sugerenciasProducto.innerHTML = "";
+
+  if (query.length === 0) {
+    productoIdSeleccionado = null;
+    return;
+  }
+
+  const resultados = productos.filter(p =>
+    p.nombre.toLowerCase().includes(query)
+  );
+
+  resultados.slice(0, 10).forEach(p => {
+    const div = document.createElement("div");
+    div.textContent = p.nombre;
+    div.addEventListener("click", () => {
+      productoInput.value = p.nombre;
+      productoIdSeleccionado = p.id;
+      sugerenciasProducto.innerHTML = "";
+    });
+    sugerenciasProducto.appendChild(div);
+  });
+});
+
+document.addEventListener("click", (e) => {
+  if (!productoInput.contains(e.target) && !sugerenciasProducto.contains(e.target)) {
+    sugerenciasProducto.innerHTML = "";
+  }
+});
+
 const variantesTableBody = document.getElementById("variantesTableBody");
 const addVarianteBtn = document.getElementById("addVarianteBtn");
 const varianteModal = document.getElementById("varianteModal");
@@ -12,7 +54,6 @@ const cancelModalBtn = document.getElementById("cancelModalBtn");
 const varianteForm = document.getElementById("varianteForm");
 
 const varianteIdInput = document.getElementById("varianteId");
-const productoSelect = document.getElementById("productoSelect");
 const varianteColorInput = document.getElementById("varianteColor");
 const varianteStockInput = document.getElementById("varianteStock");
 const varianteImgInput = document.getElementById("varianteImg");
@@ -26,26 +67,6 @@ async function fetchVariantes() {
   variantes = await res.json();
   filteredVariantes = [];
   renderVariantes();
-}
-
-async function fetchProductos() {
-  const res = await fetch("/api/admin/productos");
-  const productos = await res.json();
-
-  productoSelect.innerHTML = "";
-
-  const defaultOption = document.createElement("option");
-  defaultOption.value = "";
-  defaultOption.textContent = "Seleccione un producto";
-  defaultOption.selected = true;
-  productoSelect.appendChild(defaultOption);
-
-  productos.forEach(prod => {
-    const option = document.createElement("option");
-    option.value = prod.id;
-    option.textContent = prod.nombre;
-    productoSelect.appendChild(option);
-  });
 }
 
 function renderVariantes() {
@@ -93,6 +114,14 @@ addVarianteBtn.addEventListener("click", () => {
   modalTitle.textContent = "Nueva Variante";
   varianteForm.reset();
   varianteIdInput.value = "";
+  productoInput.value = "";
+  productoIdSeleccionado = null;
+
+  varianteImgInput.value = "";
+  varianteImgFileInput.value = "";
+
+  toggleImageInputs();
+
   varianteModal.classList.add("visible");
 });
 
@@ -106,13 +135,18 @@ varianteForm.addEventListener("submit", async (e) => {
   clearError(errorFields, "#varianteForm");
 
   const id = varianteIdInput.value;
-  const producto_id = parseInt(productoSelect.value);
+  if (!productoIdSeleccionado) {
+  showValidation([{ path: "producto_id", message: "Debe seleccionar un producto válido" }], "#varianteForm");
+  return;
+}
+
+const producto_id = productoIdSeleccionado;
+
   const color = varianteColorInput.value;
   const stock = parseInt(varianteStockInput.value);
 
   let imgPath = varianteImgInput.value.trim();
 
-  // Cambiar aquí para dar prioridad a archivo si existe
   if (varianteImgFileInput.files.length > 0) {
     const file = varianteImgFileInput.files[0];
     const formData = new FormData();
@@ -177,15 +211,39 @@ window.editVariante = function (id) {
   const variante = variantes.find(v => v.id === id);
   if (!variante) return;
 
+  const producto = productos.find(p => p.id === variante.producto_id);
+  productoInput.value = producto ? producto.nombre : "";
+  productoIdSeleccionado = producto ? producto.id : null;
+
   modalTitle.textContent = "Editar Variante";
   varianteIdInput.value = variante.id;
-  productoSelect.value = variante.producto_id || ""; 
   varianteColorInput.value = variante.color;
   varianteStockInput.value = variante.stock;
+
   varianteImgInput.value = variante.img || "";
+  varianteImgFileInput.value = "";
+
+  toggleImageInputs();
 
   varianteModal.classList.add("visible");
+};
+
+clearImgFileBtn.addEventListener("click", () => {
+  varianteImgFileInput.value = "";
+  toggleImageInputs();
+});
+
+function toggleImageInputs() {
+  const hasUrl = varianteImgInput.value.trim();
+  const hasFile = varianteImgFileInput.files.length > 0;
+
+  varianteImgInput.disabled = hasFile;
+  varianteImgFileInput.disabled = hasUrl;
 }
+
+varianteImgInput.addEventListener("input", toggleImageInputs);
+varianteImgFileInput.addEventListener("change", toggleImageInputs);
+
 
 window.deleteVariante = async function(id) {
   const confirmed = await sweetAlert({

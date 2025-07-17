@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="/css/toastify.css">
   <link rel="stylesheet" href="/css/adminTable.css">
   <link rel="stylesheet" href="/css/error.css">
+  <link rel="stylesheet" href="/css/variant.css">
 
   <div class="main-content">
     <header class="header">
@@ -51,10 +52,12 @@
       <form id="varianteForm" class="modal-form">
         <input type="hidden" id="varianteId">
         <div class="form-group">
-          <label for="productoSelect">Producto:</label>
-          <select id="productoSelect" name="producto_id"></select>
+          <label for="productoInput">Producto:</label>
+          <input type="text" id="productoInput" name="producto_nombre" autocomplete="off">
+          <div id="sugerenciasProducto" class="suggestions-list"></div>
           <div class="error-text" data-error-for="producto_id"></div>
         </div>
+
         <div class="form-group">
           <label for="varianteColor">Color:</label>
           <input type="text" id="varianteColor" name="color">
@@ -72,7 +75,10 @@
         </div>
         <div class="form-group">
           <label for="varianteImgFile">Imagen (Archivo):</label>
-          <input type="file" id="varianteImgFile" name="imgFile" accept="image/png, image/jpeg">
+          <div class="file-input-wrapper">
+            <input type="file" id="varianteImgFile" name="imgFile" accept="image/png, image/jpeg">
+            <button type="button" id="clearImgFileBtn" class="clear-file-btn">❌</button>
+          </div>
           <div class="error-text" data-error-for="img"></div>
         </div>
         <div class="modal-buttons">

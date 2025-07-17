@@ -173,7 +173,6 @@ body {
 .input-search {
     width: 100%;
     padding: 10px 40px 10px 12px;
-    /* padding right para espacio del icono */
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -181,7 +180,6 @@ body {
     transition: border-color 0.3s ease;
     margin-top: 17px;
     box-sizing: border-box;
-    /* importante para que ancho respete padding */
 }
 
 .input-search:focus {
