@@ -17,11 +17,23 @@ function renderAdmins() {
   const tbody = document.getElementById("adminTableBody");
   tbody.innerHTML = "";
 
-  admins.forEach(admin => {
+  const sortedAdmins = [...admins].sort((a, b) => {
+    if (a.id === currentAdminId) return -1;
+    if (b.id === currentAdminId) return 1;
+    return 0;
+  });
+
+  sortedAdmins.forEach(admin => {
     const row = document.createElement("tr");
 
     const estadoTexto = admin.is_active ? "Activo" : "Inactivo";
     const estadoClase = admin.is_active ? "estado-activo" : "estado-inactivo";
+
+    const estadoBtn = admin.id !== currentAdminId ? `
+      <button class="estado-btn ${estadoClase}" onclick="toggleEstado(${admin.id})">
+        ${estadoTexto}
+      </button>
+    ` : '';
 
     const botones = `
       <button onclick="openEditModal(${admin.id})" class="edit-button">Editar</button>
@@ -33,11 +45,7 @@ function renderAdmins() {
     row.innerHTML = `
       <td>${admin.username}</td>
       <td>${new Date(admin.created_at).toLocaleString()}</td>
-      <td>
-        <button class="estado-btn ${estadoClase}" onclick="toggleEstado(${admin.id})">
-          ${estadoTexto}
-        </button>
-      </td>
+      <td>${estadoBtn}</td>
       <td>${botones}</td>
     `;
 

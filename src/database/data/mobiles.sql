@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-07-2025 a las 22:13:20
+-- Tiempo de generación: 18-07-2025 a las 19:38:44
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -183,6 +183,13 @@ CREATE TABLE `carrito` (
   `nombre` varchar(255) DEFAULT NULL,
   `fecha_agregado` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `carrito`
+--
+
+INSERT INTO `carrito` (`id`, `usuario_id`, `producto_id`, `colorSeleccionado`, `cantidad`, `descuento`, `precio`, `imagen`, `nombre`, `fecha_agregado`) VALUES
+(1249, 75, 2, 'blanco', 1, 0.00, 17995.00, 'https://rukminim2.flixcart.com/image/850/1000/kg8avm80/mobile/j/f/9/apple-iphone-12-dummyapplefsn-original-imafwg8dkyh2zgrh.jpeg?q=90&crop=false', 'iPhone 12 128GB', '2025-07-18 16:55:51');
 
 -- --------------------------------------------------------
 
@@ -776,7 +783,7 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (95, 0, 'Macbook Pro M2 2022 8-Ram 256GB', '', 51995.00, 3, 0.00, '2023-01-01 08:00:00', 1),
 (96, 0, 'Macbook Air 15-Inch M2 256GB ', '', 54995.00, 3, 0.00, '2023-01-01 08:00:00', 1),
 (97, 0, 'HP Victus i5 12GEN 3050TI 8+512GB ', '', 33495.00, 3, 0.00, '2023-01-01 08:00:00', 8),
-(98, 0, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', '', 39995.00, 3, 0.00, '2025-06-23 08:00:00', 9),
+(98, 0, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 'waos', 39995.00, 3, 0.00, '2025-06-23 08:00:00', 9),
 (99, 0, 'HP 15.6Inch i5 12GEN 8+256GB ', '', 23995.00, 3, 0.00, '2023-01-01 08:00:00', 8),
 (100, 0, 'HP i5 13GEN 8+256GB ', '', 24995.00, 3, 0.00, '2023-01-01 08:00:00', 8),
 (108, 0, 'SAMSUNG GALAXY TAB A9+ 64GB ', '', 11495.00, 5, 0.00, '2023-01-01 08:00:00', 2),
@@ -865,7 +872,7 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (203, 0, 'Monitor Asus VG1B 27 Pulgada 165HZ', '', 14995.00, 2, 0.00, '2023-01-01 08:00:00', 9),
 (204, 0, 'Monitor LG Ultragear 34 Pulgada 160HZ', '', 24995.00, 2, 0.00, '2023-01-01 08:00:00', NULL),
 (206, 0, 'Monitor Samsung G4 ODYSSEEY 27 Pulgada 240HZ', '', 19995.00, 2, 0.00, '2023-01-01 08:00:00', 2),
-(207, 0, 'Monitor Samsung G5 ODYSSEY 32 Pulgada 165HZ', 'siuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasd', 22995.00, 2, 0.00, '2023-01-02 08:00:00', 2);
+(207, 0, 'Monitor Samsung G5 ODYSSEY 32 Pulgada 165HZ', 'siuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasd', 22995.00, 2, 0.00, '2023-01-02 12:00:00', 2);
 
 -- --------------------------------------------------------
 
@@ -930,8 +937,8 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (374, 98, 'blanco', 4, 'https://globaliraq.net/cdn/shop/files/1bbcf8d6-eaea-4f46-96e5-e4aee2924baa_2048x.jpg?v=1710541301'),
 (375, 1, 'purpura', 3, 'https://www.artefacta.com/media/catalog/product/1/4/148658_2_.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=400&width=400&canvas=400:400'),
 (376, 2, 'blanco', 9, 'https://rukminim2.flixcart.com/image/850/1000/kg8avm80/mobile/j/f/9/apple-iphone-12-dummyapplefsn-original-imafwg8dkyh2zgrh.jpeg?q=90&crop=false'),
-(377, 3, 'dorado', 3, '/uploads/1752696100534_modal.PNG'),
-(382, 1, 'blanco', 5, 'https://images-na.ssl-images-amazon.com/images/I/7199VOAdkRL._AC_UL495_SR435,495_.jpg');
+(377, 3, 'dorado', 3, 'https://www.lacuracao.pe/media/catalog/product/p/s/ps21110833_1.jpg?quality=80&bg-color=255,255,255&fit=bounds&height=400&width=400&canvas=400:400'),
+(382, 1, 'blanco', 5, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg');
 
 -- --------------------------------------------------------
 
@@ -971,14 +978,6 @@ CREATE TABLE `sessions` (
   `expires` int(11) UNSIGNED NOT NULL,
   `data` mediumtext DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `sessions`
---
-
-INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('5zkcxlNcEN_4DA5Ied5Cm463wB3HebfB', 1752699288, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-07-16T20:00:46.276Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\"}}'),
-('LgMskVkqnyXn593tAqs-aXazDQAJ2vKl', 1752700350, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-07-16T21:09:43.240Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\"}}');
 
 -- --------------------------------------------------------
 
@@ -1356,7 +1355,7 @@ ALTER TABLE `variantes_ram`
 -- AUTO_INCREMENT de la tabla `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `almacenamiento`
@@ -1380,7 +1379,7 @@ ALTER TABLE `camara`
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1247;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1250;
 
 --
 -- AUTO_INCREMENT de la tabla `categorias`
@@ -1458,7 +1457,7 @@ ALTER TABLE `p_marcas`
 -- AUTO_INCREMENT de la tabla `p_variantes`
 --
 ALTER TABLE `p_variantes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=390;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=393;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`

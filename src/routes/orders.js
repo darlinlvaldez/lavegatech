@@ -6,10 +6,12 @@ import { isAuth } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-router.post('/', isAuth(), validate(request.order), orders.createOrder);
-router.post('/payment', isAuth(), orders.processPayment); 
-router.get('/showOrders', isAuth(), orders.showUserOrders);
-router.get('/orderDetails/:orderId', isAuth(), orders.showOrderDetails);
-router.get('/:orderId', isAuth(), orders.getOrderDetails);
+router.use(isAuth());
+
+router.post('/', validate(request.order), orders.createOrder);
+router.post('/payment', orders.processPayment); 
+router.get('/showOrders', orders.showUserOrders);
+router.get('/orderDetails/:orderId', orders.showOrderDetails);
+router.get('/:orderId', orders.getOrderDetails);
 
 export default router;
