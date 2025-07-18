@@ -1,4 +1,4 @@
-import { checkFavorites } from './fav.js';
+import { checkFavorites } from "./fav.js";
 
 (function ($) {
   "use strict";
@@ -48,58 +48,61 @@ import { checkFavorites } from './fav.js';
       ],
     });
   });
-  
+
   /////////////////////////////////////////
 
-function handleColorChange(event, slick, currentSlide) {
-  var currentSlideElement = $('#product-imgs .slick-slide:not(.slick-cloned)').eq(currentSlide);
-  var imgElement = currentSlideElement.find('img');
-  var color = imgElement.attr('alt');
-  var productId = '<%= producto.id %>';
-  
-  if (color && productId) {
-    $('#colorSeleccionado').val(color).trigger('change');
+  function handleColorChange(event, slick, currentSlide) {
+    var currentSlideElement = $(
+      "#product-imgs .slick-slide:not(.slick-cloned)"
+    ).eq(currentSlide);
+    var imgElement = currentSlideElement.find("img");
+    var color = imgElement.attr("alt");
+    var productId = "<%= producto.id %>";
 
-    document.querySelectorAll('.add-to-wishlist').forEach(button => {
-      button.dataset.productColor = color;
-    });
+    if (color && productId) {
+      $("#colorSeleccionado").val(color).trigger("change");
 
-    checkFavorites();
-  }
-}
+      document.querySelectorAll(".add-to-wishlist").forEach((button) => {
+        button.dataset.productColor = color;
+      });
 
-// Product Main img Slick
-$("#product-main-img").slick({
-  infinite: true,
-  speed: 300,
-  dots: false,
-  arrows: true,
-  fade: true,
-  asNavFor: "#product-imgs"
-});
-
-// Product imgs Slick
-var $productImgs = $("#product-imgs").slick({
-  slidesToShow: 3,
-  slidesToScroll: 1,
-  arrows: true,
-  centerMode: true,
-  focusOnSelect: true,
-  centerPadding: 0,
-  vertical: true,
-  asNavFor: "#product-main-img",
-  responsive: [{
-    breakpoint: 991,
-    settings: {
-      vertical: false,
-      arrows: false,
-      dots: true
+      checkFavorites();
     }
-  }]
-});
-  
-  $productImgs.on('afterChange', handleColorChange);
+  }
 
+  // Product Main img Slick
+  $("#product-main-img").slick({
+    infinite: true,
+    speed: 300,
+    dots: false,
+    arrows: true,
+    fade: true,
+    asNavFor: "#product-imgs",
+  });
+
+  // Product imgs Slick
+  var $productImgs = $("#product-imgs").slick({
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    arrows: true,
+    centerMode: true,
+    focusOnSelect: true,
+    centerPadding: 0,
+    vertical: true,
+    asNavFor: "#product-main-img",
+    responsive: [
+      {
+        breakpoint: 991,
+        settings: {
+          vertical: false,
+          arrows: false,
+          dots: true,
+        },
+      },
+    ],
+  });
+
+  $productImgs.on("afterChange", handleColorChange);
 
   // Product img zoom
   // var zoomMainProduct = document.getElementById("product-main-img");
@@ -109,21 +112,23 @@ var $productImgs = $("#product-imgs").slick({
 
   /////////////////////////////////////////
 
-
   function asegurarDosDecimales(input) {
-  input.value = parseFloat(input.value).toFixed(2);
-}
+    input.value = parseFloat(input.value).toFixed(2);
+  }
 
-const priceInputs = [document.getElementById("price-min"), document.getElementById("price-max")];
+const priceInputs = [
+  document.getElementById("price-min"),
+  document.getElementById("price-max"),
+];
 
-priceInputs.forEach(input => {
+priceInputs.forEach((input) => {
   if (input) {
     input.addEventListener("input", function () {
-      if (!this.value.includes('.')) {
+      if (!this.value.includes(".")) {
         this.value = parseFloat(this.value).toFixed(2);
       } else {
-        let parts = this.value.split('.');
-        this.value = parts[0] + '.' + '00';
+        let parts = this.value.split(".");
+        this.value = parts[0] + "." + "00";
       }
     });
 
@@ -142,17 +147,17 @@ if (document.getElementById("price-slider")) {
       down = $this.find(".qty-down");
 
     down.on("click", function () {
-      var value = parseFloat($input.val()) - 500.00; 
-      value = value < 0.00 ? 0.00 : value; 
-      $input.val(value.toFixed(2)); 
+      var value = parseFloat($input.val()) - 500.0;
+      value = value < window.priceRange.min ? window.priceRange.min : value;
+      $input.val(value.toFixed(2));
       $input.change();
       updatePriceSlider($this, value);
     });
 
     up.on("click", function () {
-      var value = parseFloat($input.val()) + 500.00; 
-      value = value > 100000.00 ? 100000.00 : value;
-      $input.val(value.toFixed(2)); 
+      var value = parseFloat($input.val()) + 500.0;
+      value = value > window.priceRange.max ? window.priceRange.max : value;
+      $input.val(value.toFixed(2));
       $input.change();
       updatePriceSlider($this, value);
     });
@@ -163,8 +168,8 @@ if (document.getElementById("price-slider")) {
     priceSlider = document.getElementById("price-slider"),
     resetButton = document.getElementById("reset-filtro-precio");
 
-  var defaultMin = 0,
-    defaultMax = 100000,
+  var defaultMin = window.priceRange.min,
+    defaultMax = window.priceRange.max,
     savedMin = localStorage.getItem("priceMin") || defaultMin,
     savedMax = localStorage.getItem("priceMax") || defaultMax;
 
@@ -203,7 +208,10 @@ if (document.getElementById("price-slider")) {
       start: [savedMin, savedMax],
       connect: true,
       step: 0.01,
-      range: { min: defaultMin, max: defaultMax },
+      range: {
+        min: window.priceRange.min,
+        max: window.priceRange.max,
+      },
     });
 
     priceSlider.noUiSlider.on("update", function (values, handle) {

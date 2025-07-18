@@ -18,6 +18,9 @@ store.storeController = async (req, res) => {
             marcasCompatiblesIds.includes(marca)
         );
 
+        // Obtener el rango de precios
+        const rangoPrecios = await store.obtenerRangoPrecios(categorias, marcasFiltradas);
+
         const [productos, totalProduct, cantCategoria, cantMarcas] = await Promise.all([
             store.obtenerStore(pagina, limite, orden, categorias, marcasFiltradas, precioMin, precioMax),
             store.totalProductos(categorias, marcasFiltradas, precioMin, precioMax),
@@ -28,13 +31,25 @@ store.storeController = async (req, res) => {
         for (let producto of productos) {
           const avg = await rating.getAverageRating(producto.id);
           producto.averageRating = parseFloat(avg) || 0;
-
           producto.esMovil = producto.categoria?.toLowerCase() === "moviles";
         }
 
-        res.render("store/store", {productos,  totalProduct, limite, pagina,  orden, categorias, 
-            marcas: marcasFiltradas, marcasFiltradas: marcasFiltradas, cantCategoria, cantMarcas, precioMin, 
-            precioMax, defaultMin: 1, defaultMax: 100000, req
+        res.render("store/store", {
+            productos,  
+            totalProduct, 
+            limite, 
+            pagina,  
+            orden, 
+            categorias, 
+            marcas: marcasFiltradas, 
+            marcasFiltradas: marcasFiltradas, 
+            cantCategoria, 
+            cantMarcas, 
+            precioMin, 
+            precioMax, 
+            defaultMin: rangoPrecios.minPrecio, 
+            defaultMax: rangoPrecios.maxPrecio, 
+            req
         });
     } catch (err) {
         console.error('Error al obtener datos de productos:', err);

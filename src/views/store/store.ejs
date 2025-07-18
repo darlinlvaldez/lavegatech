@@ -26,6 +26,8 @@
 			&marca=${marcas}&precioMin=${precioMin}&precioMax=${precioMax}`;
 	}
 
+	window.priceRange = {min: <%= defaultMin || 0 %>, max: <%= defaultMax || 100000 %>};
+
 	document.addEventListener("DOMContentLoaded", function () {
 		document.getElementById("aplicar-filtro-precio").addEventListener("click", actualizarProductos);
 	});
