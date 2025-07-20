@@ -131,16 +131,16 @@ app.get('/warranty', (req, res) => {
   res.render('information/warranty');  
 });
 
-app.get('/admin/productos', isAdmin(), (req, res) => {
-  res.render('admin/productos');  
+app.get('/admin/products', isAdmin(), (req, res) => {
+  res.render('admin/products');  
 });
 
-app.get('/admin/usuarios', isAdmin(), (req, res) => {
-  res.render('admin/usuarios');  
+app.get('/admin/users', isAdmin(), (req, res) => {
+  res.render('admin/users');  
 });
 
-app.get('/admin/variantes', isAdmin(), (req, res) => {
-  res.render('admin/variantes');  
+app.get('/admin/variants', isAdmin(), (req, res) => {
+  res.render('admin/variants');  
 });
 
 app.get('/admin/accounts', isAdmin(), (req, res) => {
@@ -149,12 +149,24 @@ app.get('/admin/accounts', isAdmin(), (req, res) => {
   });
 });
 
-app.get('/admin/marcaCategoria', isAdmin(), (req, res) => {
-  res.render('admin/marcaCategoria');
+app.get('/admin/brandCategory', isAdmin(), (req, res) => {
+  res.render('admin/brandCategory');
 });
 
 app.get('/admin/login', isAdmin({ redirect: true }), (req, res) => {
   res.render('admin/login', { error: null, username: null, validationErrors: {} });
+});
+
+app.get('/admin/device', isAdmin(), (req, res) => {
+  res.render('admin/device');
+});
+
+app.get('/admin/editComparison', isAdmin(), (req, res) => {
+  res.render('admin/editComparison');
+});
+
+app.get('/admin/specs', isAdmin(), (req, res) => {
+  res.render('admin/specs');
 });
 
 app.listen(config.PORT, () => {

@@ -33,8 +33,8 @@ router.put('/categorias/:id', validate(request.category), admin.editarCategoria)
 router.delete('/categorias/:id', admin.borrarCategoria);
 
 // Pedidos
-router.get('/pedidos', admin.listarPedidos);
-router.get('/pedidos/:id', admin.detallePedido);
+router.get('/orders', admin.listarPedidos);
+router.get('/orders/:id', admin.detallePedido);
 
 // Usuarios/Clientes
 router.get('/usuarios', admin.listarUsuarios);
@@ -42,5 +42,11 @@ router.patch('/usuarios/:id/estado', admin.actualizarEstado);
 
 // Cargar Imagen
 router.post('/variantes/upload', admin.cargarImagen);
+
+// Comparación de dispositivos
+router.get('/dispositivos', admin.listarDispositivos);
+router.post('/dispositivos', validate(request.device), admin.crearDispositivo);
+router.put('/dispositivos/:id', validate(request.device), admin.editarDispositivo);
+router.delete('/dispositivos/:id', admin.borrarDispositivo);
 
 export default router;

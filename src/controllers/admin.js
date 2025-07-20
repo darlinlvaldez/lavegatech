@@ -136,7 +136,7 @@ adminController.cargarImagen = async (req, res) => {
 adminController.listarPedidos = async (req, res) => {
   try {
     const pedidos = await admin.obtenerPedidos();
-    res.render("admin/pedidos", { orders: pedidos }); 
+    res.render("admin/orders", { orders: pedidos }); 
   } catch (error) {
     res.status(500).send("Error al cargar pedidos");
   }
@@ -150,7 +150,7 @@ adminController.detallePedido = async (req, res) => {
     if (!pedido) return res.status(404).send("Pedido no encontrado");
 
     const items = await admin.productoPedido(id);
-    res.render("admin/detallePedido", {
+    res.render("admin/orderDetails", {
       order: { ...pedido, items },
     });
   } catch (error) {
@@ -263,6 +263,52 @@ adminController.actualizarEstado = async (req, res) => {
     res.json({ success });
   } catch (error) {
     res.status(500).json({ error: 'Error al actualizar estado del usuario' });
+  }
+};
+
+// Comparación de dispositivo
+
+adminController.listarDispositivos = async (req, res) => {
+  try {
+    const dispositivos = await admin.obtenerDispositivos();
+    res.json(dispositivos);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener dispositivos' });
+  }
+};
+
+adminController.crearDispositivo = async (req, res) => {
+  try {
+    const id = await admin.agregarDispositivo(req.body);
+    res.status(201).json({ message: 'Comparación creada con éxito', id });
+  } catch (error) {
+    console.error('Error al crear comparación:', error);
+    res.status(500).json({ message: 'Error del servidor' });
+  }
+};
+
+adminController.editarDispositivo = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const actualizado = await admin.actualizarDispositivo(id, req.body);
+    if (actualizado) {
+      res.json({ message: 'Comparación actualizada con éxito' });
+    } else {
+      res.status(404).json({ message: 'Comparación no encontrada' });
+    }
+  } catch (error) {
+    console.error('Error al actualizar comparación:', error);
+    res.status(500).json({ message: 'Error del servidor' });
+  }
+};
+
+adminController.borrarDispositivo = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await admin.eliminarProducto(id); 
+    res.json({ success: result });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al eliminar dispositivo' });
   }
 };
 

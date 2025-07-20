@@ -22,7 +22,7 @@ export function isAdmin({ redirect = false } = {}) {
     const Logged = !!req.session.admin;
 
     if (redirect && Logged) {
-      return res.redirect('/admin/productos');
+      return res.redirect('/admin/products');
     }
 
     if (!Logged && !redirect) {

@@ -19,35 +19,47 @@
             <nav>
                 <ul>
                     <li>
-                        <a href="/admin/productos"
-                            class="<%= req.originalUrl === '/admin/productos' ? 'active' : '' %>">
+                        <a href="/admin/products"
+                            class="<%= req.originalUrl === '/admin/products' ? 'active' : '' %>">
                             <i class="fas fa-box-open"></i>
                             <span>Productos</span>
                         </a>
                     </li>
                     <li>
-                        <a href="/admin/variantes"
-                            class="<%= req.originalUrl === '/admin/variantes' ? 'active' : '' %>">
+                        <a href="/admin/variants"
+                            class="<%= req.originalUrl === '/admin/variants' ? 'active' : '' %>">
                             <i class="fas fa-cogs"></i>
                             <span>Variantes</span>
                         </a>
                     </li>
                     <li>
-                        <a href="/admin/marcaCategoria"
-                            class="<%= req.originalUrl === '/admin/marcaCategoria' ? 'active' : '' %>">
+                        <a href="/admin/brandCategory"
+                            class="<%= req.originalUrl === '/admin/brandCategory' ? 'active' : '' %>">
                             <i class="fas fa-tags"></i>
                             <span>Marcas y Categorías</span>
                         </a>
                     </li>
                     <li>
-                        <a href="/api/admin/pedidos"
-                            class="<%= req.originalUrl === '/api/admin/pedidos' ? 'active' : '' %>">
+                        <a href="/admin/device" class="<%= req.originalUrl === '/admin/device' ? 'active' : '' %>">
+                            <i class="fas fa-solid fa-arrow-right-arrow-left"></i>
+                            <span>Gestión de Comparación</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/specs" class="<%= req.originalUrl === '/admin/accounts' ? 'active' : '' %>">
+                            <i class="fas fa-sliders-h"></i>
+                            <span>Gestión de Especificaciones</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/api/admin/orders"
+                            class="<%= req.originalUrl === '/api/admin/orders' ? 'active' : '' %>">
                             <i class="fas fa-shopping-cart"></i>
                             <span>Pedidos</span>
                         </a>
                     </li>
                     <li>
-                        <a href="/admin/usuarios" class="<%= req.originalUrl === '/admin/usuarios' ? 'active' : '' %>">
+                        <a href="/admin/users" class="<%= req.originalUrl === '/admin/users' ? 'active' : '' %>">
                             <i class="fas fa-users"></i>
                             <span>Usuarios</span>
                         </a>

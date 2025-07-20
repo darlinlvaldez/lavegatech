@@ -1,0 +1,55 @@
+<%- include('../admin/dashboard.ejs') %>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<link rel="stylesheet" href="/css/sweetAlertAdmin.css">
+<link rel="stylesheet" href="/css/toastify.css">
+<link rel="stylesheet" href="/css/adminTable.css">
+<link rel="stylesheet" href="/css/error.css">
+<link rel="stylesheet" href="/css/tabs.css">
+
+<div class="main-content">
+    <header class="header">
+        <h1>Gestión de Comparables</h1>
+    </header>
+
+    <main class="main-content-area">
+        <div class="card">
+            <div class="card-header">
+                <h2>Dispositivos Listados</h2>
+                <div class="search-container">
+                    <input type="text" id="searchDeviceInput" placeholder="Buscar dispositivos..." class="input-search"/>
+                    <i class="fa fa-search search-icon"></i>
+                </div>
+                <button id="addDeviceBtn" class="add-button">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Añadir Dispositivo
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>RAM</th>
+                            <th>CPU</th>
+                            <th>Almacenamiento</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="devicesTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script type="module" src="/js/adminDevice.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://unpkg.com/feather-icons"></script>

@@ -27,7 +27,7 @@
         <% } else { %>
             <div class="list-group-user">
                 <% orders.forEach(order => { %>
-                    <a href="/api/admin/pedidos/<%= order.id %>" class="list-group-product">
+                    <a href="/api/admin/orders/<%= order.id %>" class="list-group-product">
                         <div class="d-flex-user w-100-user justify-content-user">
                             <h5 class="mb-1">Pedido #<%= order.id %></h5>
                             <small class="text-muted-user"><%= new Date(order.fecha_creacion).toLocaleDateString() %></small>

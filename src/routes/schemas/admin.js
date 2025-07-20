@@ -97,4 +97,32 @@ request.user = z.object({
     .optional()
   }).strict();
 
+request.device = z.object({
+  nombre: z
+    .string()
+    .trim()
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
+    .max(100, { message: ERROR_ZOD.FIELD_MAX }),
+  ram: z
+    .string()
+    .trim()
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
+  cpu: z
+    .string()
+    .trim()
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
+  gpu: z
+    .string()
+    .trim()
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
+  almacenamiento: z
+    .string()
+    .trim()
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
+  pantalla: z
+    .string()
+    .trim()
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
+}).strict();
+
 export default request;

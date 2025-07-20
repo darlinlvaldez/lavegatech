@@ -1,0 +1,514 @@
+<%- include('../admin/dashboard.ejs') %>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<link rel="stylesheet" href="/css/sweetAlertAdmin.css">
+<link rel="stylesheet" href="/css/toastify.css">
+<link rel="stylesheet" href="/css/adminTable.css">
+<link rel="stylesheet" href="/css/error.css">
+<link rel="stylesheet" href="/css/adminTabs.css">
+
+<div class="main-content">
+    <header class="header">
+        <h1>Gestión Completa de Dispositivos</h1>
+    </header>
+    
+    <main class="main-content-area">
+        <div class="card">
+            <!-- Navegación por pestañas -->
+            <div class="tabs-container">
+                <div class="tabs">
+                    <button class="tab-button" data-tab="moviles">Móviles</button>
+                    <button class="tab-button" data-tab="pantallas">Pantallas</button>
+                    <button class="tab-button" data-tab="camaras">Cámaras</button>
+                    <button class="tab-button" data-tab="cpus">CPUs</button>
+                    <button class="tab-button" data-tab="gpus">GPUs</button>
+                    <button class="tab-button" data-tab="baterias">Baterías</button>
+                    <button class="tab-button" data-tab="conectividad">Conectividad</button>
+                    <button class="tab-button" data-tab="dimensiones">Dimensiones</button>
+                    <button class="tab-button" data-tab="almacenamiento">Almacenamiento</button>
+                    <button class="tab-button" data-tab="ram">RAM</button>
+                    <button class="tab-button" data-tab="variantes-alm">Variantes Almacenamiento</button>
+                    <button class="tab-button" data-tab="variantes-ram">Variantes RAM</button>
+                </div>
+            </div>
+
+            <!-- Contenido de las pestañas -->
+            <div class="tab-content active" id="productos">
+                <div class="card-header">
+                    <h2>Lista de Productos</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchProductInput" placeholder="Buscar productos..." class="input-search"/>
+                        <i class="fa fa-search search-icon"></i>
+                    </div>
+                    <button id="addProductBtn" class="add-button">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Añadir Producto
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Precio</th>
+                                <th>Descuento</th>
+                                <th>Categoría</th>
+                                <th>Marca</th>
+                                <th>Fecha</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody">
+                            <!-- Datos se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pestaña Móviles -->
+            <div class="tab-content" id="moviles">
+                <div class="card-header">
+                    <h2>Lista de Móviles</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchMovilesInput" placeholder="Buscar móviles..." class="input-search"/>
+                        <i class="fa fa-search search-icon"></i>
+                    </div>
+                    <button id="addMovilBtn" class="add-button">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Añadir Móvil
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Año</th>
+                                <th>CPU</th>
+                                <th>Cámara</th>
+                                <th>Batería</th>
+                                <th>GPU</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="movilesTableBody">
+                            <!-- Datos se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pestaña Pantallas -->
+            <div class="tab-content" id="pantallas">
+                <div class="card-header">
+                    <h2>Lista de Pantallas</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchPantallasInput" placeholder="Buscar pantallas..." class="input-search"/>
+                        <i class="fa fa-search search-icon"></i>
+                    </div>
+                    <button id="addPantallaBtn" class="add-button">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Añadir Pantalla
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th>Tamaño</th>
+                                <th>Resolución</th>
+                                <th>Tipo</th>
+                                <th>Frecuencia</th>
+                                <th>Protección</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pantallasTableBody">
+                            <!-- Datos se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pestaña Cámaras -->
+            <div class="tab-content" id="camaras">
+                <div class="card-header">
+                    <h2>Lista de Cámaras</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchCamarasInput" placeholder="Buscar cámaras..." class="input-search"/>
+                        <i class="fa fa-search search-icon"></i>
+                    </div>
+                    <button id="addCamaraBtn" class="add-button">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Añadir Cámara
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th>Principal</th>
+                                <th>Frontal</th>
+                                <th>Video</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="camarasTableBody">
+                            <!-- Datos se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pestaña CPUs -->
+            <div class="tab-content" id="cpus">
+                <div class="card-header">
+                    <h2>Lista de CPUs</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchCPUsInput" placeholder="Buscar CPUs..." class="input-search"/>
+                        <i class="fa fa-search search-icon"></i>
+                    </div>
+                    <button id="addCPUBtn" class="add-button">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Añadir CPU
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Núcleos</th>
+                                <th>Velocidad</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cpusTableBody">
+                            <!-- Datos se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pestaña GPUs -->
+            <div class="tab-content" id="gpus">
+                <div class="card-header">
+                    <h2>Lista de GPUs</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchGPUsInput" placeholder="Buscar GPUs..." class="input-search"/>
+                        <i class="fa fa-search search-icon"></i>
+                    </div>
+                    <button id="addGPUBtn" class="add-button">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Añadir GPU
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th>Modelo</th>
+                                <th>Núcleos</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gpusTableBody">
+                            <!-- Datos se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pestaña Baterías -->
+            <div class="tab-content" id="baterias">
+                <div class="card-header">
+                    <h2>Lista de Baterías</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchBateriasInput" placeholder="Buscar baterías..." class="input-search"/>
+                        <i class="fa fa-search search-icon"></i>
+                    </div>
+                    <button id="addBateriaBtn" class="add-button">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Añadir Batería
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th>Capacidad</th>
+                                <th>Tipo</th>
+                                <th>Carga Rápida</th>
+                                <th>Inalámbrica</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bateriasTableBody">
+                            <!-- Datos se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pestaña Conectividad -->
+            <div class="tab-content" id="conectividad">
+                <div class="card-header">
+                    <h2>Lista de Conectividad</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchConectividadInput" placeholder="Buscar conectividad..." class="input-search"/>
+                        <i class="fa fa-search search-icon"></i>
+                    </div>
+                    <button id="addConectividadBtn" class="add-button">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Añadir Conectividad
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th>Red</th>
+                                <th>Wi-Fi</th>
+                                <th>Bluetooth</th>
+                                <th>NFC</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="conectividadTableBody">
+                            <!-- Datos se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pestaña Dimensiones -->
+            <div class="tab-content" id="dimensiones">
+                <div class="card-header">
+                    <h2>Lista de Dimensiones</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchDimensionesInput" placeholder="Buscar dimensiones..." class="input-search"/>
+                        <i class="fa fa-search search-icon"></i>
+                    </div>
+                    <button id="addDimensionesBtn" class="add-button">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Añadir Dimensiones
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th>Altura</th>
+                                <th>Anchura</th>
+                                <th>Grosor</th>
+                                <th>Peso</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dimensionesTableBody">
+                            <!-- Datos se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pestaña Almacenamiento -->
+            <div class="tab-content" id="almacenamiento">
+                <div class="card-header">
+                    <h2>Lista de Almacenamiento</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchAlmacenamientoInput" placeholder="Buscar almacenamiento..." class="input-search"/>
+                        <i class="fa fa-search search-icon"></i>
+                    </div>
+                    <button id="addAlmacenamientoBtn" class="add-button">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Añadir Almacenamiento
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th>Capacidad</th>
+                                <th>Tipo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="almacenamientoTableBody">
+                            <!-- Datos se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pestaña RAM -->
+            <div class="tab-content" id="ram">
+                <div class="card-header">
+                    <h2>Lista de RAM</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchRAMInput" placeholder="Buscar RAM..." class="input-search"/>
+                        <i class="fa fa-search search-icon"></i>
+                    </div>
+                    <button id="addRAMBtn" class="add-button">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Añadir RAM
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th>Capacidad</th>
+                                <th>Tipo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ramTableBody">
+                            <!-- Datos se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pestaña Variantes Almacenamiento -->
+            <div class="tab-content" id="variantes-alm">
+                <div class="card-header">
+                    <h2>Variantes de Almacenamiento</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchVariantesAlmInput" placeholder="Buscar variantes..." class="input-search"/>
+                        <i class="fa fa-search search-icon"></i>
+                    </div>
+                    <button id="addVarianteAlmBtn" class="add-button">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Añadir Variante
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th>Móvil ID</th>
+                                <th>Almacenamiento ID</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="variantesAlmTableBody">
+                            <!-- Datos se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pestaña Variantes RAM -->
+            <div class="tab-content" id="variantes-ram">
+                <div class="card-header">
+                    <h2>Variantes de RAM</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchVariantesRAMInput" placeholder="Buscar variantes..." class="input-search"/>
+                        <i class="fa fa-search search-icon"></i>
+                    </div>
+                    <button id="addVarianteRAMBtn" class="add-button">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Añadir Variante
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th>Móvil ID</th>
+                                <th>RAM ID</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="variantesRAMTableBody">
+                            <!-- Datos se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Modal genérico para todas las tablas -->
+<div id="genericModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 id="modalTitle" class="modal-title">Añadir Nuevo Registro</h3>
+        <form id="genericForm" class="modal-form">
+            <input type="hidden" id="recordId">
+            <input type="hidden" id="recordType">
+            <div id="modalFormFields">
+                <!-- Campos del formulario se cargarán dinámicamente -->
+            </div>
+            <div class="modal-buttons">
+                <button type="button" id="cancelModalBtn" class="cancel-button">
+                    Cancelar
+                </button>
+                <button type="submit" class="save-button">
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+  document.querySelectorAll(".tab-button").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-button").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+
+    btn.classList.add("active");
+    const tabId = btn.getAttribute("data-tab");
+    document.getElementById(`tab-${tabId}`).classList.add("active");
+  });
+});
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://unpkg.com/feather-icons"></script>
+<script type="module" src="/js/adminSpecs.js"></script>
+<script src="/js/formatPrice.js"></script>

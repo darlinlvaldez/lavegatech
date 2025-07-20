@@ -27,7 +27,6 @@ console.log("Filtrados:", filteredUsers);
   renderUsers();
 });
 
-
 function renderUsers() {
   const tbody = document.getElementById("productsTableBody");
   tbody.innerHTML = "";

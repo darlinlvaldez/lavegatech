@@ -26,6 +26,7 @@ const modalBrandTitle = document.getElementById("modalBrandTitle");
 const brandIdInput = document.getElementById("brandId");
 const brandNameInput = document.getElementById("brandName");
 const brandLogoInput = document.getElementById("brandLogo");
+const searchMarcaInput = document.getElementById("searchMarcaInput");
 
 const categoryErrorFields = ["categoria", "imagen"];
 
@@ -190,10 +191,6 @@ function renderBrands() {
   });
 }
 
-const searchMarcaInput = document.getElementById("searchMarcaInput");
-
-
-
 searchMarcaInput.addEventListener("input", () => {
   const query = searchMarcaInput.value.trim().toLowerCase();
 
@@ -208,7 +205,6 @@ searchMarcaInput.addEventListener("input", () => {
 
   renderBrands();
 });
-
 
 addBrandBtn.addEventListener("click", () => {
   modalBrandTitle.textContent = "Añadir Nueva Marca";
