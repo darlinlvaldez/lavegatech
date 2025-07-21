@@ -1,6 +1,8 @@
 <%- include('../admin/dashboard.ejs') %>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 <link rel="stylesheet" href="/css/adminComparison.css">
+<link rel="stylesheet" href="/css/toastify.css">
 
 <div class="main-content">
     <div class="header">
@@ -11,15 +13,10 @@
         <div class="card">
             <div class="device-management-container">
                 <div class="device-info-section">
-                    <h2>Dispositivo Actual: <span id="device-model">Samsung Galaxy S24 Ultra</span></h2>
+                    <h2>Dispositivo Actual: <span><%= movil.nombre %></span></h2>
                     <div class="grid-layout">
                         <div class="form-group">
-                            <label for="device-name">Nombre del Dispositivo</label>
-                            <input type="text" id="device-name" name="nombre" value="Samsung Galaxy S24 Ultra">
                         </div>
-                    </div>
-                    <div class="button-group">
-                        <button class="save-button">Guardar Cambios Básicos</button>
                     </div>
                 </div>
 
@@ -40,23 +37,23 @@
                         <div class="grid-layout">
                             <div class="form-group">
                                 <label for="screen-size">Tamaño (pulgadas)</label>
-                                <input type="text" id="screen-size" name="tamaño" value="6.8">
+                                <input type="text" id="screen-size" name="tamaño" value="<%= movil.pantalla_tamaño %>">
                             </div>
                             <div class="form-group">
                                 <label for="screen-resolution">Resolución</label>
-                                <input type="text" id="screen-resolution" name="resolucion" value="3120 x 1440">
+                                <input type="text" id="screen-resolution" name="resolucion" value="<%= movil.pantalla_resolucion %>">
                             </div>
                             <div class="form-group">
                                 <label for="screen-type">Tipo</label>
-                                <input type="text" id="screen-type" name="tipo" value="Dynamic AMOLED 2X">
+                                <input type="text" id="screen-type" name="tipo" value="<%= movil.pantalla_tipo %>">
                             </div>
                             <div class="form-group">
                                 <label for="screen-refresh">Frecuencia de refresco</label>
-                                <input type="text" id="screen-refresh" name="frecuencia" value="120Hz">
+                                <input type="text" id="screen-refresh" name="frecuencia" value="<%= movil.pantalla_frecuencia %>">
                             </div>
                             <div class="form-group">
                                 <label for="screen-protection">Protección</label>
-                                <input type="text" id="screen-protection" name="proteccion" value="Gorilla Glass Victus 2">
+                                <input type="text" id="screen-protection" name="proteccion" value="<%= movil.pantalla_proteccion %>">
                             </div>
                         </div>
                         <div class="button-group">
@@ -69,15 +66,15 @@
                         <div class="grid-layout">
                             <div class="form-group">
                                 <label for="camera-main">Cámara principal</label>
-                                <input type="text" id="camera-main" name="principal" value="200 MP, f/1.7">
+                                <input type="text" id="camera-main" name="principal" value="<%= movil.camara_principal %>">
                             </div>
                             <div class="form-group">
                                 <label for="camera-selfie">Cámara frontal</label>
-                                <input type="text" id="camera-selfie" name="selfie" value="12 MP, f/2.2">
+                                <input type="text" id="camera-selfie" name="selfie" value="<%= movil.camara_frontal %>">
                             </div>
                             <div class="form-group">
                                 <label for="camera-video">Grabación de video</label>
-                                <input type="text" id="camera-video" name="video" value="8K@30fps">
+                                <input type="text" id="camera-video" name="video" value="<%= movil.camara_video %>">
                             </div>
                         </div>
                         <div class="button-group">
@@ -90,15 +87,15 @@
                         <div class="grid-layout">
                             <div class="form-group">
                                 <label for="cpu-name">Modelo CPU</label>
-                                <input type="text" id="cpu-name" name="nombre" value="Snapdragon 8 Gen 3">
+                                <input type="text" id="cpu-name" name="nombre" value="<%= movil.cpu_nombre %>">
                             </div>
                             <div class="form-group">
                                 <label for="cpu-cores">Núcleos</label>
-                                <input type="text" id="cpu-cores" name="nucleos" value="Octa-core">
+                                <input type="text" id="cpu-cores" name="nucleos" value="<%= movil.cpu_nucleos %>">
                             </div>
                             <div class="form-group">
                                 <label for="cpu-speed">Velocidad</label>
-                                <input type="text" id="cpu-speed" name="velocidad" value="3.39 GHz">
+                                <input type="text" id="cpu-speed" name="velocidad" value="<%= movil.cpu_velocidad %>">
                             </div>
                         </div>
                         <div class="button-group">
@@ -111,21 +108,21 @@
                         <div class="grid-layout">
                             <div class="form-group">
                                 <label for="battery-capacity">Capacidad</label>
-                                <input type="text" id="battery-capacity" name="capacidad" value="5000 mAh">
+                                <input type="text" id="battery-capacity" name="capacidad" value="<%= movil.beteria_capacidad %>">
                             </div>
                             <div class="form-group">
                                 <label for="battery-type">Tipo</label>
-                                <input type="text" id="battery-type" name="tipo" value="Li-Ion">
+                                <input type="text" id="battery-type" name="tipo" value="<%= movil.bateria_tipo %>">
                             </div>
                             <div class="form-group">
                                 <label for="battery-fast">Carga rápida</label>
-                                <input type="text" id="battery-fast" name="carga_rapida" value="45W">
+                                <input type="text" id="battery-fast" name="carga_rapida" value="<%= movil.bateria_cargaRapida %>">
                             </div>
                             <div class="form-group">
                                 <label for="battery-wireless">Carga inalámbrica</label>
                                 <select id="battery-wireless" name="carga_inalambrica">
-                                    <option value="1">Sí</option>
-                                    <option value="0">No</option>
+                                    <option value="1" <%=movil.bateria_cargaInalambrica==1 ? 'selected' : '' %>>Sí</option>
+                                    <option value="0" <%=movil.bateria_cargaInalambrica==0 ? 'selected' : '' %>>No</option>
                                 </select>
                             </div>
                         </div>
@@ -139,21 +136,21 @@
                         <div class="grid-layout">
                             <div class="form-group">
                                 <label for="connectivity-network">Red</label>
-                                <input type="text" id="connectivity-network" name="red" value="5G, LTE">
+                                <input type="text" id="connectivity-network" name="red" value="<%= movil.conectividad_red %>">
                             </div>
                             <div class="form-group">
                                 <label for="connectivity-wifi">Wi-Fi</label>
-                                <input type="text" id="connectivity-wifi" name="wifi" value="Wi-Fi 6E">
+                                <input type="text" id="connectivity-wifi" name="wifi" value="<%= movil.conectividad_wifi %>">
                             </div>
                             <div class="form-group">
                                 <label for="connectivity-bluetooth">Bluetooth</label>
-                                <input type="text" id="connectivity-bluetooth" name="bluetooth" value="5.3">
+                                <input type="text" id="connectivity-bluetooth" name="bluetooth" value="<%= movil.conectividad_bluetooth %>">
                             </div>
                             <div class="form-group">
                                 <label for="connectivity-nfc">NFC</label>
                                 <select id="connectivity-nfc" name="nfc">
-                                    <option value="1">Sí</option>
-                                    <option value="0">No</option>
+                                    <option value="1" <%=movil.conectividad_nfc==1 ? 'selected' : '' %>>Sí</option>
+                                    <option value="0" <%=movil.conectividad_nfc==0 ? 'selected' : '' %>>No</option>
                                 </select>
                             </div>
                         </div>
@@ -167,19 +164,19 @@
                         <div class="grid-layout">
                             <div class="form-group">
                                 <label for="design-height">Altura (mm)</label>
-                                <input type="text" id="design-height" name="altura" value="162.3">
+                                <input type="text" id="design-height" name="altura" value="<%= movil.dimensiones_altura %>">
                             </div>
                             <div class="form-group">
                                 <label for="design-width">Anchura (mm)</label>
-                                <input type="text" id="design-width" name="anchura" value="79.0">
+                                <input type="text" id="design-width" name="anchura" value="<%= movil.dimensiones_anchura %>">
                             </div>
                             <div class="form-group">
                                 <label for="design-thickness">Grosor (mm)</label>
-                                <input type="text" id="design-thickness" name="grosor" value="8.6">
+                                <input type="text" id="design-thickness" name="grosor" value="<%= movil.dimensiones_grosor %>">
                             </div>
                             <div class="form-group">
                                 <label for="design-weight">Peso (g)</label>
-                                <input type="text" id="design-weight" name="peso" value="232">
+                                <input type="text" id="design-weight" name="peso" value="<%= movil.dimensiones_peso %>">
                             </div>
                         </div>
                         <div class="button-group">
@@ -192,11 +189,11 @@
                         <div class="grid-layout">
                             <div class="form-group">
                                 <label for="software-os">Sistema Operativo</label>
-                                <input type="text" id="software-os" value="Android 14">
+                                <input type="text" id="software-os" value="<%= movil.dimensiones_software %>">
                             </div>
                             <div class="form-group">
                                 <label for="software-ui">Interfaz</label>
-                                <input type="text" id="software-ui" value="One UI 6.1">
+                                <input type="text" id="software-ui" value="<%= movil.dimensiones_interfaz %>">
                             </div>
                         </div>
                         <div class="button-group">
@@ -209,11 +206,11 @@
                         <div class="grid-layout">
                             <div class="form-group">
                                 <label for="storage-capacity">Capacidades (separar con comas)</label>
-                                <input type="text" id="storage-capacity" name="capacidad" value="256GB, 512GB, 1TB">
+                                <input type="text" id="storage-capacity" name="capacidad" value="<%= movil.almacenamiento_capacidad %>">
                             </div>
                             <div class="form-group">
                                 <label for="storage-type">Tipo</label>
-                                <input type="text" id="storage-type" name="tipo" value="UFS 4.0">
+                                <input type="text" id="storage-type" name="tipo" value="<%= movil.almacenamiento_tipo %>">
                             </div>
                         </div>
                         <div class="button-group">
@@ -226,11 +223,11 @@
                         <div class="grid-layout">
                             <div class="form-group">
                                 <label for="ram-capacity">Capacidades (separar con comas)</label>
-                                <input type="text" id="ram-capacity" name="capacidad" value="8GB, 12GB">
+                                <input type="text" id="ram-capacity" name="capacidad" value="<%= movil.ram_capacidad %>">
                             </div>
                             <div class="form-group">
                                 <label for="ram-type">Tipo</label>
-                                <input type="text" id="ram-type" name="tipo" value="LPDDR5X">
+                                <input type="text" id="ram-type" name="tipo" value="<%= movil.ram_tipo %>">
                             </div>
                         </div>
                         <div class="button-group">
@@ -275,3 +272,7 @@
         }
     });
 </script>
+
+<script type="module" src="/js/adminEditSpecs.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://unpkg.com/feather-icons"></script>

@@ -97,32 +97,16 @@ request.user = z.object({
     .optional()
   }).strict();
 
-request.device = z.object({
-  nombre: z
-    .string()
-    .trim()
-    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
-    .max(100, { message: ERROR_ZOD.FIELD_MAX }),
-  ram: z
-    .string()
-    .trim()
-    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
-  cpu: z
-    .string()
-    .trim()
-    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
-  gpu: z
-    .string()
-    .trim()
-    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
-  almacenamiento: z
-    .string()
-    .trim()
-    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
-  pantalla: z
-    .string()
-    .trim()
-    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
+request.deviceUpdate = z.object({
+  cpu_id: z.number().int(),
+  gpu_id: z.number().int(),
+  ram_id: z.number().int(),
+  almacenamiento_id: z.number().int(),
+  pantalla_id: z.number().int(),
+  camara_id: z.number().int(),
+  bateria_id: z.number().int(),
+  conectividad_id: z.number().int(),
+  dimensionespeso_id: z.number().int()
 }).strict();
 
 export default request;

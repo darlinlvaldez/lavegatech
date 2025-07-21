@@ -14,10 +14,8 @@
     
     <main class="main-content-area">
         <div class="card">
-            <!-- Navegación por pestañas -->
             <div class="tabs-container">
                 <div class="tabs">
-                    <button class="tab-button" data-tab="moviles">Móviles</button>
                     <button class="tab-button" data-tab="pantallas">Pantallas</button>
                     <button class="tab-button" data-tab="camaras">Cámaras</button>
                     <button class="tab-button" data-tab="cpus">CPUs</button>
@@ -32,80 +30,6 @@
                 </div>
             </div>
 
-            <!-- Contenido de las pestañas -->
-            <div class="tab-content active" id="productos">
-                <div class="card-header">
-                    <h2>Lista de Productos</h2>
-                    <div class="search-container">
-                        <input type="text" id="searchProductInput" placeholder="Buscar productos..." class="input-search"/>
-                        <i class="fa fa-search search-icon"></i>
-                    </div>
-                    <button id="addProductBtn" class="add-button">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Añadir Producto
-                    </button>
-                </div>
-
-                <div class="table-container">
-                    <table class="product-table">
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Descripción</th>
-                                <th>Precio</th>
-                                <th>Descuento</th>
-                                <th>Categoría</th>
-                                <th>Marca</th>
-                                <th>Fecha</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="productsTableBody">
-                            <!-- Datos se cargarán dinámicamente -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Pestaña Móviles -->
-            <div class="tab-content" id="moviles">
-                <div class="card-header">
-                    <h2>Lista de Móviles</h2>
-                    <div class="search-container">
-                        <input type="text" id="searchMovilesInput" placeholder="Buscar móviles..." class="input-search"/>
-                        <i class="fa fa-search search-icon"></i>
-                    </div>
-                    <button id="addMovilBtn" class="add-button">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Añadir Móvil
-                    </button>
-                </div>
-
-                <div class="table-container">
-                    <table class="product-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Año</th>
-                                <th>CPU</th>
-                                <th>Cámara</th>
-                                <th>Batería</th>
-                                <th>GPU</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="movilesTableBody">
-                            <!-- Datos se cargarán dinámicamente -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Pestaña Pantallas -->
             <div class="tab-content" id="pantallas">
                 <div class="card-header">
                     <h2>Lista de Pantallas</h2>
@@ -134,13 +58,11 @@
                             </tr>
                         </thead>
                         <tbody id="pantallasTableBody">
-                            <!-- Datos se cargarán dinámicamente -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Pestaña Cámaras -->
             <div class="tab-content" id="camaras">
                 <div class="card-header">
                     <h2>Lista de Cámaras</h2>
@@ -167,7 +89,6 @@
                             </tr>
                         </thead>
                         <tbody id="camarasTableBody">
-                            <!-- Datos se cargarán dinámicamente -->
                         </tbody>
                     </table>
                 </div>
@@ -200,13 +121,11 @@
                             </tr>
                         </thead>
                         <tbody id="cpusTableBody">
-                            <!-- Datos se cargarán dinámicamente -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Pestaña GPUs -->
             <div class="tab-content" id="gpus">
                 <div class="card-header">
                     <h2>Lista de GPUs</h2>
@@ -232,13 +151,11 @@
                             </tr>
                         </thead>
                         <tbody id="gpusTableBody">
-                            <!-- Datos se cargarán dinámicamente -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Pestaña Baterías -->
             <div class="tab-content" id="baterias">
                 <div class="card-header">
                     <h2>Lista de Baterías</h2>
@@ -266,13 +183,11 @@
                             </tr>
                         </thead>
                         <tbody id="bateriasTableBody">
-                            <!-- Datos se cargarán dinámicamente -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Pestaña Conectividad -->
             <div class="tab-content" id="conectividad">
                 <div class="card-header">
                     <h2>Lista de Conectividad</h2>
@@ -300,13 +215,11 @@
                             </tr>
                         </thead>
                         <tbody id="conectividadTableBody">
-                            <!-- Datos se cargarán dinámicamente -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Pestaña Dimensiones -->
             <div class="tab-content" id="dimensiones">
                 <div class="card-header">
                     <h2>Lista de Dimensiones</h2>
@@ -334,13 +247,11 @@
                             </tr>
                         </thead>
                         <tbody id="dimensionesTableBody">
-                            <!-- Datos se cargarán dinámicamente -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Pestaña Almacenamiento -->
             <div class="tab-content" id="almacenamiento">
                 <div class="card-header">
                     <h2>Lista de Almacenamiento</h2>
@@ -366,13 +277,11 @@
                             </tr>
                         </thead>
                         <tbody id="almacenamientoTableBody">
-                            <!-- Datos se cargarán dinámicamente -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Pestaña RAM -->
             <div class="tab-content" id="ram">
                 <div class="card-header">
                     <h2>Lista de RAM</h2>
@@ -398,13 +307,11 @@
                             </tr>
                         </thead>
                         <tbody id="ramTableBody">
-                            <!-- Datos se cargarán dinámicamente -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Pestaña Variantes Almacenamiento -->
             <div class="tab-content" id="variantes-alm">
                 <div class="card-header">
                     <h2>Variantes de Almacenamiento</h2>
@@ -430,13 +337,11 @@
                             </tr>
                         </thead>
                         <tbody id="variantesAlmTableBody">
-                            <!-- Datos se cargarán dinámicamente -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Pestaña Variantes RAM -->
             <div class="tab-content" id="variantes-ram">
                 <div class="card-header">
                     <h2>Variantes de RAM</h2>
@@ -462,7 +367,6 @@
                             </tr>
                         </thead>
                         <tbody id="variantesRAMTableBody">
-                            <!-- Datos se cargarán dinámicamente -->
                         </tbody>
                     </table>
                 </div>
@@ -471,7 +375,6 @@
     </main>
 </div>
 
-<!-- Modal genérico para todas las tablas -->
 <div id="genericModal" class="modal-overlay">
     <div class="modal-content">
         <h3 id="modalTitle" class="modal-title">Añadir Nuevo Registro</h3>
@@ -479,7 +382,6 @@
             <input type="hidden" id="recordId">
             <input type="hidden" id="recordType">
             <div id="modalFormFields">
-                <!-- Campos del formulario se cargarán dinámicamente -->
             </div>
             <div class="modal-buttons">
                 <button type="button" id="cancelModalBtn" class="cancel-button">
@@ -493,22 +395,363 @@
     </div>
 </div>
 
-<script>
-  document.querySelectorAll(".tab-button").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".tab-button").forEach(b => b.classList.remove("active"));
-    document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+<div id="pantallaModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3 id="modalPantallaTitle" class="modal-title">Añadir Nueva Pantalla</h3>
+    <form id="pantallaForm" class="modal-form">
+      <input type="hidden" id="pantallaId">
 
-    btn.classList.add("active");
-    const tabId = btn.getAttribute("data-tab");
-    document.getElementById(`tab-${tabId}`).classList.add("active");
+      <div class="form-group">
+        <label for="pantallaTipo">Tipo:</label>
+        <input type="text" id="pantallaTipo" name="tipo">
+        <div class="error-text" data-error-for="tipo"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="pantallaTamanio">Tamaño:</label>
+        <input type="text" id="pantallaTamanio" name="tamanio">
+        <div class="error-text" data-error-for="tamanio"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="pantallaResolucion">Resolución:</label>
+        <input type="text" id="pantallaResolucion" name="resolucion">
+        <div class="error-text" data-error-for="resolucion"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="pantallaFrecuencia">Frecuencia:</label>
+        <input type="text" id="pantallaFrecuencia" name="frecuencia">
+        <div class="error-text" data-error-for="frecuencia"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="pantallaProteccion">Protección:</label>
+        <input type="text" id="pantallaProteccion" name="proteccion">
+        <div class="error-text" data-error-for="proteccion"></div>
+      </div>
+
+      <div class="modal-buttons">
+        <button type="button" id="cancelPantallaModalBtn" class="cancel-button">Cancelar</button>
+        <button type="submit" class="save-button">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="camaraModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3 id="modalCamaraTitle" class="modal-title">Añadir Nueva Cámara</h3>
+    <form id="camaraForm" class="modal-form">
+      <input type="hidden" id="camaraId">
+      <div class="form-group">
+        <label for="camaraPrincipal">Cámara Principal:</label>
+        <input type="text" id="camaraPrincipal" name="principal">
+        <div class="error-text" data-error-for="principal"></div>
+      </div>
+      <div class="form-group">
+        <label for="camaraSelfie">Cámara Frontal (Selfie):</label>
+        <input type="text" id="camaraSelfie" name="selfie">
+        <div class="error-text" data-error-for="selfie"></div>
+      </div>
+      <div class="form-group">
+        <label for="camaraVideo">Grabación de Video:</label>
+        <input type="text" id="camaraVideo" name="video">
+        <div class="error-text" data-error-for="video"></div>
+      </div>
+      <div class="modal-buttons">
+        <button type="button" id="cancelCamaraModalBtn" class="cancel-button">Cancelar</button>
+        <button type="submit" class="save-button">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="cpuModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3 id="modalCpuTitle" class="modal-title">Añadir Nueva CPU</h3>
+    <form id="cpuForm" class="modal-form">
+      <input type="hidden" id="cpuId">
+      <div class="form-group">
+        <label for="cpuNombre">Nombre:</label>
+        <input type="text" id="cpuNombre" name="nombre" />
+        <div class="error-text" data-error-for="nombre"></div>
+      </div>
+      <div class="form-group">
+        <label for="cpuNucleos">Núcleos:</label>
+        <input type="text" id="cpuNucleos" name="nucleos" />
+        <div class="error-text" data-error-for="nucleos"></div>
+      </div>
+      <div class="form-group">
+        <label for="cpuVelocidad">Velocidad:</label>
+        <input type="text" id="cpuVelocidad" name="velocidad" />
+        <div class="error-text" data-error-for="velocidad"></div>
+      </div>
+      <div class="modal-buttons">
+        <button type="button" id="cancelCpuModalBtn" class="cancel-button">Cancelar</button>
+        <button type="submit" class="save-button">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="gpuModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3 id="modalGpuTitle" class="modal-title">Añadir Nueva GPU</h3>
+    <form id="gpuForm" class="modal-form">
+      <input type="hidden" id="gpuId" />
+      <div class="form-group">
+        <label for="gpuModelo">Modelo:</label>
+        <input type="text" id="gpuModelo" name="modelo" />
+        <div class="error-text" data-error-for="modelo"></div>
+      </div>
+      <div class="form-group">
+        <label for="gpuNucleos">Núcleos:</label>
+        <input type="text" id="gpuNucleos" name="nucleos" />
+        <div class="error-text" data-error-for="nucleos"></div>
+      </div>
+      <div class="modal-buttons">
+        <button type="button" id="cancelGpuModalBtn" class="cancel-button">Cancelar</button>
+        <button type="submit" class="save-button">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="bateriaModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3 id="modalBateriaTitle" class="modal-title">Añadir Nueva Batería</h3>
+    <form id="bateriaForm" class="modal-form">
+      <input type="hidden" id="bateriaId">
+      <div class="form-group">
+        <label for="bateriaCapacidad">Capacidad:</label>
+        <input type="text" id="bateriaCapacidad" name="capacidad" />
+        <div class="error-text" data-error-for="capacidad"></div>
+      </div>
+      <div class="form-group">
+        <label for="bateriaTipo">Tipo:</label>
+        <input type="text" id="bateriaTipo" name="tipo" />
+        <div class="error-text" data-error-for="tipo"></div>
+      </div>
+      <div class="form-group">
+        <label for="bateriaCargaRapida">Carga Rápida:</label>
+        <input type="text" id="bateriaCargaRapida" name="carga_rapida" />
+        <div class="error-text" data-error-for="carga_rapida"></div>
+      </div>
+      <div class="form-group checkbox-group">
+        <label for="bateriaCargaInalambrica">Carga Inalámbrica:</label>
+        <input type="checkbox" id="bateriaCargaInalambrica" name="carga_inalambrica" />
+      </div>
+      <div class="modal-buttons">
+        <button type="button" id="cancelBateriaModalBtn" class="cancel-button">Cancelar</button>
+        <button type="submit" class="save-button">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="conectividadModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3 id="modalConectividadTitle" class="modal-title">Añadir Nueva Conectividad</h3>
+    <form id="conectividadForm" class="modal-form">
+      <input type="hidden" id="conectividadId" />
+      <div class="form-group">
+        <label for="conectividadRed">Red:</label>
+        <input type="text" id="conectividadRed" name="red" />
+        <div class="error-text" data-error-for="red"></div>
+      </div>
+      <div class="form-group">
+        <label for="conectividadWifi">Wi-Fi:</label>
+        <input type="text" id="conectividadWifi" name="wifi" />
+        <div class="error-text" data-error-for="wifi"></div>
+      </div>
+      <div class="form-group">
+        <label for="conectividadBluetooth">Bluetooth:</label>
+        <input type="text" id="conectividadBluetooth" name="bluetooth" />
+        <div class="error-text" data-error-for="bluetooth"></div>
+      </div>
+      <div class="form-group checkbox-group">
+        <label for="conectividadNfc">NFC:</label>
+        <input type="checkbox" id="conectividadNfc" name="nfc" />
+      </div>
+      <div class="modal-buttons">
+        <button type="button" id="cancelConectividadModalBtn" class="cancel-button">Cancelar</button>
+        <button type="submit" class="save-button">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="dimensionesModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3 id="modalDimensionesTitle" class="modal-title">Añadir Nueva Dimensión</h3>
+    <form id="dimensionesForm" class="modal-form">
+      <input type="hidden" id="dimensionesId" />
+      <div class="form-group">
+        <label for="dimensionesAltura">Altura:</label>
+        <input type="text" id="dimensionesAltura" name="altura" />
+        <div class="error-text" data-error-for="altura"></div>
+      </div>
+      <div class="form-group">
+        <label for="dimensionesAnchura">Anchura:</label>
+        <input type="text" id="dimensionesAnchura" name="anchura" />
+        <div class="error-text" data-error-for="anchura"></div>
+      </div>
+      <div class="form-group">
+        <label for="dimensionesGrosor">Grosor:</label>
+        <input type="text" id="dimensionesGrosor" name="grosor" />
+        <div class="error-text" data-error-for="grosor"></div>
+      </div>
+      <div class="form-group">
+        <label for="dimensionesPeso">Peso:</label>
+        <input type="text" id="dimensionesPeso" name="peso" />
+        <div class="error-text" data-error-for="peso"></div>
+      </div>
+      <div class="modal-buttons">
+        <button type="button" id="cancelDimensionesModalBtn" class="cancel-button">Cancelar</button>
+        <button type="submit" class="save-button">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="ramModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3 id="modalRAMTitle" class="modal-title">Añadir Nueva RAM</h3>
+    <form id="ramForm" class="modal-form">
+      <input type="hidden" id="ramId">
+      <div class="form-group">
+        <label for="ramCapacidad">Capacidad:</label>
+        <input type="text" id="ramCapacidad" name="capacidad" placeholder="Ej: 8GB">
+        <div class="error-text" data-error-for="capacidad"></div>
+      </div>
+      <div class="form-group">
+        <label for="ramTipo">Tipo:</label>
+        <input type="text" id="ramTipo" name="tipo" placeholder="Ej: LPDDR5">
+        <div class="error-text" data-error-for="tipo"></div>
+      </div>
+      <div class="modal-buttons">
+        <button type="button" id="cancelRAMModalBtn" class="cancel-button">Cancelar</button>
+        <button type="submit" class="save-button">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="varianteRAMModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3 id="modalVarianteRAMTitle" class="modal-title">Añadir Nueva Variante RAM</h3>
+    <form id="varianteRAMForm" class="modal-form">
+      <input type="hidden" id="varianteRAMId">
+      <div class="form-group">
+        <label for="movilId">Móvil:</label>
+        <select id="movilId" name="movil_id" class="form-select">
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="ramId">RAM:</label>
+        <select id="ramId" name="ram_id" class="form-select">
+        </select>
+      </div>
+      <div class="modal-buttons">
+        <button type="button" id="cancelVarianteRAMModalBtn" class="cancel-button">Cancelar</button>
+        <button type="submit" class="save-button">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="almacenamientoModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3 id="modalAlmacenamientoTitle" class="modal-title">Añadir Nuevo Almacenamiento</h3>
+    <form id="almacenamientoForm" class="modal-form">
+      <input type="hidden" id="almacenamientoId">
+      <div class="form-group">
+        <label for="almacenamientoCapacidad">Capacidad:</label>
+        <input type="text" id="almacenamientoCapacidad" name="capacidad" placeholder="Ej: 128GB">
+        <div class="error-text" data-error-for="capacidad"></div>
+      </div>
+      <div class="form-group">
+        <label for="almacenamientoTipo">Tipo:</label>
+        <input type="text" id="almacenamientoTipo" name="tipo" placeholder="Ej: UFS 3.1">
+        <div class="error-text" data-error-for="tipo"></div>
+      </div>
+      <div class="modal-buttons">
+        <button type="button" id="cancelAlmacenamientoModalBtn" class="cancel-button">Cancelar</button>
+        <button type="submit" class="save-button">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="varianteAlmModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3 id="modalVarianteAlmTitle" class="modal-title">Añadir Nueva Variante de Almacenamiento</h3>
+    <form id="varianteAlmForm" class="modal-form">
+      <input type="hidden" id="varianteAlmId">
+      <div class="form-group">
+        <label for="movilIdAlm">Móvil:</label>
+        <select id="movilIdAlm" name="movil_id" class="form-select">
+          <!-- Opciones se cargarán dinámicamente -->
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="almacenamientoId">Almacenamiento:</label>
+        <select id="almacenamientoId" name="almacenamiento_id" class="form-select">
+          <!-- Opciones se cargarán dinámicamente -->
+        </select>
+      </div>
+      <div class="modal-buttons">
+        <button type="button" id="cancelVarianteAlmModalBtn" class="cancel-button">Cancelar</button>
+        <button type="submit" class="save-button">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const tabButtons = document.querySelectorAll(".tab-button");
+
+    tabButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        tabButtons.forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+
+        btn.classList.add("active");
+        const tabId = btn.getAttribute("data-tab");
+        document.getElementById(tabId).classList.add("active");
+
+        switch(tabId) {
+          case 'pantallas':
+            if (typeof fetchPantallas === 'function') fetchPantallas();
+            break;
+          case 'camaras':
+            if (typeof fetchCamaras === 'function') fetchCamaras();
+            break;
+        }
+      });
+    });
+
+    if (tabButtons.length > 0) {
+      tabButtons[0].click();
+    }
   });
-});
 </script>
 
-
+<script type="module" src="/js/adminScreen.js"></script>
+<script type="module" src="/js/adminCamera.js"></script>
+<script type="module" src="/js/adminCpu.js"></script>
+<script type="module" src="/js/adminGpu.js"></script>
+<script type="module" src="/js/adminBattery.js"></script>
+<script type="module" src="/js/adminConnectivity.js"></script>
+<script type="module" src="/js/adminConnectivity.js"></script>
+<script type="module" src="/js/adminDimensions.js"></script>
+<script type="module" src="/js/adminRAM.js"></script>
+<script type="module" src="/js/adminVariantRAM.js"></script>
+<script type="module" src="/js/adminStorage.js"></script>
+<script type="module" src="/js/adminVariantStorage.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="https://unpkg.com/feather-icons"></script>
-<script type="module" src="/js/adminSpecs.js"></script>
 <script src="/js/formatPrice.js"></script>

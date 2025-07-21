@@ -20,6 +20,7 @@ import rating from './src/routes/rating.js';
 import comparison from './src/routes/comparison.js'; 
 import admin from './src/routes/admin.js';
 import adminAuth from './src/routes/adminAuth.js';
+import specs from './src/routes/adminSpecs.js';
 
 const app = express();
 
@@ -51,6 +52,8 @@ app.use('/api/auth', auth);
 app.use('/api/admin', admin);
 
 app.use('/api/adminAuth', adminAuth);
+
+app.use('/api/specs', specs);
 
 app.use('/user', userProfile); 
 
@@ -153,20 +156,20 @@ app.get('/admin/brandCategory', isAdmin(), (req, res) => {
   res.render('admin/brandCategory');
 });
 
-app.get('/admin/login', isAdmin({ redirect: true }), (req, res) => {
-  res.render('admin/login', { error: null, username: null, validationErrors: {} });
-});
-
 app.get('/admin/device', isAdmin(), (req, res) => {
   res.render('admin/device');
 });
 
-app.get('/admin/editComparison', isAdmin(), (req, res) => {
-  res.render('admin/editComparison');
+app.get('/admin/editMobiles', isAdmin(), (req, res) => {
+  res.render('admin/editMobiles');
 });
 
 app.get('/admin/specs', isAdmin(), (req, res) => {
   res.render('admin/specs');
+}); 
+
+app.get('/admin/login', isAdmin({ redirect: true }), (req, res) => {
+  res.render('admin/login', { error: null, username: null, validationErrors: {} });
 });
 
 app.listen(config.PORT, () => {

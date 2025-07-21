@@ -54,7 +54,6 @@ comparison.getDevice = async (ids) => {
       p.precio,
       p.descuento,
       v.img AS imagen,
-      m.año,
       pant.tamaño AS pantalla_tamaño,
       pant.resolucion AS pantalla_resolucion,
       pant.tipo AS pantalla_tipo,

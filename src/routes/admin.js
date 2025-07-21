@@ -43,10 +43,4 @@ router.patch('/usuarios/:id/estado', admin.actualizarEstado);
 // Cargar Imagen
 router.post('/variantes/upload', admin.cargarImagen);
 
-// Comparación de dispositivos
-router.get('/dispositivos', admin.listarDispositivos);
-router.post('/dispositivos', validate(request.device), admin.crearDispositivo);
-router.put('/dispositivos/:id', validate(request.device), admin.editarDispositivo);
-router.delete('/dispositivos/:id', admin.borrarDispositivo);
-
 export default router;
