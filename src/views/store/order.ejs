@@ -56,7 +56,7 @@
 							<select class="input" id="city-select" name="ciudad_envio_id">
 								<option value="">Selecciona una ciudad</option>
 							</select>
-							<div class="error-text" data-error-for="city"></div>
+							<div class="error-text" data-error-for="ciudad_envio_id"></div>
 						</div>
 						<div class="form-group">
 							<input class="input" type="text" name="district" placeholder="Distrito">
@@ -88,7 +88,7 @@
 						</div>
 						<div class="order-col">
 							<div>ENVÍO</div>
-							<div><strong>GRATIS</strong></div>
+							<div><strong id="shipping-cost"></strong></div>
 						</div>
 						<div class="order-col">
 							<div><strong>TOTAL</strong></div>
@@ -126,7 +126,7 @@
 
 	<%- include('../partials/footer.ejs') %>
 
-		</body>
+	</body>
     
     <script src="https://www.paypal.com/sdk/js?client-id=Adxx8fzjTmAkgRKTLil8ciSgRYaYZxTnJf96IAsdJVAvE8-fW3Rx2hbrDZ5VC662O1So9fgvFOPZd5IG&currency=USD"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>

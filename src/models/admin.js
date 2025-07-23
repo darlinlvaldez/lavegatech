@@ -184,12 +184,23 @@ admin.estadoUsuario = async (id, isActive) => {
 // Pedidos
 
 admin.obtenerPedidos = async () => {
-  const [rows] = await db.query("SELECT * FROM pedidos ORDER BY fecha_creacion DESC");
+  const [rows] = await db.query(
+    `SELECT p.*, c.costo_envio 
+     FROM pedidos p
+     LEFT JOIN ciudades_envio c ON p.ciudad_envio_id = c.id
+     ORDER BY p.fecha_creacion DESC`
+  );
   return rows;
 };
 
 admin.obtenerPedidoId = async (id) => {
-  const [rows] = await db.query("SELECT * FROM pedidos WHERE id = ?", [id]);
+  const [rows] = await db.query(
+    `SELECT p.*, c.costo_envio 
+     FROM pedidos p
+     LEFT JOIN ciudades_envio c ON p.ciudad_envio_id = c.id
+     WHERE p.id = ?`,
+    [id]
+  );
   return rows[0]; 
 };
 

@@ -1,6 +1,5 @@
 import orders from '../models/orders.js';
 import cart from '../models/cart.js';
-import db from "../database/mobiles.js";
 
 const payController = {};
 
@@ -12,8 +11,8 @@ payController.createOrder = async (req, res) => {
     }
 
     const userId = req.session.user.id;
-    const {nombre, apellido, email, direccion, ciudad, 
-      distrito, telefono} = req.body;
+    const { nombre, apellido, email, direccion, ciudad, 
+      distrito, telefono, ciudad_envio_id } = req.body;
 
     if (!nombre || !direccion || !telefono || !email) {
       return res.status(400).json({ 
@@ -26,15 +25,22 @@ payController.createOrder = async (req, res) => {
         message: 'El carrito está vacío'});
     }
 
-    const total = cartItems.reduce((sum, item) => {
-  const precioFinal = item.descuento > 0 
-    ? item.precio * (1 - item.descuento / 100)
-    : item.precio;
-  return sum + (precioFinal * item.cantidad);
-}, 0) + costoEnvio;
+    const ciudadData = await orders.getCiudadEnvioById(ciudad_envio_id);
+    if (!ciudadData) {
+      return res.status(400).json({ success: false, message: 'Ciudad de envío no válida' });
+    }
 
-    const orderData = { user_id: userId, nombre, apellido, email, 
-      direccion, ciudad, distrito, telefono, total, ciudad_envio_id
+    const costoEnvio = parseFloat(ciudadData.costo_envio);
+
+    const total = cartItems.reduce((sum, item) => {
+      const precioFinal = item.descuento > 0 
+        ? item.precio * (1 - item.descuento / 100)
+        : item.precio;
+      return sum + (precioFinal * item.cantidad);
+    }, 0) + costoEnvio;
+
+    const orderData = { user_id: userId, nombre, apellido, email, direccion, 
+      ciudad: ciudadData.nombre, distrito, telefono, total, ciudad_envio_id
     };
 
     const orderItems = cartItems.map(item => ({
@@ -47,21 +53,6 @@ payController.createOrder = async (req, res) => {
       subtotal: (item.precio * (1 - (item.descuento || 0) / 100)) * item.cantidad
     }));
 
-    const { ciudad_envio_id } = req.body;
-
-const [ciudadData] = await db.query(
-  "SELECT nombre, costo_envio FROM ciudades_envio WHERE id = ?", 
-  [ciudad_envio_id]
-);
-
-if (!ciudadData.length) {
-  return res.status(400).json({ success: false, message: 'Ciudad de envío no válida' });
-}
-
-const ciudadNombre = ciudadData[0].nombre;
-const costoEnvio = parseFloat(ciudadData[0].costo_envio);
-
-
     res.json({success: true, orderData, orderItems, total});
   } catch (error) {
     console.error('Error al crear orden:', error);
@@ -70,6 +61,16 @@ const costoEnvio = parseFloat(ciudadData[0].costo_envio);
     });
   }
 };
+
+payController.getCiudades = async function (req, res) {
+  try {
+    const ciudades = await orders.obtenerCiudades();
+    res.json({ success: true, ciudades });
+  } catch (error) {
+    console.error('Error al cargar ciudades:', error);
+    res.status(500).json({ success: false, message: 'Error al cargar ciudades' });
+  }
+}
 
 payController.processPayment = async (req, res) => {
   try {
@@ -83,14 +84,33 @@ payController.processPayment = async (req, res) => {
     const userId = req.session.user.id;
 
     const cartItems = await cart.getCartToPay(userId);
+
     if (cartItems.length === 0) { 
       return res.status(400).json({success: false, message: 'El carrito está vacío'});
     }
 
-    await orders.checkStock(cartItems);
+    const ciudadData = await orders.getCiudadEnvioById(orderData.ciudad_envio_id);
+    if (!ciudadData) {
+      return res.status(400).json({ success: false, message: 'Ciudad de envío no válida' });
+    }
+    const costoEnvio = parseFloat(ciudadData.costo_envio);
 
     const totalReal = parseFloat(orderData.total);
     const pagado = parseFloat(paymentDetails.purchase_units[0].amount.value);
+
+    const totalCalculado = cartItems.reduce((sum, item) => {
+      const precioFinal = item.descuento > 0
+        ? item.precio * (1 - item.descuento / 100)
+        : item.precio;
+      return sum + (precioFinal * item.cantidad);
+    }, 0) + costoEnvio;
+
+    if (Math.abs(pagado - totalCalculado) > 0.01) {
+      return res.status(400).json({success: false,
+        message: 'Monto pagado no coincide con el total real de la orden'});
+    }
+
+    await orders.checkStock(cartItems);
 
     if (pagado !== totalReal) {
       return res.status(400).json({success: false, 

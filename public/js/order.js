@@ -102,11 +102,9 @@ document.addEventListener("DOMContentLoaded", () => {
     apellido: document.querySelector('input[name="last-name"]').value.trim(),
     email: document.querySelector('input[name="email"]').value.trim(),
     direccion: document.querySelector('input[name="address"]').value.trim(),
-    ciudad: document.querySelector('input[name="city"]').value.trim(),
+    ciudad_envio_id: document.getElementById("city-select").value,
     distrito: document.querySelector('input[name="district"]').value.trim(),
     telefono: document.querySelector('input[name="tel"]').value.replace(/\D/g, ""),
-    ciudad_envio_id: document.getElementById("city-select").value
-
   });
 
   const inputFields = () => ["first-name", "last-name", "email",
@@ -142,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
         apellido: "last-name",
         email: "email",
         direccion: "address",
-        ciudad: "city",
+        ciudad_envio_id: "ciudad_envio_id",
         distrito: "district",
         telefono: "tel",
       };
@@ -256,6 +254,7 @@ let costoEnvio = 0;
 
 const citySelect = document.getElementById("city-select");
 const orderTotal = document.querySelector(".order-total");
+const shippingCostEl = document.getElementById("shipping-cost");
 
 async function cargarCiudades() {
   try {
@@ -281,13 +280,17 @@ citySelect?.addEventListener("change", () => {
   const selectedOption = citySelect.options[citySelect.selectedIndex];
   costoEnvio = parseFloat(selectedOption.dataset.costo || "0");
 
+  if (shippingCostEl) {
+    shippingCostEl.textContent = `$${formatPrice(costoEnvio)}`;
+  }
+
   actualizarTotalConEnvio();
 });
 
 function actualizarTotalConEnvio() {
   const subtotal = parseFloat(orderTotal.dataset.subtotal || "0");
   const totalConEnvio = subtotal + costoEnvio;
-  orderTotal.textContent = `$${totalConEnvio.toFixed(2)}`;
+  orderTotal.textContent = `$${formatPrice(totalConEnvio)}`;
 }
 
 cargarCiudades();
