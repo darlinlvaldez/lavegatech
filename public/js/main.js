@@ -80,13 +80,12 @@ import { checkFavorites } from "./fav.js";
     asNavFor: "#product-imgs",
   });
 
-  // Product imgs Slick
-  var $productImgs = $("#product-imgs").slick({
-    slidesToShow: 3,
+  var $productImgs = $("#product-imgs");
+  var slideCount = $productImgs.find('.product-preview').length;
+  
+  var slickOptions = {
+    slidesToShow: Math.min(3, slideCount),
     slidesToScroll: 1,
-    arrows: true,
-    centerMode: true,
-    focusOnSelect: true,
     centerPadding: 0,
     vertical: true,
     asNavFor: "#product-main-img",
@@ -95,12 +94,33 @@ import { checkFavorites } from "./fav.js";
         breakpoint: 991,
         settings: {
           vertical: false,
-          arrows: false,
-          dots: true,
-        },
-      },
-    ],
-  });
+          dots: false
+        }
+      }
+    ]
+  };
+
+  if (slideCount <= 3) {
+    $.extend(slickOptions, {
+      arrows: false,
+      centerMode: false,
+      focusOnSelect: false,
+      infinite: false,
+      swipe: false,
+      touchMove: false
+    });
+    $productImgs.addClass('few-items');
+  } else {
+    $.extend(slickOptions, {
+      arrows: true,
+      centerMode: true,
+      focusOnSelect: true,
+      infinite: true
+    });
+    $productImgs.removeClass('few-items');
+  }
+
+  $productImgs.slick(slickOptions);
 
   $productImgs.on("afterChange", handleColorChange);
 

@@ -1574,6 +1574,21 @@ textarea.input {
 	Product view
 \*----------------------------*/
 
+/* Asegura que las miniaturas siempre sean visibles */
+#product-imgs .slick-list {
+  padding: 0 !important;
+  margin: 0 auto;
+}
+
+/* Estilo para cuando hay pocas imágenes */
+#product-imgs.few-items .slick-track {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: none !important;
+  width: 100% !important;
+}
+
 #product-main-img .slick-prev {
   -webkit-transform: translateX(-15px);
   -ms-transform: translateX(-15px);
