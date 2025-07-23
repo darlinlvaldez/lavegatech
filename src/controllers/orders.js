@@ -1,9 +1,9 @@
 import orders from '../models/orders.js';
 import cart from '../models/cart.js';
 
-const payController = {};
+const orderController = {};
 
-payController.createOrder = async (req, res) => {
+orderController.createOrder = async (req, res) => {
   try {
     if (!req.session.user) {
       return res.status(401).json({ 
@@ -62,7 +62,7 @@ payController.createOrder = async (req, res) => {
   }
 };
 
-payController.getCiudades = async function (req, res) {
+orderController.getCiudades = async function (req, res) {
   try {
     const ciudades = await orders.obtenerCiudades();
     res.json({ success: true, ciudades });
@@ -72,7 +72,7 @@ payController.getCiudades = async function (req, res) {
   }
 }
 
-payController.processPayment = async (req, res) => {
+orderController.processPayment = async (req, res) => {
   try {
     const { orderData, orderItems } = req.body; 
     const { paymentMethod, paymentDetails, payerId, paymentId } = req.body;
@@ -143,7 +143,7 @@ payController.processPayment = async (req, res) => {
   }
 };
 
-payController.getOrderDetails = async (req, res) => {
+orderController.getOrderDetails = async (req, res) => {
   try {
     const { orderId } = req.params;
     const userId = req.session.user.id;
@@ -162,7 +162,7 @@ payController.getOrderDetails = async (req, res) => {
   }
 };
 
-payController.showUserOrders = async (req, res) => {
+orderController.showUserOrders = async (req, res) => {
   try {
     const userId = req.session.user.id;
     const userOrders = await orders.getUserOrders(userId);
@@ -174,7 +174,7 @@ payController.showUserOrders = async (req, res) => {
   }
 };
 
-payController.showOrderDetails = async (req, res) => {
+orderController.showOrderDetails = async (req, res) => {
   try {
     const order = await orders.getOrderById(req.params.orderId, req.session.user.id);
 
@@ -189,4 +189,4 @@ payController.showOrderDetails = async (req, res) => {
   }
 };
 
-export default payController;
+export default orderController;
