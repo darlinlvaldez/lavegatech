@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-07-2025 a las 19:38:44
+-- Tiempo de generación: 23-07-2025 a las 08:51:24
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -189,7 +189,8 @@ CREATE TABLE `carrito` (
 --
 
 INSERT INTO `carrito` (`id`, `usuario_id`, `producto_id`, `colorSeleccionado`, `cantidad`, `descuento`, `precio`, `imagen`, `nombre`, `fecha_agregado`) VALUES
-(1249, 75, 2, 'blanco', 1, 0.00, 17995.00, 'https://rukminim2.flixcart.com/image/850/1000/kg8avm80/mobile/j/f/9/apple-iphone-12-dummyapplefsn-original-imafwg8dkyh2zgrh.jpeg?q=90&crop=false', 'iPhone 12 128GB', '2025-07-18 16:55:51');
+(1251, 78, 2, 'verde', 1, 0.00, 17995.00, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg', 'iPhone 12 128GB', '2025-07-23 04:34:41'),
+(1259, 75, 1, 'verde', 1, 20.00, 15995.00, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg', 'iPhone 12 64GB', '2025-07-23 06:43:54');
 
 -- --------------------------------------------------------
 
@@ -218,6 +219,54 @@ INSERT INTO `categorias` (`id`, `categoria`, `imagen`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `ciudades_envio`
+--
+
+CREATE TABLE `ciudades_envio` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `costo_envio` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `ciudades_envio`
+--
+
+INSERT INTO `ciudades_envio` (`id`, `nombre`, `costo_envio`) VALUES
+(1, 'La Vega', 50.00),
+(2, 'Santiago', 150.00),
+(3, 'Santo Domingo', 250.00),
+(4, 'Distrito Nacional', 250.00),
+(5, 'San Cristóbal', 220.00),
+(6, 'Monseñor Nouel', 100.00),
+(7, 'Duarte', 180.00),
+(8, 'Espaillat', 160.00),
+(9, 'Puerto Plata', 200.00),
+(10, 'Valverde', 170.00),
+(11, 'María Trinidad Sánchez', 220.00),
+(12, 'Samaná', 280.00),
+(13, 'Hato Mayor', 300.00),
+(14, 'El Seibo', 320.00),
+(15, 'La Altagracia', 350.00),
+(16, 'San Pedro de Macorís', 280.00),
+(17, 'Monte Plata', 260.00),
+(18, 'San José de Ocoa', 200.00),
+(19, 'Peravia', 230.00),
+(20, 'Azua', 250.00),
+(21, 'Barahona', 300.00),
+(22, 'Bahoruco', 280.00),
+(23, 'Independencia', 320.00),
+(24, 'Pedernales', 350.00),
+(25, 'Elías Piña', 280.00),
+(26, 'Dajabón', 250.00),
+(27, 'Montecristi', 270.00),
+(28, 'Santiago Rodríguez', 200.00),
+(29, 'San Juan', 230.00),
+(30, 'La Romana', 300.00);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `clasificacion`
 --
 
@@ -236,7 +285,7 @@ CREATE TABLE `clasificacion` (
 --
 
 INSERT INTO `clasificacion` (`id`, `producto_id`, `usuario_id`, `calificacion`, `comentario`, `fecha_creacion`, `fecha_actualizacion`) VALUES
-(45, 1, 75, 2, 'el wason', '2025-07-09 21:00:43', '2025-07-09 21:09:24');
+(45, 1, 75, 3, 'Buenisimo!', '2025-07-09 21:00:43', '2025-07-23 02:48:31');
 
 -- --------------------------------------------------------
 
@@ -333,19 +382,13 @@ CREATE TABLE `detalles_pedido` (
 --
 
 INSERT INTO `detalles_pedido` (`id`, `order_id`, `producto_id`, `nombre_producto`, `cantidad`, `precio_unitario`, `descuento`, `subtotal`, `colorSeleccionado`) VALUES
-(145, 134, 3, 'iPhone 12 256GB', 1, 19495.00, 0.00, 19495.00, 'dorado'),
-(146, 135, 1, 'iPhone 12 64GB', 1, 15995.00, 20.00, 12796.00, 'negro espacial'),
-(147, 136, 1, 'iPhone 12 64GB', 1, 15995.00, 20.00, 12796.00, 'negro espacial'),
-(148, 137, 98, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 1, 39995.00, 0.00, 39995.00, 'blanco'),
-(149, 138, 3, 'iPhone 12 256GB', 1, 19495.00, 0.00, 19495.00, 'dorado'),
-(150, 139, 1, 'iPhone 12 64GB', 1, 15995.00, 20.00, 12796.00, 'negro espacial'),
-(151, 140, 98, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 1, 39995.00, 0.00, 39995.00, 'blanco'),
-(152, 141, 1, 'iPhone 12 64GB', 1, 15995.00, 20.00, 12796.00, 'negro espacial'),
-(153, 141, 98, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 1, 39995.00, 0.00, 39995.00, 'blanco'),
-(154, 142, 98, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 1, 39995.00, 0.00, 39995.00, 'blanco'),
-(155, 143, 3, 'iPhone 12 256GB', 1, 19495.00, 0.00, 19495.00, 'dorado'),
-(156, 143, 98, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 1, 39995.00, 0.00, 39995.00, 'blanco'),
-(157, 144, NULL, 'claro', 1, 17000.00, 5.00, 16150.00, 'rojo');
+(159, 146, 1, 'iPhone 12 64GB', 1, 15995.00, 20.00, 12796.00, 'blanco'),
+(160, 147, 2, 'iPhone 12 128GB', 1, 17995.00, 0.00, 17995.00, 'verde'),
+(161, 148, 4, 'iPhone 12 Pro 128GB', 1, 21995.00, 0.00, 21995.00, 'negro'),
+(162, 149, 6, 'iPhone 12 Pro Max 128GB ', 1, 27495.00, 0.00, 27495.00, 'gris'),
+(163, 150, 9, 'iPhone 13 128GB ', 1, 23995.00, 0.00, 23995.00, 'Rojo'),
+(164, 151, 19, 'iPhone 14 Plus 256GB ', 1, 30995.00, 0.00, 30995.00, 'negro'),
+(165, 152, 1, 'iPhone 12 64GB', 1, 15995.00, 20.00, 12796.00, 'blanco');
 
 -- --------------------------------------------------------
 
@@ -396,6 +439,24 @@ INSERT INTO `dimensionespeso` (`id`, `altura`, `anchura`, `grosor`, `peso`) VALU
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `envios`
+--
+
+CREATE TABLE `envios` (
+  `id` int(11) NOT NULL,
+  `pedido_id` int(11) NOT NULL,
+  `empresa_envio` varchar(100) DEFAULT NULL,
+  `estado_envio` varchar(50) DEFAULT 'pendiente',
+  `codigo_seguimiento` varchar(100) DEFAULT NULL,
+  `costo_envio` decimal(10,2) DEFAULT 0.00,
+  `fecha_envio` datetime DEFAULT NULL,
+  `fecha_entrega_estimada` datetime DEFAULT NULL,
+  `fecha_entregado` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `fav`
 --
 
@@ -410,6 +471,15 @@ CREATE TABLE `fav` (
   `nombre` varchar(255) DEFAULT NULL,
   `fecha_agregado` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `fav`
+--
+
+INSERT INTO `fav` (`id`, `usuario_id`, `producto_id`, `colorSeleccionado`, `descuento`, `precio`, `imagen`, `nombre`, `fecha_agregado`) VALUES
+(700, 75, 1, 'blanco', 20.00, 15995.00, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg', 'iPhone 12 64GB', '2025-07-23 06:43:09'),
+(701, 75, 1, 'verde', 20.00, 15995.00, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg', 'iPhone 12 64GB', '2025-07-23 06:43:11'),
+(702, 75, 1, 'negro', 20.00, 15995.00, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/a75941f0-0032-4680-bda0-ba070e5f9982.jpg', 'iPhone 12 64GB', '2025-07-23 06:43:14');
 
 -- --------------------------------------------------------
 
@@ -504,7 +574,6 @@ INSERT INTO `marca_categoria` (`marca_id`, `categoria_id`) VALUES
 
 CREATE TABLE `moviles` (
   `id` int(11) NOT NULL,
-  `año` int(11) DEFAULT NULL,
   `cpu_id` int(11) DEFAULT NULL,
   `camara_id` int(11) DEFAULT NULL,
   `bateria_id` int(11) DEFAULT NULL,
@@ -518,68 +587,68 @@ CREATE TABLE `moviles` (
 -- Volcado de datos para la tabla `moviles`
 --
 
-INSERT INTO `moviles` (`id`, `año`, `cpu_id`, `camara_id`, `bateria_id`, `gpu_id`, `conectividad_id`, `dimensionespeso_id`, `pantalla_id`) VALUES
-(1, 2020, 1, 1, 1, 1, 1, 1, NULL),
-(2, 2020, 1, 2, 3, 1, 1, 2, NULL),
-(3, 2020, 1, 3, 2, 1, 1, 3, NULL),
-(4, 2021, 2, 1, 4, 2, 1, 4, NULL),
-(5, 2021, 2, 4, 4, 2, 1, 5, NULL),
-(6, 2021, 2, 4, 5, 2, 1, 6, NULL),
-(7, 2022, 2, 1, 6, 2, 1, 7, NULL),
-(8, 2022, 2, 1, 7, 2, 5, 8, NULL),
-(9, 2022, 3, 5, 8, 2, 5, 9, NULL),
-(10, 2022, 3, 5, 9, 2, 5, 10, NULL),
-(11, 2023, 2, 7, 10, 2, 5, 11, NULL),
-(12, 2023, 2, 7, 11, 2, 2, 12, NULL),
-(13, 2023, 4, 6, 12, 3, 2, 13, NULL),
-(14, 2023, 4, 8, 9, 3, 2, 14, NULL),
-(15, 2025, 5, 7, 13, 2, 3, 15, NULL),
-(16, 2025, 2, 7, 14, 2, 5, 16, NULL),
-(17, 2025, 5, 7, 15, 2, 3, 17, NULL),
-(18, 2025, 5, 8, 16, 3, 4, 18, NULL),
-(19, 2019, 7, 9, 2, 5, 4, 19, NULL),
-(20, 2019, 7, 9, 3, 5, 4, 3, NULL),
-(21, 2020, 6, 9, 5, 4, 1, 6, NULL),
-(22, 2021, 6, 9, 7, 4, 1, 8, NULL),
-(23, 2023, 8, 10, 17, 6, 2, 12, NULL),
-(24, 2025, 8, 10, 17, 6, 3, 18, NULL),
-(25, 2023, 6, 11, 14, 4, 4, 15, NULL),
-(26, 2023, 6, 11, 18, 4, 1, 16, NULL),
-(27, 2023, 6, 11, 18, 4, 1, 17, NULL),
-(28, 2024, 10, 12, 19, 8, 1, 15, NULL),
-(29, 2024, 12, 13, 20, 10, 1, 16, NULL),
-(30, 2024, 11, 13, 19, 9, 1, 15, NULL),
-(31, 2024, 9, 12, 19, 7, 4, 13, NULL),
-(32, 2025, 10, 12, 19, 8, 4, 15, NULL),
-(33, 2025, 10, 12, 19, 8, 1, 15, NULL),
-(34, 2025, 11, 13, 20, 9, 4, 16, NULL),
-(35, 2025, 11, 13, 20, 9, 1, 16, NULL),
-(36, 2025, 12, 14, 21, 10, 1, 17, NULL),
-(37, 2022, 13, 15, 15, 3, 2, 13, NULL),
-(38, 2023, 14, 16, 16, 3, 3, 14, NULL),
-(39, 2023, 15, 17, 22, 11, 4, 15, NULL),
-(40, 2024, 15, 17, 22, 11, 4, 15, NULL),
-(41, 2024, 15, 18, 23, 11, 4, 16, NULL),
-(42, 2023, 16, 19, 22, 12, 4, 17, NULL),
-(43, 2023, 16, 19, 22, 12, 4, 17, NULL),
-(44, 2024, 15, 18, 22, 11, 4, 16, NULL),
-(45, 2024, 17, 18, 25, 13, 1, 18, NULL),
-(46, 2024, 18, 19, 24, 14, 4, 19, NULL),
-(47, 2024, 18, 17, 24, 14, 4, 15, NULL),
-(48, 2022, 19, 20, 26, 15, 6, 20, NULL),
-(49, 2022, 19, 20, 26, 15, 6, 20, NULL),
-(50, 2024, 20, 20, 27, 16, 6, 21, NULL),
-(51, 2022, 1, 21, 28, 1, 6, 22, NULL),
-(52, 2022, 21, 22, 29, 17, 8, 23, NULL),
-(53, 2021, 22, 23, 30, 11, 8, 24, NULL),
-(54, 2023, 23, 25, 31, 7, 8, 25, NULL),
-(55, 2024, 24, 24, 30, 18, 8, 24, NULL),
-(56, 2023, 24, 24, 32, 18, 8, 24, NULL),
-(57, 2020, 22, 23, 30, 11, 9, 26, NULL),
-(58, 2023, 22, 23, 30, 11, 9, 26, NULL),
-(59, 2025, 24, 24, 32, 18, 8, 26, NULL),
-(60, 0, 22, 23, 30, 11, 9, 26, NULL),
-(61, 2023, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `moviles` (`id`, `cpu_id`, `camara_id`, `bateria_id`, `gpu_id`, `conectividad_id`, `dimensionespeso_id`, `pantalla_id`) VALUES
+(1, 1, 1, 1, 1, 1, 1, NULL),
+(2, 1, 2, 3, 1, 1, 2, NULL),
+(3, 1, 3, 2, 1, 1, 3, NULL),
+(4, 2, 1, 4, 2, 1, 4, NULL),
+(5, 2, 4, 4, 2, 1, 5, NULL),
+(6, 2, 4, 5, 2, 1, 6, NULL),
+(7, 2, 1, 6, 2, 1, 7, NULL),
+(8, 2, 1, 7, 2, 5, 8, NULL),
+(9, 3, 5, 8, 2, 5, 9, NULL),
+(10, 3, 5, 9, 2, 5, 10, NULL),
+(11, 2, 7, 10, 2, 5, 11, NULL),
+(12, 2, 7, 11, 2, 2, 12, NULL),
+(13, 4, 6, 12, 3, 2, 13, NULL),
+(14, 4, 8, 9, 3, 2, 14, NULL),
+(15, 5, 7, 13, 2, 3, 15, NULL),
+(16, 2, 7, 14, 2, 5, 16, NULL),
+(17, 5, 7, 15, 2, 3, 17, NULL),
+(18, 5, 8, 16, 3, 4, 18, NULL),
+(19, 7, 9, 2, 5, 4, 19, NULL),
+(20, 7, 9, 3, 5, 4, 3, NULL),
+(21, 6, 9, 5, 4, 1, 6, NULL),
+(22, 6, 9, 7, 4, 1, 8, NULL),
+(23, 8, 10, 17, 6, 2, 12, NULL),
+(24, 8, 10, 17, 6, 3, 18, NULL),
+(25, 6, 11, 14, 4, 4, 15, NULL),
+(26, 6, 11, 18, 4, 1, 16, NULL),
+(27, 6, 11, 18, 4, 1, 17, NULL),
+(28, 10, 12, 19, 8, 1, 15, NULL),
+(29, 12, 13, 20, 10, 1, 16, NULL),
+(30, 11, 13, 19, 9, 1, 15, NULL),
+(31, 9, 12, 19, 7, 4, 13, NULL),
+(32, 10, 12, 19, 8, 4, 15, NULL),
+(33, 10, 12, 19, 8, 1, 15, NULL),
+(34, 11, 13, 20, 9, 4, 16, NULL),
+(35, 11, 13, 20, 9, 1, 16, NULL),
+(36, 12, 14, 21, 10, 1, 17, NULL),
+(37, 13, 15, 15, 3, 2, 13, NULL),
+(38, 14, 16, 16, 3, 3, 14, NULL),
+(39, 15, 17, 22, 11, 4, 15, NULL),
+(40, 15, 17, 22, 11, 4, 15, NULL),
+(41, 15, 18, 23, 11, 4, 16, NULL),
+(42, 16, 19, 22, 12, 4, 17, NULL),
+(43, 16, 19, 22, 12, 4, 17, NULL),
+(44, 15, 18, 22, 11, 4, 16, NULL),
+(45, 17, 25, 13, 13, 4, 7, 2),
+(46, 22, 19, 24, 14, 4, 19, 2),
+(47, 22, 25, 6, 13, 4, 15, 2),
+(48, 19, 20, 26, 15, 6, 20, NULL),
+(49, 19, 20, 26, 15, 6, 20, NULL),
+(50, 20, 20, 27, 16, 6, 21, NULL),
+(51, 1, 21, 28, 1, 6, 22, NULL),
+(52, 21, 22, 29, 17, 8, 23, NULL),
+(53, 22, 23, 30, 11, 8, 24, NULL),
+(54, 23, 25, 31, 7, 8, 25, NULL),
+(55, 24, 24, 30, 18, 8, 24, NULL),
+(56, 24, 24, 32, 18, 8, 24, NULL),
+(57, 22, 23, 30, 11, 9, 26, NULL),
+(58, 22, 23, 30, 11, 9, 26, NULL),
+(59, 24, 24, 32, 18, 8, 26, NULL),
+(60, 22, 23, 30, 11, 9, 26, NULL),
+(61, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -601,17 +670,13 @@ CREATE TABLE `pagos` (
 --
 
 INSERT INTO `pagos` (`id`, `order_id`, `metodo_pago`, `estado_pago`, `paypal_order_id`, `fecha_pago`) VALUES
-(58, 134, 'paypal', 'completado', '73D50044F8587682E', '2025-07-01 12:17:01'),
-(59, 135, 'paypal', 'completado', '3VG068255U807713R', '2025-07-01 13:01:26'),
-(60, 136, 'paypal', 'completado', '8TS99958KK340951V', '2025-07-01 13:03:23'),
-(61, 137, 'paypal', 'completado', '2RD31520A5065735N', '2025-07-01 14:31:26'),
-(62, 138, 'paypal', 'completado', '2B930113XV6486323', '2025-07-01 19:26:59'),
-(63, 139, 'paypal', 'completado', '9SV308349P603690S', '2025-07-01 21:24:27'),
-(64, 140, 'paypal', 'completado', '6UY75528XK265480K', '2025-07-01 21:51:48'),
-(65, 141, 'paypal', 'completado', '0174712251777870F', '2025-07-02 12:50:29'),
-(66, 142, 'paypal', 'completado', '96M74879SP885025R', '2025-07-02 14:16:01'),
-(67, 143, 'paypal', 'completado', '9DN90904UU546225W', '2025-07-09 20:06:53'),
-(68, 144, 'paypal', 'completado', '49M34316M51887250', '2025-07-13 21:42:57');
+(70, 146, 'paypal', 'completado', '6JD02214X2638905A', '2025-07-23 02:02:12'),
+(71, 147, 'paypal', 'completado', '5GW102228B381114D', '2025-07-23 02:09:40'),
+(72, 148, 'paypal', 'completado', '87Y15664575013401', '2025-07-23 02:17:50'),
+(73, 149, 'paypal', 'completado', '9W151508TM7272941', '2025-07-23 02:21:57'),
+(74, 150, 'paypal', 'completado', '85D84198L0894323T', '2025-07-23 02:24:01'),
+(75, 151, 'paypal', 'completado', '6AD12795MU113220L', '2025-07-23 02:28:51'),
+(76, 152, 'paypal', 'completado', '7XK41110RU677240G', '2025-07-23 02:41:24');
 
 -- --------------------------------------------------------
 
@@ -627,6 +692,13 @@ CREATE TABLE `pantalla` (
   `frecuencia` varchar(20) DEFAULT NULL,
   `proteccion` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `pantalla`
+--
+
+INSERT INTO `pantalla` (`id`, `tamaño`, `resolucion`, `tipo`, `frecuencia`, `proteccion`) VALUES
+(2, '70', '1444p', 'ips', '60 hz', 'gorila');
 
 -- --------------------------------------------------------
 
@@ -644,28 +716,24 @@ CREATE TABLE `pedidos` (
   `ciudad` varchar(100) NOT NULL,
   `distrito` varchar(100) NOT NULL,
   `telefono` varchar(20) NOT NULL,
-  `horario_entrega` varchar(20) NOT NULL,
   `total` decimal(10,2) NOT NULL,
   `status` varchar(50) DEFAULT 'pendiente',
-  `fecha_creacion` datetime DEFAULT current_timestamp()
+  `fecha_creacion` datetime DEFAULT current_timestamp(),
+  `ciudad_envio_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `pedidos`
 --
 
-INSERT INTO `pedidos` (`id`, `user_id`, `nombre`, `apellido`, `email`, `direccion`, `ciudad`, `distrito`, `telefono`, `horario_entrega`, `total`, `status`, `fecha_creacion`) VALUES
-(134, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '2-5', 19495.00, 'pagado', '2025-07-01 12:17:01'),
-(135, 75, 'N', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '', 12796.00, 'pagado', '2025-07-01 13:01:26'),
-(136, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '', 12796.00, 'pagado', '2025-07-01 13:03:23'),
-(137, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '', 39995.00, 'pagado', '2025-07-01 14:31:26'),
-(138, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '', 19495.00, 'pagado', '2025-07-01 19:26:59'),
-(139, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295524400', '', 12796.00, 'pagado', '2025-07-01 21:24:27'),
-(140, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295542244', '', 39995.00, 'pagado', '2025-07-01 21:51:48'),
-(141, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295542244', '', 52791.00, 'pagado', '2025-07-02 12:50:29'),
-(142, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295542244', '', 39995.00, 'pagado', '2025-07-02 14:16:01'),
-(143, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295542244', '', 59490.00, 'pagado', '2025-07-09 20:06:53'),
-(144, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', 'LA VEGA', '8295542244', '', 16150.00, 'pagado', '2025-07-13 21:42:57');
+INSERT INTO `pedidos` (`id`, `user_id`, `nombre`, `apellido`, `email`, `direccion`, `ciudad`, `distrito`, `telefono`, `total`, `status`, `fecha_creacion`, `ciudad_envio_id`) VALUES
+(146, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'La Vega', 'LA VEGA', '8295542244', 12846.00, 'pagado', '2025-07-23 02:02:12', NULL),
+(147, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'La Vega', 'LA VEGA', '8295542244', 18045.00, 'pagado', '2025-07-23 02:09:40', 1),
+(148, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'La Vega', 'LA VEGA', '8295542244', 22045.00, 'pagado', '2025-07-23 02:17:50', 1),
+(149, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'Espaillat', 'LA VEGA', '8295542244', 27655.00, 'pagado', '2025-07-23 02:21:57', 8),
+(150, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'La Vega', 'LA VEGA', '8295542244', 24045.00, 'pagado', '2025-07-23 02:24:01', 1),
+(151, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'Santo Domingo', 'LA VEGA', '8295542244', 31245.00, 'pagado', '2025-07-23 02:28:51', 3),
+(152, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'San Cristóbal', 'LA VEGA', '8295542244', 13016.00, 'pagado', '2025-07-23 02:41:24', 5);
 
 -- --------------------------------------------------------
 
@@ -783,7 +851,7 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (95, 0, 'Macbook Pro M2 2022 8-Ram 256GB', '', 51995.00, 3, 0.00, '2023-01-01 08:00:00', 1),
 (96, 0, 'Macbook Air 15-Inch M2 256GB ', '', 54995.00, 3, 0.00, '2023-01-01 08:00:00', 1),
 (97, 0, 'HP Victus i5 12GEN 3050TI 8+512GB ', '', 33495.00, 3, 0.00, '2023-01-01 08:00:00', 8),
-(98, 0, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 'waos', 39995.00, 3, 0.00, '2025-06-23 08:00:00', 9),
+(98, 0, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 'waos', 39995.00, 3, 0.00, '2025-06-23 16:00:00', 9),
 (99, 0, 'HP 15.6Inch i5 12GEN 8+256GB ', '', 23995.00, 3, 0.00, '2023-01-01 08:00:00', 8),
 (100, 0, 'HP i5 13GEN 8+256GB ', '', 24995.00, 3, 0.00, '2023-01-01 08:00:00', 8),
 (108, 0, 'SAMSUNG GALAXY TAB A9+ 64GB ', '', 11495.00, 5, 0.00, '2023-01-01 08:00:00', 2),
@@ -932,13 +1000,55 @@ CREATE TABLE `p_variantes` (
 --
 
 INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
-(372, 1, 'negro espacial', 5, 'https://www.trippodo.com/997943-medium_default/apple-iphone-12-155-cm-61-sim-doble-ios-14-5g-128-.jpg'),
-(373, 1, 'azul', 6, 'https://hsi.com.co/wp-content/uploads/2022/03/Apple-iPhone-12-128GB-Usado-B-Azul-400x400.jpg'),
-(374, 98, 'blanco', 4, 'https://globaliraq.net/cdn/shop/files/1bbcf8d6-eaea-4f46-96e5-e4aee2924baa_2048x.jpg?v=1710541301'),
-(375, 1, 'purpura', 3, 'https://www.artefacta.com/media/catalog/product/1/4/148658_2_.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=400&width=400&canvas=400:400'),
-(376, 2, 'blanco', 9, 'https://rukminim2.flixcart.com/image/850/1000/kg8avm80/mobile/j/f/9/apple-iphone-12-dummyapplefsn-original-imafwg8dkyh2zgrh.jpeg?q=90&crop=false'),
-(377, 3, 'dorado', 3, 'https://www.lacuracao.pe/media/catalog/product/p/s/ps21110833_1.jpg?quality=80&bg-color=255,255,255&fit=bounds&height=400&width=400&canvas=400:400'),
-(382, 1, 'blanco', 5, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg');
+(372, 23, 'negro', 4, 'https://i.ebayimg.com/images/g/0lIAAOSwqNhkW5sy/s-l1600.webp'),
+(373, 23, 'blanco', 3, 'https://i.ebayimg.com/images/g/b~YAAOSwNzNkW5tc/s-l1600.webp'),
+(374, 25, 'oro', 5, 'https://i.ebayimg.com/images/g/0MgAAOSwWIpkW5u-/s-l1600.webp'),
+(375, 24, 'purpura', 3, 'https://i.ebayimg.com/images/g/Yu0AAOSwG0hkW5uL/s-l1600.webp'),
+(376, 24, 'blanco', 4, 'https://i.ebayimg.com/images/g/b~YAAOSwNzNkW5tc/s-l1600.webp'),
+(377, 25, 'dorado', 1, 'https://i.ebayimg.com/images/g/0MgAAOSwWIpkW5u-/s-l1600.webp'),
+(382, 1, 'blanco', 0, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg'),
+(383, 1, 'negro', 5, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/a75941f0-0032-4680-bda0-ba070e5f9982.jpg'),
+(384, 1, 'verde', 4, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg'),
+(385, 2, 'verde', 2, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg'),
+(386, 2, 'pupura', 4, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/b01801bc-4c3c-411e-9ff0-dac6b4e34a87.jpg'),
+(387, 3, 'blanco', 2, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/6caf4891-9655-4247-a11c-9719a3db6244.jpg'),
+(388, 3, 'rojo', 1, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/859d07b9-f8a1-43bc-b8c3-ff09652e2c26.jpg'),
+(389, 4, 'negro', 5, 'https://i.ebayimg.com/images/g/6VEAAOSwcrlhP6ad/s-l1600.webp'),
+(390, 4, 'blanco', 4, 'https://i.ebayimg.com/images/g/WloAAOSwcU9hP6ap/s-l1600.webp'),
+(391, 5, 'azul', 2, 'https://i.ebayimg.com/images/g/9PsAAOSwnh5hP6a7/s-l1600.webp'),
+(392, 5, 'verde', 4, 'https://i.ebayimg.com/images/g/s2MAAOSwugxhP6bJ/s-l1600.webp'),
+(393, 6, 'gris', 0, 'https://i.ebayimg.com/images/g/QVEAAOSwbWdhQfcN/s-l1600.webp'),
+(394, 6, 'oro', 4, 'https://i.ebayimg.com/images/g/l8AAAOSwrQlhQfcU/s-l1600.webp'),
+(395, 7, 'blanco', 3, 'https://i.ebayimg.com/images/g/Yj4AAOSwmb5hQfca/s-l1600.webp'),
+(396, 7, 'azul', 6, 'https://i.ebayimg.com/images/g/YZsAAOSwntxhQfch/s-l1600.webp'),
+(397, 8, 'gris', 4, 'https://i.ebayimg.com/images/g/KSQAAOSwa4xhQfcO/s-l1600.webp'),
+(398, 9, 'Rojo', 1, 'https://i.ebayimg.com/images/g/iZ4AAOSwk7pkwnXM/s-l1600.webp'),
+(399, 9, 'azul', 4, 'https://i.ebayimg.com/images/g/rdMAAOSwjUFkwnXL/s-l1600.webp'),
+(400, 10, 'blanco', 5, 'https://i.ebayimg.com/images/g/4pEAAOSwxchkwnXN/s-l1600.webp'),
+(401, 10, 'pupura', 4, 'https://i.ebayimg.com/images/g/Yp4AAOSwPLNkwnXM/s-l1600.webp'),
+(402, 11, 'verde', 4, 'https://i.ebayimg.com/images/g/Gq4AAeSwNhNobXlW/s-l960.webp'),
+(403, 11, 'azul', 4, 'https://i.ebayimg.com/images/g/ScgAAeSwnqdobXlV/s-l960.webp'),
+(404, 12, 'gris', 4, 'https://i.ebayimg.com/images/g/eeYAAeSw4S9obXlU/s-l960.webp'),
+(405, 12, 'blanco', 4, 'https://i.ebayimg.com/images/g/FkcAAeSwvgNobXlS/s-l960.webp'),
+(406, 13, 'oro', 4, 'https://i.ebayimg.com/images/g/FkcAAeSwvgNobXlS/s-l960.webp'),
+(409, 14, 'gris', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Grey.jpg'),
+(410, 14, 'oro', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Gold.jpg'),
+(411, 15, 'blanco', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Silver.jpg'),
+(412, 15, 'verde', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Green.jpg'),
+(413, 16, 'negro', 4, 'https://i.ebayimg.com/images/g/AKQAAOSwn51oE~FN/s-l1600.webp'),
+(414, 16, 'blanco', 4, 'https://i.ebayimg.com/images/g/BvQAAOSwhH1mkSlU/s-l1600.webp'),
+(415, 17, 'Rojo', 4, 'https://i.ebayimg.com/images/g/bg4AAOSw2g1mkSlx/s-l1600.webp'),
+(416, 17, 'azul', 4, 'https://i.ebayimg.com/images/g/C-QAAOSw8l5mkSmR/s-l1600.webp'),
+(417, 18, 'amarillo', 4, 'https://i.ebayimg.com/images/g/k-8AAOSwofxmkSoT/s-l1600.webp'),
+(418, 18, 'pupura', 4, 'https://i.ebayimg.com/images/g/XPIAAOSwYEtmkSnd/s-l1600.webp'),
+(419, 19, 'negro', 2, 'https://i.ebayimg.com/images/g/~RgAAOSwKkhl61i3/s-l1600.webp'),
+(420, 19, 'azul', 4, 'https://i.ebayimg.com/images/g/C-QAAOSw8l5mkSmR/s-l1600.webp'),
+(421, 20, 'negro', 4, 'https://i.ebayimg.com/images/g/o~UAAOSwVB1kXRSz/s-l1600.webp'),
+(422, 20, 'blanco', 4, 'https://i.ebayimg.com/images/g/sI4AAOSwi5lkXRTg/s-l1600.webp'),
+(423, 21, 'oro', 4, 'https://i.ebayimg.com/images/g/-FYAAOSw8UNkXRT4/s-l1600.webp'),
+(424, 21, 'blanco', 4, 'https://i.ebayimg.com/images/g/sI4AAOSwi5lkXRTg/s-l1600.webp'),
+(425, 22, 'gris', 4, 'https://i.ebayimg.com/images/g/ml4AAOSwQJZkXRUR/s-l1600.webp'),
+(426, 22, 'negro', 4, 'https://i.ebayimg.com/images/g/o~UAAOSwVB1kXRSz/s-l140.webp');
 
 -- --------------------------------------------------------
 
@@ -979,6 +1089,13 @@ CREATE TABLE `sessions` (
   `data` mediumtext DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `sessions`
+--
+
+INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
+('H0KwF_QBJ5EPz1q2tc4q3qzgJGw7IF-T', 1753257040, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-07-23T07:31:16.954Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":75,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"},\"admin\":{\"id\":1,\"username\":\"darlin\"}}');
+
 -- --------------------------------------------------------
 
 --
@@ -999,7 +1116,8 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `username`, `email`, `password`, `is_active`, `created_at`) VALUES
-(75, 'darlin', 'darlinlvaldez@gmail.com', '$2b$10$daPgRMDJ07ah/gGuXRNP5unuAaS0HPGRBeVMQQx43y6.xe7o1D9ze', 1, '2025-05-26 00:18:31');
+(75, 'darlin', 'darlinlvaldez@gmail.com', '$2b$10$daPgRMDJ07ah/gGuXRNP5unuAaS0HPGRBeVMQQx43y6.xe7o1D9ze', 1, '2025-05-26 00:18:31'),
+(78, 'nilrad', 'nilradlvaldez@gmail.com', '$2b$10$7Tt9F/p5zZd.AQN3vRrMTeEI8QkxXZcOM7.i3fWBA74IZHNVJfrwi', 1, '2025-07-22 23:56:46');
 
 -- --------------------------------------------------------
 
@@ -1058,6 +1176,7 @@ INSERT INTO `variantes_almacenamiento` (`movil_id`, `almacenamiento_id`) VALUES
 (24, 4),
 (25, 1),
 (25, 2),
+(26, 0),
 (26, 2),
 (27, 3),
 (28, 3),
@@ -1083,12 +1202,7 @@ INSERT INTO `variantes_almacenamiento` (`movil_id`, `almacenamiento_id`) VALUES
 (47, 2),
 (53, 6),
 (54, 2),
-(55, 6),
-(56, 6),
-(57, 2),
-(58, 2),
-(59, 6),
-(60, 2);
+(55, 3);
 
 -- --------------------------------------------------------
 
@@ -1115,6 +1229,8 @@ INSERT INTO `variantes_ram` (`movil_id`, `ram_id`) VALUES
 (7, 2),
 (8, 2),
 (9, 2),
+(9, 6),
+(9, 8),
 (10, 2),
 (11, 2),
 (12, 2),
@@ -1123,6 +1239,7 @@ INSERT INTO `variantes_ram` (`movil_id`, `ram_id`) VALUES
 (19, 4),
 (20, 6),
 (21, 6),
+(21, 8),
 (22, 6),
 (23, 5),
 (24, 7),
@@ -1139,6 +1256,7 @@ INSERT INTO `variantes_ram` (`movil_id`, `ram_id`) VALUES
 (34, 3),
 (35, 5),
 (36, 5),
+(36, 8),
 (37, 5),
 (38, 5),
 (39, 1),
@@ -1157,7 +1275,8 @@ INSERT INTO `variantes_ram` (`movil_id`, `ram_id`) VALUES
 (57, 2),
 (58, 2),
 (59, 1),
-(60, 2);
+(60, 6),
+(60, 9);
 
 --
 -- Índices para tablas volcadas
@@ -1203,6 +1322,12 @@ ALTER TABLE `categorias`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `ciudades_envio`
+--
+ALTER TABLE `ciudades_envio`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `clasificacion`
 --
 ALTER TABLE `clasificacion`
@@ -1235,6 +1360,13 @@ ALTER TABLE `detalles_pedido`
 --
 ALTER TABLE `dimensionespeso`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `envios`
+--
+ALTER TABLE `envios`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pedido_id` (`pedido_id`);
 
 --
 -- Indices de la tabla `fav`
@@ -1289,7 +1421,8 @@ ALTER TABLE `pantalla`
 --
 ALTER TABLE `pedidos`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_orders_usuario` (`user_id`);
+  ADD KEY `fk_orders_usuario` (`user_id`),
+  ADD KEY `fk_ciudad_envio` (`ciudad_envio_id`);
 
 --
 -- Indices de la tabla `productos`
@@ -1361,7 +1494,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT de la tabla `almacenamiento`
 --
 ALTER TABLE `almacenamiento`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `baterias`
@@ -1373,13 +1506,13 @@ ALTER TABLE `baterias`
 -- AUTO_INCREMENT de la tabla `camara`
 --
 ALTER TABLE `camara`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1250;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1260;
 
 --
 -- AUTO_INCREMENT de la tabla `categorias`
@@ -1403,7 +1536,7 @@ ALTER TABLE `conectividad`
 -- AUTO_INCREMENT de la tabla `detalles_pedido`
 --
 ALTER TABLE `detalles_pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=158;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=166;
 
 --
 -- AUTO_INCREMENT de la tabla `dimensionespeso`
@@ -1415,7 +1548,7 @@ ALTER TABLE `dimensionespeso`
 -- AUTO_INCREMENT de la tabla `fav`
 --
 ALTER TABLE `fav`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=698;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=703;
 
 --
 -- AUTO_INCREMENT de la tabla `moviles`
@@ -1427,19 +1560,19 @@ ALTER TABLE `moviles`
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
 
 --
 -- AUTO_INCREMENT de la tabla `pantalla`
 --
 ALTER TABLE `pantalla`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
@@ -1457,13 +1590,19 @@ ALTER TABLE `p_marcas`
 -- AUTO_INCREMENT de la tabla `p_variantes`
 --
 ALTER TABLE `p_variantes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=393;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=427;
+
+--
+-- AUTO_INCREMENT de la tabla `ram`
+--
+ALTER TABLE `ram`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
 
 --
 -- Restricciones para tablas volcadas
@@ -1490,6 +1629,12 @@ ALTER TABLE `clasificacion`
 ALTER TABLE `detalles_pedido`
   ADD CONSTRAINT `detalles_pedido_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `pedidos` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_order_items` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE SET NULL;
+
+--
+-- Filtros para la tabla `envios`
+--
+ALTER TABLE `envios`
+  ADD CONSTRAINT `envios_ibfk_1` FOREIGN KEY (`pedido_id`) REFERENCES `pedidos` (`id`);
 
 --
 -- Filtros para la tabla `fav`
@@ -1527,6 +1672,7 @@ ALTER TABLE `pagos`
 -- Filtros para la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
+  ADD CONSTRAINT `fk_ciudad_envio` FOREIGN KEY (`ciudad_envio_id`) REFERENCES `ciudades_envio` (`id`),
   ADD CONSTRAINT `fk_orders_usuario` FOREIGN KEY (`user_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
 COMMIT;
 
