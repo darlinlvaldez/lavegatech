@@ -26,6 +26,7 @@ function renderRAMs() {
   lista.forEach(r => {
     const row = document.createElement("tr");
     row.innerHTML = `
+      <td>${r.id}</td>
       <td>${r.capacidad || '-'}</td>
       <td>${r.tipo || '-'}</td>
       <td>

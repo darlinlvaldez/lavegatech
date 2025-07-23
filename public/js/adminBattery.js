@@ -29,6 +29,7 @@ function renderBaterias() {
     const cargaInalambricaText = b.carga_inalambrica ? "Sí" : "No";
     const row = document.createElement("tr");
     row.innerHTML = `
+      <td>${b.id}</td>
       <td>${b.capacidad || '-'}</td>
       <td>${b.tipo || '-'}</td>
       <td>${b.carga_rapida || '-'}</td>

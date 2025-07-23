@@ -10,8 +10,6 @@ let movilesDisponibles = [];
 const varianteRAMModal = document.getElementById("varianteRAMModal");
 const varianteRAMForm = document.getElementById("varianteRAMForm");
 const varianteRAMIdInput = document.getElementById("varianteRAMId");
-const movilIdInput = document.getElementById("movilId");
-const ramIdInput = document.getElementById("ramId");
 const modalVarianteRAMTitle = document.getElementById("modalVarianteRAMTitle");
 const cancelVarianteRAMModalBtn = document.getElementById("cancelVarianteRAMModalBtn");
 const addVarianteRAMBtn = document.getElementById("addVarianteRAMBtn");
@@ -59,7 +57,6 @@ addVarianteRAMBtn.addEventListener("click", async () => {
   varianteRAMForm.reset();
   varianteRAMIdInput.value = "";
   
-  // Cargar selects
   await fetchRAMsDisponibles();
   await fetchMovilesDisponibles();
   
@@ -70,15 +67,59 @@ cancelVarianteRAMModalBtn.addEventListener("click", () => {
   varianteRAMModal.classList.remove("visible");
 });
 
+async function fetchMovilesDisponibles() {
+  try {
+    const res = await fetch("/api/specs/moviles");
+    movilesDisponibles = await res.json();
+    const list = document.getElementById("movilesList");
+    list.innerHTML = movilesDisponibles.map(m =>
+      `<option value="${m.nombre}" data-id="${m.id}"></option>`
+    ).join('');
+  } catch (err) {
+    showToast("Error al cargar móviles disponibles.", "#e74c3c", "alert-circle");
+  }
+}
+
+async function fetchRAMsDisponibles() {
+  try {
+    const res = await fetch("/api/specs/ram");
+    ramsDisponibles = await res.json();
+    const list = document.getElementById("ramsList");
+    list.innerHTML = ramsDisponibles.map(r =>
+      `<option value="${r.capacidad} ${r.tipo}" data-id="${r.id}"></option>`
+    ).join('');
+  } catch (err) {
+    showToast("Error al cargar RAMs disponibles.", "#e74c3c", "alert-circle");
+  }
+}
+
 varianteRAMForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const movil_id = movilIdInput.value;
-  const ram_id = ramIdInput.value;
+  const movilNombre = document.getElementById("movilIdInput").value.trim();
+  const ramTexto = document.getElementById("ramIdInput").value.trim();
 
-  const body = JSON.stringify({ movil_id, ram_id });
-  const url = "/api/specs/variantes_ram";
-  const method = "POST";
+  const movil = movilesDisponibles.find(m => m.nombre.trim().toLowerCase() === movilNombre.toLowerCase());
+  const ram = ramsDisponibles.find(r => (`${r.capacidad} ${r.tipo}`).trim().toLowerCase() === ramTexto.toLowerCase());
+
+  if (!movil || !ram) {
+    showToast("Debes seleccionar un móvil y una RAM válidos.", "#e74c3c", "alert-circle");
+    return;
+  }
+
+  const originalMovilId = varianteRAMForm.getAttribute("data-original-movil");
+  const originalRamId = varianteRAMForm.getAttribute("data-original-ram");
+  const isEditing = originalMovilId && originalRamId;
+
+  const body = isEditing
+    ? JSON.stringify({ nuevo_movil_id: movil.id, nuevo_ram_id: ram.id })
+    : JSON.stringify({ movil_id: movil.id, ram_id: ram.id });
+
+  const url = isEditing
+    ? `/api/specs/variantes_ram/${originalMovilId}/${originalRamId}`
+    : "/api/specs/variantes_ram";
+
+  const method = isEditing ? "PUT" : "POST";
 
   try {
     const res = await fetch(url, {
@@ -94,15 +135,36 @@ varianteRAMForm.addEventListener("submit", async (e) => {
       return;
     }
 
-    showToast("Variante RAM agregada.", "#27ae60", "check-circle");
+    showToast(isEditing ? "Variante RAM actualizada." : "Variante RAM agregada.", "#27ae60", "check-circle");
     varianteRAMModal.classList.remove("visible");
+    varianteRAMForm.removeAttribute("data-original-movil");
+    varianteRAMForm.removeAttribute("data-original-ram");
     fetchVariantesRAM();
   } catch (err) {
     showToast("Error inesperado.", "#e74c3c", "alert-circle");
   }
 });
 
-window.editVarianteRAM = function(movil_id, ram_id) {
+window.editVarianteRAM = async function(movil_id, ram_id) {
+  await fetchMovilesDisponibles();
+  await fetchRAMsDisponibles();
+
+  const movil = movilesDisponibles.find(m => m.id === movil_id);
+  const ram = ramsDisponibles.find(r => r.id === ram_id);
+
+  if (!movil || !ram) {
+    showToast("No se encontró el móvil o la RAM.", "#e74c3c", "alert-circle");
+    return;
+  }
+
+  modalVarianteRAMTitle.textContent = "Editar Variante RAM";
+  document.getElementById("movilIdInput").value = movil.nombre;
+  document.getElementById("ramIdInput").value = `${ram.capacidad} ${ram.tipo}`;
+  
+  varianteRAMForm.setAttribute("data-original-movil", movil_id);
+  varianteRAMForm.setAttribute("data-original-ram", ram_id);
+
+  varianteRAMModal.classList.add("visible");
 };
 
 window.deleteVarianteRAM = async function(movil_id, ram_id) {
@@ -115,9 +177,10 @@ window.deleteVarianteRAM = async function(movil_id, ram_id) {
   if (!confirmed) return;
 
   try {
-    const res = await fetch(`/api/specs/variantes_ram?movil_id=${movil_id}&ram_id=${ram_id}`, { 
-      method: "DELETE" 
+    const res = await fetch(`/api/specs/variantes_ram/${movil_id}/${ram_id}`, {
+      method: "DELETE",
     });
+
     if (!res.ok) throw new Error();
     await fetchVariantesRAM();
     showToast("Variante RAM eliminada con éxito.", "#27ae60", "check-circle");
@@ -136,30 +199,8 @@ async function fetchVariantesRAM() {
   }
 }
 
-async function fetchRAMsDisponibles() {
-  try {
-    const res = await fetch("/api/specs/variantes_ram");
-    ramsDisponibles = await res.json();
-    ramIdInput.innerHTML = ramsDisponibles.map(r => 
-      `<option value="${r.id}">${r.capacidad} ${r.tipo}</option>`
-    ).join('');
-  } catch (err) {
-    showToast("Error al cargar RAMs disponibles.", "#e74c3c", "alert-circle");
-  }
-}
-
-async function fetchMovilesDisponibles() {
-  try {
-    const res = await fetch("/api/moviles");
-    movilesDisponibles = await res.json();
-    movilIdInput.innerHTML = movilesDisponibles.map(m => 
-      `<option value="${m.id}">${m.nombre}</option>`
-    ).join('');
-  } catch (err) {
-    showToast("Error al cargar móviles disponibles.", "#e74c3c", "alert-circle");
-  }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  fetchVariantesRAM();
+document.addEventListener("DOMContentLoaded", async () => {
+  await fetchMovilesDisponibles();
+  await fetchRAMsDisponibles();
+  await fetchVariantesRAM();
 });

@@ -60,7 +60,13 @@ function openModal(type) {
   title.innerText = titles[type];
   form.innerHTML = formTemplates[type] || '';
 
+  const submitButton = document.getElementById("submit-button");
+  submitButton.textContent = type === "email" || type === "verify-email" ? "Enviar" : "Guardar";
+
   modal.style.display = 'flex';
+  const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+  document.body.style.overflow = 'hidden';
+  document.body.style.paddingRight = `${scrollBarWidth}px`;
 }
 
 async function openCodeModal(newEmail) {
@@ -140,15 +146,23 @@ async function openCodeModal(newEmail) {
   modal.style.display = "flex";
 }
 
+let resendIntervalId = null; 
+
 function disableResendButton(button, seconds) {
   button.disabled = true;
   const originalText = button.innerText;
 
-  const interval = setInterval(() => {
+  if (resendIntervalId !== null) {
+    clearInterval(resendIntervalId);
+    resendIntervalId = null;
+  }
+
+  resendIntervalId = setInterval(() => {
     if (seconds > 0) {
       button.innerText = `Espera ${seconds--}s`;
     } else {
-      clearInterval(interval);
+      clearInterval(resendIntervalId);
+      resendIntervalId = null;
       button.disabled = false;
       button.innerText = originalText;
     }
@@ -159,6 +173,8 @@ function closeModal() {
   document.getElementById('modal').style.display = 'none';
   document.getElementById('resend-code-btn').style.display = 'none';
   document.getElementById('verification-message').style.display = 'none';
+  document.body.style.overflow = '';
+  document.body.style.paddingRight = ''; 
 }
 
 document.getElementById("modal-form").addEventListener("submit", async (e) => {

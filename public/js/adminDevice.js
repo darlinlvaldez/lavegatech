@@ -13,8 +13,6 @@ let conectividades = [];
 let dimensionespeso = [];
 let productos = [];
 
-let dispositivoIdSeleccionado = null;
-
 const deviceModal = document.getElementById("deviceModal");
 const deviceForm = document.getElementById("deviceForm");
 const deviceModalTitle = document.getElementById("deviceModalTitle");
@@ -214,7 +212,6 @@ async function fetchDispositivos() {
   }
 }
 
-
 function renderMobiles() {
   devicesTableBody.innerHTML = "";
 
@@ -266,13 +263,13 @@ cancelDeviceModalBtn.addEventListener("click", () => {
   clearError(deviceErrorFields, "#deviceForm");
 });
 
-window.editDispositivo = function (id) {
-  const dispositivo = dispositivos.find(d => d.id === id);
+window.editDispositivo = function (productoId) {
+  const dispositivo = dispositivos.find(d => d.id === productoId);
   if (!dispositivo) return;
 
   deviceModalTitle.textContent = "Editar Dispositivo";
   deviceIdInput.value = dispositivo.id;
-  dispositivoIdSeleccionado = dispositivo.id;
+  deviceIdInput.dataset.movilId = dispositivo.movil_id; 
 
   deviceNameInput.value = dispositivo.nombre;
   deviceNameInput.readOnly = true;
@@ -289,65 +286,78 @@ window.editDispositivo = function (id) {
 };
 
 function buscarIdPorNombre(array, valorInput, campoNombre = null, formatter = null) {
-  return array.find(item => {
-    const comparacion = formatter ? formatter(item) : item[campoNombre];
-    return comparacion === valorInput;
-  })?.id || null;
+  if (!valorInput || valorInput.trim() === "") return undefined; // Cambiado a undefined
+  
+  const foundItem = array.find(item => {
+    if (formatter) {
+      return formatter(item).trim() === valorInput.trim();
+    } else if (campoNombre) {
+      return item[campoNombre] && item[campoNombre].trim() === valorInput.trim();
+    }
+    return false;
+  });
+  
+  return foundItem ? foundItem.id : undefined;
 }
 
 deviceForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   clearError(deviceErrorFields, "#deviceForm");
 
-  if (!dispositivoIdSeleccionado) {
-    showValidation([{ path: "nombre", message: "Debe seleccionar un dispositivo válido de la lista" }], "#deviceForm");
+  const productoId = deviceIdInput.value;
+  const movilId = deviceIdInput.dataset.movilId;
+
+  if (productoId && !movilId) {
+    showToast("No se encontró el dispositivo móvil asociado", "#e74c3c", "alert-circle");
     return;
   }
 
   const id = deviceIdInput.value;
 
-const body = {
-  cpu_id: buscarIdPorNombre(cpus, deviceCpuInput.value.trim(), "nombre"),
-  gpu_id: buscarIdPorNombre(gpus, deviceGpuInput.value.trim(), "modelo"),
-  pantalla_id: buscarIdPorNombre(pantallas, deviceScreenInput.value.trim(), null, (p) =>
-    `${p.tamaño} ${p.resolucion} ${p.tipo}`.trim()
-  ),
-  camara_id: buscarIdPorNombre(camaras, deviceCameraInput.value.trim(), null, (c) =>
-    `${c.principal} / Selfie: ${c.selfie}`.trim()
-  ),
-  bateria_id: buscarIdPorNombre(baterias, deviceBatteryInput.value.trim(), null, (b) =>
-    `${b.capacidad} ${b.tipo} ${b.carga_rapida ? 'Carga rápida' : ''} ${b.carga_inalambrica ? 'Inalámbrica' : ''}`.trim()
-  ),
-  conectividad_id: buscarIdPorNombre(conectividades, deviceConnectivityInput.value.trim(), null, (c) =>
-    `${c.red} ${c.wifi} ${c.bluetooth} ${c.nfc ? 'NFC' : ''}`.trim()
-  ),
-  dimensionespeso_id: buscarIdPorNombre(dimensionespeso, deviceSizeWeightInput.value.trim(), null, (d) =>
-    `${d.altura}x${d.anchura}x${d.grosor} ${d.peso}g`
-  )
-};
-
+  const body = {
+    cpu_id: buscarIdPorNombre(cpus, deviceCpuInput.value.trim(), "nombre"),
+    gpu_id: buscarIdPorNombre(gpus, deviceGpuInput.value.trim(), "modelo"),
+    pantalla_id: buscarIdPorNombre(pantallas, deviceScreenInput.value.trim(), null, (p) =>
+      `${p.tamaño} ${p.resolucion} ${p.tipo}`.trim()
+    ),
+    camara_id: buscarIdPorNombre(camaras, deviceCameraInput.value.trim(), null, (c) =>
+      `${c.principal} / Selfie: ${c.selfie}`.trim()
+    ),
+    bateria_id: buscarIdPorNombre(baterias, deviceBatteryInput.value.trim(), null, (b) =>
+      `${b.capacidad} ${b.tipo} ${b.carga_rapida ? 'Carga rápida' : ''} ${b.carga_inalambrica ? 'Inalámbrica' : ''}`.trim()
+    ),
+    conectividad_id: buscarIdPorNombre(conectividades, deviceConnectivityInput.value.trim(), null, (c) =>
+      `${c.red} ${c.wifi} ${c.bluetooth} ${c.nfc ? 'NFC' : ''}`.trim()
+    ),
+    dimensionespeso_id: buscarIdPorNombre(dimensionespeso, deviceSizeWeightInput.value.trim(), null, (d) =>
+      `${d.altura}x${d.anchura}x${d.grosor} ${d.peso}g`
+    )
+  };
 
   try {
-    const res = await fetch(id ? `/api/specs/movil/${id}` : "/api/specs/movil", {
-      method: id ? "PUT" : "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    });
+  const url = productoId ? `/api/specs/movil/${productoId}` : "/api/specs/movil";
+  const method = productoId ? "PUT" : "POST";
+  
+  const res = await fetch(url, {
+    method,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
 
-    const data = await res.json();
+  const data = await res.json();
 
-    if (!res.ok) {
-      if (data.validationError && Array.isArray(data.errors)) {
-        showValidation(data.errors, "#deviceForm");
-      } else {
-        showToast(data.message || "Error al guardar el dispositivo.", "#e74c3c", "alert-circle");
-      }
-      return;
+  if (!res.ok) {
+    if (data.validationError && Array.isArray(data.errors)) {
+      showValidation(data.errors, "#deviceForm");
+    } else {
+      showToast(data.message || "Error al guardar el dispositivo.", "#e74c3c", "alert-circle");
     }
+    return;
+  }
 
-    showToast(id ? "Dispositivo actualizado con éxito." : "Dispositivo agregado con éxito.", "#27ae60", "check-circle");
-    deviceModal.classList.remove("visible");
-    await fetchDispositivos();
+  showToast(id ? "Dispositivo actualizado con éxito." : "Dispositivo agregado con éxito.", "#27ae60", "check-circle");
+  deviceModal.classList.remove("visible");
+  await fetchDispositivos();
 
   } catch (err) {
     showToast("Error inesperado al guardar el dispositivo.", "#e74c3c", "alert-circle");

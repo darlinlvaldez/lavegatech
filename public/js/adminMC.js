@@ -40,6 +40,7 @@ function renderCategories() {
   lista.forEach((cat) => {
     const row = document.createElement("tr");
     row.innerHTML = `
+      <td>${cat.id}</td>
       <td>${cat.categoria}</td>
       <td>${cat.imagen}</td>
       <td>
@@ -179,6 +180,7 @@ function renderBrands() {
     const row = document.createElement("tr");
     const categoriasNombres = brand.categorias?.map(c => c.categoria).join(", ") || "";
     row.innerHTML = `
+      <td>${brand.id}</td>
       <td>${brand.nombre}</td>
       <td><img src="${brand.logo}" alt="${brand.nombre}" style="max-height: 40px;"></td>
       <td>${categoriasNombres}</td>

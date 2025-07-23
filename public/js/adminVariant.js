@@ -78,6 +78,7 @@ function renderVariantes() {
     const row = document.createElement("tr");
 
     row.innerHTML = `
+      <td>${vari.id}</td>
       <td>${vari.producto}</td>
       <td>${vari.color}</td>
       <td>${vari.stock}</td>

@@ -26,6 +26,7 @@ function renderGPUs() {
   lista.forEach(gpu => {
     const row = document.createElement("tr");
     row.innerHTML = `
+      <td>${gpu.id}</td>
       <td>${gpu.modelo || '-'}</td>
       <td>${gpu.nucleos || '-'}</td>
       <td>

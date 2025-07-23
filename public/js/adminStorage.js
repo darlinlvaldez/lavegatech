@@ -26,6 +26,7 @@ function renderAlmacenamientos() {
   lista.forEach(a => {
     const row = document.createElement("tr");
     row.innerHTML = `
+      <td>${a.id}</td>
       <td>${a.capacidad || '-'}</td>
       <td>${a.tipo || '-'}</td>
       <td>

@@ -29,6 +29,7 @@ function renderPantallas() {
   lista.forEach(p => {
     const row = document.createElement("tr");
     row.innerHTML = `
+      <td>${p.id}</td>
       <td>${p.tamaño}</td>
       <td>${p.resolucion}</td>
       <td>${p.tipo}</td>

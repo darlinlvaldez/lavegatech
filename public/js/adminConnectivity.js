@@ -29,6 +29,7 @@ function renderConectividades() {
     const nfcText = c.nfc ? "Sí" : "No";
     const row = document.createElement("tr");
     row.innerHTML = `
+      <td>${c.id}</td>
       <td>${c.red || '-'}</td>
       <td>${c.wifi || '-'}</td>
       <td>${c.bluetooth || '-'}</td>

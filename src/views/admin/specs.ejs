@@ -49,6 +49,7 @@
                     <table class="product-table">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Tamaño</th>
                                 <th>Resolución</th>
                                 <th>Tipo</th>
@@ -82,6 +83,7 @@
                     <table class="product-table">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Principal</th>
                                 <th>Frontal</th>
                                 <th>Video</th>
@@ -114,6 +116,7 @@
                     <table class="product-table">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Nombre</th>
                                 <th>Núcleos</th>
                                 <th>Velocidad</th>
@@ -145,6 +148,7 @@
                     <table class="product-table">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Modelo</th>
                                 <th>Núcleos</th>
                                 <th>Acciones</th>
@@ -175,6 +179,7 @@
                     <table class="product-table">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Capacidad</th>
                                 <th>Tipo</th>
                                 <th>Carga Rápida</th>
@@ -207,6 +212,7 @@
                     <table class="product-table">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Red</th>
                                 <th>Wi-Fi</th>
                                 <th>Bluetooth</th>
@@ -239,6 +245,7 @@
                     <table class="product-table">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Altura</th>
                                 <th>Anchura</th>
                                 <th>Grosor</th>
@@ -271,6 +278,7 @@
                     <table class="product-table">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Capacidad</th>
                                 <th>Tipo</th>
                                 <th>Acciones</th>
@@ -301,6 +309,7 @@
                     <table class="product-table">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Capacidad</th>
                                 <th>Tipo</th>
                                 <th>Acciones</th>
@@ -645,13 +654,13 @@
       <input type="hidden" id="varianteRAMId">
       <div class="form-group">
         <label for="movilId">Móvil:</label>
-        <select id="movilId" name="movil_id" class="form-select">
-        </select>
+        <input list="movilesList" id="movilIdInput" placeholder="Escribe el nombre del móvil">
+        <datalist id="movilesList"></datalist>
       </div>
       <div class="form-group">
         <label for="ramId">RAM:</label>
-        <select id="ramId" name="ram_id" class="form-select">
-        </select>
+        <input list="ramsList" id="ramIdInput" placeholder="Escribe la capacidad o tipo de RAM">
+        <datalist id="ramsList"></datalist>
       </div>
       <div class="modal-buttons">
         <button type="button" id="cancelVarianteRAMModalBtn" class="cancel-button">Cancelar</button>
@@ -690,16 +699,14 @@
     <form id="varianteAlmForm" class="modal-form">
       <input type="hidden" id="varianteAlmId">
       <div class="form-group">
-        <label for="movilIdAlm">Móvil:</label>
-        <select id="movilIdAlm" name="movil_id" class="form-select">
-          <!-- Opciones se cargarán dinámicamente -->
-        </select>
+        <label for="movilIdAlmInput">Móvil:</label>
+        <input list="movilesAlmList" id="movilIdAlmInput" class="form-input" autocomplete="off" />
+        <datalist id="movilesAlmList"></datalist>
       </div>
       <div class="form-group">
-        <label for="almacenamientoId">Almacenamiento:</label>
-        <select id="almacenamientoId" name="almacenamiento_id" class="form-select">
-          <!-- Opciones se cargarán dinámicamente -->
-        </select>
+        <label for="almacenamientoIdInput">Almacenamiento:</label>
+        <input list="almacenamientosAlmList" id="almacenamientoIdInput" class="form-input" autocomplete="off" />
+        <datalist id="almacenamientosAlmList"></datalist>
       </div>
       <div class="modal-buttons">
         <button type="button" id="cancelVarianteAlmModalBtn" class="cancel-button">Cancelar</button>

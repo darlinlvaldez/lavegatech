@@ -27,6 +27,7 @@ function renderCPUs() {
   lista.forEach(c => {
     const row = document.createElement("tr");
     row.innerHTML = `
+      <td>${c.id}</td>
       <td>${c.nombre || '-'}</td>
       <td>${c.nucleos || '-'}</td>
       <td>${c.velocidad || '-'}</td>

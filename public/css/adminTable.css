@@ -85,6 +85,10 @@
 .product-table td {
     font-size: 0.875rem;
     color: #1f2937;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .product-table td.font-medium {
@@ -94,13 +98,6 @@
 .product-table td.actions {
     text-align: right;
     font-weight: 500;
-}
-
-.truncate-cell {
-  max-width: 250px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .product-table .edit-button,

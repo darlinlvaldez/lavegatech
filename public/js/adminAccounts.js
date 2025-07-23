@@ -43,6 +43,7 @@ function renderAdmins() {
     `;
 
     row.innerHTML = `
+      <td>${admin.id}</td>
       <td>${admin.username}</td>
       <td>${new Date(admin.created_at).toLocaleString()}</td>
       <td>${estadoBtn}</td>

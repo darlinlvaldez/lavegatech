@@ -28,6 +28,7 @@ function renderDimensiones() {
   lista.forEach(d => {
     const row = document.createElement("tr");
     row.innerHTML = `
+      <td>${d.id}</td>
       <td>${d.altura || '-'}</td>
       <td>${d.anchura || '-'}</td>
       <td>${d.grosor || '-'}</td>

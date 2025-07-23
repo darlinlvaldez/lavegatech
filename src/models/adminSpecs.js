@@ -51,9 +51,6 @@ specs.eliminarMovil = async (id) => {
 
     const movilId = producto.movil_id;
 
-    await db.query("DELETE FROM variantes_ram WHERE movil_id = ?", [movilId]);
-    await db.query("DELETE FROM variantes_almacenamiento WHERE movil_id = ?", [movilId]);
-
     await db.query("DELETE FROM moviles WHERE id = ?", [movilId]);
 
     await db.query("UPDATE productos SET movil_id = NULL WHERE id = ?", [id]);
@@ -67,16 +64,18 @@ specs.eliminarMovil = async (id) => {
 
 specs.agregarMovil = async (data) => {
   const sql = `
-    INSERT INTO moviles (nombre, cpu, gpu, ram, pantalla, almacenamiento)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO moviles (cpu_id, gpu_id, pantalla_id,
+    dimensionespeso_id, conectividad_id, bateria_id, camara_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
   const [result] = await db.execute(sql, [
-    data.nombre,
-    data.cpu,
-    data.gpu,
-    data.ram,
-    data.pantalla,
-    data.almacenamiento
+    data.cpu_id,
+    data.gpu_id,
+    data.pantalla_id,
+    data.dimensionespeso_id,
+    data.conectividad_id,
+    data.bateria_id,
+    data.camara_id,
   ]);
   return result.insertId;
 };
@@ -158,6 +157,16 @@ specs.agregarVarianteAlmacenamiento = async (data) => {
     data.almacenamiento_id
   ]);
   return result.insertId;
+};
+
+specs.actualizarVarianteAlmacenamiento = async (movilIdOriginal, almIdOriginal, nuevoMovilId, nuevoAlmId) => {
+  const query = `
+    UPDATE variantes_almacenamiento
+    SET movil_id = ?, almacenamiento_id = ?
+    WHERE movil_id = ? AND almacenamiento_id = ?
+  `;
+  const [result] = await db.execute(query, [nuevoMovilId, nuevoAlmId, movilIdOriginal, almIdOriginal]);
+  return result.affectedRows;
 };
 
 specs.eliminarVarianteAlmacenamiento = async (movil_id, almacenamiento_id) => {
@@ -513,6 +522,21 @@ specs.agregarVarianteRam = async (data) => {
     data.ram_id
   ]);
   return result.insertId;
+};
+
+specs.actualizarVarianteRam = async (movil_id, ram_id, nuevo_movil_id, nuevo_ram_id) => {
+  const query = `
+    UPDATE variantes_ram
+    SET movil_id = ?, ram_id = ?
+    WHERE movil_id = ? AND ram_id = ?
+  `;
+  const [result] = await db.execute(query, [
+    nuevo_movil_id,
+    nuevo_ram_id,
+    movil_id,
+    ram_id
+  ]);
+  return result.affectedRows > 0;
 };
 
 specs.eliminarVarianteRam = async (movil_id, ram_id) => {

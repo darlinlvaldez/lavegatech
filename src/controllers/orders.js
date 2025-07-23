@@ -1,5 +1,6 @@
 import orders from '../models/orders.js';
 import cart from '../models/cart.js';
+import db from "../database/mobiles.js";
 
 const payController = {};
 
@@ -26,13 +27,14 @@ payController.createOrder = async (req, res) => {
     }
 
     const total = cartItems.reduce((sum, item) => {
-      const precioFinal = item.descuento > 0 
-      ? item.precio * (1 - item.descuento / 100) : item.precio;
-      return sum + (precioFinal * item.cantidad);
-    }, 0);
+  const precioFinal = item.descuento > 0 
+    ? item.precio * (1 - item.descuento / 100)
+    : item.precio;
+  return sum + (precioFinal * item.cantidad);
+}, 0) + costoEnvio;
 
     const orderData = { user_id: userId, nombre, apellido, email, 
-      direccion, ciudad, distrito, telefono, total
+      direccion, ciudad, distrito, telefono, total, ciudad_envio_id
     };
 
     const orderItems = cartItems.map(item => ({
@@ -44,6 +46,21 @@ payController.createOrder = async (req, res) => {
       descuento: item.descuento || 0,
       subtotal: (item.precio * (1 - (item.descuento || 0) / 100)) * item.cantidad
     }));
+
+    const { ciudad_envio_id } = req.body;
+
+const [ciudadData] = await db.query(
+  "SELECT nombre, costo_envio FROM ciudades_envio WHERE id = ?", 
+  [ciudad_envio_id]
+);
+
+if (!ciudadData.length) {
+  return res.status(400).json({ success: false, message: 'Ciudad de envío no válida' });
+}
+
+const ciudadNombre = ciudadData[0].nombre;
+const costoEnvio = parseFloat(ciudadData[0].costo_envio);
+
 
     res.json({success: true, orderData, orderItems, total});
   } catch (error) {

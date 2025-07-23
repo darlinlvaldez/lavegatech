@@ -33,6 +33,7 @@ function renderProducts() {
     });
 
     row.innerHTML = `
+      <td class="truncate-cell">${product.id || ''}</td>
       <td class="truncate-cell">${product.nombre || ''}</td>
       <td class="truncate-cell">${product.descripcion || ''}</td>
       <td>$${formatPrice(parseFloat(product.precio)) || 0}</td>

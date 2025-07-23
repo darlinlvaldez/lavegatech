@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
     orderTotal.textContent = `$${formatPrice(total)}`;
+    orderTotal.dataset.subtotal = total;
   } catch (error) {
     console.error("Error al cargar el carrito:", error);
     orderProducts.innerHTML = "<p>Error al cargar los productos. Por favor intenta nuevamente.</p>";
@@ -104,6 +105,8 @@ document.addEventListener("DOMContentLoaded", () => {
     ciudad: document.querySelector('input[name="city"]').value.trim(),
     distrito: document.querySelector('input[name="district"]').value.trim(),
     telefono: document.querySelector('input[name="tel"]').value.replace(/\D/g, ""),
+    ciudad_envio_id: document.getElementById("city-select").value
+
   });
 
   const inputFields = () => ["first-name", "last-name", "email",
@@ -247,3 +250,44 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+let ciudades = [];
+let costoEnvio = 0;
+
+const citySelect = document.getElementById("city-select");
+const orderTotal = document.querySelector(".order-total");
+
+async function cargarCiudades() {
+  try {
+    const res = await fetch("/api/order/cities");
+    const data = await res.json();
+    if (!data.success) return;
+
+    ciudades = data.ciudades;
+
+    ciudades.forEach((ciudad) => {
+      const option = document.createElement("option");
+      option.value = ciudad.id;
+      option.textContent = `${ciudad.nombre} (+$${ciudad.costo_envio})`;
+      option.dataset.costo = ciudad.costo_envio;
+      citySelect.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Error cargando ciudades:", error);
+  }
+}
+
+citySelect?.addEventListener("change", () => {
+  const selectedOption = citySelect.options[citySelect.selectedIndex];
+  costoEnvio = parseFloat(selectedOption.dataset.costo || "0");
+
+  actualizarTotalConEnvio();
+});
+
+function actualizarTotalConEnvio() {
+  const subtotal = parseFloat(orderTotal.dataset.subtotal || "0");
+  const totalConEnvio = subtotal + costoEnvio;
+  orderTotal.textContent = `$${totalConEnvio.toFixed(2)}`;
+}
+
+cargarCiudades();

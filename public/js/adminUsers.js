@@ -40,6 +40,7 @@ function renderUsers() {
     const estadoClase = user.is_active ? "estado-activo" : "estado-inactivo";
 
     row.innerHTML = `
+      <td>${user.id}</td>
       <td>${user.username}</td>
       <td>${user.email}</td>
       <td>${new Date(user.created_at).toLocaleString()}</td>

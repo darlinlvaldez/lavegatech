@@ -1,4 +1,5 @@
 import specs from "../models/adminSpecs.js";
+import db from "../database/mobiles.js";
 
 const specsController = {};
 
@@ -24,7 +25,22 @@ specsController.crearMovil = async (req, res) => {
 specsController.editarMovil = async (req, res) => {
   const { id } = req.params;
   try {
-    const actualizado = await specs.actualizarMovil(id, req.body);
+    const [[producto]] = await db.query("SELECT movil_id FROM productos WHERE id = ?", [id]);
+    if (!producto || !producto.movil_id) {
+      return res.status(404).json({ message: 'Comparación no encontrada' });
+    }
+
+    const [movilActual] = await db.query("SELECT * FROM moviles WHERE id = ?", [producto.movil_id]);
+    if (!movilActual.length) {
+      return res.status(404).json({ message: 'Comparación no encontrada' });
+    }
+
+    const datosActualizados = {
+      ...movilActual[0],
+      ...req.body
+    };
+
+    const actualizado = await specs.actualizarMovil(producto.movil_id, datosActualizados);
     if (actualizado) {
       res.json({ message: 'Comparación actualizada con éxito' });
     } else {
@@ -117,6 +133,29 @@ specsController.crearVarianteAlmacenamiento = async (req, res) => {
   } catch (err) {
     console.error("Error al crear variante de almacenamiento:", err);
     res.status(500).json({ error: "Error al crear variante de almacenamiento" });
+  }
+};
+
+specsController.actualizarVarianteAlmacenamiento = async (req, res) => {
+  try {
+    const { movil_id, almacenamiento_id } = req.params;
+    const { movil_id: nuevoMovilId, almacenamiento_id: nuevoAlmId } = req.body;
+
+    const actualizado = await specs.actualizarVarianteAlmacenamiento(
+      movil_id,
+      almacenamiento_id,
+      nuevoMovilId,
+      nuevoAlmId
+    );
+
+    if (actualizado) {
+      res.json({ message: "Variante actualizada correctamente" });
+    } else {
+      res.status(404).json({ message: "Variante no encontrada" });
+    }
+  } catch (err) {
+    console.error("Error al actualizar variante:", err);
+    res.status(500).json({ error: "Error del servidor al actualizar variante" });
   }
 };
 
@@ -557,6 +596,28 @@ specsController.crearVarianteRam = async (req, res) => {
   } catch (err) {
     console.error("Error al crear variante RAM:", err);
     res.status(500).json({ error: "Error al crear variante RAM" });
+  }
+};
+
+specsController.editarVarianteRam = async (req, res) => {
+  try {
+    const { movil_id, ram_id } = req.params; 
+    const { nuevo_movil_id, nuevo_ram_id } = req.body; 
+
+    if (!nuevo_movil_id || !nuevo_ram_id) {
+      return res.status(400).json({ error: "Debe enviar nuevo_movil_id y nuevo_ram_id" });
+    }
+
+    const actualizado = await specs.actualizarVarianteRam(movil_id, ram_id, nuevo_movil_id, nuevo_ram_id);
+
+    if (actualizado) {
+      res.json({ message: "Variante RAM actualizada con éxito" });
+    } else {
+      res.status(404).json({ message: "Variante RAM no encontrada" });
+    }
+  } catch (err) {
+    console.error("Error al actualizar variante RAM:", err);
+    res.status(500).json({ error: "Error al actualizar variante RAM" });
   }
 };
 

@@ -59,6 +59,7 @@ router.delete('/dimensionespeso/:id', specs.borrarDimensiones);
 router.get('/variantes_almacenamiento', specs.listarVariantesAlmacenamiento);
 router.post('/variantes_almacenamiento', specs.crearVarianteAlmacenamiento);
 router.delete('/variantes_almacenamiento/:movil_id/:almacenamiento_id', specs.borrarVarianteAlmacenamiento);
+router.put('/variantes_almacenamiento/:movil_id/:almacenamiento_id', specs.actualizarVarianteAlmacenamiento);
 
 // Tabla gpu
 router.get('/gpu', specs.listarGpu);
@@ -81,6 +82,7 @@ router.delete('/ram/:id', specs.borrarRam);
 // Tablla Variantes RAM 
 router.get('/variantes_ram', specs.listarVariantesRam);
 router.post('/variantes_ram', specs.crearVarianteRam);
+router.put('/variantes_ram/:movil_id/:ram_id', specs.editarVarianteRam);
 router.delete('/variantes_ram/:movil_id/:ram_id', specs.borrarVarianteRam);
 
 export default router;

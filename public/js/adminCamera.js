@@ -27,6 +27,7 @@ function renderCamaras() {
   lista.forEach(c => {
     const row = document.createElement("tr");
     row.innerHTML = `
+      <td>${c.id}</td>
       <td>${c.principal || '-'}</td>
       <td>${c.selfie || '-'}</td>
       <td>${c.video || '-'}</td>
