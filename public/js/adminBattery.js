@@ -75,7 +75,7 @@ bateriaForm.addEventListener("submit", async (e) => {
   const capacidad = bateriaCapacidadInput.value.trim();
   const tipo = bateriaTipoInput.value.trim();
   const carga_rapida = bateriaCargaRapidaInput.value.trim();
-  const carga_inalambrica = bateriaCargaInalambricaInput.checked ? 1 : 0;
+  const carga_inalambrica = bateriaCargaInalambricaInput.checked;
 
   const body = JSON.stringify({ capacidad, tipo, carga_rapida, carga_inalambrica });
   const url = id ? `/api/specs/baterias/${id}` : "/api/specs/baterias";

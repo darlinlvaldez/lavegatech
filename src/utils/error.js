@@ -79,14 +79,13 @@ export const ERROR_ZOD = {
   PRODUCT_NAME_MAX: "El nombre del producto no debe superar los 100 caracteres",
   PRODUCT_PRICE_POSITIVE: "El precio debe ser un número positivo",
   PRODUCT_DISCOUNT_INVALID: "El descuento debe ser un número",
-  PRODUCT_DISCOUNT_NEGATIVE: "El descuento no puede ser negativo",
   PRODUCT_DATE_INVALID: "La fecha del producto no es válida",
 
   // CATEGORY
   CATEGORY_NAME_MAX: "El nombre de la categoría no debe superar los 60 caracteres",
 
   // VARIANT
-  STOCK_NEGATIVE: "El stock no puede ser negativo",
+  FIELD_NEGATIVE: "El campo no puede ser negativo",
   URL_INVALID: "La URL de la imagen no es válida",
 
   // BRAND

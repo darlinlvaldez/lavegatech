@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="/css/adminTable.css">
 <link rel="stylesheet" href="/css/error.css">
 <link rel="stylesheet" href="/css/adminTabs.css">
+<link rel="stylesheet" href="/css/adminResult.css">
 
 <div class="main-content">
     <header class="header">
@@ -409,37 +410,31 @@
     <h3 id="modalPantallaTitle" class="modal-title">Añadir Nueva Pantalla</h3>
     <form id="pantallaForm" class="modal-form">
       <input type="hidden" id="pantallaId">
-
       <div class="form-group">
         <label for="pantallaTipo">Tipo:</label>
         <input type="text" id="pantallaTipo" name="tipo">
         <div class="error-text" data-error-for="tipo"></div>
       </div>
-
       <div class="form-group">
-        <label for="pantallaTamanio">Tamaño:</label>
-        <input type="text" id="pantallaTamanio" name="tamanio">
-        <div class="error-text" data-error-for="tamanio"></div>
+        <label for="pantallaTamaño">Tamaño:</label>
+        <input type="text" id="pantallaTamaño" name="tamaño">
+        <div class="error-text" data-error-for="tamaño"></div>
       </div>
-
       <div class="form-group">
         <label for="pantallaResolucion">Resolución:</label>
         <input type="text" id="pantallaResolucion" name="resolucion">
         <div class="error-text" data-error-for="resolucion"></div>
       </div>
-
       <div class="form-group">
         <label for="pantallaFrecuencia">Frecuencia:</label>
         <input type="text" id="pantallaFrecuencia" name="frecuencia">
         <div class="error-text" data-error-for="frecuencia"></div>
       </div>
-
       <div class="form-group">
         <label for="pantallaProteccion">Protección:</label>
         <input type="text" id="pantallaProteccion" name="proteccion">
         <div class="error-text" data-error-for="proteccion"></div>
       </div>
-
       <div class="modal-buttons">
         <button type="button" id="cancelPantallaModalBtn" class="cancel-button">Cancelar</button>
         <button type="submit" class="save-button">Guardar</button>
@@ -534,22 +529,24 @@
       <input type="hidden" id="bateriaId">
       <div class="form-group">
         <label for="bateriaCapacidad">Capacidad:</label>
-        <input type="text" id="bateriaCapacidad" name="capacidad" />
+        <input type="text" id="bateriaCapacidad" name="capacidad"/>
         <div class="error-text" data-error-for="capacidad"></div>
       </div>
       <div class="form-group">
         <label for="bateriaTipo">Tipo:</label>
-        <input type="text" id="bateriaTipo" name="tipo" />
+        <input type="text" id="bateriaTipo" name="tipo"/>
         <div class="error-text" data-error-for="tipo"></div>
       </div>
       <div class="form-group">
         <label for="bateriaCargaRapida">Carga Rápida:</label>
-        <input type="text" id="bateriaCargaRapida" name="carga_rapida" />
+        <input type="text" id="bateriaCargaRapida" name="carga_rapida"/>
         <div class="error-text" data-error-for="carga_rapida"></div>
       </div>
-      <div class="form-group checkbox-group">
-        <label for="bateriaCargaInalambrica">Carga Inalámbrica:</label>
-        <input type="checkbox" id="bateriaCargaInalambrica" name="carga_inalambrica" />
+      <div>
+        <label>
+          <input type="checkbox" id="bateriaCargaInalambrica" name="carga_inalambrica">
+          Carga Inalámbrica
+        </label>
       </div>
       <div class="modal-buttons">
         <button type="button" id="cancelBateriaModalBtn" class="cancel-button">Cancelar</button>
@@ -579,9 +576,10 @@
         <input type="text" id="conectividadBluetooth" name="bluetooth" />
         <div class="error-text" data-error-for="bluetooth"></div>
       </div>
-      <div class="form-group checkbox-group">
-        <label for="conectividadNfc">NFC:</label>
-        <input type="checkbox" id="conectividadNfc" name="nfc" />
+      <div>
+        <label for="conectividadNfc">
+        <input type="checkbox" id="conectividadNfc" name="nfc">NFC
+        </label>
       </div>
       <div class="modal-buttons">
         <button type="button" id="cancelConectividadModalBtn" class="cancel-button">Cancelar</button>
@@ -652,15 +650,15 @@
     <h3 id="modalVarianteRAMTitle" class="modal-title">Añadir Nueva Variante RAM</h3>
     <form id="varianteRAMForm" class="modal-form">
       <input type="hidden" id="varianteRAMId">
-      <div class="form-group">
-        <label for="movilId">Móvil:</label>
-        <input list="movilesList" id="movilIdInput" placeholder="Escribe el nombre del móvil">
-        <datalist id="movilesList"></datalist>
+      <div class="form-group autocomplete-group">
+        <label for="movilIdInput">Móvil:</label>
+        <input type="text" id="movilIdInput" placeholder="Escribe el nombre del móvil" autocomplete="off">
+        <div class="suggestions-list" id="movilSuggestions"></div>
       </div>
-      <div class="form-group">
-        <label for="ramId">RAM:</label>
-        <input list="ramsList" id="ramIdInput" placeholder="Escribe la capacidad o tipo de RAM">
-        <datalist id="ramsList"></datalist>
+      <div class="form-group autocomplete-group">
+        <label for="ramIdInput">RAM:</label>
+        <input type="text" id="ramIdInput" placeholder="Escribe la capacidad o tipo de RAM" autocomplete="off">
+        <div class="suggestions-list" id="ramSuggestions"></div>
       </div>
       <div class="modal-buttons">
         <button type="button" id="cancelVarianteRAMModalBtn" class="cancel-button">Cancelar</button>
@@ -698,15 +696,17 @@
     <h3 id="modalVarianteAlmTitle" class="modal-title">Añadir Nueva Variante de Almacenamiento</h3>
     <form id="varianteAlmForm" class="modal-form">
       <input type="hidden" id="varianteAlmId">
-      <div class="form-group">
+      <div class="form-group autocomplete-group">
         <label for="movilIdAlmInput">Móvil:</label>
-        <input list="movilesAlmList" id="movilIdAlmInput" class="form-input" autocomplete="off" />
-        <datalist id="movilesAlmList"></datalist>
+        <input type="text" id="movilIdAlmInput" name="movil_id" placeholder="..." autocomplete="off">
+        <div class="suggestions-list" id="movilesAlmList"></div>
+        <div class="error-text" data-error-for="movil_id"></div>
       </div>
-      <div class="form-group">
+      <div class="form-group autocomplete-group">
         <label for="almacenamientoIdInput">Almacenamiento:</label>
-        <input list="almacenamientosAlmList" id="almacenamientoIdInput" class="form-input" autocomplete="off" />
-        <datalist id="almacenamientosAlmList"></datalist>
+        <input type="text" id="almacenamientoIdInput" name="almacenamiento_id" placeholder="..." autocomplete="off">
+        <div class="suggestions-list" id="almacenamientosAlmList"></div>
+        <div class="error-text" data-error-for="almacenamiento_id"></div>
       </div>
       <div class="modal-buttons">
         <button type="button" id="cancelVarianteAlmModalBtn" class="cancel-button">Cancelar</button>
@@ -715,6 +715,14 @@
     </form>
   </div>
 </div>
+
+<style>
+input[type="checkbox"] {
+  width: auto;
+  margin-right: 5px;
+  transform: scale(1.2);
+}
+</style>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
@@ -761,4 +769,3 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="https://unpkg.com/feather-icons"></script>
-<script src="/js/formatPrice.js"></script>

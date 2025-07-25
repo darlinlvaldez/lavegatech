@@ -384,6 +384,7 @@ window.deleteDispositivo = async function (id) {
   }
 };
 
+
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     await fetchDispositivos();

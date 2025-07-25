@@ -17,9 +17,9 @@ adminController.listarItems = async (req, res) => {
 
 adminController.crearItems = async (req, res) => {
   try {
-    const { nombre, precio, descuento, descripcion, categoria, marca} = req.body;
-    const insertId = await admin.agregarItems({ nombre, 
-        precio, descuento, descripcion, categoria, marca});
+    const { nombre, precio, descuento, descripcion, categoria, marca, ram, almacenamiento} = req.body;
+    const insertId = await admin.agregarItems({ nombre, precio, descuento,
+      descripcion, categoria, marca, almacenamiento_id: almacenamiento, ram_id: ram});
 
     res.json({ success: true, id: insertId });
   } catch (err) {
@@ -30,9 +30,9 @@ adminController.crearItems = async (req, res) => {
 adminController.editarItems = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, precio, descuento, descripcion, categoria, marca, fecha} = req.body;
+    const { nombre, precio, descuento, descripcion, categoria, marca, ram, almacenamiento, fecha} = req.body;
     const affectedRows = await admin.actualizarItems({ id, nombre, precio, descuento, 
-        descripcion, categoria, marca, fecha});
+      descripcion, categoria, marca, almacenamiento_id: almacenamiento, ram_id: ram, fecha});
 
     res.json({ success: affectedRows > 0 });
   } catch (err) {
@@ -47,6 +47,26 @@ adminController.borrarItems = async (req, res) => {
     res.json({ success: affectedRows > 0 });
   } catch (err) {
     res.status(500).json({ error: 'Error al eliminar producto' });
+  }
+};
+
+//Ram y Almacenamiento
+
+adminController.listarRAM = async (req, res) => {
+  try {
+    const ram = await admin.obtenerRAM();
+    res.json(ram);
+  } catch (err) {
+    res.status(500).json({ error: "Error al obtener RAM" });
+  }
+};
+
+adminController.listarAlm = async (req, res) => {
+  try {
+    const almacenamientos = await admin.obtenerAlm();
+    res.json(almacenamientos);
+  } catch (err) {
+    res.status(500).json({ error: "Error al obtener almacenamiento" });
   }
 };
 

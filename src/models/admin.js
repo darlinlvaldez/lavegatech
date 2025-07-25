@@ -14,6 +14,8 @@ admin.obtenerItems = async () => {
     p.descuento, 
     p.categoria_id AS categoria_id,
     p.marca_id AS marca_id,
+    p.almacenamiento_id,
+    p.ram_id,
     c.categoria AS categoria,
     m.nombre AS marca,
     p.fecha
@@ -27,27 +29,29 @@ admin.obtenerItems = async () => {
 };
 
 admin.agregarItems = async ({nombre, precio, descripcion, 
-    descuento, categoria, marca}) => {
+    descuento, categoria, marca, almacenamiento_id, ram_id}) => {
         
     const query = `INSERT INTO productos 
-    (nombre, precio, descripcion, descuento, categoria_id, marca_id) 
-    VALUES (?, ?, ?, ?, ?, ?)`;
+    (nombre, precio, descripcion, descuento, categoria_id, marca_id, 
+    almacenamiento_id, ram_id) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
     
     const [result] = await db.query(query, [nombre, precio, descripcion, 
-        descuento, categoria, marca]);
+      descuento, categoria, marca, almacenamiento_id, ram_id]);
 
   return result.insertId;
 };
 
 admin.actualizarItems = async ({id, nombre, precio, descripcion, 
-    descuento, categoria, marca, fecha}) => {
+    descuento, categoria, marca, fecha, almacenamiento_id, ram_id}) => {
     const query = `UPDATE productos 
-    SET nombre = ?, precio = ?, descripcion = ?,
-    descuento = ?, categoria_id = ?, marca_id = ?, fecha = ?
+    SET nombre = ?, precio = ?, descripcion = ?, descuento = ?, 
+    categoria_id = ?, marca_id = ?, fecha = ?, almacenamiento_id = ?, ram_id = ?
     WHERE id = ?`;
     
     const [result] = await db.query(query, [nombre, precio, 
-    descripcion, descuento, categoria, marca, fecha, id]);
+    descripcion, descuento, categoria, marca, fecha, 
+    almacenamiento_id, ram_id, id]);
 
   return result.affectedRows;
 };
@@ -56,6 +60,18 @@ admin.eliminarItems = async (id) => {
   const query = `DELETE FROM productos WHERE id = ?`;
   const [result] = await db.query(query, [id]);
   return result.affectedRows;
+};
+
+// Ram y Almacenamiento
+
+admin.obtenerRAM = async () => {
+  const [rows] = await db.query("SELECT id, capacidad, tipo FROM ram");
+  return rows.map(r => ({ id: r.id, nombre: `${r.capacidad} ${r.tipo}` }));
+};
+
+admin.obtenerAlm = async () => {
+  const [rows] = await db.query("SELECT id, capacidad, tipo FROM almacenamiento");
+  return rows.map(r => ({ id: r.id, nombre: `${r.capacidad} ${r.tipo}` }));
 };
 
 // Categorias

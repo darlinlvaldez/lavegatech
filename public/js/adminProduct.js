@@ -19,8 +19,10 @@ const descuentoInput = document.getElementById("productoDescuento");
 const categoriaInput = document.getElementById("productoCategoria");
 const marcaInput = document.getElementById("productoMarca");
 const fechaInput = document.getElementById("productoFecha");
+const ramSelect = document.getElementById("productoRam");
+const almSelect = document.getElementById("productoAlm");
 
-const productErrorFields = ["nombre", "descripcion", "precio", "descuento", "categoria", "marca", "fecha"];
+const productErrorFields = ["nombre", "descripcion", "precio", "descuento", "categoria", "marca", "ram", "almacenamiento", "fecha"];
 
 function renderProducts() {
   productsTableBody.innerHTML = "";
@@ -66,7 +68,9 @@ searchProductInput.addEventListener("input", () => {
       product.nombre?.toLowerCase().includes(query) ||
       product.descripcion?.toLowerCase().includes(query) ||
       product.categoria?.toLowerCase().includes(query) ||
-      product.marca?.toLowerCase().includes(query)
+      product.marca?.toLowerCase().includes(query) ||
+      product.almacenamiento?.toLowerCase().includes(query) ||
+      product.ram?.toLowerCase().includes(query)
     );
   }
 
@@ -97,6 +101,8 @@ productForm.addEventListener("submit", async (e) => {
     precio: precioInput.value ? parseFloat(precioInput.value) : 0,
     descuento: descuentoInput.value ? parseFloat(descuentoInput.value) : 0,
     categoria: categoriaInput.value ? parseInt(categoriaInput.value) : null,
+    almacenamiento: almSelect.value ? parseInt(almSelect.value) : null,
+    ram: ramSelect.value ? parseInt(ramSelect.value) : null,
     marca: marcaInput.value ? parseInt(marcaInput.value) : null,
     ...(id ? { fecha: fechaInput?.value || null } : {}),
   };
@@ -138,6 +144,8 @@ window.editProduct = function  (id) {
     descuentoInput.value = product.descuento;
     categoriaInput.value = product.categoria_id;
     marcaInput.value = product.marca_id;
+    almSelect.value = product.almacenamiento_id;
+    ramSelect.value = product.ram_id;
 
     document.getElementById("fechaGroup").style.display = "block"; 
     fechaInput.value = product.fecha?.slice(0, 16);
@@ -165,17 +173,23 @@ addProductBtn.addEventListener("click", () => {
   productModal.classList.add("visible"); 
 });
 
-async function loadCategoryBranch() {
-  const [categoriasRes, marcasRes] = await Promise.all([
+async function loadFields() {
+  const [categoriasRes, marcasRes, almRes, ramsRes] = await Promise.all([
     fetch("/api/admin/categorias"),
     fetch("/api/admin/marcas"),
+    fetch("/api/admin/almacenamiento"),
+    fetch("/api/admin/ram")
   ]);
 
   const categorias = await categoriasRes.json();
   const marcas = await marcasRes.json();
+  const rams = await ramsRes.json();
+  const almacenamiento = await almRes.json();
 
   categoriaInput.innerHTML = "<option value=''>Seleccione una categoría</option>";
   marcaInput.innerHTML = "<option value=''>Seleccione una marca</option>";
+  almSelect.innerHTML = "<option value=''>Seleccione el almacenamiento</option>";
+  ramSelect.innerHTML = "<option value=''>Seleccione la ram</option>";
 
   categorias.forEach(cat => {
     const option = document.createElement("option");
@@ -189,6 +203,20 @@ async function loadCategoryBranch() {
     option.value = marca.id;
     option.textContent = marca.nombre;
     marcaInput.appendChild(option);
+  });
+
+  rams.forEach(ram => {
+    const option = document.createElement("option");
+    option.value = ram.id;
+    option.textContent = ram.nombre;
+    ramSelect.appendChild(option);
+  });
+
+  almacenamiento.forEach(alm => {
+    const option = document.createElement("option");
+    option.value = alm.id;
+    option.textContent = alm.nombre;
+    almSelect.appendChild(option);
   });
 }
 
@@ -215,5 +243,5 @@ window.deleteProduct = async function(id) {
 
 document.addEventListener("DOMContentLoaded", () => {
   fetchProducts();
-  loadCategoryBranch();
+  loadFields();
 });

@@ -30,12 +30,20 @@ request.product = z.object({
     .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
   descuento: z
     .number({ invalid_type_error: ERROR_ZOD.PRODUCT_DISCOUNT_INVALID })
-    .nonnegative({ message: ERROR_ZOD.PRODUCT_DISCOUNT_NEGATIVE })
+    .nonnegative({ message: ERROR_ZOD.FIELD_NEGATIVE })
     .optional(),
   categoria: z
     .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }),
   marca: z
     .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }),
+  ram: z
+    .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED })
+    .nonnegative({ message: ERROR_ZOD.FIELD_NEGATIVE })
+    .optional(),
+  almacenamiento: z
+    .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED })
+    .nonnegative({ message: ERROR_ZOD.FIELD_NEGATIVE })
+    .optional(),
   fecha: z
   .string()
   .refine(value => !value || !isNaN(Date.parse(value)), 
@@ -48,7 +56,7 @@ const IMG_REGEX = /^\/uploads\/.+\.(png|jpg|jpeg)$/i;
 request.variant = z.object({
   producto_id: z.number({ required_error: ERROR_ZOD.FIELD_REQUIRED }),
   color: z.string().trim().min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
-  stock: z.number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }).min(0, { message: ERROR_ZOD.STOCK_NEGATIVE }),
+  stock: z.number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }).min(0, { message: ERROR_ZOD.FIELD_NEGATIVE }),
   img: z.string()
     .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
     .refine(val => {
@@ -96,17 +104,5 @@ request.user = z.object({
     .min(6, { message: ERROR_ZOD.PASSWORD_MIN })
     .optional()
   }).strict();
-
-request.deviceUpdate = z.object({
-  cpu_id: z.number().int(),
-  gpu_id: z.number().int(),
-  ram_id: z.number().int(),
-  almacenamiento_id: z.number().int(),
-  pantalla_id: z.number().int(),
-  camara_id: z.number().int(),
-  bateria_id: z.number().int(),
-  conectividad_id: z.number().int(),
-  dimensionespeso_id: z.number().int()
-}).strict();
 
 export default request;

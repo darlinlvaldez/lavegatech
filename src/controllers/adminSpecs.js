@@ -41,6 +41,7 @@ specsController.editarMovil = async (req, res) => {
     };
 
     const actualizado = await specs.actualizarMovil(producto.movil_id, datosActualizados);
+    
     if (actualizado) {
       res.json({ message: 'Comparación actualizada con éxito' });
     } else {
@@ -136,16 +137,19 @@ specsController.crearVarianteAlmacenamiento = async (req, res) => {
   }
 };
 
-specsController.actualizarVarianteAlmacenamiento = async (req, res) => {
+specsController.editarVarianteAlmacenamiento = async (req, res) => {
   try {
     const { movil_id, almacenamiento_id } = req.params;
-    const { movil_id: nuevoMovilId, almacenamiento_id: nuevoAlmId } = req.body;
+    const { 
+      nuevo_movil_id = movil_id, 
+      nuevo_almacenamiento_id = almacenamiento_id 
+    } = req.body;
 
     const actualizado = await specs.actualizarVarianteAlmacenamiento(
       movil_id,
       almacenamiento_id,
-      nuevoMovilId,
-      nuevoAlmId
+      nuevo_movil_id,
+      nuevo_almacenamiento_id
     );
 
     if (actualizado) {
@@ -155,7 +159,10 @@ specsController.actualizarVarianteAlmacenamiento = async (req, res) => {
     }
   } catch (err) {
     console.error("Error al actualizar variante:", err);
-    res.status(500).json({ error: "Error del servidor al actualizar variante" });
+    res.status(500).json({ 
+      error: "Error del servidor al actualizar variante",
+      details: err.message 
+    });
   }
 };
 

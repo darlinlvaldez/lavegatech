@@ -15,6 +15,12 @@ const cancelVarianteAlmModalBtn = document.getElementById("cancelVarianteAlmModa
 const addVarianteAlmBtn = document.getElementById("addVarianteAlmBtn");
 const variantesAlmTableBody = document.getElementById("variantesAlmTableBody");
 const searchVariantesAlmInput = document.getElementById("searchVariantesAlmInput");
+const movilIdAlmInput = document.getElementById("movilIdAlmInput");
+const almacenamientoIdInput = document.getElementById("almacenamientoIdInput");
+const movilesAlmSuggestions = document.getElementById("movilesAlmList");
+const almacenamientosAlmSuggestions = document.getElementById("almacenamientosAlmList");
+
+const varianteAlmErrorFields = ["movil_id", "almacenamiento_id"];
 
 function renderVariantesAlm() {
   variantesAlmTableBody.innerHTML = "";
@@ -65,13 +71,97 @@ addVarianteAlmBtn.addEventListener("click", async () => {
 
 cancelVarianteAlmModalBtn.addEventListener("click", () => {
   varianteAlmModal.classList.remove("visible");
+  clearError(varianteAlmErrorFields, "#varianteAlmForm");
+});
+
+function setupAutocomplete({ inputEl, suggestionsEl, dataArray, onSelect = null }) {
+  if (!Array.isArray(dataArray)) {
+    console.error(`Datos no válidos para autocompletado en ${inputEl.id}`);
+    return;
+  }
+
+  inputEl.addEventListener("input", () => {
+    const query = inputEl.value.toLowerCase();
+    suggestionsEl.innerHTML = "";
+    
+    if (query.length === 0) return;
+
+    const resultados = dataArray
+      .filter(val => val && val.toLowerCase().includes(query))
+      .slice(0, 10);
+
+    if (resultados.length === 0) {
+      const noResults = document.createElement("div");
+      noResults.textContent = "No hay coincidencias";
+      noResults.className = "no-results";
+      suggestionsEl.appendChild(noResults);
+      return;
+    }
+
+    resultados.forEach(item => {
+      const div = document.createElement("div");
+      div.textContent = item;
+      div.addEventListener("click", () => {
+        inputEl.value = item;
+        suggestionsEl.innerHTML = "";
+        if (onSelect) onSelect(item);
+      });
+      suggestionsEl.appendChild(div);
+    });
+  });
+}
+
+function setupAlmAutocomplete() {
+  setupAutocomplete({
+    inputEl: movilIdAlmInput,
+    suggestionsEl: movilesAlmSuggestions,
+    dataArray: movilesDisponibles.map(m => m.nombre),
+    onSelect: () => {}
+  });
+
+  setupAutocomplete({
+    inputEl: almacenamientoIdInput,
+    suggestionsEl: almacenamientosAlmSuggestions,
+    dataArray: almacenamientosDisponibles.map(a => `${a.capacidad} ${a.tipo}`),
+    onSelect: () => {}
+  });
+}
+
+async function fetchAlmacenamientosDisponibles() {
+  try {
+    const res = await fetch("/api/specs/almacenamiento"); 
+    almacenamientosDisponibles = await res.json();
+    setupAlmAutocomplete();
+  } catch (err) {
+    showToast("Error al cargar almacenamientos disponibles.", "#e74c3c", "alert-circle");
+  }
+}
+
+async function fetchMovilesDisponibles() {
+  try {
+    const res = await fetch("/api/specs/moviles");
+    movilesDisponibles = await res.json();
+    setupAlmAutocomplete();
+  } catch (err) {
+    showToast("Error al cargar móviles disponibles.", "#e74c3c", "alert-circle");
+  }
+}
+
+document.addEventListener("click", (e) => {
+  if (!movilIdAlmInput.contains(e.target)) {
+    movilesAlmSuggestions.innerHTML = "";
+  }
+  if (!almacenamientoIdInput.contains(e.target)) {
+    almacenamientosAlmSuggestions.innerHTML = "";
+  }
 });
 
 varianteAlmForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+  clearError(varianteAlmErrorFields, "#varianteAlmForm");
 
-  const movilNombre = document.getElementById("movilIdAlmInput").value.trim();
-  const almTexto = document.getElementById("almacenamientoIdInput").value.trim();
+  const movilNombre = movilIdAlmInput.value.trim();
+  const almTexto = almacenamientoIdInput.value.trim();
 
   const movil = movilesDisponibles.find(m => m.nombre.trim().toLowerCase() === movilNombre.toLowerCase());
   const alm = almacenamientosDisponibles.find(a => (`${a.capacidad} ${a.tipo}`).trim().toLowerCase() === almTexto.toLowerCase());
@@ -85,36 +175,35 @@ varianteAlmForm.addEventListener("submit", async (e) => {
   const originalAlmacenamientoId = varianteAlmForm.getAttribute("data-original-almacenamiento");
   const isEditing = originalMovilId && originalAlmacenamientoId;
 
-  const body = JSON.stringify({
-    movil_id: movil.id,
-    almacenamiento_id: alm.id
-  });
+  const requestData = { movil_id: movil.id, almacenamiento_id: alm.id };
 
-  const url = isEditing
-    ? `/api/specs/variantes_almacenamiento/${originalMovilId}/${originalAlmacenamientoId}`
-    : "/api/specs/variantes_almacenamiento";
-
-  const method = isEditing ? "PUT" : "POST";
+  if (isEditing) {
+    requestData.nuevo_movil_id = movil.id;
+    requestData.nuevo_almacenamiento_id = alm.id;
+  }
 
   try {
-    const res = await fetch(url, {
-      method,
+    const res = await fetch(isEditing
+      ? `/api/specs/variantes_almacenamiento/${originalMovilId}/${originalAlmacenamientoId}`
+      : "/api/specs/variantes_almacenamiento", {
+      method: isEditing ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
-      body
+      body: JSON.stringify(requestData),
     });
 
     const data = await res.json();
 
     if (!res.ok) {
-      showToast(data.error || "Error al guardar la variante.", "#e74c3c", "alert-circle");
+      if (data.validationError && Array.isArray(data.errors)) {
+        showValidation(data.errors, "#varianteAlmForm");
+      } else {
+        showToast(data.error || "Error al guardar la variante.", "#e74c3c", "alert-circle");
+      }
       return;
     }
 
-    showToast(
-      isEditing ? "Variante de almacenamiento actualizada." : "Variante de almacenamiento agregada.",
-      "#27ae60",
-      "check-circle"
-    );
+    showToast(isEditing ? "Variante de almacenamiento actualizada." : "Variante de almacenamiento agregada.",
+      "#27ae60", "check-circle");
 
     varianteAlmModal.classList.remove("visible");
     varianteAlmForm.removeAttribute("data-original-movil");
@@ -181,36 +270,9 @@ async function fetchVariantesAlm() {
   }
 }
 
-async function fetchAlmacenamientosDisponibles() {
-  try {
-    const res = await fetch("/api/specs/almacenamiento"); 
-    almacenamientosDisponibles = await res.json();
-
-    const datalistAlm = document.getElementById("almacenamientosAlmList");
-    datalistAlm.innerHTML = almacenamientosDisponibles.map(a => 
-      `<option value="${a.capacidad} ${a.tipo}" data-id="${a.id}"></option>`
-    ).join('');
-  } catch (err) {
-    showToast("Error al cargar almacenamientos disponibles.", "#e74c3c", "alert-circle");
-  }
-}
-
-async function fetchMovilesDisponibles() {
-  try {
-    const res = await fetch("/api/specs/moviles");
-    movilesDisponibles = await res.json();
-
-    const datalistMov = document.getElementById("movilesAlmList");
-    datalistMov.innerHTML = movilesDisponibles.map(m => 
-      `<option value="${m.nombre}" data-id="${m.id}"></option>`
-    ).join('');
-  } catch (err) {
-    showToast("Error al cargar móviles disponibles.", "#e74c3c", "alert-circle");
-  }
-}
-
 document.addEventListener("DOMContentLoaded", async () => {
   await fetchMovilesDisponibles();
   await fetchAlmacenamientosDisponibles();
   await fetchVariantesAlm();
+  setupAlmAutocomplete();
 });

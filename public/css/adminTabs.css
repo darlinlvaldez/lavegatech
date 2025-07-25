@@ -1,18 +1,26 @@
-  .tabs {
+.tabs {
   display: flex;
   gap: 12px;
   margin-bottom: 24px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; 
+  padding-bottom: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
 }
 
 .tab-button {
+  flex: 0 0 auto; 
   background-color: #f3f4f6;
   color: #374151;
-  padding: 8px 16px;
+  padding: 8px 12px;
   border-radius: 8px;
   font-weight: 600;
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  white-space: nowrap; 
+  font-size: 0.9em;
 }
 
 .tab-button:hover {

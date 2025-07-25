@@ -12,14 +12,14 @@ const pantallaTipoInput = document.getElementById("pantallaTipo");
 const pantallaResolucionInput = document.getElementById("pantallaResolucion");
 const pantallaFrecuenciaInput = document.getElementById("pantallaFrecuencia");
 const pantallaProteccionInput = document.getElementById("pantallaProteccion");
-const pantallaTamanioInput = document.getElementById("pantallaTamanio");
+const pantallaTamañoInput = document.getElementById("pantallaTamaño");
 const modalPantallaTitle = document.getElementById("modalPantallaTitle");
 const cancelPantallaModalBtn = document.getElementById("cancelPantallaModalBtn");
 const addPantallaBtn = document.getElementById("addPantallaBtn");
 const pantallasTableBody = document.getElementById("pantallasTableBody");
 const searchPantallasInput = document.getElementById("searchPantallasInput");
 
-const pantallaErrorFields = ["tipo", "resolucion", "tamanio", "frecuencia", "proteccion" ];
+const pantallaErrorFields = ["tipo", "resolucion", "tamaño", "frecuencia", "proteccion" ];
 
 function renderPantallas() {
   pantallasTableBody.innerHTML = "";
@@ -75,7 +75,7 @@ pantallaForm.addEventListener("submit", async (e) => {
   const id = pantallaIdInput.value;
   const tipo = pantallaTipoInput.value;
   const resolucion = pantallaResolucionInput.value;
-  const tamaño = pantallaTamanioInput.value;
+  const tamaño = pantallaTamañoInput.value;
   const frecuencia = pantallaFrecuenciaInput.value;
   const proteccion = pantallaProteccionInput.value;
 
@@ -116,7 +116,7 @@ window.editPantalla = function (id) {
     pantallaIdInput.value = p.id;
     pantallaTipoInput.value = p.tipo;
     pantallaResolucionInput.value = p.resolucion;
-    pantallaTamanioInput.value = p.tamaño;
+    pantallaTamañoInput.value = p.tamaño;
     pantallaFrecuenciaInput.value = p.frecuencia;
     pantallaProteccionInput.value = p.proteccion;
     pantallaModal.classList.add("visible");

@@ -15,6 +15,10 @@ const cancelVarianteRAMModalBtn = document.getElementById("cancelVarianteRAMModa
 const addVarianteRAMBtn = document.getElementById("addVarianteRAMBtn");
 const variantesRAMTableBody = document.getElementById("variantesRAMTableBody");
 const searchVariantesRAMInput = document.getElementById("searchVariantesRAMInput");
+const movilIdInput = document.getElementById("movilIdInput");
+const ramIdInput = document.getElementById("ramIdInput");
+const movilSuggestions = document.getElementById("movilSuggestions");
+const ramSuggestions = document.getElementById("ramSuggestions");
 
 function renderVariantesRAM() {
   variantesRAMTableBody.innerHTML = "";
@@ -65,16 +69,67 @@ addVarianteRAMBtn.addEventListener("click", async () => {
 
 cancelVarianteRAMModalBtn.addEventListener("click", () => {
   varianteRAMModal.classList.remove("visible");
+  clearError(productErrorFields,'#cancelVarianteRAMModalBtn');
 });
+
+function setupAutocomplete({ inputEl, suggestionsEl, dataArray, onSelect = null }) {
+  if (!Array.isArray(dataArray)) {
+    console.error(`Datos no válidos para autocompletado en ${inputEl.id}`);
+    return;
+  }
+
+  inputEl.addEventListener("input", () => {
+    const query = inputEl.value.toLowerCase();
+    suggestionsEl.innerHTML = "";
+    
+    if (query.length === 0) return;
+
+    const resultados = dataArray
+      .filter(val => val && val.toLowerCase().includes(query))
+      .slice(0, 10);
+
+    if (resultados.length === 0) {
+      const noResults = document.createElement("div");
+      noResults.textContent = "No hay coincidencias";
+      noResults.className = "no-results";
+      suggestionsEl.appendChild(noResults);
+      return;
+    }
+
+    resultados.forEach(item => {
+      const div = document.createElement("div");
+      div.textContent = item;
+      div.addEventListener("click", () => {
+        inputEl.value = item;
+        suggestionsEl.innerHTML = "";
+        if (onSelect) onSelect(item);
+      });
+      suggestionsEl.appendChild(div);
+    });
+  });
+}
+
+function setupRAMAutocomplete() {
+  setupAutocomplete({
+    inputEl: movilIdInput,
+    suggestionsEl: movilSuggestions,
+    dataArray: movilesDisponibles.map(m => m.nombre),
+    onSelect: () => {} 
+  });
+
+  setupAutocomplete({
+    inputEl: ramIdInput,
+    suggestionsEl: ramSuggestions,
+    dataArray: ramsDisponibles.map(r => `${r.capacidad} ${r.tipo}`),
+    onSelect: () => {} 
+  });
+}
 
 async function fetchMovilesDisponibles() {
   try {
     const res = await fetch("/api/specs/moviles");
     movilesDisponibles = await res.json();
-    const list = document.getElementById("movilesList");
-    list.innerHTML = movilesDisponibles.map(m =>
-      `<option value="${m.nombre}" data-id="${m.id}"></option>`
-    ).join('');
+    setupRAMAutocomplete();
   } catch (err) {
     showToast("Error al cargar móviles disponibles.", "#e74c3c", "alert-circle");
   }
@@ -84,14 +139,20 @@ async function fetchRAMsDisponibles() {
   try {
     const res = await fetch("/api/specs/ram");
     ramsDisponibles = await res.json();
-    const list = document.getElementById("ramsList");
-    list.innerHTML = ramsDisponibles.map(r =>
-      `<option value="${r.capacidad} ${r.tipo}" data-id="${r.id}"></option>`
-    ).join('');
+    setupRAMAutocomplete(); 
   } catch (err) {
     showToast("Error al cargar RAMs disponibles.", "#e74c3c", "alert-circle");
   }
 }
+
+document.addEventListener("click", (e) => {
+  if (!movilIdInput.contains(e.target)) {
+    movilSuggestions.innerHTML = "";
+  }
+  if (!ramIdInput.contains(e.target)) {
+    ramSuggestions.innerHTML = "";
+  }
+});
 
 varianteRAMForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -131,7 +192,11 @@ varianteRAMForm.addEventListener("submit", async (e) => {
     const data = await res.json();
 
     if (!res.ok) {
-      showToast(data.error || "Error al guardar la variante.", "#e74c3c", "alert-circle");
+      if (data.validationError && Array.isArray(data.errors)) {
+        showValidation(data.errors, "#productForm");
+      } else {
+        showToast(data.error || "Error al guardar el producto.", "#e74c3c", "alert-circle");
+      }
       return;
     }
 
@@ -203,4 +268,5 @@ document.addEventListener("DOMContentLoaded", async () => {
   await fetchMovilesDisponibles();
   await fetchRAMsDisponibles();
   await fetchVariantesRAM();
+  setupRAMAutocomplete();
 });

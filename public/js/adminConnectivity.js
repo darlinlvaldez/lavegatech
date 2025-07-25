@@ -75,7 +75,7 @@ conectividadForm.addEventListener("submit", async (e) => {
   const red = conectividadRedInput.value.trim();
   const wifi = conectividadWifiInput.value.trim();
   const bluetooth = conectividadBluetoothInput.value.trim();
-  const nfc = conectividadNfcInput.checked ? 1 : 0;
+  const nfc = conectividadNfcInput.checked;
 
   const body = JSON.stringify({ red, wifi, bluetooth, nfc });
   const url = id ? `/api/specs/conectividades/${id}` : "/api/specs/conectividades";

@@ -1,108 +1,117 @@
 <%- include('../admin/dashboard.ejs') %>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    <link rel="stylesheet" href="/css/sweetAlertAdmin.css">
-    <link rel="stylesheet" href="/css/toastify.css">
-    <link rel="stylesheet" href="/css/adminTable.css">
-    <link rel="stylesheet" href="/css/error.css">
-    <link rel="stylesheet" href="/css/variant.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<link rel="stylesheet" href="/css/sweetAlertAdmin.css">
+<link rel="stylesheet" href="/css/toastify.css">
+<link rel="stylesheet" href="/css/adminTable.css">
+<link rel="stylesheet" href="/css/error.css">
+<link rel="stylesheet" href="/css/adminResult.css">
 
-    <div class="main-content">
-        <header class="header">
-            <h1>Gestión de Comparables</h1>
-        </header>
+<div class="main-content">
+    <header class="header">
+        <h1>Gestión de Comparables</h1>
+    </header>
 
-        <main class="main-content-area">
-            <div class="card">
-                <div class="card-header">
-                    <h2>Dispositivos Listados</h2>
-                    <div class="search-container">
-                        <input type="text" id="searchDeviceInput" placeholder="Buscar dispositivos..."
-                            class="input-search" />
-                        <i class="fa fa-search search-icon"></i>
-                    </div>
-                    <button id="addDeviceBtn" class="add-button">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Añadir Dispositivo
-                    </button>
+    <main class="main-content-area">
+        <div class="card">
+            <div class="card-header">
+                <h2>Dispositivos Listados</h2>
+                <div class="search-container">
+                    <input type="text" id="searchDeviceInput" placeholder="Buscar dispositivos..."
+                        class="input-search" />
+                    <i class="fa fa-search search-icon"></i>
                 </div>
-
-                <div class="table-container">
-                    <table class="product-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>RAM</th>
-                                <th>CPU</th>
-                                <th>Almacenamiento</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="devicesTableBody">
-                        </tbody>
-                    </table>
-                </div>
+                <button id="addDeviceBtn" class="add-button">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Añadir Dispositivo
+                </button>
             </div>
-        </main>
-    </div>
 
-    <div id="deviceModal" class="modal-overlay">
-        <div class="modal-content">
-            <h3 id="deviceModalTitle" class="modal-title">Añadir Dispositivo</h3>
-            <form id="deviceForm" class="modal-form">
-                <input type="hidden" id="deviceId">
-                <div class="form-group">
-                    <label for="deviceName">Nombre:</label>
-                    <input type="text" id="deviceName" name="nombre" autocomplete="off" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="deviceCpu">CPU:</label>
-                    <input type="text" id="deviceCpu" name="cpu" autocomplete="off">
-                    <div id="suggestionsCpu" class="suggestions-list"></div>
-                </div>
-                <div class="form-group">
-                    <label for="deviceGpu">GPU:</label>
-                    <input type="text" id="deviceGpu" name="gpu" autocomplete="off">
-                    <div id="suggestionsGpu" class="suggestions-list"></div>
-                </div>
-                <div class="form-group">
-                    <label for="deviceScreen">Pantalla:</label>
-                    <input type="text" id="deviceScreen" name="pantalla" autocomplete="off">
-                    <div id="suggestionsScreen" class="suggestions-list"></div>
-                </div>
-                <div class="form-group">
-                    <label for="deviceCamera">Cámara:</label>
-                    <input type="text" id="deviceCamera" name="camara" autocomplete="off">
-                    <div id="suggestionsCamera" class="suggestions-list"></div>
-                </div>
-                <div class="form-group">
-                    <label for="deviceBattery">Batería:</label>
-                    <input type="text" id="deviceBattery" name="bateria" autocomplete="off">
-                    <div id="suggestionsBattery" class="suggestions-list"></div>
-                </div>
-                <div class="form-group">
-                    <label for="deviceConnectivity">Conectividad:</label>
-                    <input type="text" id="deviceConnectivity" name="conectividad" autocomplete="off">
-                    <div id="suggestionsConnectivity" class="suggestions-list"></div>
-                </div>
-                <div class="form-group">
-                    <label for="deviceSizeWeight">Dimensiones/Peso:</label>
-                    <input type="text" id="deviceSizeWeight" name="dimensionespeso" autocomplete="off">
-                    <div id="suggestionsSizeWeight" class="suggestions-list"></div>
-                </div>
-                <div class="modal-buttons">
-                    <button type="button" id="cancelDeviceModalBtn" class="cancel-button">Cancelar</button>
-                    <button type="submit" class="save-button">Guardar</button>
-                </div>
-            </form>
+            <div class="table-container">
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>RAM</th>
+                            <th>CPU</th>
+                            <th>Almacenamiento</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="devicesTableBody">
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+    </main>
+</div>
 
-    <script type="module" src="/js/adminDevice.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
+<div id="deviceModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 id="deviceModalTitle" class="modal-title">Añadir Dispositivo</h3>
+        <form id="deviceForm" class="modal-form">
+            <input type="hidden" id="deviceId">
+            <div class="form-group">
+                <label for="deviceName">Nombre:</label>
+                <input type="text" id="deviceName" name="nombre" autocomplete="off" readonly>
+            </div>
+            <div class="form-group">
+                <label for="deviceCpu">CPU:</label>
+                <input type="text" id="deviceCpu" name="cpu" autocomplete="off">
+                <div id="suggestionsCpu" class="suggestions-list"></div>
+            </div>
+            <div class="form-group">
+                <label for="deviceGpu">GPU:</label>
+                <input type="text" id="deviceGpu" name="gpu" autocomplete="off">
+                <div id="suggestionsGpu" class="suggestions-list"></div>
+            </div>
+            <div class="form-group">
+                <label for="deviceScreen">Pantalla:</label>
+                <input type="text" id="deviceScreen" name="pantalla" autocomplete="off">
+                <div id="suggestionsScreen" class="suggestions-list"></div>
+            </div>
+            <div class="form-group">
+                <label for="deviceCamera">Cámara:</label>
+                <input type="text" id="deviceCamera" name="camara" autocomplete="off">
+                <div id="suggestionsCamera" class="suggestions-list"></div>
+            </div>
+            <div class="form-group">
+                <label for="deviceBattery">Batería:</label>
+                <input type="text" id="deviceBattery" name="bateria" autocomplete="off">
+                <div id="suggestionsBattery" class="suggestions-list"></div>
+            </div>
+            <div class="form-group">
+                <label for="deviceConnectivity">Conectividad:</label>
+                <input type="text" id="deviceConnectivity" name="conectividad" autocomplete="off">
+                <div id="suggestionsConnectivity" class="suggestions-list"></div>
+            </div>
+            <div class="form-group">
+                <label for="deviceSizeWeight">Dimensiones/Peso:</label>
+                <input type="text" id="deviceSizeWeight" name="dimensionespeso" autocomplete="off">
+                <div id="suggestionsSizeWeight" class="suggestions-list"></div>
+            </div>
+            <div class="form-group">
+                <label for="searchMobileInput">Buscar Móvil:</label>
+                <input type="text" id="searchMobileInput" autocomplete="off" placeholder="Busca un móvil para asignar">
+                <div id="suggestionsMobile" class="suggestions-list"></div>
+            </div>
+            <div class="form-group">
+                <label>Móviles seleccionados:</label>
+                <ul id="selectedMobilesList"></ul>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" id="cancelDeviceModalBtn" class="cancel-button">Cancelar</button>
+                <button type="submit" class="save-button">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="module" src="/js/adminDevice.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://unpkg.com/feather-icons"></script>

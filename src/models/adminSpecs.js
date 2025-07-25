@@ -264,7 +264,7 @@ specs.eliminarCamara = async (id) => {
 // Tabla conectividad
 
 specs.obtenerConectividad = async () => {
-  const [rows] = await db.query("SELECT * FROM conectividad");
+  const [rows] = await db.query("SELECT * FROM conectividad ORDER BY id DESC");
   return rows;
 };
 
@@ -339,7 +339,7 @@ specs.obtenerDimensiones = async () => {
 
 specs.agregarDimensiones = async (data) => {
   const query = `
-    INSERT INTO Dimensiones (altura, anchura, grosor, peso)
+    INSERT INTO dimensionespeso (altura, anchura, grosor, peso)
     VALUES (?, ?, ?, ?)
   `;
   const [result] = await db.execute(query, [
@@ -353,7 +353,7 @@ specs.agregarDimensiones = async (data) => {
 
 specs.actualizarDimensiones = async (id, data) => {
   const query = `
-    UPDATE Dimensiones
+    UPDATE dimensionespeso
     SET altura = ?, anchura = ?, grosor = ?, peso = ?
     WHERE id = ?
   `;
@@ -368,7 +368,7 @@ specs.actualizarDimensiones = async (id, data) => {
 };
 
 specs.eliminarDimensiones = async (id) => {
-  const query = `DELETE FROM Dimensiones WHERE id = ?`;
+  const query = `DELETE FROM dimensionespeso WHERE id = ?`;
   const [result] = await db.execute(query, [id]);
   return result.affectedRows;
 };

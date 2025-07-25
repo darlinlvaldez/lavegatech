@@ -32,6 +32,10 @@ router.post('/categorias', validate(request.category), admin.agregarCategoria);
 router.put('/categorias/:id', validate(request.category), admin.editarCategoria); 
 router.delete('/categorias/:id', admin.borrarCategoria);
 
+// RAM y Almacenamiento
+router.get('/ram', admin.listarRAM);
+router.get('/almacenamiento', admin.listarAlm);
+
 // Pedidos
 router.get('/orders', admin.listarPedidos);
 router.get('/orders/:id', admin.detallePedido);
