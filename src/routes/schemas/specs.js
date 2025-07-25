@@ -163,11 +163,9 @@ tipo: z
 }).strict(),
 
 request.varianteRAM = z.object({
-movilId: z
-    .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }),
-ramId: z
-    .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }),
-}).strict(),
+  nuevo_movil_id: z.number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }),
+  nuevo_ram_id: z.number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }),
+}).strict();
 
 request.varianteAlm = z.object({
   movil_id: z.number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }),

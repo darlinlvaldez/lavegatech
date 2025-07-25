@@ -14,8 +14,14 @@ specsController.listarMoviles = async (req, res) => {
 
 specsController.crearMovil = async (req, res) => {
   try {
-    const id = await specs.agregarMovil(req.body);
-    res.status(201).json({ message: 'Comparación creada con éxito', id });
+    const { productIds = [], ...movilData } = req.body;
+    const movilId = await specs.agregarMovil(movilData);
+    
+    if (productIds.length > 0) {
+      await db.query("UPDATE productos SET movil_id = ? WHERE id IN (?)", [movilId, productIds]);
+    }
+    
+    res.status(201).json({ message: 'Comparación creada con éxito', id: movilId });
   } catch (error) {
     console.error('Error al crear comparación:', error);
     res.status(500).json({ message: 'Error del servidor' });
@@ -24,23 +30,19 @@ specsController.crearMovil = async (req, res) => {
 
 specsController.editarMovil = async (req, res) => {
   const { id } = req.params;
+  const { productIds = [], ...movilData } = req.body;
+
   try {
     const [[producto]] = await db.query("SELECT movil_id FROM productos WHERE id = ?", [id]);
     if (!producto || !producto.movil_id) {
       return res.status(404).json({ message: 'Comparación no encontrada' });
     }
 
-    const [movilActual] = await db.query("SELECT * FROM moviles WHERE id = ?", [producto.movil_id]);
-    if (!movilActual.length) {
-      return res.status(404).json({ message: 'Comparación no encontrada' });
+    const actualizado = await specs.actualizarMovil(producto.movil_id, movilData);
+    
+    if (productIds.length > 0) {
+      await db.query("UPDATE productos SET movil_id = ? WHERE id IN (?)", [producto.movil_id, productIds]);
     }
-
-    const datosActualizados = {
-      ...movilActual[0],
-      ...req.body
-    };
-
-    const actualizado = await specs.actualizarMovil(producto.movil_id, datosActualizados);
     
     if (actualizado) {
       res.json({ message: 'Comparación actualizada con éxito' });
@@ -602,6 +604,13 @@ specsController.crearVarianteRam = async (req, res) => {
     res.status(201).json({ message: "Variante RAM creada con éxito", id });
   } catch (err) {
     console.error("Error al crear variante RAM:", err);
+    if (err.code === 'ER_DUP_ENTRY') {
+      return res.status(400).json({ 
+        error: "Esta combinación de móvil y RAM ya existe",
+        validationError: true,
+        errors: [{ path: ['movil_id'], message: "Esta combinación ya existe" }]
+      });
+    }
     res.status(500).json({ error: "Error al crear variante RAM" });
   }
 };

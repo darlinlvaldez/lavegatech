@@ -10,8 +10,8 @@ router.use(isAdmin());
 
 // Tabla moviles
 router.get('/moviles', specs.listarMoviles);
-router.post('/movil', validate(request.movil), specs.crearMovil);
-router.put('/movil/:id', validate(request.movil), specs.editarMovil);
+router.post('/movil',  specs.crearMovil);
+router.put('/movil/:id',specs.editarMovil);
 router.delete('/movil/:id', specs.borrarMovil);
 
 // Tabla almacenamiento

@@ -11,21 +11,19 @@ let baterias = [];
 let camaras = [];
 let conectividades = [];
 let dimensionespeso = [];
-let productos = [];
+let productosSeleccionados = [];
 
 const deviceModal = document.getElementById("deviceModal");
 const deviceForm = document.getElementById("deviceForm");
 const deviceModalTitle = document.getElementById("deviceModalTitle");
 const cancelDeviceModalBtn = document.getElementById("cancelDeviceModalBtn");
 const deviceIdInput = document.getElementById("deviceId");
-const deviceNameInput = document.getElementById("deviceName");
 const deviceCpuInput = document.getElementById("deviceCpu");
 const deviceGpuInput = document.getElementById("deviceGpu");
 const deviceScreenInput = document.getElementById("deviceScreen");
 const searchDeviceInput = document.getElementById("searchDeviceInput");
 const devicesTableBody = document.getElementById("devicesTableBody");
 const addDeviceBtn = document.getElementById("addDeviceBtn");
-const suggestionsDevice = document.getElementById("suggestionsDevice");
 const suggestionsCpu = document.getElementById("suggestionsCpu");
 const suggestionsGpu = document.getElementById("suggestionsGpu");
 const suggestionsScreen = document.getElementById("suggestionsScreen");
@@ -39,7 +37,7 @@ const suggestionsConnectivity = document.getElementById("suggestionsConnectivity
 const suggestionsSizeWeight = document.getElementById("suggestionsSizeWeight");
 
 const deviceErrorFields = [
-  "nombre", "cpu", "gpu", "pantalla", "camara", "bateria", "conectividad", "dimensionespeso"
+  "cpu", "gpu", "pantalla", "camara", "bateria", "conectividad", "dimensionespeso"
 ];
 
 async function fetchCpus() {
@@ -147,12 +145,6 @@ setupAutocomplete({
 });
 
 setupAutocomplete({
-  inputEl: deviceNameInput,
-  suggestionsEl: suggestionsDevice,
-  dataArray: productos.map(p => p.nombre)
-});
-
-setupAutocomplete({
   inputEl: deviceCameraInput,
   suggestionsEl: suggestionsCamera,
   dataArray: camaras.map(c => `${c.principal} / Selfie: ${c.selfie}`)
@@ -212,6 +204,60 @@ async function fetchDispositivos() {
   }
 }
 
+function renderProductosSeleccionados() {
+  const lista = document.getElementById("selectedMobilesList");
+  lista.innerHTML = "";
+  
+  productosSeleccionados.forEach(producto => {
+    const li = document.createElement("li");
+    li.textContent = producto.nombre;
+    
+    const removeBtn = document.createElement("button");
+    removeBtn.textContent = "×";
+    removeBtn.className = "remove-product-btn";
+    removeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      productosSeleccionados = productosSeleccionados.filter(p => p.id !== producto.id);
+      renderProductosSeleccionados();
+    });
+    
+    li.prepend(removeBtn);
+    lista.appendChild(li);
+  });
+}
+
+searchMobileInput.addEventListener("input", () => {
+  const query = searchMobileInput.value.trim().toLowerCase();
+  suggestionsMobile.innerHTML = "";
+  
+  if (query.length < 2) return;
+
+  const resultados = dispositivos.filter(d => 
+    d.nombre.toLowerCase().includes(query) &&
+    !productosSeleccionados.some(p => p.id === d.id)
+  ).slice(0, 10);
+
+  if (resultados.length === 0) {
+    const noResults = document.createElement("div");
+    noResults.textContent = "No hay coincidencias";
+    noResults.className = "no-results";
+    suggestionsMobile.appendChild(noResults);
+    return;
+  }
+
+  resultados.forEach(d => {
+    const div = document.createElement("div");
+    div.textContent = d.nombre;
+    div.addEventListener("click", () => {
+      productosSeleccionados.push({ id: d.id, nombre: d.nombre });
+      renderProductosSeleccionados();
+      searchMobileInput.value = "";
+      suggestionsMobile.innerHTML = "";
+    });
+    suggestionsMobile.appendChild(div);
+  });
+});
+
 function renderMobiles() {
   devicesTableBody.innerHTML = "";
 
@@ -254,6 +300,8 @@ addDeviceBtn.addEventListener("click", () => {
   deviceModalTitle.textContent = "Añadir Dispositivo";
   deviceForm.reset();
   deviceIdInput.value = "";
+  productosSeleccionados = []; 
+  renderProductosSeleccionados();
   clearError(deviceErrorFields, "#deviceForm");
   deviceModal.classList.add("visible");
 });
@@ -263,7 +311,7 @@ cancelDeviceModalBtn.addEventListener("click", () => {
   clearError(deviceErrorFields, "#deviceForm");
 });
 
-window.editDispositivo = function (productoId) {
+window.editDispositivo = async function (productoId) {
   const dispositivo = dispositivos.find(d => d.id === productoId);
   if (!dispositivo) return;
 
@@ -271,11 +319,18 @@ window.editDispositivo = function (productoId) {
   deviceIdInput.value = dispositivo.id;
   deviceIdInput.dataset.movilId = dispositivo.movil_id; 
 
-  deviceNameInput.value = dispositivo.nombre;
-  deviceNameInput.readOnly = true;
-  deviceCpuInput.value = dispositivo.cpu;
-  deviceGpuInput.value = dispositivo.gpu;
-  deviceScreenInput.value = dispositivo.pantalla;
+  productosSeleccionados = [];
+  if (dispositivo.movil_id) {
+    productosSeleccionados = dispositivos
+      .filter(d => d.movil_id === dispositivo.movil_id)
+      .map(d => ({ id: d.id, nombre: d.nombre }));
+    
+    renderProductosSeleccionados();
+  }
+
+  deviceCpuInput.value = dispositivo.cpu || "";
+  deviceGpuInput.value = dispositivo.gpu || "";
+  deviceScreenInput.value = dispositivo.pantalla || "";
   deviceCameraInput.value = dispositivo.camara || "";
   deviceBatteryInput.value = dispositivo.bateria || "";
   deviceConnectivityInput.value = dispositivo.conectividad || "";
@@ -286,7 +341,7 @@ window.editDispositivo = function (productoId) {
 };
 
 function buscarIdPorNombre(array, valorInput, campoNombre = null, formatter = null) {
-  if (!valorInput || valorInput.trim() === "") return undefined; // Cambiado a undefined
+  if (!valorInput || valorInput.trim() === "") return undefined;
   
   const foundItem = array.find(item => {
     if (formatter) {
@@ -313,6 +368,7 @@ deviceForm.addEventListener("submit", async (e) => {
   }
 
   const id = deviceIdInput.value;
+  const productIds = productosSeleccionados.map(p => p.id);
 
   const body = {
     cpu_id: buscarIdPorNombre(cpus, deviceCpuInput.value.trim(), "nombre"),
@@ -331,7 +387,8 @@ deviceForm.addEventListener("submit", async (e) => {
     ),
     dimensionespeso_id: buscarIdPorNombre(dimensionespeso, deviceSizeWeightInput.value.trim(), null, (d) =>
       `${d.altura}x${d.anchura}x${d.grosor} ${d.peso}g`
-    )
+    ),
+    productIds 
   };
 
   try {
@@ -383,7 +440,6 @@ window.deleteDispositivo = async function (id) {
     showToast("Error al eliminar el dispositivo.", "#e74c3c", "alert-circle");
   }
 };
-
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {

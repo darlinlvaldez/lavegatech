@@ -193,7 +193,7 @@ varianteRAMForm.addEventListener("submit", async (e) => {
 
     if (!res.ok) {
       if (data.validationError && Array.isArray(data.errors)) {
-        showValidation(data.errors, "#productForm");
+        showValidation(data.errors, "#varianteRAMForm");
       } else {
         showToast(data.error || "Error al guardar el producto.", "#e74c3c", "alert-circle");
       }

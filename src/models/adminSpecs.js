@@ -7,6 +7,7 @@ specs.obtenerMoviles = async () => {
     SELECT 
       p.id,
       p.nombre,
+      p.movil_id,
       cpu.nombre AS cpu,
       gpu.modelo AS gpu,
       GROUP_CONCAT(DISTINCT CONCAT(r.capacidad, ' ', r.tipo)) AS ram,
@@ -83,22 +84,23 @@ specs.agregarMovil = async (data) => {
 specs.actualizarMovil = async (id, data) => {
   const sql = `
     UPDATE moviles
-    SET cpu_id = ?, gpu_id = ?, pantalla_id = ?,
-    dimensionespeso_id = ?, conectividad_id = ?, bateria_id = ?, camara_id = ? 
-    WHERE id = ?
-  `;
-    console.log('Datos recibidos para actualizar móvil:', data);
+    SET cpu_id = ?, gpu_id = ?, pantalla_id = ?, dimensionespeso_id = ?,
+      conectividad_id = ?, bateria_id = ?, camara_id = ? WHERE id = ?`;
+  
+  console.log('Datos recibidos para actualizar móvil:', data);
 
-  const [result] = await db.execute(sql, [
-    data.cpu_id,
-    data.gpu_id,
-    data.pantalla_id,
-    data.dimensionespeso_id,
-    data.conectividad_id,
-    data.bateria_id,
-    data.camara_id,
+  const params = [
+    data.cpu_id || null,
+    data.gpu_id || null,
+    data.pantalla_id || null,
+    data.dimensionespeso_id || null,
+    data.conectividad_id || null,
+    data.bateria_id || null,
+    data.camara_id || null,
     id
-  ]);
+  ];
+
+  const [result] = await db.execute(sql, params);
   return result.affectedRows;
 };
 
