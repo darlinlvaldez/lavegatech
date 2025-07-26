@@ -8,6 +8,10 @@ const router = express.Router();
 
 router.use(isAdmin());
 
+// Panel Admin
+router.get('/panel', admin.adminDashboard);
+router.get('/ventas-por-fecha', admin.graficoVentas);
+
 // Productos
 router.get('/productos', admin.listarItems);
 router.post('/productos', validate(request.product), admin.crearItems);

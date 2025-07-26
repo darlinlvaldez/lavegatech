@@ -4,6 +4,29 @@ import admin from '../models/admin.js';
 
 const adminController = {};
 
+// Panel Admin
+
+adminController.adminDashboard = async (req, res) => {
+  try {
+    const resumen = await admin.dashboard();
+    res.render('admin/panel', { resumen });
+  } catch (err) {
+    res.status(500).send('Error al cargar el panel de administración');
+  }
+};
+
+adminController.graficoVentas = async (req, res) => {
+  const { rango, mes, fecha } = req.query;
+
+  try {
+    const ventas = await admin.graficoVentas(rango, mes, fecha);
+    res.json(ventas);
+  } catch (error) {
+    console.error('Error al obtener ventas por fecha:', error);
+    res.status(500).json({ error: 'Error al obtener ventas por fecha' });
+  }
+};
+
 // Productos
 
 adminController.listarItems = async (req, res) => {

@@ -1,0 +1,30 @@
+<%- include('../admin/dashboard.ejs') %>
+
+<link rel="stylesheet" href="/css/chart.css">
+
+<div class="grafico-contenedor">
+  <label for="rangoSelect">Selecciona rango:</label>
+  <select id="rangoSelect">
+    <option value="dia">Día</option>
+    <option value="mes">Mes</option>
+    <option value="año">Año</option>
+    <option value="fecha-especifica">Fecha específica</option>
+  </select>
+
+  <label for="tipoGraficoSelect">Tipo de gráfico:</label>
+  <select id="tipoGraficoSelect">
+    <option value="bar">Barras</option>
+    <option value="line">Línea</option>
+  </select>
+
+  <label for="mesSelect" id="labelMesSelect" style="display:none;">Selecciona mes:</label>
+  <input type="month" id="mesSelect" style="display:none;" />
+
+  <label for="fechaSelect" id="labelFechaSelect" style="display:none;">Selecciona fecha:</label>
+  <input type="date" id="fechaSelect" style="display:none;" />
+  
+  <canvas id="ventasChart"></canvas>
+</div>
+
+<script src="/js/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

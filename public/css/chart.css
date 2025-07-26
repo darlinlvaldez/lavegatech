@@ -1,0 +1,32 @@
+.grafico-contenedor {
+  max-width: 12000px;
+  margin: auto;
+  width: 100%;
+  padding: 10px;
+}
+
+#ventasChart {
+  width: 100% !important;
+  height: 800px !important; 
+}
+
+@media (max-width: 600px) {
+  #ventasChart {
+    height: 400px !important;
+  }
+}
+
+select, input[type="month"], input[type="date"] {
+  padding: 6px 12px;
+  font-size: 16px;
+  border: 2px solid #3498db;
+  border-radius: 6px;
+  color: #333;
+  margin-right: 10px;
+  vertical-align: middle;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+select:hover, input[type="month"]:hover, input[type="date"]:hover {
+  border-color: #2980b9;
+}

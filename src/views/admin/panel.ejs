@@ -1,0 +1,79 @@
+<%- include('../admin/dashboard.ejs') %>
+
+<link rel="stylesheet" href="/css/adminPanel.css">
+
+<body>
+    <div class="main-content">
+        <header class="header">
+            <h1>Panel Administrador</h1>
+        </header>
+
+        <main class="main-content-area">
+
+            <div class="dashboard">
+                <a href="/api/admin/orders" class="card">
+                    <div class="icon">🛒</div>
+                    <div class="info">
+                    <div class="title">Pedidos totales</div>
+                    <div class="value" id="pedidosTotales"><%= resumen.pedidos %></div>
+                    </div>
+                </a>
+                <a href="/admin/products" class="card">
+                    <div class="icon">📦</div>
+                    <div class="info">
+                    <div class="title">Productos totales</div>
+                    <div class="value" id="productosTotales"><%= resumen.productos %></div>
+                    </div>
+                </a>
+                <a href="/admin/users" class="card">
+                    <div class="icon">👥</div>
+                    <div class="info">
+                    <div class="title">Usuarios registrados</div>
+                    <div class="value" id="usuariosRegistrados"><%= resumen.usuarios %></div>
+                    </div>
+                </a>
+                <a href="/admin/sales" class="card">
+                    <div class="icon">💰</div>
+                    <div class="info">
+                    <div class="title">Ventas completadas</div>
+                    <div class="value" id="ventasCompletadas">$<%= resumen.ventas.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></div>
+                    </div>
+                </a>
+            </div>
+
+            <section class="shipping-section">
+                <h2 style="margin-top: 40px; margin-bottom: 20px;">Estados de Envío</h2>
+                <div class="dashboard">
+                    <div class="card">
+                        <div class="icon">📨</div>
+                        <div class="info">
+                            <div class="title">Pendientes de envío</div>
+                            <div class="value" id="enviosPendientes">0</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="icon">🚚</div>
+                        <div class="info">
+                            <div class="title">En camino</div>
+                            <div class="value" id="enviosEnCamino">0</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="icon">✅</div>
+                        <div class="info">
+                            <div class="title">Entregados</div>
+                            <div class="value" id="enviosEntregados">0</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="icon">❌</div>
+                        <div class="info">
+                            <div class="title">Cancelados</div>
+                            <div class="value" id="enviosCancelados">0</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>

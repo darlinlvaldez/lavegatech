@@ -134,6 +134,10 @@ app.get('/warranty', (req, res) => {
   res.render('information/warranty');  
 });
 
+app.get('/admin/sales', isAdmin(), (req, res) => {
+  res.render('admin/sales');  
+});
+
 app.get('/admin/products', isAdmin(), (req, res) => {
   res.render('admin/products');  
 });

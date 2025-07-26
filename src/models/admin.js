@@ -2,6 +2,74 @@ import db from "../database/mobiles.js";
 
 const admin = {};
 
+// Panel admin
+
+admin.dashboard = async () => {
+  const [productosRows] = await db.query('SELECT COUNT(*) AS total FROM productos');
+  const [usuariosRows] = await db.query('SELECT COUNT(*) AS total FROM usuarios');
+  const [pedidosRows] = await db.query('SELECT COUNT(*) AS total FROM pedidos');
+  const [ventasRows] = await db.query(`SELECT SUM(total) AS totalVentas FROM pedidos`);
+
+  return {
+    productos: productosRows[0]?.total || 0,
+    usuarios: usuariosRows[0]?.total || 0,
+    pedidos: pedidosRows[0]?.total || 0,
+    ventas: Number(ventasRows[0]?.totalVentas) || 0
+  };
+};
+
+admin.graficoVentas = async (rango, mes, fecha) => {
+  let query = '';
+  let params = [];
+
+  if (rango === 'mes') {
+    if (mes) {
+      query = `
+        SELECT DATE_FORMAT(fecha_creacion, '%Y-%m-%d') AS fecha, SUM(total) AS totalVentas
+        FROM pedidos
+        WHERE status = 'pagado' AND DATE_FORMAT(fecha_creacion, '%Y-%m') = ?
+        GROUP BY fecha ORDER BY fecha
+      `;
+      params = [mes];
+    } else {
+      query = `
+        SELECT DATE_FORMAT(fecha_creacion, '%Y-%m') AS fecha, SUM(total) AS totalVentas
+        FROM pedidos
+        WHERE status = 'pagado'
+        GROUP BY fecha ORDER BY fecha
+      `;
+    }
+
+  } else if (rango === 'año') {
+    query = `
+      SELECT YEAR(fecha_creacion) AS fecha, SUM(total) AS totalVentas
+      FROM pedidos
+      WHERE status = 'pagado'
+      GROUP BY fecha ORDER BY fecha
+    `;
+
+  } else if (rango === 'fecha-especifica' && fecha) {
+    query = `
+      SELECT DATE_FORMAT(fecha_creacion, '%H:00') AS fecha, SUM(total) AS totalVentas
+      FROM pedidos
+      WHERE status = 'pagado' AND DATE(fecha_creacion) = ?
+      GROUP BY HOUR(fecha_creacion) ORDER BY HOUR(fecha_creacion)
+    `;
+    params = [fecha];
+
+  } else {
+    query = `
+      SELECT DATE(fecha_creacion) AS fecha, SUM(total) AS totalVentas
+      FROM pedidos
+      WHERE status = 'pagado'
+      GROUP BY fecha ORDER BY fecha
+    `;
+  }
+
+  const [rows] = await db.query(query, params);
+  return rows;
+};
+
 // Productos
 
 admin.obtenerItems = async () => {
