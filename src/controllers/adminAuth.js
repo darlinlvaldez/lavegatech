@@ -53,7 +53,7 @@ adminAuth.logout = (req, res) => {
       console.error('Error al cerrar sesión del admin:', err);
       return res.status(500).send(ERROR_MESSAGES.SERVER_ERROR);
     }
-    res.clearCookie('connect.sid');
+    res.clearCookie('connect.admin.sid');
     res.redirect('/admin/login');
   });
 };

@@ -7,6 +7,7 @@ import config from './config.js';
 // Middleware
 import {isAuth, isAdmin} from './src/middlewares/auth.js';
 import session from './src/middlewares/session.js';
+import sessionAdmin from './src/middlewares/sessionAdmin.js';
 import { userLocals, adminLocals } from './src/middlewares/userLocals.js';
 
 // Routes
@@ -25,6 +26,11 @@ import specs from './src/routes/adminSpecs.js';
 const app = express();
 
 app.use(express.json());
+
+app.use('/api/admin', sessionAdmin);
+app.use('/admin', sessionAdmin);
+app.use('/api/adminAuth', sessionAdmin);
+app.use('/api/specs', sessionAdmin);
 
 app.use(session);
 
