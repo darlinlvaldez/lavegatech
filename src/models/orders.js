@@ -2,7 +2,7 @@ import db from "../database/mobiles.js";
 
 const orders = {};
 
-orders.createOrder = async (orderData, items) => {
+orders.createOrder = async (orderData, items, costoEnvio) => {
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
@@ -46,6 +46,11 @@ orders.createOrder = async (orderData, items) => {
       );
     }
 
+    await orders.createShipping(conn, orderId, {
+      estado_envio: "pendiente",
+      costo_envio: costoEnvio,
+    });
+
     await conn.commit();
     return orderId;
   } catch (error) {
@@ -68,6 +73,16 @@ orders.obtenerCiudades = async function () {
   const [ciudades] = await db.query("SELECT id, nombre, costo_envio FROM ciudades_envio");
   return ciudades;
 }
+
+orders.createShipping = async (conn, pedido_id, envioData) => {
+  const {estado_envio = 'pendiente', costo_envio = 0.00 } = envioData;
+
+  await conn.query(`
+    INSERT INTO envios (pedido_id, estado_envio, costo_envio)
+    VALUES (?, ?, ?)`,
+    [pedido_id, estado_envio, costo_envio]
+  );
+};
 
 orders.updateStock = async (orderId, userId) => {
   const { items } = await orders.getOrderById(orderId, userId) || {};
@@ -113,9 +128,10 @@ orders.checkStock = async (items) => {
 
 orders.getOrderById = async (orderId, userId) => {
   const [order] = await db.query(
-    `SELECT p.*, c.costo_envio 
+    `SELECT p.*, c.costo_envio, e.estado_envio 
      FROM pedidos p 
      LEFT JOIN ciudades_envio c ON p.ciudad_envio_id = c.id 
+     LEFT JOIN envios e ON p.id = e.pedido_id
      WHERE p.id = ? AND p.user_id = ?`,
     [orderId, userId]
   );
@@ -132,15 +148,15 @@ orders.getOrderById = async (orderId, userId) => {
   };
 };
 
-orders.updateOrderStatus = async (orderId, status) => {
-  await db.query(`UPDATE pedidos SET status = ? WHERE id = ?`, 
-    [status, orderId]);
-};
-
 orders.getUserOrders = async (userId) => {
   const [orders] = await db.query(
-    `SELECT * FROM pedidos WHERE user_id = ? ORDER BY fecha_creacion DESC`,
-    [userId]);
+    `SELECT p.*, e.estado_envio 
+     FROM pedidos p
+     LEFT JOIN envios e ON p.id = e.pedido_id
+     WHERE p.user_id = ? 
+     ORDER BY fecha_creacion DESC`,
+    [userId]
+  );
   return orders;
 };
 

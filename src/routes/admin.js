@@ -11,6 +11,7 @@ router.use(isAdmin());
 // Panel Admin
 router.get('/panel', admin.adminDashboard);
 router.get('/ventas-por-fecha', admin.graficoVentas);
+router.post('/orders/:id/estado-envio', admin.estadoEnvio);
 
 // Productos
 router.get('/productos', admin.listarItems);

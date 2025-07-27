@@ -8,8 +8,8 @@ const adminController = {};
 
 adminController.adminDashboard = async (req, res) => {
   try {
-    const resumen = await admin.dashboard();
-    res.render('admin/panel', { resumen });
+    const result = await admin.dashboard();
+    res.render('admin/panel', { result });
   } catch (err) {
     res.status(500).send('Error al cargar el panel de administración');
   }
@@ -24,6 +24,23 @@ adminController.graficoVentas = async (req, res) => {
   } catch (error) {
     console.error('Error al obtener ventas por fecha:', error);
     res.status(500).json({ error: 'Error al obtener ventas por fecha' });
+  }
+};
+
+adminController.estadoEnvio = async (req, res) => {
+  const pedidoId = req.params.id;
+  const { estado_envio } = req.body;
+
+  if (!estado_envio || !['pendiente', 'enviado', 'entregado', 'cancelado'].includes(estado_envio)) {
+    return res.status(400).json({ error: 'Estado de envío no válido' });
+  }
+
+  try {
+    await admin.actualizarEstadoEnvio(estado_envio, pedidoId);
+    res.json({ mensaje: 'Estado actualizado correctamente' });
+  } catch (error) {
+    console.error('Error actualizando estado de envío:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
   }
 };
 
@@ -200,6 +217,8 @@ adminController.detallePedido = async (req, res) => {
     res.status(500).send("Error al cargar detalles del pedido");
   }
 };
+
+// Categorías y marcas
 
 adminController.listarCategorias = async (req, res) => {
   try {

@@ -8,13 +8,24 @@ admin.dashboard = async () => {
   const [productosRows] = await db.query('SELECT COUNT(*) AS total FROM productos');
   const [usuariosRows] = await db.query('SELECT COUNT(*) AS total FROM usuarios');
   const [pedidosRows] = await db.query('SELECT COUNT(*) AS total FROM pedidos');
-  const [ventasRows] = await db.query(`SELECT SUM(total) AS totalVentas FROM pedidos`);
+  const [ventasRows] = await db.query('SELECT SUM(total) AS totalVentas FROM pedidos');
+
+  const [[pendientes]] = await db.query(`SELECT COUNT(*) AS total FROM envios WHERE estado_envio = 'pendiente'`);
+  const [[enviados]] = await db.query(`SELECT COUNT(*) AS total FROM envios WHERE estado_envio = 'enviado'`);
+  const [[entregados]] = await db.query(`SELECT COUNT(*) AS total FROM envios WHERE estado_envio = 'entregado'`);
+  const [[cancelados]] = await db.query(`SELECT COUNT(*) AS total FROM envios WHERE estado_envio = 'cancelado'`);
 
   return {
     productos: productosRows[0]?.total || 0,
     usuarios: usuariosRows[0]?.total || 0,
     pedidos: pedidosRows[0]?.total || 0,
-    ventas: Number(ventasRows[0]?.totalVentas) || 0
+    ventas: Number(ventasRows[0]?.totalVentas) || 0,
+    envios: {
+      pendientes: pendientes.total || 0,
+      enviados: enviados.total || 0,
+      entregados: entregados.total || 0,
+      cancelados: cancelados.total || 0
+    }
   };
 };
 
@@ -68,6 +79,32 @@ admin.graficoVentas = async (rango, mes, fecha) => {
 
   const [rows] = await db.query(query, params);
   return rows;
+};
+
+admin.actualizarEstadoEnvio = async (estado_envio, pedidoId) => {
+  let campos = 'estado_envio = ?';
+  let valores = [estado_envio];
+
+  if (estado_envio === "enviado") {
+    campos += ", fecha_envio = NOW(), fecha_cancelado = NULL";
+  }
+
+  if (estado_envio === 'entregado') {
+    campos += ', fecha_entregado = NOW(), fecha_cancelado = NULL';
+  }
+
+  if (estado_envio === 'pendiente') {
+    campos += ', fecha_envio = NULL, fecha_entregado = NULL, fecha_cancelado = NULL';
+  }
+
+  if (estado_envio === 'cancelado') {
+    campos += ', fecha_envio = NULL, fecha_entregado = NULL, fecha_cancelado = NOW()';
+  }
+
+  valores.push(pedidoId);
+
+  const sql = `UPDATE envios SET ${campos} WHERE pedido_id = ?`;
+  return db.query(sql, valores);
 };
 
 // Productos
@@ -269,8 +306,9 @@ admin.estadoUsuario = async (id, isActive) => {
 
 admin.obtenerPedidos = async () => {
   const [rows] = await db.query(
-    `SELECT p.*, c.costo_envio 
+    `SELECT p.*, e.estado_envio, e.fecha_envio, e.fecha_entregado, e.fecha_cancelado, c.costo_envio
      FROM pedidos p
+     LEFT JOIN envios e ON p.id = e.pedido_id
      LEFT JOIN ciudades_envio c ON p.ciudad_envio_id = c.id
      ORDER BY p.fecha_creacion DESC`
   );
@@ -279,13 +317,14 @@ admin.obtenerPedidos = async () => {
 
 admin.obtenerPedidoId = async (id) => {
   const [rows] = await db.query(
-    `SELECT p.*, c.costo_envio 
+    `SELECT p.*, e.estado_envio, e.fecha_envio, e.fecha_entregado, e.fecha_cancelado, c.costo_envio 
      FROM pedidos p
+     LEFT JOIN envios e ON p.id = e.pedido_id
      LEFT JOIN ciudades_envio c ON p.ciudad_envio_id = c.id
      WHERE p.id = ?`,
     [id]
   );
-  return rows[0]; 
+  return rows[0];
 };
 
 admin.productoPedido = async (orderId) => {

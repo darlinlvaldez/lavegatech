@@ -33,9 +33,7 @@ orderController.createOrder = async (req, res) => {
     const costoEnvio = parseFloat(ciudadData.costo_envio);
 
     const total = cartItems.reduce((sum, item) => {
-      const precioFinal = item.descuento > 0 
-        ? item.precio * (1 - item.descuento / 100)
-        : item.precio;
+      const precioFinal = item.descuento > 0 ? item.precio * (1 - item.descuento / 100) : item.precio;
       return sum + (precioFinal * item.cantidad);
     }, 0) + costoEnvio;
 
@@ -93,6 +91,7 @@ orderController.processPayment = async (req, res) => {
     if (!ciudadData) {
       return res.status(400).json({ success: false, message: 'Ciudad de envío no válida' });
     }
+
     const costoEnvio = parseFloat(ciudadData.costo_envio);
 
     const totalReal = parseFloat(orderData.total);
@@ -117,7 +116,7 @@ orderController.processPayment = async (req, res) => {
         message: 'Monto pagado no coincide con el total de la orden'});
     }
 
-    const orderId = await orders.createOrder({...orderData, status: 'pagado'}, orderItems);
+    const orderId = await orders.createOrder({...orderData, status: 'pagado'}, orderItems, costoEnvio);
 
     await orders.createPayment(orderId, {paymentMethod: 'paypal',
       paymentId: paymentId, payerId: payerId});    

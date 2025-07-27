@@ -15,28 +15,28 @@
                     <div class="icon">🛒</div>
                     <div class="info">
                     <div class="title">Pedidos totales</div>
-                    <div class="value" id="pedidosTotales"><%= resumen.pedidos %></div>
+                    <div class="value" id="pedidosTotales"><%= result.pedidos %></div>
                     </div>
                 </a>
                 <a href="/admin/products" class="card">
                     <div class="icon">📦</div>
                     <div class="info">
                     <div class="title">Productos totales</div>
-                    <div class="value" id="productosTotales"><%= resumen.productos %></div>
+                    <div class="value" id="productosTotales"><%= result.productos %></div>
                     </div>
                 </a>
                 <a href="/admin/users" class="card">
                     <div class="icon">👥</div>
                     <div class="info">
                     <div class="title">Usuarios registrados</div>
-                    <div class="value" id="usuariosRegistrados"><%= resumen.usuarios %></div>
+                    <div class="value" id="usuariosRegistrados"><%= result.usuarios %></div>
                     </div>
                 </a>
                 <a href="/admin/sales" class="card">
                     <div class="icon">💰</div>
                     <div class="info">
                     <div class="title">Ventas completadas</div>
-                    <div class="value" id="ventasCompletadas">$<%= resumen.ventas.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></div>
+                    <div class="value" id="ventasCompletadas">$<%= result.ventas.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></div>
                     </div>
                 </a>
             </div>
@@ -44,34 +44,34 @@
             <section class="shipping-section">
                 <h2 style="margin-top: 40px; margin-bottom: 20px;">Estados de Envío</h2>
                 <div class="dashboard">
-                    <div class="card">
-                        <div class="icon">📨</div>
-                        <div class="info">
-                            <div class="title">Pendientes de envío</div>
-                            <div class="value" id="enviosPendientes">0</div>
-                        </div>
+                    <a href="/api/admin/orders?estado=pendiente" class="card">
+                    <div class="icon">📨</div>
+                    <div class="info">
+                        <div class="title">Pendientes de envío</div>
+                        <div class="value" id="enviosPendientes"><%= result.envios.pendientes %></div>
                     </div>
-                    <div class="card">
-                        <div class="icon">🚚</div>
-                        <div class="info">
-                            <div class="title">En camino</div>
-                            <div class="value" id="enviosEnCamino">0</div>
-                        </div>
+                    </a>
+                    <a href="/api/admin/orders?estado=en_camino" class="card">
+                    <div class="icon">🚚</div>
+                    <div class="info">
+                        <div class="title">En camino</div>
+                        <div class="value" id="enviosEnCamino"><%= result.envios.enviados %></div>
                     </div>
-                    <div class="card">
-                        <div class="icon">✅</div>
-                        <div class="info">
-                            <div class="title">Entregados</div>
-                            <div class="value" id="enviosEntregados">0</div>
-                        </div>
+                    </a>
+                    <a href="/api/admin/orders?estado=entregado" class="card">
+                    <div class="icon">✅</div>
+                    <div class="info">
+                        <div class="title">Entregados</div>
+                        <div class="value" id="enviosEntregados"><%= result.envios.entregados %></div>
                     </div>
-                    <div class="card">
-                        <div class="icon">❌</div>
-                        <div class="info">
-                            <div class="title">Cancelados</div>
-                            <div class="value" id="enviosCancelados">0</div>
-                        </div>
+                    </a>
+                    <a href="/api/admin/orders?estado=cancelado" class="card">
+                    <div class="icon">❌</div>
+                    <div class="info">
+                        <div class="title">Cancelados</div>
+                        <div class="value" id="enviosCancelados"><%= result.envios.cancelados %></div>
                     </div>
+                    </a>
                 </div>
             </section>
         </main>

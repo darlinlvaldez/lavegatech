@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalles del Pedido</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="/css/orderDetails.css">
+    <link rel="stylesheet" href="/css/adminOrderDetails.css">
 
 </head>
 <body>
@@ -37,10 +37,19 @@
                     <div class="col-md-6-details">
                         <h5 class="tittle5">Detalles</h5>
                         <p class="Information-details">
-                            <strong>Fecha:</strong> <%= new Date(order.fecha_creacion).toLocaleString() %><br>
-                            <strong>Estado:</strong> <span class="badge-details <%= order.status === 'pagado' ? 'badge-success-details' : 'badge-warning-details' %>">
-                                <%= order.status %>
-                            </span><br>
+                            <strong>Fecha:</strong>
+                            <%= new Date(order.fecha_creacion).toLocaleString() %><br>
+                                <strong>Estado:</strong> <span
+                                    class="badge-details <%= order.status === 'pagado' ? 'badge-success-details' : '' %>">
+                                    <%= order.status %>
+                                </span><br>
+                                <strong>Estado de Envío:</strong>
+                                <span class="badge-details <%= order.estado_envio === 'enviado' ? 'badge-warning-details' : 
+                                    order.estado_envio === 'entregado' ? 'badge-success-details' :
+                                    order.estado_envio === 'cancelado' ? 'badge-danger-details' : 
+                                    order.estado_envio === 'pendiente' ? 'badge-pending-details' : '' %>">
+                                    <%= order.estado_envio ? order.estado_envio.toUpperCase() : 'PENDIENTE' %>
+                                </span><br>
                             <strong class="strong-details">Total:</strong> $<%= Number(order.total).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %>
                         </p>
                     </div>

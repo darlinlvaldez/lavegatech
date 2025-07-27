@@ -1,7 +1,9 @@
   <%- include('../admin/dashboard.ejs') %>
 
 <head>
-  <link rel="stylesheet" href="/css/orders.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="/css/toastify.css">
+    <link rel="stylesheet" href="/css/adminOrders.css">
 </head>
 
 <div class="main-content">
@@ -23,14 +25,24 @@
             <div class="alert-info-user">
                 No hay pedidos aún.
             </div>
-            <a href="/" class="btn-user">Ir a la tienda</a>
         <% } else { %>
             <div class="list-group-user">
                 <% orders.forEach(order => { %>
-                    <a href="/api/admin/orders/<%= order.id %>" class="list-group-product">
+                    <a href="/api/admin/orders/<%= order.id %>" class="list-group-product order-link" data-order-id="<%= order.id %>">
                         <div class="d-flex-user w-100-user justify-content-user">
-                            <h5 class="mb-1">Pedido #<%= order.id %></h5>
-                            <small class="text-muted-user"><%= new Date(order.fecha_creacion).toLocaleDateString() %></small>
+                            <h5 class="mb-1">Pedido #<%= order.id %>
+                            </h5>
+                            <div class="text-right-user">
+                                <select class="estado-envio-select" data-order-id="<%= order.id %>">
+                                    <option value="pendiente" <%=order.estado_envio==='pendiente' ? 'selected' : '' %>>Pendiente</option>
+                                    <option value="enviado" <%=order.estado_envio==='enviado' ? 'selected' : '' %>>Enviado</option>
+                                    <option value="entregado" <%=order.estado_envio==='entregado' ? 'selected' : '' %>>Entregado</option>
+                                    <option value="cancelado" <%=order.estado_envio==='cancelado' ? 'selected' : '' %>>Cancelado</option>
+                                </select>
+                                <small class="text-muted-user">
+                                    <%= new Date(order.fecha_creacion).toLocaleDateString() %>
+                                </small>
+                            </div>
                         </div>
                         <p class="mb-1-user">
                             <span class="strong-details">Total:</span> $<%= Number(order.total).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %>
@@ -47,18 +59,8 @@
         <% } %>
     </div>
   </main>
-  
-<script>
-  const searchInput = document.getElementById("searchPedidosInput");
-  const pedidos = document.querySelectorAll(".list-group-product");
+</div>
 
-  searchInput.addEventListener("input", () => {
-    const valor = searchInput.value.toLowerCase();
-
-    pedidos.forEach(pedido => {
-      const texto = pedido.textContent.toLowerCase();
-      const visible = texto.includes(valor);
-      pedido.style.display = visible ? "block" : "none";
-    });
-  });
-</script>
+<script type="module" src="/js/adminOrders.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://unpkg.com/feather-icons"></script>
