@@ -25,7 +25,7 @@ orderController.createOrder = async (req, res) => {
         message: 'El carrito está vacío'});
     }
 
-    const ciudadData = await orders.getCiudadEnvioById(ciudad_envio_id);
+    const ciudadData = await orders.getCityId(ciudad_envio_id);
     if (!ciudadData) {
       return res.status(400).json({ success: false, message: 'Ciudad de envío no válida' });
     }
@@ -60,9 +60,9 @@ orderController.createOrder = async (req, res) => {
   }
 };
 
-orderController.getCiudades = async function (req, res) {
+orderController.getCities = async function (req, res) {
   try {
-    const ciudades = await orders.obtenerCiudades();
+    const ciudades = await orders.listCities();
     res.json({ success: true, ciudades });
   } catch (error) {
     console.error('Error al cargar ciudades:', error);
@@ -86,7 +86,7 @@ orderController.processPayment = async (req, res) => {
       return res.status(400).json({success: false, message: 'El carrito está vacío'});
     }
 
-    const ciudadData = await orders.getCiudadEnvioById(orderData.ciudad_envio_id);
+    const ciudadData = await orders.getCityId(orderData.ciudad_envio_id);
     if (!ciudadData) {
       return res.status(400).json({ success: false, message: 'Ciudad de envío no válida' });
     }
@@ -137,22 +137,24 @@ orderController.processPayment = async (req, res) => {
   }
 };
 
-orderController.getOrderDetails = async (req, res) => {
+orderController.getLastOrder = async (req, res) => {
   try {
-    const { orderId } = req.params;
-    const userId = req.session.user.id;
-
-    const order = await orders.getOrderById(orderId, userId);
-    if (!order) {
-      return res.status(404).json({ 
-        success: false, message: 'Orden no encontrada'});
+    if (!req.session.user) {
+      return res.status(401).json({ success: false, message: "No autorizado" });
     }
 
-    res.json({success: true, order});
+    const userId = req.session.user.id;
+
+    const lastOrder = await orders.getLastOrderByUserId(userId);
+
+    if (!lastOrder) {
+      return res.json({ success: true, lastOrder: null });
+    }
+
+    res.json({ success: true, lastOrder });
   } catch (error) {
-    console.error('Error al obtener detalles de orden:', error);
-    res.status(500).json({success: false, 
-      message: 'Error al obtener detalles de la orden'});
+    console.error("Error al obtener último pedido:", error);
+    res.status(500).json({ success: false, message: "Error al obtener último pedido" });
   }
 };
 

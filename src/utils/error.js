@@ -93,4 +93,7 @@ export const ERROR_ZOD = {
   BRAND_LOGO_INVALID: "El logo debe ser una URL válida",
   BRAND_CATEGORIES_REQUIRED: "Debes seleccionar al menos una categoría",
   BRAND_CATEGORIES_INVALID: "Las categorías deben ser valores numéricos",
+
+  // CITY
+  CITY_NAME_MAX: "El nombre de la ciudad no debe superar los 100 caracteres" 
 };

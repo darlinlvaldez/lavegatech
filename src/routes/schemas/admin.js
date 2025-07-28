@@ -93,6 +93,18 @@ request.brand = z.object({
     .min(1, { message: ERROR_ZOD.BRAND_CATEGORIES_REQUIRED }),
 }).strict();
 
+request.shipping = z.object({
+  nombre: z
+    .string()
+    .trim()
+    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
+    .max(100, { message: ERROR_ZOD.CITY_NAME_MAX }),
+  costo_envio: z
+    .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED })
+    .nonnegative({ message: ERROR_ZOD.FIELD_NEGATIVE })
+    .min(0.01, { message: ERROR_ZOD.FIELD_REQUIRED })
+}).strict();
+
 request.user = z.object({
   username: z
     .string()

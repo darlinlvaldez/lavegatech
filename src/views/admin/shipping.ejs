@@ -1,0 +1,77 @@
+<%- include('../admin/dashboard.ejs') %>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<link rel="stylesheet" href="/css/toastify.css">
+<link rel="stylesheet" href="/css/sweetAlertAdmin.css">
+<link rel="stylesheet" href="/css/adminTable.css">
+<link rel="stylesheet" href="/css/error.css">
+
+<div class="main-content">
+    <header class="header">
+        <h1>Gestión de Ciudades de Envío</h1>
+    </header>
+    
+    <main class="main-content-area">
+        <div class="card">
+            <div class="card-header">
+                <h2>Lista de Ciudades</h2>
+                <div class="search-container">
+                    <input type="text" id="searchCityInput" placeholder="Buscar ciudades..."
+                        class="input-search"/><i class="fa fa-search search-icon"></i>
+                </div>
+                <button id="addCityBtn" class="add-button">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                    Añadir Ciudad
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 30%;">ID</th>
+                            <th style="width: 30%;">Nombre</th>
+                            <th style="width: 30%;">Costo de Envío</th>
+                            <th style="width: 10%;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="citiesTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="cityModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 id="modalTitle" class="modal-title">Añadir Nueva Ciudad</h3>
+        <form id="cityForm" class="modal-form">
+            <input type="hidden" id="cityId">
+            <div class="form-group">
+                <label for="cityName">Nombre de la Ciudad:</label>
+                <input type="text" id="cityNombre" name="nombre">
+                <div class="error-text" data-error-for="nombre"></div>
+            </div>
+            <div class="form-group">
+                <label for="cityCost">Costo de Envío:</label>
+                <input type="number" id="cityCosto" name="costo_envio" step="0.01">
+                <div class="error-text" data-error-for="costo_envio"></div>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" id="cancelModalBtn" class="cancel-button">
+                    Cancelar
+                </button>
+                <button type="submit" class="save-button">
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="module" src="/js/adminShipping.js"></script>
+<script src="/js/formatPrice.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://unpkg.com/feather-icons"></script>

@@ -166,6 +166,10 @@ app.get('/admin/brandCategory', isAdmin(), (req, res) => {
   res.render('admin/brandCategory');
 });
 
+app.get('/admin/shipping', isAdmin(), (req, res) => {
+  res.render('admin/shipping');
+}); 
+
 app.get('/admin/device', isAdmin(), (req, res) => {
   res.render('admin/device');
 });

@@ -58,6 +58,13 @@
                         </a>
                     </li>
                     <li>
+                        <a href="/admin/shipping"
+                            class="<%= req.originalUrl === '/admin/shipping' ? 'active' : '' %>">
+                            <i class="fas fa-city"></i>
+                            <span>Ciudades de envío</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="/api/admin/orders"
                             class="<%= req.originalUrl === '/api/admin/orders' ? 'active' : '' %>">
                             <i class="fas fa-shopping-cart"></i>

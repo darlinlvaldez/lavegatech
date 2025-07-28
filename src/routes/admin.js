@@ -37,6 +37,12 @@ router.post('/categorias', validate(request.category), admin.agregarCategoria);
 router.put('/categorias/:id', validate(request.category), admin.editarCategoria); 
 router.delete('/categorias/:id', admin.borrarCategoria);
 
+// Ciudades de envíos
+router.get('/ciudades', admin.listarCiudades);
+router.post('/ciudades', validate(request.shipping), admin.crearCiudad);
+router.put('/ciudades/:id', validate(request.shipping), admin.editarCiudad);
+router.delete('/ciudades/:id', admin.borrarCiudad);
+
 // RAM y Almacenamiento
 router.get('/ram', admin.listarRAM);
 router.get('/almacenamiento', admin.listarAlm);

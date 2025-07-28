@@ -328,4 +328,48 @@ adminController.actualizarEstado = async (req, res) => {
   }
 };
 
+// Ciudades de Envío
+
+adminController.listarCiudades = async (req, res) => {
+  try {
+    const ciudades = await admin.obtenerCiudades();
+    res.json(ciudades);
+  } catch (err) {
+    res.status(500).json({ error: 'Error al obtener ciudades de envío' });
+  }
+};
+
+adminController.crearCiudad = async (req, res) => {
+  try {
+    const { nombre, costo_envio } = req.body;
+    const insertId = await admin.agregarCiudad({ nombre, costo_envio });
+
+    res.json({ success: true, id: insertId });
+  } catch (err) {
+    res.status(500).json({ error: 'Error al crear ciudad de envío' });
+  }
+};
+
+adminController.editarCiudad = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nombre, costo_envio } = req.body;
+    const affectedRows = await admin.actualizarCiudad({ id, nombre, costo_envio });
+
+    res.json({ success: affectedRows > 0 });
+  } catch (err) {
+    res.status(500).json({ error: 'Error al actualizar ciudad de envío' });
+  }
+};
+
+adminController.borrarCiudad = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const affectedRows = await admin.eliminarCiudad(id);
+    res.json({ success: affectedRows > 0 });
+  } catch (err) {
+    res.status(500).json({ error: 'Error al eliminar ciudad de envío' });
+  }
+};
+
 export default adminController;

@@ -62,7 +62,7 @@ orders.createOrder = async (orderData, items, costoEnvio) => {
   }
 };
 
-orders.getCiudadEnvioById = async (ciudad_envio_id) => {
+orders.getCityId = async (ciudad_envio_id) => {
   const [result] = await db.query(
     "SELECT nombre, costo_envio FROM ciudades_envio WHERE id = ?", 
     [ciudad_envio_id]
@@ -70,7 +70,7 @@ orders.getCiudadEnvioById = async (ciudad_envio_id) => {
   return result.length ? result[0] : null;
 };
 
-orders.obtenerCiudades = async function () {
+orders.listCities = async function () {
   const [ciudades] = await db.query("SELECT id, nombre, costo_envio FROM ciudades_envio");
   return ciudades;
 }
@@ -83,6 +83,18 @@ orders.createShipping = async (conn, pedido_id, envioData) => {
     VALUES (?, ?, ?)`,
     [pedido_id, estado_envio, costo_envio]
   );
+};
+
+orders.getLastOrderByUserId = async (userId) => {
+  const [rows] = await db.query(
+    `SELECT nombre, apellido, email, direccion, distrito, telefono, envio_diferente 
+     FROM pedidos 
+     WHERE user_id = ? 
+     ORDER BY fecha_creacion DESC 
+     LIMIT 1`,
+    [userId]
+  );
+  return rows.length ? rows[0] : null;
 };
 
 orders.updateStock = async (orderId, userId) => {

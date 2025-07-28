@@ -332,4 +332,45 @@ admin.productoPedido = async (orderId) => {
   return rows;
 };
 
+// Ciudades de envíos
+
+admin.obtenerCiudades = async () => {
+  const [rows] = await db.query(
+    `SELECT * FROM ciudades_envio ORDER BY id DESC`
+  );
+  return rows;
+};
+
+admin.obtenerCiudadId = async (id) => {
+  const [rows] = await db.query(
+    `SELECT * FROM ciudades_envio WHERE id = ?`,
+    [id]
+  );
+  return rows[0];
+};
+
+admin.agregarCiudad = async ({ nombre, costo_envio }) => {
+  const [result] = await db.query(
+    `INSERT INTO ciudades_envio (nombre, costo_envio) VALUES (?, ?)`,
+    [nombre, costo_envio]
+  );
+  return result.insertId;
+};
+
+admin.actualizarCiudad = async ({ id, nombre, costo_envio }) => {
+  const [result] = await db.query(
+    `UPDATE ciudades_envio SET nombre = ?, costo_envio = ? WHERE id = ?`,
+    [nombre, costo_envio, id]
+  );
+  return result.affectedRows;
+};
+
+admin.eliminarCiudad = async (id) => {
+  const [result] = await db.query(
+    `DELETE FROM ciudades_envio WHERE id = ?`,
+    [id]
+  );
+  return result.affectedRows;
+};
+
 export default admin;

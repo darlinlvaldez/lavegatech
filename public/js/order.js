@@ -140,6 +140,7 @@ const setupInputErrorClearing = () => {
 
 document.addEventListener("DOMContentLoaded", () => {
   setupInputErrorClearing();
+  lastOrder();
   const paypalRadio = document.getElementById("payment-3");
   const paypalContainer = document.getElementById("paypal-button-container");
   let buttonRendered = false;
@@ -323,7 +324,7 @@ const orderTotal = document.querySelector(".order-total");
 const shippingCostEl = document.getElementById("shipping-cost");
 const altCitySelect = document.getElementById("alt-city-select");
 
-async function cargarCiudades() {
+async function loadCities() {
   try {
     const res = await fetch("/api/order/cities");
     const data = await res.json();
@@ -399,4 +400,40 @@ document.addEventListener("DOMContentLoaded", () => {
   toggleForms(); 
 });
 
-cargarCiudades();
+async function lastOrder() {
+  try {
+    const res = await fetch("/api/order/last", { credentials: "include" });
+    const data = await res.json();
+
+    if (data.success && data.lastOrder) {
+      const lastOrder = data.lastOrder;
+
+      const checkbox = document.getElementById("shiping-address");
+      if (checkbox) {
+        checkbox.checked = false;
+      }
+
+      const setInputValue = (name, value) => {
+        const input = document.querySelector(`[name="${name}"]`);
+        if (input) input.value = value || "";
+      };
+
+      setInputValue("first-name", lastOrder.nombre);
+      setInputValue("last-name", lastOrder.apellido);
+      setInputValue("email", lastOrder.email);
+      setInputValue("address", lastOrder.direccion);
+      setInputValue("district", lastOrder.distrito);
+      setInputValue("tel", lastOrder.telefono);
+
+      const citySelect = document.getElementById("city-select");
+      if (citySelect) {
+        citySelect.value = lastOrder.ciudad_envio_id || "";
+        citySelect.dispatchEvent(new Event("change"));
+      }
+    }
+  } catch (error) {
+    console.error("Error cargando último pedido:", error);
+  }
+}
+
+loadCities();
