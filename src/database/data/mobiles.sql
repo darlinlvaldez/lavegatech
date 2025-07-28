@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-07-2025 a las 22:11:23
+-- Tiempo de generación: 28-07-2025 a las 06:55:40
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -381,7 +381,10 @@ CREATE TABLE `detalles_pedido` (
 --
 
 INSERT INTO `detalles_pedido` (`id`, `order_id`, `producto_id`, `nombre_producto`, `cantidad`, `precio_unitario`, `descuento`, `subtotal`, `colorSeleccionado`) VALUES
-(174, 161, 4, 'iPhone 12 Pro 128GB', 2, 21995.00, 0.00, 43990.00, 'negro');
+(196, 182, 10, 'iPhone 13 256GB ', 1, 25495.00, 0.00, 25495.00, 'blanco'),
+(197, 183, 14, 'iPhone 13 Pro Max 256GB ', 1, 35995.00, 0.00, 35995.00, 'gris'),
+(198, 184, 16, 'iPhone 14 128GB ', 1, 26495.00, 0.00, 26495.00, 'negro'),
+(199, 185, 7, 'iPhone 12 Pro Max 256GB ', 1, 28995.00, 0.00, 28995.00, 'blanco');
 
 -- --------------------------------------------------------
 
@@ -450,7 +453,10 @@ CREATE TABLE `envios` (
 --
 
 INSERT INTO `envios` (`id`, `pedido_id`, `estado_envio`, `costo_envio`, `fecha_envio`, `fecha_entregado`, `fecha_cancelado`) VALUES
-(2, 161, 'pendiente', 50.00, NULL, NULL, NULL);
+(23, 182, 'pendiente', 50.00, NULL, NULL, NULL),
+(24, 183, 'enviado', 50.00, '2025-07-28 00:10:33', NULL, NULL),
+(25, 184, 'pendiente', 150.00, NULL, NULL, NULL),
+(26, 185, 'pendiente', 50.00, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -469,15 +475,6 @@ CREATE TABLE `fav` (
   `nombre` varchar(255) DEFAULT NULL,
   `fecha_agregado` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `fav`
---
-
-INSERT INTO `fav` (`id`, `usuario_id`, `producto_id`, `colorSeleccionado`, `descuento`, `precio`, `imagen`, `nombre`, `fecha_agregado`) VALUES
-(700, 75, 1, 'blanco', 20.00, 15995.00, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg', 'iPhone 12 64GB', '2025-07-23 06:43:09'),
-(701, 75, 1, 'verde', 20.00, 15995.00, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg', 'iPhone 12 64GB', '2025-07-23 06:43:11'),
-(702, 75, 1, 'negro', 20.00, 15995.00, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/a75941f0-0032-4680-bda0-ba070e5f9982.jpg', 'iPhone 12 64GB', '2025-07-23 06:43:14');
 
 -- --------------------------------------------------------
 
@@ -669,7 +666,10 @@ CREATE TABLE `pagos` (
 --
 
 INSERT INTO `pagos` (`id`, `order_id`, `metodo_pago`, `estado_pago`, `paypal_order_id`, `fecha_pago`) VALUES
-(79, 161, 'paypal', 'completado', '0A390281065335138', '2025-07-26 15:07:47');
+(100, 182, 'paypal', 'completado', '499129559D4573211', '2025-07-28 00:08:49'),
+(101, 183, 'paypal', 'completado', '1EY52212WG933314W', '2025-07-28 00:10:06'),
+(102, 184, 'paypal', 'completado', '1A231344P2476874G', '2025-07-28 00:13:47'),
+(103, 185, 'paypal', 'completado', '8MB213883E592541H', '2025-07-28 00:25:43');
 
 -- --------------------------------------------------------
 
@@ -712,15 +712,19 @@ CREATE TABLE `pedidos` (
   `total` decimal(10,2) NOT NULL,
   `status` varchar(50) DEFAULT 'pendiente',
   `fecha_creacion` datetime DEFAULT current_timestamp(),
-  `ciudad_envio_id` int(11) DEFAULT NULL
+  `ciudad_envio_id` int(11) DEFAULT NULL,
+  `envio_diferente` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `pedidos`
 --
 
-INSERT INTO `pedidos` (`id`, `user_id`, `nombre`, `apellido`, `email`, `direccion`, `ciudad`, `distrito`, `telefono`, `total`, `status`, `fecha_creacion`, `ciudad_envio_id`) VALUES
-(161, 75, 'Darlin', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'La Vega', 'LA VEGA', '8295544400', 44040.00, 'pagado', '2025-07-26 15:07:47', 1);
+INSERT INTO `pedidos` (`id`, `user_id`, `nombre`, `apellido`, `email`, `direccion`, `ciudad`, `distrito`, `telefono`, `total`, `status`, `fecha_creacion`, `ciudad_envio_id`, `envio_diferente`) VALUES
+(182, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'La Vega', 'LA VEGA', '8295542244', 25545.00, 'pagado', '2025-07-28 00:08:49', 1, 0),
+(183, 75, 'nilrad', 'luis valdez', 'darlinlvaldez@gmail.com', 'la cigua', 'La Vega', 'la vega', '8295524400', 36045.00, 'pagado', '2025-07-28 00:10:06', 1, 1),
+(184, 75, 'Nilrad', 'L. Valdez', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'Santiago', 'LA VEGA', '8295544400', 26645.00, 'pagado', '2025-07-28 00:13:47', 2, 0),
+(185, 75, 'Darlin', 'L. Valdez', 'nilradlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'La Vega', 'LA VEGA', '8295542244', 29045.00, 'pagado', '2025-07-28 00:25:43', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -995,42 +999,42 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (375, 24, 'purpura', 3, 'https://i.ebayimg.com/images/g/Yu0AAOSwG0hkW5uL/s-l1600.webp'),
 (376, 24, 'blanco', 4, 'https://i.ebayimg.com/images/g/b~YAAOSwNzNkW5tc/s-l1600.webp'),
 (377, 25, 'dorado', 1, 'https://i.ebayimg.com/images/g/0MgAAOSwWIpkW5u-/s-l1600.webp'),
-(382, 1, 'blanco', 1, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg'),
+(382, 1, 'blanco', 0, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg'),
 (383, 1, 'negro', 5, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/a75941f0-0032-4680-bda0-ba070e5f9982.jpg'),
 (384, 1, 'verde', 3, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg'),
-(385, 2, 'verde', 2, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg'),
+(385, 2, 'verde', 0, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg'),
 (386, 2, 'pupura', 4, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/b01801bc-4c3c-411e-9ff0-dac6b4e34a87.jpg'),
-(387, 3, 'blanco', 2, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/6caf4891-9655-4247-a11c-9719a3db6244.jpg'),
-(388, 3, 'rojo', 1, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/859d07b9-f8a1-43bc-b8c3-ff09652e2c26.jpg'),
-(389, 4, 'negro', 3, 'https://i.ebayimg.com/images/g/6VEAAOSwcrlhP6ad/s-l1600.webp'),
+(387, 3, 'blanco', 0, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/6caf4891-9655-4247-a11c-9719a3db6244.jpg'),
+(388, 3, 'rojo', 0, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/859d07b9-f8a1-43bc-b8c3-ff09652e2c26.jpg'),
+(389, 4, 'negro', 0, 'https://i.ebayimg.com/images/g/6VEAAOSwcrlhP6ad/s-l1600.webp'),
 (390, 4, 'blanco', 4, 'https://i.ebayimg.com/images/g/WloAAOSwcU9hP6ap/s-l1600.webp'),
-(391, 5, 'azul', 2, 'https://i.ebayimg.com/images/g/9PsAAOSwnh5hP6a7/s-l1600.webp'),
+(391, 5, 'azul', 0, 'https://i.ebayimg.com/images/g/9PsAAOSwnh5hP6a7/s-l1600.webp'),
 (392, 5, 'verde', 4, 'https://i.ebayimg.com/images/g/s2MAAOSwugxhP6bJ/s-l1600.webp'),
 (393, 6, 'gris', 2, 'https://i.ebayimg.com/images/g/QVEAAOSwbWdhQfcN/s-l1600.webp'),
 (394, 6, 'oro', 4, 'https://i.ebayimg.com/images/g/l8AAAOSwrQlhQfcU/s-l1600.webp'),
-(395, 7, 'blanco', 3, 'https://i.ebayimg.com/images/g/Yj4AAOSwmb5hQfca/s-l1600.webp'),
+(395, 7, 'blanco', 0, 'https://i.ebayimg.com/images/g/Yj4AAOSwmb5hQfca/s-l1600.webp'),
 (396, 7, 'azul', 6, 'https://i.ebayimg.com/images/g/YZsAAOSwntxhQfch/s-l1600.webp'),
-(397, 8, 'gris', 4, 'https://i.ebayimg.com/images/g/KSQAAOSwa4xhQfcO/s-l1600.webp'),
-(398, 9, 'Rojo', 1, 'https://i.ebayimg.com/images/g/iZ4AAOSwk7pkwnXM/s-l1600.webp'),
+(397, 8, 'gris', 1, 'https://i.ebayimg.com/images/g/KSQAAOSwa4xhQfcO/s-l1600.webp'),
+(398, 9, 'Rojo', 0, 'https://i.ebayimg.com/images/g/iZ4AAOSwk7pkwnXM/s-l1600.webp'),
 (399, 9, 'azul', 4, 'https://i.ebayimg.com/images/g/rdMAAOSwjUFkwnXL/s-l1600.webp'),
-(400, 10, 'blanco', 5, 'https://i.ebayimg.com/images/g/4pEAAOSwxchkwnXN/s-l1600.webp'),
+(400, 10, 'blanco', 3, 'https://i.ebayimg.com/images/g/4pEAAOSwxchkwnXN/s-l1600.webp'),
 (401, 10, 'pupura', 4, 'https://i.ebayimg.com/images/g/Yp4AAOSwPLNkwnXM/s-l1600.webp'),
 (402, 11, 'verde', 6, 'https://i.ebayimg.com/images/g/Gq4AAeSwNhNobXlW/s-l960.webp'),
 (403, 11, 'azul', 4, 'https://i.ebayimg.com/images/g/ScgAAeSwnqdobXlV/s-l960.webp'),
-(404, 12, 'gris', 4, 'https://i.ebayimg.com/images/g/eeYAAeSw4S9obXlU/s-l960.webp'),
+(404, 12, 'gris', 2, 'https://i.ebayimg.com/images/g/eeYAAeSw4S9obXlU/s-l960.webp'),
 (405, 12, 'blanco', 1, 'https://i.ebayimg.com/images/g/FkcAAeSwvgNobXlS/s-l960.webp'),
 (406, 13, 'oro', 4, 'https://i.ebayimg.com/images/g/FkcAAeSwvgNobXlS/s-l960.webp'),
-(409, 14, 'gris', 6, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Grey.jpg'),
+(409, 14, 'gris', 5, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Grey.jpg'),
 (410, 14, 'oro', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Gold.jpg'),
-(411, 15, 'blanco', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Silver.jpg'),
+(411, 15, 'blanco', 3, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Silver.jpg'),
 (412, 15, 'verde', 2, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Green.jpg'),
-(413, 16, 'negro', 4, 'https://i.ebayimg.com/images/g/AKQAAOSwn51oE~FN/s-l1600.webp'),
+(413, 16, 'negro', 2, 'https://i.ebayimg.com/images/g/AKQAAOSwn51oE~FN/s-l1600.webp'),
 (414, 16, 'blanco', 5, 'https://i.ebayimg.com/images/g/BvQAAOSwhH1mkSlU/s-l1600.webp'),
 (415, 17, 'Rojo', 4, 'https://i.ebayimg.com/images/g/bg4AAOSw2g1mkSlx/s-l1600.webp'),
 (416, 17, 'azul', 4, 'https://i.ebayimg.com/images/g/C-QAAOSw8l5mkSmR/s-l1600.webp'),
 (417, 18, 'amarillo', 3, 'https://i.ebayimg.com/images/g/k-8AAOSwofxmkSoT/s-l1600.webp'),
 (418, 18, 'pupura', 4, 'https://i.ebayimg.com/images/g/XPIAAOSwYEtmkSnd/s-l1600.webp'),
-(419, 19, 'negro', 2, 'https://i.ebayimg.com/images/g/~RgAAOSwKkhl61i3/s-l1600.webp'),
+(419, 19, 'negro', 1, 'https://i.ebayimg.com/images/g/~RgAAOSwKkhl61i3/s-l1600.webp'),
 (420, 19, 'azul', 4, 'https://i.ebayimg.com/images/g/C-QAAOSw8l5mkSmR/s-l1600.webp'),
 (421, 20, 'negro', 4, 'https://i.ebayimg.com/images/g/o~UAAOSwVB1kXRSz/s-l1600.webp'),
 (422, 20, 'blanco', 1, 'https://i.ebayimg.com/images/g/sI4AAOSwi5lkXRTg/s-l1600.webp'),
@@ -1084,7 +1088,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('DfW0IZScwGVDR0Vu9Etm-MEdvIrxoUlH', 1753564225, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-07-26T20:45:33.988Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\"}}');
+('KjD1SVJZvt7xNTwT5S7_6qhzhe9bXDm-', 1753679818, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-07-28T04:19:24.934Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\"}}'),
+('s63KNY3lWhj8xwjky8jNb6VwM_BUUxHr', 1753680399, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-07-28T05:22:36.099Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":75,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}');
 
 -- --------------------------------------------------------
 
@@ -1506,7 +1511,7 @@ ALTER TABLE `camara`
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1262;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1288;
 
 --
 -- AUTO_INCREMENT de la tabla `categorias`
@@ -1530,7 +1535,7 @@ ALTER TABLE `conectividad`
 -- AUTO_INCREMENT de la tabla `detalles_pedido`
 --
 ALTER TABLE `detalles_pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=175;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=200;
 
 --
 -- AUTO_INCREMENT de la tabla `dimensionespeso`
@@ -1542,13 +1547,13 @@ ALTER TABLE `dimensionespeso`
 -- AUTO_INCREMENT de la tabla `envios`
 --
 ALTER TABLE `envios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT de la tabla `fav`
 --
 ALTER TABLE `fav`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=703;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=704;
 
 --
 -- AUTO_INCREMENT de la tabla `moviles`
@@ -1560,7 +1565,7 @@ ALTER TABLE `moviles`
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
 
 --
 -- AUTO_INCREMENT de la tabla `pantalla`
@@ -1572,7 +1577,7 @@ ALTER TABLE `pantalla`
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=186;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
