@@ -51,31 +51,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  const paypalRadio = document.getElementById("payment-3");
-  const paypalContainer = document.getElementById("paypal-button-container");
-  let buttonRendered = false;
-
-  const telInput = document.querySelector('input[name="tel"]');
-  telInput?.addEventListener("input", (e) => {
-    let value = e.target.value.replace(/\D/g, "");
-
-    if (value.length > 10) value = value.slice(0, 10);
-
-    let formatted = "";
-    if (value.length > 0) {
-      formatted += `(${value.substring(0, 3)}`;
-    }
-    if (value.length >= 4) {
-      formatted += `) ${value.substring(3, 6)}`;
-    }
-    if (value.length >= 7) {
-      formatted += `-${value.substring(6, 10)}`;
-    }
-
-    e.target.value = formatted;
-  });
-
   const mostrarToast = (texto, tipo = "info") => {
     const colores = {
       info: "#0d6efd",
@@ -97,34 +72,107 @@ document.addEventListener("DOMContentLoaded", () => {
     showToast(texto, color, icon);
   };
 
-  const getFormData = () => ({
-    nombre: document.querySelector('input[name="first-name"]').value.trim(),
-    apellido: document.querySelector('input[name="last-name"]').value.trim(),
-    email: document.querySelector('input[name="email"]').value.trim(),
-    direccion: document.querySelector('input[name="address"]').value.trim(),
-    ciudad_envio_id: document.getElementById("city-select").value,
-    distrito: document.querySelector('input[name="district"]').value.trim(),
-    telefono: document.querySelector('input[name="tel"]').value.replace(/\D/g, ""),
-  });
+  const getFormData = () => {
+  const usarOtraDireccion = document.getElementById("shiping-address")?.checked;
 
-  const inputFields = () => ["first-name", "last-name", "email",
-  "address", "city", "district", "tel" ];
-
-  const clearInput = () => {
-    inputFields().forEach((name) => {
-      const input = document.querySelector(`input[name="${name}"]`);
-      const errorContainer = document.querySelector(`.error-text[data-error-for="${name}"]`);
-
-      if (input) {
-        input.addEventListener("input", () => {
-          input.classList.remove("input-error");
-          if (errorContainer) errorContainer.textContent = "";
-        });
-      }
-    });
+  const getValue = (name, isAlt = false) => {
+    const prefix = isAlt ? "alt-" : "";
+    const input = document.querySelector(`[name="${prefix}${name}"]`);
+    return input?.value.trim() || "";
   };
 
+  const getTel = (isAlt = false) => {
+    const prefix = isAlt ? "alt-" : "";
+    const input = document.querySelector(`[name="${prefix}tel"]`);
+    return input?.value.replace(/\D/g, "") || "";
+  };
+
+  const getCiudad = (isAlt = false) => {
+    const id = isAlt ? "alt-city-select" : "city-select";
+    const select = document.getElementById(id);
+    return select?.value || "";
+  };
+
+  const alt = usarOtraDireccion;
+
+  return {
+    nombre: getValue("first-name", alt),
+    apellido: getValue("last-name", alt),
+    email: getValue("email", alt),
+    direccion: getValue("address", alt),
+    ciudad_envio_id: getCiudad(alt),
+    distrito: getValue("district", alt),
+    telefono: getTel(alt),
+    envio_diferente: usarOtraDireccion ? 1 : 0
+  };
+};
+
+const clearErrors = () => {
+  document.querySelectorAll('.input-error').forEach(input => {
+    input.classList.remove('input-error');
+  });
+  
+  document.querySelectorAll('.error-text').forEach(errorContainer => {
+    errorContainer.textContent = '';
+    errorContainer.classList.remove('visible');
+  });
+};
+
+const setupInputErrorClearing = () => {
+  const inputNames = [
+    "first-name", "last-name", "email", "address", "district", "tel", "ciudad_envio_id",
+    "alt-first-name", "alt-last-name", "alt-email", "alt-address", "alt-district", "alt-tel", "alt-ciudad_envio_id"
+  ];
+
+  inputNames.forEach(name => {
+    const input = document.querySelector(`[name="${name}"]`);
+    const errorContainer = document.querySelector(`.error-text[data-error-for="${name}"]`);
+    
+    input?.addEventListener('input', () => {
+      input.classList.remove('input-error');
+      if (errorContainer) {
+        errorContainer.textContent = '';
+        errorContainer.classList.remove('visible');
+      }
+    });
+  });
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  setupInputErrorClearing();
+  const paypalRadio = document.getElementById("payment-3");
+  const paypalContainer = document.getElementById("paypal-button-container");
+  let buttonRendered = false;
+
+  const formatPhoneNumber = (value) => {
+  let digits = value.replace(/\D/g, "");
+  if (digits.length > 10) digits = digits.slice(0, 10);
+
+  let formatted = "";
+  if (digits.length > 0) {
+    formatted += `(${digits.substring(0, 3)}`;
+  }
+  if (digits.length >= 4) {
+    formatted += `) ${digits.substring(3, 6)}`;
+  }
+  if (digits.length >= 7) {
+    formatted += `-${digits.substring(6, 10)}`;
+  }
+  return formatted;
+};
+
+const telInput = document.querySelector('input[name="tel"]');
+telInput?.addEventListener("input", (e) => {
+  e.target.value = formatPhoneNumber(e.target.value);
+});
+
+const altTelInput = document.querySelector('input[name="alt-tel"]');
+altTelInput?.addEventListener("input", (e) => {
+  e.target.value = formatPhoneNumber(e.target.value);
+});
+
   const validateConditions = () => {
+     clearErrors();
     if (!document.getElementById("terms").checked) {
       mostrarToast("Debe aceptar los Políticas y condiciones", "warning");
       return false;
@@ -134,34 +182,36 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const showValidation = (errores) => {
-    errores.forEach((error) => {
-      const pathToInputName = {
-        nombre: "first-name",
-        apellido: "last-name",
-        email: "email",
-        direccion: "address",
-        ciudad_envio_id: "ciudad_envio_id",
-        distrito: "district",
-        telefono: "tel",
-      };
+  const usarOtraDireccion = document.getElementById("shiping-address")?.checked;
 
-      const inputName = pathToInputName[error.path];
-      if (inputName) {
-        const input = document.querySelector(`input[name="${inputName}"]`);
-        const errorContainer = document.querySelector(
-          `.error-text[data-error-for="${inputName}"]`);
-
-        if (input) {
-          input.classList.add("input-error");
-        }
-
-        if (errorContainer) {
-          errorContainer.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${error.message}`;
-          errorContainer.classList.add("visible");
-        }
-      }
-    });
+  const pathToInputName = {
+    nombre: "first-name",
+    apellido: "last-name",
+    email: "email",
+    direccion: "address",
+    ciudad_envio_id: "ciudad_envio_id",
+    distrito: "district",
+    telefono: "tel",
   };
+
+  errores.forEach((error) => {
+    const baseName = pathToInputName[error.path];
+    const inputName = usarOtraDireccion ? `alt-${baseName}` : baseName;
+
+    const input = document.querySelector(`input[name="${inputName}"], select[name="${inputName}"]`);
+    const errorFieldName = usarOtraDireccion ? `alt-${baseName}` : baseName;
+    const errorContainer = document.querySelector(`.error-text[data-error-for="${errorFieldName}"]`);
+
+    if (input) {
+      input.classList.add("input-error");
+    }
+
+    if (errorContainer) {
+      errorContainer.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${error.message}`;
+      errorContainer.classList.add("visible");
+    }
+  });
+};
 
   const handleApiError = async (response) => {
     const data = await response.json();
@@ -186,31 +236,46 @@ document.addEventListener("DOMContentLoaded", () => {
           if (!validateConditions()) {
             return Promise.reject(); 
           }
+
+          const subtotal = parseFloat(orderTotal.dataset.subtotal || "0");
+          if (subtotal === 0) {
+            mostrarToast("No hay productos seleccionados en tu carrito", "error");
+            return Promise.reject();
+          }
+
           return fetch("/api/order", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify(getFormData()),
           })
-          .then(handleApiError).then((data) => {
-            if (!data.success)
+          .then(handleApiError)
+          .then((data) => {
+            if (!data.success) {
               throw new Error(data.message || "Error al crear la orden"); 
-            
+            }
+
             window.currentOrderData = {
               orderData: data.orderData,
               orderItems: data.orderItems,
             };
 
+            const tasaCambio = 60.56;
+            const totalEnDolares = (data.total / tasaCambio).toFixed(2);
+
             return actions.order.create({
               purchase_units: [
-                {amount: {value: data.total.toFixed(2),
-                  currency_code: "USD",
-                  description: "Compra en tu tienda"},
-              },
-            ],
+                {
+                  amount: {
+                    value: totalEnDolares,
+                    currency_code: "USD",
+                  },
+                  description: "Compra en tu tienda",
+                },
+              ],
+            });
           });
-        });
-      },
+        },
 
     onApprove: (data, actions) =>
       actions.order.capture().then((details) =>
@@ -230,6 +295,8 @@ document.addEventListener("DOMContentLoaded", () => {
           .then(handleApiError).then((data) => {
             if (!data.success) throw new Error(data.message);
             mostrarToast("¡Pago completado con éxito!", "success");
+            clearErrors();
+
             setTimeout( () => (window.location.href = data.redirectUrl), 3000);
           })
           .catch((error) => {
@@ -242,9 +309,8 @@ document.addEventListener("DOMContentLoaded", () => {
           mostrarToast("Ocurrió un error al procesar el pago con PayPal", "error");
           },
         }).render("#paypal-button-container");
-      
+
       buttonRendered = true;
-      clearInput();
     }
   });
 });
@@ -255,6 +321,7 @@ let costoEnvio = 0;
 const citySelect = document.getElementById("city-select");
 const orderTotal = document.querySelector(".order-total");
 const shippingCostEl = document.getElementById("shipping-cost");
+const altCitySelect = document.getElementById("alt-city-select");
 
 async function cargarCiudades() {
   try {
@@ -269,12 +336,24 @@ async function cargarCiudades() {
       option.value = ciudad.id;
       option.textContent = `${ciudad.nombre} (+$${ciudad.costo_envio})`;
       option.dataset.costo = ciudad.costo_envio;
-      citySelect.appendChild(option);
+
+      citySelect?.appendChild(option.cloneNode(true));
+      altCitySelect?.appendChild(option.cloneNode(true));
     });
   } catch (error) {
     console.error("Error cargando ciudades:", error);
   }
 }
+
+ciudades.forEach((ciudad) => {
+  const option = document.createElement("option");
+  option.value = ciudad.id;
+  option.textContent = `${ciudad.nombre} (+$${ciudad.costo_envio})`;
+  option.dataset.costo = ciudad.costo_envio;
+
+  citySelect?.appendChild(option.cloneNode(true));
+  altCitySelect?.appendChild(option);
+});
 
 citySelect?.addEventListener("change", () => {
   const selectedOption = citySelect.options[citySelect.selectedIndex];
@@ -292,5 +371,32 @@ function actualizarTotalConEnvio() {
   const totalConEnvio = subtotal + costoEnvio;
   orderTotal.textContent = `$${formatPrice(totalConEnvio)}`;
 }
+
+citySelect?.addEventListener("change", handleCityChange);
+altCitySelect?.addEventListener("change", handleCityChange);
+
+function handleCityChange(e) {
+  const selectedOption = e.target.options[e.target.selectedIndex];
+  costoEnvio = parseFloat(selectedOption.dataset.costo || "0");
+  if (shippingCostEl) {
+    shippingCostEl.textContent = `$${formatPrice(costoEnvio)}`;
+  }
+  actualizarTotalConEnvio();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const checkbox = document.getElementById("shiping-address");
+  const caption = document.querySelector(".input-checkbox .caption");
+  const billing = document.querySelector(".billing-details");
+
+  const toggleForms = () => {
+    const mostrarAlt = checkbox.checked;
+    caption.style.display = mostrarAlt ? "block" : "none";
+    billing.style.display = mostrarAlt ? "none" : "block";
+  };
+
+  checkbox?.addEventListener("change", toggleForms);
+  toggleForms(); 
+});
 
 cargarCiudades();

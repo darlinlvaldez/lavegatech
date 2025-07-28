@@ -50,6 +50,10 @@
                                     order.estado_envio === 'pendiente' ? 'badge-pending-details' : '' %>">
                                     <%= order.estado_envio ? order.estado_envio.toUpperCase() : 'PENDIENTE' %>
                                 </span><br>
+                                <strong>Dirección personalizada:</strong>
+                                <span class="badge-details <%= order.envio_diferente === 1 ? 'badge-warning-details' : 'badge-success-details' %>">
+                                <%= order.envio_diferente === 1 ? 'Sí' : 'No' %>
+                                </span><br>
                             <strong class="strong-details">Total:</strong> $<%= Number(order.total).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %>
                         </p>
                     </div>
@@ -85,11 +89,11 @@
                                 <td>$<%= Number(item.descuento).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></td>
                                 <td>$<%= Number(item.subtotal).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></td>
                             </tr>
-                        <% }); %>
+                        <% }) %>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="5" style="text-align: right;">Total</th>
+                            <th colspan="6" style="text-align: right;">Total</th>
                             <th>$<%= Number(order.total).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></th>
                         </tr>
                     </tfoot>

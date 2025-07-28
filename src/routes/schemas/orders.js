@@ -31,7 +31,13 @@ request.order = z.object({
     .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
   telefono: z
     .string()
-    .length(10, { message: ERROR_ZOD.NUMBER_MIN })
+    .length(10, { message: ERROR_ZOD.NUMBER_MIN }),
+    envio_diferente: z
+    .number()
+    .int()
+    .min(0)
+    .max(1)
+    .default(0)
 }).strict();
 
 export default request;

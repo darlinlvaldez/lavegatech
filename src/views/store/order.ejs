@@ -2,6 +2,7 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 <link rel="stylesheet" href="/css/toastify.css">
+<link rel="stylesheet" href="/css/error.css">
 
 	<!-- BREADCRUMB -->
 	<div id="breadcrumb" class="section">
@@ -29,7 +30,6 @@
 		<div class="container">
 			<!-- row -->
 			<div class="row">
-
 				<div class="col-md-7">
 					<!-- Billing Details -->
 					<div class="billing-details">
@@ -72,6 +72,58 @@
 						</div>						
 					</div>
 					<!-- /Billing Details -->
+
+					<!-- Shiping Details -->
+					<div class="shiping-details">
+						<div class="section-title">
+							<h3 class="title">Enviar a otra dirección</h3>
+						</div>
+						<div class="input-checkbox">
+							<input type="checkbox" id="shiping-address">
+							<label for="shiping-address">
+								<span></span>
+								¿Enviar a una dirección diferente?
+							</label>
+							<div class="caption">
+								<div class="form-group">
+									<input class="input" type="text" name="alt-first-name" placeholder="Nombre">
+									<div class="error-text" data-error-for="alt-first-name"></div>
+								</div>
+								<div class="form-group">
+									<input class="input" type="text" name="alt-last-name" placeholder="Apellido">
+									<div class="error-text" data-error-for="alt-last-name"></div>
+								</div>
+								<div class="form-group">
+									<input class="input" type="email" name="alt-email" placeholder="ejemplo@gmail.com">
+									<div class="error-text" data-error-for="alt-email"></div>
+								</div>
+								<div class="form-group">
+									<input class="input" type="text" name="alt-address" placeholder="Dirección">
+									<div class="error-text" data-error-for="alt-address"></div>
+								</div>
+								<div class="form-group">
+									<select class="input" id="alt-city-select" name="alt-ciudad_envio_id">
+										<option value="">Selecciona una ciudad</option>
+									</select>
+									<div class="error-text" data-error-for="alt-ciudad_envio_id"></div>
+								</div>
+								<div class="form-group">
+									<input class="input" type="text" name="alt-district" placeholder="Distrito">
+									<div class="error-text" data-error-for="alt-district"></div>
+								</div>
+								<div class="form-group">
+									<input class="input" type="tel" name="alt-tel" placeholder="Telefono o celular">
+									<div class="error-text" data-error-for="alt-tel"></div>
+								</div>
+								<div class="form-group">
+									<p><small><strong> Nota:</strong> La fecha de entrega será en algún momento dentro de la próxima semana.
+									La compañía te informará sobre el día exacto de entrega. En caso de que no se realice en ese
+									tiempo, contactenos al +1 (809) 277 2371</small></p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /Shiping Details -->
 				</div>
 
 				<!-- Order Details -->

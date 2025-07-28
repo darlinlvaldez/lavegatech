@@ -12,7 +12,7 @@ orderController.createOrder = async (req, res) => {
 
     const userId = req.session.user.id;
     const { nombre, apellido, email, direccion, ciudad, 
-      distrito, telefono, ciudad_envio_id } = req.body;
+      distrito, telefono, ciudad_envio_id, envio_diferente} = req.body;
 
     if (!nombre || !direccion || !telefono || !email) {
       return res.status(400).json({ 
@@ -38,7 +38,7 @@ orderController.createOrder = async (req, res) => {
     }, 0) + costoEnvio;
 
     const orderData = { user_id: userId, nombre, apellido, email, direccion, 
-      ciudad: ciudadData.nombre, distrito, telefono, total, ciudad_envio_id
+      ciudad: ciudadData.nombre, distrito, telefono, total, ciudad_envio_id, envio_diferente,
     };
 
     const orderItems = cartItems.map(item => ({
@@ -73,14 +73,13 @@ orderController.getCiudades = async function (req, res) {
 orderController.processPayment = async (req, res) => {
   try {
     const { orderData, orderItems } = req.body; 
-    const { paymentMethod, paymentDetails, payerId, paymentId } = req.body;
+    const {paymentDetails, payerId, paymentId } = req.body;
     
     if (!req.session.user) {
       return res.status(401).json({ success: false, message: 'No autorizado'});
     }
 
     const userId = req.session.user.id;
-
     const cartItems = await cart.getCartToPay(userId);
 
     if (cartItems.length === 0) { 
@@ -94,39 +93,36 @@ orderController.processPayment = async (req, res) => {
 
     const costoEnvio = parseFloat(ciudadData.costo_envio);
 
-    const totalReal = parseFloat(orderData.total);
-    const pagado = parseFloat(paymentDetails.purchase_units[0].amount.value);
-
-    const totalCalculado = cartItems.reduce((sum, item) => {
+    const totalPesos = cartItems.reduce((sum, item) => {
       const precioFinal = item.descuento > 0
-        ? item.precio * (1 - item.descuento / 100)
-        : item.precio;
+      ? item.precio * (1 - item.descuento / 100) : item.precio;
       return sum + (precioFinal * item.cantidad);
     }, 0) + costoEnvio;
 
-    if (Math.abs(pagado - totalCalculado) > 0.01) {
+    const tasaCambio = 60.56; 
+    const pagadoDolares = parseFloat(paymentDetails.purchase_units[0].amount.value);
+    const pagadoPesos = pagadoDolares * tasaCambio;
+
+    if (Math.abs(pagadoPesos - totalPesos) > 1) { 
       return res.status(400).json({success: false,
         message: 'Monto pagado no coincide con el total real de la orden'});
     }
 
     await orders.checkStock(cartItems);
 
-    if (pagado !== totalReal) {
-      return res.status(400).json({success: false, 
-        message: 'Monto pagado no coincide con el total de la orden'});
-    }
-
-    const orderId = await orders.createOrder({...orderData, status: 'pagado'}, orderItems, costoEnvio);
+    const orderId = await orders.createOrder(
+      {...orderData, status: 'pagado', total: totalPesos}, 
+      orderItems, costoEnvio);
 
     await orders.createPayment(orderId, {paymentMethod: 'paypal',
       paymentId: paymentId, payerId: payerId});    
 
     await orders.updateStock(orderId, userId);
-
     await cart.clearCart(userId);
 
-    res.json({success: true, message: 'Pago procesado correctamente',
-      orderId, redirectUrl: `/api/order/orderDetails/${orderId}`
+    res.json({success: true, 
+      message: 'Pago procesado correctamente', orderId, 
+      redirectUrl: `/api/order/orderDetails/${orderId}`
     });
   } catch (error) {
     console.error('Error al procesar pago:', error);
@@ -136,9 +132,8 @@ orderController.processPayment = async (req, res) => {
         message: error.message, stockItems: error.stockItems});
     }
     
-    res.status(500).json({success: false, message: 'Error al procesar el pago',
-      error: error.message
-    });
+    res.status(500).json({success: false, 
+      message: 'Error al procesar el pago', error: error.message});
   }
 };
 
