@@ -185,13 +185,14 @@ if (document.getElementById("price-slider")) {
     priceSlider = document.getElementById("price-slider"),
     resetButton = document.getElementById("reset-filtro-precio");
 
-  var defaultMin = 0,
-    defaultMax = 100000,
-    savedMin = localStorage.getItem("priceMin") || defaultMin,
-    savedMax = localStorage.getItem("priceMax") || defaultMax;
+var defaultMin = window.defaultMin || 0;
+var defaultMax = window.defaultMax || 100000;
 
-  if (priceInputMin) priceInputMin.value = savedMin;
-  if (priceInputMax) priceInputMax.value = savedMax;
+var savedMin = localStorage.getItem("priceMin") || defaultMin;
+var savedMax = localStorage.getItem("priceMax") || defaultMax;
+
+if (priceInputMin) priceInputMin.value = savedMin;
+if (priceInputMax) priceInputMax.value = savedMax;
 
   function updatePriceSlider(input) {
     let min = parseFloat(priceInputMin.value) || defaultMin;

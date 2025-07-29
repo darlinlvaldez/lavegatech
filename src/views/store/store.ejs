@@ -25,10 +25,16 @@
 		window.location.href = `/store/${pagina}?limite=${limite}&orden=${orden}&categoria=${categorias}
 			&marca=${marcas}&precioMin=${precioMin}&precioMax=${precioMax}`;
 	}
+	
 
 	document.addEventListener("DOMContentLoaded", function () {
 		document.getElementById("aplicar-filtro-precio").addEventListener("click", actualizarProductos);
 	});
+</script>
+
+<script>
+  var defaultMin = <%= defaultMin %> || 0;
+  var defaultMax = <%= defaultMax %> || 100000;
 </script>
   
 <!-- BREADCRUMB -->
@@ -88,13 +94,13 @@
 					<div class="price-filter">	
 						<div id="price-slider"></div>
 						<div class="input-number price-min">
-							<input id="price-min" type="number" value="<%= precioMin %>">
+							<input id="price-min" type="number" value="<%= precioMin ?? defaultMin %>">
 							<span class="qty-up">+</span>
 							<span class="qty-down">-</span>
 						</div>
 						<span>-</span>
 						<div class="input-number price-max">
-							<input id="price-max" type="number" value="<%= precioMax %>">
+							<input id="price-max" type="number" value="<%= precioMax ?? defaultMax %>">
 							<span class="qty-up">+</span>
 							<span class="qty-down">-</span>
 						</div><br><br>
