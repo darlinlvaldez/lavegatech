@@ -133,22 +133,19 @@ import { checkFavorites } from "./fav.js";
   /////////////////////////////////////////
 
   function asegurarDosDecimales(input) {
-    input.value = parseFloat(input.value).toFixed(2);
-  }
+  input.value = parseFloat(input.value).toFixed(2);
+}
 
-const priceInputs = [
-  document.getElementById("price-min"),
-  document.getElementById("price-max"),
-];
+const priceInputs = [document.getElementById("price-min"), document.getElementById("price-max")];
 
-priceInputs.forEach((input) => {
+priceInputs.forEach(input => {
   if (input) {
     input.addEventListener("input", function () {
-      if (!this.value.includes(".")) {
+      if (!this.value.includes('.')) {
         this.value = parseFloat(this.value).toFixed(2);
       } else {
-        let parts = this.value.split(".");
-        this.value = parts[0] + "." + "00";
+        let parts = this.value.split('.');
+        this.value = parts[0] + '.' + '00';
       }
     });
 
@@ -167,17 +164,17 @@ if (document.getElementById("price-slider")) {
       down = $this.find(".qty-down");
 
     down.on("click", function () {
-      var value = parseFloat($input.val()) - 500.0;
-      value = value < window.priceRange.min ? window.priceRange.min : value;
-      $input.val(value.toFixed(2));
+      var value = parseFloat($input.val()) - 500.00; 
+      value = value < 0.00 ? 0.00 : value; 
+      $input.val(value.toFixed(2)); 
       $input.change();
       updatePriceSlider($this, value);
     });
 
     up.on("click", function () {
-      var value = parseFloat($input.val()) + 500.0;
-      value = value > window.priceRange.max ? window.priceRange.max : value;
-      $input.val(value.toFixed(2));
+      var value = parseFloat($input.val()) + 500.00; 
+      value = value > 100000.00 ? 100000.00 : value;
+      $input.val(value.toFixed(2)); 
       $input.change();
       updatePriceSlider($this, value);
     });
@@ -188,8 +185,8 @@ if (document.getElementById("price-slider")) {
     priceSlider = document.getElementById("price-slider"),
     resetButton = document.getElementById("reset-filtro-precio");
 
-  var defaultMin = window.priceRange.min,
-    defaultMax = window.priceRange.max,
+  var defaultMin = 0,
+    defaultMax = 100000,
     savedMin = localStorage.getItem("priceMin") || defaultMin,
     savedMax = localStorage.getItem("priceMax") || defaultMax;
 
@@ -228,10 +225,7 @@ if (document.getElementById("price-slider")) {
       start: [savedMin, savedMax],
       connect: true,
       step: 0.01,
-      range: {
-        min: window.priceRange.min,
-        max: window.priceRange.max,
-      },
+      range: { min: defaultMin, max: defaultMax },
     });
 
     priceSlider.noUiSlider.on("update", function (values, handle) {

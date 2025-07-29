@@ -26,8 +26,6 @@
 			&marca=${marcas}&precioMin=${precioMin}&precioMax=${precioMax}`;
 	}
 
-	window.priceRange = {min: <%= defaultMin || 0 %>, max: <%= defaultMax || 100000 %>};
-
 	document.addEventListener("DOMContentLoaded", function () {
 		document.getElementById("aplicar-filtro-precio").addEventListener("click", actualizarProductos);
 	});
@@ -90,13 +88,13 @@
 					<div class="price-filter">	
 						<div id="price-slider"></div>
 						<div class="input-number price-min">
-							<input id="price-min" type="number" value="<%= precioMin || '' %>">
+							<input id="price-min" type="number" value="<%= precioMin %>">
 							<span class="qty-up">+</span>
 							<span class="qty-down">-</span>
 						</div>
 						<span>-</span>
 						<div class="input-number price-max">
-							<input id="price-max" type="number" value="<%= precioMax || '' %>">
+							<input id="price-max" type="number" value="<%= precioMax %>">
 							<span class="qty-up">+</span>
 							<span class="qty-down">-</span>
 						</div><br><br>

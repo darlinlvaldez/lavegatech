@@ -133,25 +133,4 @@ store.cantidadMarcas = async (categorias = []) => {
     }
 };
   
-store.obtenerRangoPrecios = async (categorias = [], marcas = []) => {
-    const whereClause = construirWhereClause(categorias, marcas);
-    
-    const query = `
-    SELECT 
-        MIN(p.precio) as minPrecio,
-        MAX(p.precio) as maxPrecio
-    FROM productos p
-    ${whereClause}`;
-
-    try {
-        const [results] = await db.query(query);
-        return {
-            minPrecio: results[0].minPrecio || 0,
-            maxPrecio: results[0].maxPrecio || 100000
-        };
-    } catch (err) {
-        throw new Error("Error al obtener el rango de precios: " + err.message);
-    }
-};
-
 export default store;
