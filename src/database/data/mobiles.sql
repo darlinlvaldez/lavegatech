@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-07-2025 a las 06:55:40
+-- Tiempo de generación: 29-07-2025 a las 02:23:35
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -67,7 +67,10 @@ INSERT INTO `almacenamiento` (`id`, `capacidad`, `tipo`) VALUES
 (6, '128 GB', 'UFS 2.2'),
 (7, '256 GB', 'UFS 3.1'),
 (8, '512 GB', 'UFS 3.1'),
-(9, '1 TB', 'UFS 4.0');
+(9, '1 TB', 'UFS 4.0'),
+(12, '64 GB', 'UFS 2.2'),
+(13, '64 GB', 'UFS 2.1'),
+(14, '256 GB', 'UFS 2.2');
 
 -- --------------------------------------------------------
 
@@ -189,7 +192,8 @@ CREATE TABLE `carrito` (
 --
 
 INSERT INTO `carrito` (`id`, `usuario_id`, `producto_id`, `colorSeleccionado`, `cantidad`, `descuento`, `precio`, `imagen`, `nombre`, `fecha_agregado`) VALUES
-(1251, 78, 2, 'verde', 1, 0.00, 17995.00, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg', 'iPhone 12 128GB', '2025-07-23 04:34:41');
+(1251, 78, 2, 'verde', 1, 0.00, 17995.00, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg', 'iPhone 12 128GB', '2025-07-23 04:34:41'),
+(1288, 75, 15, 'blanco', 1, 0.00, 37495.00, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Silver.jpg', 'iPhone 13 Pro Max 512GB ', '2025-07-28 16:55:35');
 
 -- --------------------------------------------------------
 
@@ -787,7 +791,7 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (36, 16, 'iPhone 16E 256GB', '', 44995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
 (37, 17, 'iPhone 16 Plus 128GB ', '', 54995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
 (38, 18, 'iPhone 16 Pro Max 256GB ', '', 74995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(39, 0, 'iPhone 16 Pro Max 512GB ', '', 84995.00, 1, 0.00, '2025-03-01 08:00:00', 1, NULL, NULL),
+(39, 1, 'iPhone 16 Pro Max 512GB ', '', 84995.00, 1, 0.00, '2025-03-01 08:00:00', 1, NULL, NULL),
 (40, 19, 'SAMSUNG GALAXY S10 PLUS 8+128GB', '', 9995.00, 1, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
 (41, 20, 'SAMSUNG GALAXY NOTE 10 PLUS 12+256GB', '', 13995.00, 1, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
 (42, 21, 'SAMSUNG GALAXY NOTE 20 ULTRA 12+128GB', '', 17995.00, 1, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
@@ -797,7 +801,7 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (46, 25, 'SAMSUNG GALAXY A05 6+128GB ', '', 7995.00, 1, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
 (47, 25, 'SAMSUNG GALAXY A05 4+64GB ', '', 6995.00, 1, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
 (48, 26, 'SAMSUNG GALAXY A15 6+128GB ', '', 8995.00, 1, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(49, 27, 'SAMSUNG GALAXY A25 5G 8+256GB ', '', 12995.00, 1, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
+(49, 27, 'SAMSUNG GALAXY A25 5G 8+256GB', 'S', 12995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 4, 14),
 (50, 28, 'XIAOMI REDMI NOTE 13 5G 8+256GB', '', 10995.00, 1, 0.00, '2023-01-01 08:00:00', 3, NULL, NULL),
 (51, 29, 'XIAOMI REDMI NOTE 13 PRO PLUS 5G 12+256GB', '', 20995.00, 1, 0.00, '2023-01-01 08:00:00', 3, NULL, NULL),
 (52, 30, 'XIAOMI POCO X6 PRO 8+256 GB', '', 17495.00, 1, 0.00, '2023-01-01 08:00:00', 3, NULL, NULL),
@@ -847,8 +851,8 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (98, 0, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 'waos', 39995.00, 3, 0.00, '2025-06-23 16:00:00', 9, NULL, NULL),
 (99, 0, 'HP 15.6Inch i5 12GEN 8+256GB ', '', 23995.00, 3, 0.00, '2023-01-01 08:00:00', 8, NULL, NULL),
 (100, 0, 'HP i5 13GEN 8+256GB ', '', 24995.00, 3, 0.00, '2023-01-01 08:00:00', 8, NULL, NULL),
-(108, 0, 'SAMSUNG GALAXY TAB A9+ 64GB ', '', 11495.00, 5, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(109, 0, 'SAMSUNG GALAXY TAB A9+ 128GB ', '', 13495.00, 5, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
+(108, 0, 'SAMSUNG GALAXY TAB A9+ 64GB', 's', 11495.00, 5, 0.00, '2023-01-01 12:00:00', 2, 1, 12),
+(109, 0, 'SAMSUNG GALAXY TAB A9+ 128GB', 's', 13495.00, 5, 0.00, '2023-01-01 12:00:00', 2, 1, 6),
 (120, 0, 'Macbook Pro 13-Inch 2020 i5 8+512GB', '', 31995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
 (121, 0, 'Macbook Air 13-Inch 2020 i3 8+256GB ', '', 29495.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
 (122, 0, 'Macbook Pro 16-Inch 2019 i7 16+512GB ', '', 34995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
@@ -932,8 +936,8 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (202, 0, 'SOUNDCORE BOOM 2 PLUS', '', 14995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
 (203, 0, 'Monitor Asus VG1B 27 Pulgada 165HZ', '', 14995.00, 2, 0.00, '2023-01-01 08:00:00', 9, NULL, NULL),
 (204, 0, 'Monitor LG Ultragear 34 Pulgada 160HZ', '', 24995.00, 2, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(206, 0, 'Monitor Samsung G4 ODYSSEEY 27 Pulgada 240HZ', '', 19995.00, 2, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(207, 0, 'Monitor Samsung G5 ODYSSEY 32 Pulgada 165HZ', 'siuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasd', 22995.00, 2, 0.00, '2023-01-03 04:00:00', 2, 1, 1);
+(206, 0, 'Monitor Samsung G4 ODYSSEEY 27 Pulgada 240HZ', 's', 19995.00, 2, 0.00, '2023-01-01 12:00:00', 2, NULL, NULL),
+(207, 0, 'Monitor Samsung G5 ODYSSEY 32 Pulgada 165HZ', 'siuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasd', 22995.00, 2, 0.00, '2023-01-03 08:00:00', 2, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -999,50 +1003,187 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (375, 24, 'purpura', 3, 'https://i.ebayimg.com/images/g/Yu0AAOSwG0hkW5uL/s-l1600.webp'),
 (376, 24, 'blanco', 4, 'https://i.ebayimg.com/images/g/b~YAAOSwNzNkW5tc/s-l1600.webp'),
 (377, 25, 'dorado', 1, 'https://i.ebayimg.com/images/g/0MgAAOSwWIpkW5u-/s-l1600.webp'),
-(382, 1, 'blanco', 0, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg'),
-(383, 1, 'negro', 5, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/a75941f0-0032-4680-bda0-ba070e5f9982.jpg'),
-(384, 1, 'verde', 3, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg'),
-(385, 2, 'verde', 0, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg'),
+(382, 1, 'blanco', 8, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg'),
+(383, 1, 'negro', 4, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/a75941f0-0032-4680-bda0-ba070e5f9982.jpg'),
+(384, 1, 'verde', 4, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg'),
+(385, 2, 'verde', 4, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg'),
 (386, 2, 'pupura', 4, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/b01801bc-4c3c-411e-9ff0-dac6b4e34a87.jpg'),
 (387, 3, 'blanco', 0, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/6caf4891-9655-4247-a11c-9719a3db6244.jpg'),
-(388, 3, 'rojo', 0, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/859d07b9-f8a1-43bc-b8c3-ff09652e2c26.jpg'),
-(389, 4, 'negro', 0, 'https://i.ebayimg.com/images/g/6VEAAOSwcrlhP6ad/s-l1600.webp'),
+(388, 3, 'rojo', 4, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/859d07b9-f8a1-43bc-b8c3-ff09652e2c26.jpg'),
+(389, 4, 'negro', 4, 'https://i.ebayimg.com/images/g/6VEAAOSwcrlhP6ad/s-l1600.webp'),
 (390, 4, 'blanco', 4, 'https://i.ebayimg.com/images/g/WloAAOSwcU9hP6ap/s-l1600.webp'),
-(391, 5, 'azul', 0, 'https://i.ebayimg.com/images/g/9PsAAOSwnh5hP6a7/s-l1600.webp'),
+(391, 5, 'azul', 4, 'https://i.ebayimg.com/images/g/9PsAAOSwnh5hP6a7/s-l1600.webp'),
 (392, 5, 'verde', 4, 'https://i.ebayimg.com/images/g/s2MAAOSwugxhP6bJ/s-l1600.webp'),
-(393, 6, 'gris', 2, 'https://i.ebayimg.com/images/g/QVEAAOSwbWdhQfcN/s-l1600.webp'),
+(393, 6, 'gris', 4, 'https://i.ebayimg.com/images/g/QVEAAOSwbWdhQfcN/s-l1600.webp'),
 (394, 6, 'oro', 4, 'https://i.ebayimg.com/images/g/l8AAAOSwrQlhQfcU/s-l1600.webp'),
 (395, 7, 'blanco', 0, 'https://i.ebayimg.com/images/g/Yj4AAOSwmb5hQfca/s-l1600.webp'),
-(396, 7, 'azul', 6, 'https://i.ebayimg.com/images/g/YZsAAOSwntxhQfch/s-l1600.webp'),
-(397, 8, 'gris', 1, 'https://i.ebayimg.com/images/g/KSQAAOSwa4xhQfcO/s-l1600.webp'),
-(398, 9, 'Rojo', 0, 'https://i.ebayimg.com/images/g/iZ4AAOSwk7pkwnXM/s-l1600.webp'),
+(396, 7, 'azul', 4, 'https://i.ebayimg.com/images/g/YZsAAOSwntxhQfch/s-l1600.webp'),
+(397, 8, 'gris', 4, 'https://i.ebayimg.com/images/g/KSQAAOSwa4xhQfcO/s-l1600.webp'),
+(398, 9, 'Rojo', 4, 'https://i.ebayimg.com/images/g/iZ4AAOSwk7pkwnXM/s-l1600.webp'),
 (399, 9, 'azul', 4, 'https://i.ebayimg.com/images/g/rdMAAOSwjUFkwnXL/s-l1600.webp'),
-(400, 10, 'blanco', 3, 'https://i.ebayimg.com/images/g/4pEAAOSwxchkwnXN/s-l1600.webp'),
+(400, 10, 'blanco', 4, 'https://i.ebayimg.com/images/g/4pEAAOSwxchkwnXN/s-l1600.webp'),
 (401, 10, 'pupura', 4, 'https://i.ebayimg.com/images/g/Yp4AAOSwPLNkwnXM/s-l1600.webp'),
-(402, 11, 'verde', 6, 'https://i.ebayimg.com/images/g/Gq4AAeSwNhNobXlW/s-l960.webp'),
+(402, 11, 'verde', 4, 'https://i.ebayimg.com/images/g/Gq4AAeSwNhNobXlW/s-l960.webp'),
 (403, 11, 'azul', 4, 'https://i.ebayimg.com/images/g/ScgAAeSwnqdobXlV/s-l960.webp'),
-(404, 12, 'gris', 2, 'https://i.ebayimg.com/images/g/eeYAAeSw4S9obXlU/s-l960.webp'),
-(405, 12, 'blanco', 1, 'https://i.ebayimg.com/images/g/FkcAAeSwvgNobXlS/s-l960.webp'),
+(404, 12, 'gris', 4, 'https://i.ebayimg.com/images/g/eeYAAeSw4S9obXlU/s-l960.webp'),
+(405, 12, 'blanco', 4, 'https://i.ebayimg.com/images/g/FkcAAeSwvgNobXlS/s-l960.webp'),
 (406, 13, 'oro', 4, 'https://i.ebayimg.com/images/g/FkcAAeSwvgNobXlS/s-l960.webp'),
-(409, 14, 'gris', 5, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Grey.jpg'),
+(409, 14, 'gris', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Grey.jpg'),
 (410, 14, 'oro', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Gold.jpg'),
-(411, 15, 'blanco', 3, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Silver.jpg'),
-(412, 15, 'verde', 2, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Green.jpg'),
-(413, 16, 'negro', 2, 'https://i.ebayimg.com/images/g/AKQAAOSwn51oE~FN/s-l1600.webp'),
-(414, 16, 'blanco', 5, 'https://i.ebayimg.com/images/g/BvQAAOSwhH1mkSlU/s-l1600.webp'),
+(411, 15, 'blanco', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Silver.jpg'),
+(412, 15, 'verde', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Green.jpg'),
+(413, 16, 'negro', 4, 'https://i.ebayimg.com/images/g/AKQAAOSwn51oE~FN/s-l1600.webp'),
+(414, 16, 'blanco', 4, 'https://i.ebayimg.com/images/g/BvQAAOSwhH1mkSlU/s-l1600.webp'),
 (415, 17, 'Rojo', 4, 'https://i.ebayimg.com/images/g/bg4AAOSw2g1mkSlx/s-l1600.webp'),
 (416, 17, 'azul', 4, 'https://i.ebayimg.com/images/g/C-QAAOSw8l5mkSmR/s-l1600.webp'),
-(417, 18, 'amarillo', 3, 'https://i.ebayimg.com/images/g/k-8AAOSwofxmkSoT/s-l1600.webp'),
+(417, 18, 'amarillo', 4, 'https://i.ebayimg.com/images/g/k-8AAOSwofxmkSoT/s-l1600.webp'),
 (418, 18, 'pupura', 4, 'https://i.ebayimg.com/images/g/XPIAAOSwYEtmkSnd/s-l1600.webp'),
-(419, 19, 'negro', 1, 'https://i.ebayimg.com/images/g/~RgAAOSwKkhl61i3/s-l1600.webp'),
-(420, 19, 'azul', 4, 'https://i.ebayimg.com/images/g/C-QAAOSw8l5mkSmR/s-l1600.webp'),
+(419, 19, 'negro', 4, 'https://i.ebayimg.com/images/g/~RgAAOSwKkhl61i3/s-l1600.webp'),
+(420, 19, 'azul', 4, 'https://i.ebayimg.com/images/g/PnMAAOSwAYVl61i9/s-l1600.webp'),
 (421, 20, 'negro', 4, 'https://i.ebayimg.com/images/g/o~UAAOSwVB1kXRSz/s-l1600.webp'),
-(422, 20, 'blanco', 1, 'https://i.ebayimg.com/images/g/sI4AAOSwi5lkXRTg/s-l1600.webp'),
+(422, 20, 'blanco', 4, 'https://i.ebayimg.com/images/g/sI4AAOSwi5lkXRTg/s-l1600.webp'),
 (423, 21, 'oro', 4, 'https://i.ebayimg.com/images/g/-FYAAOSw8UNkXRT4/s-l1600.webp'),
-(424, 21, 'blanco', 1, 'https://i.ebayimg.com/images/g/sI4AAOSwi5lkXRTg/s-l1600.webp'),
-(425, 22, 'gris', 2, 'https://i.ebayimg.com/images/g/ml4AAOSwQJZkXRUR/s-l1600.webp'),
+(424, 21, 'blanco', 4, 'https://i.ebayimg.com/images/g/sI4AAOSwi5lkXRTg/s-l1600.webp'),
+(425, 22, 'gris', 4, 'https://i.ebayimg.com/images/g/ml4AAOSwQJZkXRUR/s-l1600.webp'),
 (426, 22, 'negro', 4, 'https://i.ebayimg.com/images/g/o~UAAOSwVB1kXRSz/s-l140.webp'),
-(433, 1, 'rojo', 2, 'https://images-cdn.ubuy.qa/636b9edfc1468339965d9f98-new-apple-iphone-12-64gb-productred.jpg');
+(427, 26, 'negro', 3, 'https://i.ebayimg.com/images/g/NiQAAOSwUahnN63n/s-l1600.webp'),
+(428, 26, 'verde', 4, 'https://i.ebayimg.com/images/g/RjsAAOSwJsRnN63p/s-l1600.webp'),
+(429, 27, 'blanco', 4, 'https://i.ebayimg.com/images/g/ytcAAOSwqyZnN63o/s-l1600.webp'),
+(430, 27, 'amarillo', 4, 'https://i.ebayimg.com/images/g/zM0AAOSwU2JnN63q/s-l1600.webp'),
+(431, 28, 'negro', 4, 'https://i.ebayimg.com/images/g/NiQAAOSwUahnN63n/s-l1600.webp'),
+(432, 28, 'rosado', 4, 'https://i.ebayimg.com/images/g/SJgAAOSwSidnN63q/s-l1600.webp'),
+(433, 29, 'blanco', 4, 'https://i.ebayimg.com/images/g/ytcAAOSwqyZnN63o/s-l1600.webp'),
+(434, 29, 'verde', 4, 'https://i.ebayimg.com/images/g/RjsAAOSwJsRnN63p/s-l1600.webp'),
+(435, 30, 'verde', 4, 'https://i.ebayimg.com/images/g/RjsAAOSwJsRnN63p/s-l1600.webp'),
+(436, 30, 'negro', 4, 'https://i.ebayimg.com/images/g/NiQAAOSwUahnN63n/s-l1600.webp'),
+(437, 31, 'negro', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+15+Pro+Max/iPhone+15+Pro+Max+Black.jpg'),
+(438, 31, 'azul', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+15+Pro+Max/iPhone+15+Pro+Max+Blue.jpg'),
+(439, 32, 'gris', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+15+Pro+Max/iPhone+15+Pro+Max+Natural.jpg'),
+(440, 32, 'blanco', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+15+Pro+Max/iPhone+15+Pro+Max+White.jpg'),
+(441, 33, 'azul', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+15+Pro+Max/iPhone+15+Pro+Max+Blue.jpg'),
+(442, 33, 'negro', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+15+Pro+Max/iPhone+15+Pro+Max+Black.jpg'),
+(443, 34, 'blanco', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+15+Pro+Max/iPhone+15+Pro+Max+White.jpg'),
+(444, 34, 'gris', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+15+Pro+Max/iPhone+15+Pro+Max+Natural.jpg'),
+(445, 35, 'negro', 4, 'https://i.ebayimg.com/images/g/RtwAAOSwLgtngBtO/s-l1600.webp'),
+(446, 35, 'azul', 4, 'https://i.ebayimg.com/images/g/uAoAAOSwoM9ngBtP/s-l1600.webp'),
+(447, 36, 'blanco', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+16e/iPhone+16e+White.jpg'),
+(448, 36, 'negro', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+16e/iPhone+16e+Black.jpg'),
+(449, 37, 'verde', 4, 'https://i.ebayimg.com/images/g/0FsAAOSwZW9nN2R-/s-l1600.webp'),
+(450, 37, 'blanco', 4, 'https://i.ebayimg.com/images/g/XCIAAOSwj91nN2SB/s-l1600.webp'),
+(451, 38, 'negro', 4, 'https://i.ebayimg.com/images/g/K-kAAOSwQZZnmQAj/s-l1600.webp'),
+(452, 38, 'oro', 4, 'https://i.ebayimg.com/images/g/9dMAAOSwWT9nmQAk/s-l1600.webp'),
+(453, 39, 'gris', 4, 'https://i.ebayimg.com/images/g/mOYAAOSwYbBnmQAi/s-l1600.webp'),
+(454, 39, 'blanco', 4, 'https://i.ebayimg.com/images/g/ecIAAOSwjFJnmQAm/s-l1600.webp'),
+(455, 40, 'negro', 4, 'https://i.ebayimg.com/images/g/t34AAOSwoRRg2h05/s-l1600.webp'),
+(456, 40, 'azul', 4, 'https://i.ebayimg.com/images/g/1x4AAOSwEGJivIgI/s-l1600.webp'),
+(457, 41, 'plata', 4, 'https://i.ebayimg.com/images/g/VewAAeSw8lxode6u/s-l1600.webp'),
+(458, 42, 'negro', 4, 'https://i.ebayimg.com/images/g/lEUAAOSw2nJheEsR/s-l1600.webp'),
+(459, 42, 'blanco', 4, 'https://i.ebayimg.com/images/g/owYAAOSwpI1heEp9/s-l1600.webp'),
+(460, 43, 'negro', 4, 'https://d3d71ba2asa5oz.cloudfront.net/12003181/images/samg998u-b2.jpg'),
+(461, 43, 'gris', 4, 'https://d3d71ba2asa5oz.cloudfront.net/12003181/images/samg998u-n.jpg'),
+(462, 44, 'negro', 4, 'https://i.ebayimg.com/images/g/ufgAAOSwUjNkZ8Ez/s-l1600.webp'),
+(463, 45, 'gris', 4, 'https://i.ebayimg.com/images/g/kRMAAeSwnqFn7b22/s-l1600.webp'),
+(464, 45, 'blanco', 4, 'https://i.ebayimg.com/images/g/6OEAAOSwAmZn5t6O/s-l1600.webp'),
+(465, 46, 'negro', 4, 'https://i.ebayimg.com/images/g/ZB0AAeSw33toaBuw/s-l1600.webp'),
+(466, 47, 'negro', 4, 'https://i.ebayimg.com/images/g/pkkAAOSwiTloSKca/s-l1600.webp'),
+(467, 48, 'azul', 4, 'https://i.ebayimg.com/images/g/w~wAAOSwCr5mOzJq/s-l1600.webp'),
+(468, 49, 'azul', 4, 'https://i.ebayimg.com/images/g/Oe4AAOSwFGln2WsG/s-l1600.webp'),
+(469, 50, 'negro', 4, 'https://i.ebayimg.com/images/g/iJsAAOSw9ixnQzjT/s-l1600.webp'),
+(470, 50, 'verde', 4, 'https://i.ebayimg.com/images/g/hQAAAOSwXrFnQzjj/s-l1600.webp'),
+(471, 51, 'negro', 4, 'https://i.ebayimg.com/images/g/B3oAAOSwAXxnXnUq/s-l1600.webp'),
+(472, 52, 'amarillo', 4, 'https://i.ebayimg.com/images/g/XgoAAeSwYkxoc01Z/s-l1600.webp'),
+(473, 53, 'negro', 4, 'https://i.ebayimg.com/images/g/7x8AAeSw~pdoaaPb/s-l960.webp'),
+(474, 54, 'azul', 4, 'https://i.ebayimg.com/images/g/Z3UAAOSwZ~dnk9gq/s-l1600.webp'),
+(475, 55, 'negro', 4, 'https://i.ebayimg.com/images/g/swQAAeSwnPdocsh7/s-l1600.webp'),
+(476, 56, 'negro', 4, 'https://i.ebayimg.com/images/g/swQAAeSwnPdocsh7/s-l1600.webp'),
+(477, 58, 'negro', 4, 'https://i.ebayimg.com/images/g/gRsAAOSwN6NoRvJR/s-l1600.webp'),
+(478, 57, 'negro', 4, 'https://i.ebayimg.com/images/g/yBMAAOSw6YhnjZCe/s-l1600.webp'),
+(479, 59, 'negro', 4, 'https://i.ebayimg.com/images/g/sRAAAOSw81JnjZCs/s-l1600.webp'),
+(480, 60, 'negro', 4, 'https://i.ebayimg.com/images/g/7LAAAOSweRdkA1Mp/s-l960.webp'),
+(481, 61, 'blanco', 4, 'https://i.ebayimg.com/images/g/f~YAAeSwPrFobwi1/s-l1600.webp'),
+(482, 62, 'blanco', 4, 'https://i.ebayimg.com/images/g/Q5oAAeSwE21ogl~L/s-l1600.webp'),
+(483, 63, 'verde', 4, 'https://i.ebayimg.com/images/g/4o4AAeSwXHJoCN-I/s-l1600.webp'),
+(484, 64, 'negro', 4, 'https://i.ebayimg.com/images/g/QwUAAOSwE~doRmVm/s-l1600.webp'),
+(485, 65, 'verde', 4, 'https://i.ebayimg.com/images/g/zKIAAOSwkOdoVDu2/s-l1600.webp'),
+(486, 66, 'negro', 4, 'https://i.ebayimg.com/images/g/lxMAAOSw~0VnD0FB/s-l1600.webp'),
+(487, 67, 'blanco', 4, 'https://i.ebayimg.com/images/g/JmYAAOSw7YZoN8ef/s-l1600.webp'),
+(488, 68, 'negro', 3, 'https://i.ebayimg.com/images/g/trcAAOSwvNJoSn1R/s-l1600.webp'),
+(489, 69, 'negro', 3, 'https://i.ebayimg.com/images/g/Ov8AAOSwIohn-pPd/s-l1600.webp'),
+(490, 70, 'verde', 4, 'https://i.ebayimg.com/images/g/kJgAAOSwNGBnRH9e/s-l1600.webp'),
+(491, 71, 'gris', 3, 'https://i.ebayimg.com/images/g/LEgAAOSwgGNk-7cy/s-l1600.webp'),
+(492, 72, 'blanco', 4, 'https://i.ebayimg.com/images/g/-H4AAeSwMRhob-jD/s-l1600.webp'),
+(493, 73, 'blanco', 3, 'https://i.ebayimg.com/images/g/9hAAAeSw~GBof9Dw/s-l960.webp'),
+(494, 74, 'negro', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPad+Pro+13+M4/iPad+Pro+13+M4+Space+Black.jpg'),
+(495, 75, 'negro', 3, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPad+Pro+13+M4/iPad+Pro+13+M4+Space+Black.jpg'),
+(496, 76, 'gris', 3, 'https://i.ebayimg.com/images/g/LSUAAOSwD~Rk57Ec/s-l1600.webp'),
+(497, 79, 'negro', 4, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/b1dfb509dbd55df566129da8abe06ab3/04eb593f-3c2b-46db-8bb4-19c86817d6ef.jpg'),
+(498, 80, 'negro', 3, 'https://i.ebayimg.com/images/g/1wMAAOSwtb9nnppi/s-l1600.webp'),
+(499, 81, 'negro', 4, 'https://i.ebayimg.com/images/g/odUAAOSwMSNn9V0o/s-l1600.webp'),
+(500, 82, 'gris', 3, 'https://i.ebayimg.com/images/g/yVYAAOSwoNpm4Vl4/s-l1600.webp'),
+(501, 83, 'azul', 4, 'https://i.ebayimg.com/images/g/IsUAAOSwf0tml-Vu/s-l1600.webp'),
+(502, 85, 'gris', 3, 'https://i.ebayimg.com/images/g/dksAAOSwaHVmvP2r/s-l1600.webp'),
+(503, 86, 'azul', 4, 'https://i.ebayimg.com/images/g/FWwAAeSwIZRoaSuC/s-l960.webp'),
+(504, 87, 'negro', 4, 'https://i.ebayimg.com/images/g/MykAAOSw-YVkWXfS/s-l1600.webp'),
+(505, 88, 'negro', 4, 'https://i.ebayimg.com/images/g/50cAAOSwUK5oNJNc/s-l1600.webp'),
+(506, 89, 'gris', 3, 'https://i.ebayimg.com/images/g/XX0AAOSwI0JmHwCc/s-l1600.webp'),
+(507, 90, 'gris', 4, 'https://i.ebayimg.com/images/g/0McAAeSwmJpoRghK/s-l1600.webp'),
+(508, 91, 'gris', 3, 'https://i.ebayimg.com/images/g/sikAAOSwlgtl63K6/s-l1600.webp'),
+(509, 92, 'gris', 4, 'https://i.ebayimg.com/images/g/Aw8AAOSwLLdoAPyC/s-l1600.webp'),
+(510, 93, 'gris', 3, 'https://i.ebayimg.com/images/g/V7cAAOSw2g1mkIJN/s-l1600.webp'),
+(511, 94, 'negro', 4, 'https://i.ebayimg.com/images/g/5DsAAOSwqOxmTkOE/s-l1600.webp'),
+(512, 95, 'gris', 3, 'https://i.ebayimg.com/images/g/OYQAAeSwY9Jof-O4/s-l1600.webp'),
+(513, 96, 'gris', 4, 'https://i.ebayimg.com/images/g/ow0AAOSweCZmTlsv/s-l1600.webp'),
+(514, 97, 'negro', 3, 'https://i.ebayimg.com/images/g/K3cAAeSwNdRofnVu/s-l1600.webp'),
+(515, 98, 'negro', 4, 'https://i.ebayimg.com/images/g/HVUAAOSwUZBn0x~s/s-l1600.webp'),
+(516, 99, 'gris', 3, 'https://i.ebayimg.com/images/g/l-oAAOSwoIRnTibC/s-l1600.webp'),
+(517, 100, 'gris', 4, 'https://i.ebayimg.com/images/g/F2cAAOSwoeFoUczn/s-l1600.webp'),
+(518, 108, 'gris', 3, 'https://i.ebayimg.com/images/g/2NIAAeSwk0Joe2w7/s-l1600.webp'),
+(519, 109, 'gris', 4, 'https://i.ebayimg.com/images/g/El4AAOSwzXtoEfmv/s-l1600.webp'),
+(522, 132, 'gris', 3, 'https://i.ebayimg.com/images/g/ieYAAOSwU4hl32rq/s-l1600.webp'),
+(523, 133, 'gris', 4, 'https://i.ebayimg.com/images/g/Dm0AAOSwe~1mPAUU/s-l1600.webp'),
+(524, 134, 'negro', 3, 'https://d3d71ba2asa5oz.cloudfront.net/12003181/images/watch4%20black.jpg'),
+(525, 135, 'negro', 4, 'https://i.ebayimg.com/images/g/qh4AAOSwOVlnR1HZ/s-l1600.webp'),
+(526, 136, 'negro', 3, 'https://i.ebayimg.com/images/g/H4sAAOSw3OBoRaW1/s-l1600.webp'),
+(527, 137, 'negro', 4, 'https://d3d71ba2asa5oz.cloudfront.net/12003181/images/6510544cv11d.jpg'),
+(528, 137, 'blanco', 3, 'https://d3d71ba2asa5oz.cloudfront.net/12003181/images/6510542cv12d.jpg'),
+(529, 138, 'blanco', 4, 'https://i.ebayimg.com/images/g/cYEAAOSwhjFmfgR2/s-l1600.webp'),
+(530, 139, 'blanco', 3, 'https://i.ebayimg.com/images/g/KfcAAOSwzqpm7fSt/s-l1600.webp'),
+(531, 139, 'negro', 4, 'https://i.ebayimg.com/images/g/9AAAAOSwckBm7fSZ/s-l1600.webp'),
+(532, 140, 'blanco', 3, 'https://i.ebayimg.com/images/g/ZKMAAOSwteZnqxRm/s-l1600.webp'),
+(533, 142, 'blanco', 4, 'https://i.ebayimg.com/images/g/GTYAAOSw6iJnu~pt/s-l1600.webp'),
+(534, 143, 'blanco', 3, 'https://i.ebayimg.com/images/g/yhMAAOSwCo5joYAl/s-l960.webp'),
+(535, 144, 'blanco', 4, 'https://i.ebayimg.com/images/g/wX0AAOSwez1nPOcc/s-l1600.webp'),
+(536, 145, 'blanco', 3, 'https://i.ebayimg.com/images/g/kPMAAeSwK0ZoZM-f/s-l1600.webp'),
+(537, 146, 'blanco', 4, 'https://i.ebayimg.com/images/g/RT8AAOSwm6Fn0bBn/s-l1600.webp'),
+(538, 147, 'negro', 2, 'https://i.ebayimg.com/images/g/6cwAAOSwMb9kUu9g/s-l1600.webp'),
+(539, 147, 'blanco', 2, 'https://i.ebayimg.com/images/g/e2kAAOSwjolkUu9v/s-l1600.webp'),
+(540, 148, 'negro', 2, 'https://i.ebayimg.com/images/g/SCcAAOSwoS1jXCoO/s-l1600.webp'),
+(541, 148, 'blanco', 2, 'https://i.ebayimg.com/images/g/PRwAAOSwDcBjXCom/s-l1600.webp'),
+(542, 149, 'negro', 2, 'https://i.ebayimg.com/images/g/ZDcAAOSwKJxkUuPJ/s-l1600.webp'),
+(543, 149, 'blanco', 2, 'https://i.ebayimg.com/images/g/zJAAAOSw94xkUuPb/s-l1600.webp'),
+(544, 150, 'negro', 2, 'https://i.ebayimg.com/images/g/DOYAAOSwTzxnqweo/s-l1600.webp'),
+(545, 151, 'negro', 2, 'https://i.ebayimg.com/images/g/lN8AAOSwjr9l1fTs/s-l1600.webp'),
+(546, 151, 'grema', 2, 'https://i.ebayimg.com/images/g/F5wAAOSwQ4Nl1fT~/s-l1600.webp'),
+(547, 152, 'negro', 2, 'https://i.ebayimg.com/images/g/2-wAAeSwJ1xoW1-N/s-l1600.webp'),
+(548, 153, 'negro', 2, 'https://i.ebayimg.com/images/g/QaEAAOSwsA5kjgWx/s-l1600.webp'),
+(549, 154, 'negro', 4, 'https://i.ebayimg.com/images/g/fAcAAeSwFZFogXYH/s-l1600.webp'),
+(550, 155, 'negro', 4, 'https://i.ebayimg.com/images/g/Kz8AAOSwiJ5kWfPb/s-l960.webp'),
+(551, 156, 'negro', 4, 'https://i.ebayimg.com/images/g/~xIAAOSwGThmze79/s-l1600.webp'),
+(552, 157, 'negro', 3, 'https://i.ebayimg.com/images/g/YbsAAOSwBxNk-eiA/s-l1600.webp'),
+(553, 158, 'negro', 4, 'https://i.ebayimg.com/images/g/HQIAAOSwopNe9SGm/s-l1600.webp'),
+(554, 159, 'negro', 4, 'https://i.ebayimg.com/images/g/xGsAAeSw1ZlogQVA/s-l1600.webp'),
+(555, 160, 'negro', 4, 'https://i.ebayimg.com/images/g/gNkAAOSwdDRkA2mC/s-l960.webp'),
+(556, 161, 'negro', 4, 'https://i.ebayimg.com/images/g/pbwAAOSwyhpngsOi/s-l1600.webp'),
+(557, 162, 'negro', 4, 'https://i.ebayimg.com/images/g/fAcAAeSwFZFogXYH/s-l1600.webp'),
+(558, 163, 'negro', 4, 'https://i.ebayimg.com/images/g/nyAAAOSwnKRmC4XE/s-l1600.webp'),
+(559, 164, 'negro', 4, 'https://i.ebayimg.com/images/g/kTYAAOSwYytmC4Xd/s-l1600.webp'),
+(560, 165, 'negro', 4, 'https://i.ebayimg.com/images/g/ObIAAeSw1b5obgf3/s-l1600.webp'),
+(561, 166, 'negro', 4, 'https://i.ebayimg.com/images/g/Vg8AAOSwRzhmdGWz/s-l1600.webp'),
+(562, 167, 'negro', 4, 'https://i.ebayimg.com/images/g/GOIAAOSwJkBoLzNi/s-l960.webp'),
+(563, 168, 'negro', 4, 'https://i.ebayimg.com/images/g/GOIAAOSwJkBoLzNi/s-l960.webp'),
+(564, 169, 'negro', 4, 'https://i.ebayimg.com/images/g/yq0AAOSwhTlnl5GM/s-l1600.webp'),
+(565, 170, 'negro', 4, 'https://i.ebayimg.com/images/g/RnkAAeSwqZtnziem/s-l960.webp'),
+(566, 171, 'negro', 4, 'https://i.ebayimg.com/images/g/9MsAAOSw7lBi0mCu/s-l960.webp');
 
 -- --------------------------------------------------------
 
@@ -1088,8 +1229,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('KjD1SVJZvt7xNTwT5S7_6qhzhe9bXDm-', 1753679818, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-07-28T04:19:24.934Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\"}}'),
-('s63KNY3lWhj8xwjky8jNb6VwM_BUUxHr', 1753680399, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-07-28T05:22:36.099Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":75,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}');
+('bUonjqmLTcwrzx1Nr5a-Sr_aAij9Gnqb', 1753751849, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-07-29T00:59:55.755Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\"}}'),
+('vWDTa4Pr19lnh-NaeInel_s_XP_H8t30', 1753750009, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-07-28T23:57:43.454Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\"}}');
 
 -- --------------------------------------------------------
 
@@ -1493,7 +1634,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT de la tabla `almacenamiento`
 --
 ALTER TABLE `almacenamiento`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `baterias`
@@ -1511,13 +1652,19 @@ ALTER TABLE `camara`
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1288;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1289;
 
 --
 -- AUTO_INCREMENT de la tabla `categorias`
 --
 ALTER TABLE `categorias`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+
+--
+-- AUTO_INCREMENT de la tabla `ciudades_envio`
+--
+ALTER TABLE `ciudades_envio`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT de la tabla `clasificacion`
@@ -1595,7 +1742,7 @@ ALTER TABLE `p_marcas`
 -- AUTO_INCREMENT de la tabla `p_variantes`
 --
 ALTER TABLE `p_variantes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=434;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=567;
 
 --
 -- AUTO_INCREMENT de la tabla `ram`
