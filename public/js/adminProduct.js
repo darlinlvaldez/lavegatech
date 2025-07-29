@@ -33,7 +33,7 @@ function renderProducts() {
     const fechaFormateada = fecha.toLocaleString("es-DO", {
       dateStyle: "short", timeStyle: "short"
     });
-
+    
     row.innerHTML = `
       <td class="truncate-cell">${product.id || ''}</td>
       <td class="truncate-cell">${product.nombre || ''}</td>

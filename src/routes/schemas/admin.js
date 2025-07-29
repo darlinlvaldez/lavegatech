@@ -39,10 +39,12 @@ request.product = z.object({
   ram: z
     .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED })
     .nonnegative({ message: ERROR_ZOD.FIELD_NEGATIVE })
+    .nullable()
     .optional(),
   almacenamiento: z
     .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED })
     .nonnegative({ message: ERROR_ZOD.FIELD_NEGATIVE })
+    .nullable()
     .optional(),
   fecha: z
   .string()
