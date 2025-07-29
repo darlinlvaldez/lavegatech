@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-07-2025 a las 02:23:35
+-- Tiempo de generación: 29-07-2025 a las 08:28:16
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -70,7 +70,15 @@ INSERT INTO `almacenamiento` (`id`, `capacidad`, `tipo`) VALUES
 (9, '1 TB', 'UFS 4.0'),
 (12, '64 GB', 'UFS 2.2'),
 (13, '64 GB', 'UFS 2.1'),
-(14, '256 GB', 'UFS 2.2');
+(14, '256 GB', 'UFS 2.2'),
+(15, '128 GB', 'eMMC 5.1'),
+(16, '64 GB', 'eMMC 5.1'),
+(17, '512 GB', 'UFS 4.0'),
+(18, '256 GB', 'UFS 4.0'),
+(19, '128 GB', 'UFS 4.0'),
+(20, '128 GB', 'UFS 3.1'),
+(21, '256 GB', 'UFS 3.0'),
+(22, '128 GB', 'UFS 2.1');
 
 -- --------------------------------------------------------
 
@@ -755,63 +763,63 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `categoria_id`, `descuento`, `fecha`, `marca_id`, `ram_id`, `almacenamiento_id`) VALUES
-(1, 1, 'iPhone 12 64GB', '', 15995.00, 1, 20.00, '2025-05-31 11:06:10', 1, NULL, NULL),
-(2, 1, 'iPhone 12 128GB', '', 17995.00, 1, 0.00, '2025-05-31 08:00:00', 1, NULL, NULL),
-(3, 1, 'iPhone 12 256GB', '', 19495.00, 1, 0.00, '2025-05-31 08:00:00', 1, NULL, NULL),
-(4, 2, 'iPhone 12 Pro 128GB', '', 21995.00, 1, 0.00, '2025-05-31 08:00:00', 1, NULL, NULL),
-(5, 2, 'iPhone 12 Pro 256GB', '', 23995.00, 1, 0.00, '2025-05-31 08:00:00', 1, NULL, NULL),
-(6, 3, 'iPhone 12 Pro Max 128GB ', '', 27495.00, 1, 0.00, '2025-05-31 08:00:00', 1, NULL, NULL),
-(7, 3, 'iPhone 12 Pro Max 256GB ', '', 28995.00, 1, 0.00, '2025-05-31 08:00:00', 1, NULL, NULL),
-(8, 3, 'iPhone 12 Pro Max 512GB', '', 29995.00, 1, 0.00, '2025-05-01 08:00:00', 1, NULL, NULL),
-(9, 4, 'iPhone 13 128GB ', '', 23995.00, 1, 0.00, '2025-05-01 08:00:00', 1, NULL, NULL),
-(10, 4, 'iPhone 13 256GB ', '', 25495.00, 1, 0.00, '2025-05-01 08:00:00', 1, NULL, NULL),
-(11, 5, 'iPhone 13 Pro 128GB ', '', 28495.00, 1, 0.00, '2025-05-14 08:00:00', 1, NULL, NULL),
-(12, 5, 'iPhone 13 Pro 256GB ', '', 30995.00, 1, 0.00, '2025-03-11 08:00:00', 1, NULL, NULL),
-(13, 6, 'iPhone 13 Pro Max 128GB ', '', 32995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(14, 6, 'iPhone 13 Pro Max 256GB ', '', 35995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(15, 6, 'iPhone 13 Pro Max 512GB ', '', 37495.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(16, 7, 'iPhone 14 128GB ', '', 26495.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(17, 7, 'iPhone 14 256GB ', '', 27995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(18, 8, 'iPhone 14 Plus 128GB ', '', 28995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(19, 8, 'iPhone 14 Plus 256GB ', '', 30995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(20, 9, 'iPhone 14 Pro 128GB ', '', 34495.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(21, 9, 'iPhone 14 Pro 256GB ', '', 36495.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(22, 9, 'iPhone 14 Pro 512GB ', '', 38995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(23, 10, 'iPhone 14 Pro Max 128GB ', '', 41495.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(24, 10, 'iPhone 14 Pro Max 256GB ', '', 43995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(25, 10, 'iPhone 14 Pro Max 512GB ', '', 46495.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(26, 11, 'iPhone 15 128GB ', '', 35995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(27, 11, 'iPhone 15 256GB ', '', 37995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(28, 12, 'iPhone 15 Plus 128GB ', '', 38995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(29, 12, 'iPhone 15 Plus 512GB ', '', 42995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(32, 14, 'iPhone 15 Pro Max 256GB', '', 54995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(33, 14, 'iPhone 15 Pro Max 512GB ', '', 57995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(34, 14, 'iPhone 15 Pro Max 1TB ', '', 61995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(35, 15, 'iPhone 16 128GB ', '', 52495.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(36, 16, 'iPhone 16E 256GB', '', 44995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(37, 17, 'iPhone 16 Plus 128GB ', '', 54995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(38, 18, 'iPhone 16 Pro Max 256GB ', '', 74995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(39, 1, 'iPhone 16 Pro Max 512GB ', '', 84995.00, 1, 0.00, '2025-03-01 08:00:00', 1, NULL, NULL),
-(40, 19, 'SAMSUNG GALAXY S10 PLUS 8+128GB', '', 9995.00, 1, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(41, 20, 'SAMSUNG GALAXY NOTE 10 PLUS 12+256GB', '', 13995.00, 1, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(42, 21, 'SAMSUNG GALAXY NOTE 20 ULTRA 12+128GB', '', 17995.00, 1, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(43, 22, 'SAMSUNG GALAXY S21 ULTRA 12+128GB', '', 17995.00, 1, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(44, 23, 'SAMSUNG GALAXY S23 ULTRA 12+256GB', '', 39495.00, 1, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(45, 24, 'SAMSUNG GALAXY S25 ULTRA 12+512GB ', '', 84995.00, 1, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(46, 25, 'SAMSUNG GALAXY A05 6+128GB ', '', 7995.00, 1, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(47, 25, 'SAMSUNG GALAXY A05 4+64GB ', '', 6995.00, 1, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(48, 26, 'SAMSUNG GALAXY A15 6+128GB ', '', 8995.00, 1, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
+(1, 1, 'iPhone 12 64GB', 's', 15995.00, 1, 20.00, '2025-05-31 23:06:00', 1, 1, 1),
+(2, 1, 'iPhone 12 128GB', 's', 17995.00, 1, 0.00, '2025-05-31 16:00:00', 1, 1, 2),
+(3, 1, 'iPhone 12 256GB', 's', 19495.00, 1, 0.00, '2025-05-31 20:00:00', 1, 1, 3),
+(4, 2, 'iPhone 12 Pro 128GB', 's', 21995.00, 1, 0.00, '2025-05-31 16:00:00', 1, 2, 2),
+(5, 2, 'iPhone 12 Pro 256GB', 's', 23995.00, 1, 0.00, '2025-05-31 16:00:00', 1, 2, 3),
+(6, 3, 'iPhone 12 Pro Max 128GB', 's', 27495.00, 1, 0.00, '2025-05-31 16:00:00', 1, 2, 2),
+(7, 3, 'iPhone 12 Pro Max 256GB', 's', 28995.00, 1, 0.00, '2025-05-31 16:00:00', 1, 2, 3),
+(8, 3, 'iPhone 12 Pro Max 512GB', 's', 29995.00, 1, 0.00, '2025-05-01 16:00:00', 1, 2, 4),
+(9, 4, 'iPhone 13 128GB', 'S', 23995.00, 1, 0.00, '2025-05-01 16:00:00', 1, 1, 2),
+(10, 4, 'iPhone 13 256GB', 'S', 25495.00, 1, 0.00, '2025-05-01 16:00:00', 1, 1, 3),
+(11, 5, 'iPhone 13 Pro 128GB', 'S', 28495.00, 1, 0.00, '2025-05-14 16:00:00', 1, 2, 2),
+(12, 5, 'iPhone 13 Pro 256GB', 'S', 30995.00, 1, 0.00, '2025-03-11 16:00:00', 1, 2, 3),
+(13, 6, 'iPhone 13 Pro Max 128GB', 'S', 32995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 2, 2),
+(14, 6, 'iPhone 13 Pro Max 256GB', 'S', 35995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 2, 3),
+(15, 6, 'iPhone 13 Pro Max 512GB', 'S', 37495.00, 1, 0.00, '2023-01-01 16:00:00', 1, 2, 4),
+(16, 7, 'iPhone 14 128GB', 'S', 26495.00, 1, 0.00, '2023-01-01 16:00:00', 1, 1, 2),
+(17, 7, 'iPhone 14 256GB', 'S', 27995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 1, 3),
+(18, 8, 'iPhone 14 Plus 128GB', 'S', 28995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 1, 2),
+(19, 8, 'iPhone 14 Plus 256GB', 'S', 30995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 1, 3),
+(20, 9, 'iPhone 14 Pro 128GB', 'S', 34495.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 2),
+(21, 9, 'iPhone 14 Pro 256GB', 'S', 36495.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 3),
+(22, 9, 'iPhone 14 Pro 512GB', 'S', 38995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 4),
+(23, 10, 'iPhone 14 Pro Max 128GB', 'S', 41495.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 2),
+(24, 10, 'iPhone 14 Pro Max 256GB', 'S', 43995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 3),
+(25, 10, 'iPhone 14 Pro Max 512GB', 'S', 46495.00, 1, 0.00, '2023-01-01 12:00:00', 1, 9, 4),
+(26, 11, 'iPhone 15 128GB', 'S', 35995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 2),
+(27, 11, 'iPhone 15 256GB', 'S', 37995.00, 1, 0.00, '2023-01-01 12:00:00', 1, 9, 3),
+(28, 12, 'iPhone 15 Plus 128GB', 'S', 38995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 2),
+(29, 12, 'iPhone 15 Plus 512GB', 'S', 42995.00, 1, 0.00, '2023-01-01 20:00:00', 1, 9, 4),
+(32, 14, 'iPhone 15 Pro Max 256GB', 'S', 54995.00, 1, 0.00, '2023-01-01 20:00:00', 1, 3, 3),
+(33, 14, 'iPhone 15 Pro Max 512GB', 'S', 57995.00, 1, 0.00, '2023-01-01 20:00:00', 1, 3, 4),
+(34, 14, 'iPhone 15 Pro Max 1TB', 'S', 61995.00, 1, 0.00, '2023-01-01 12:00:00', 1, 5, 5),
+(35, 15, 'iPhone 16 128GB', 'S', 52495.00, 1, 0.00, '2023-01-01 16:00:00', 1, 15, 4),
+(36, 16, 'iPhone 16E 256GB', 'S', 44995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 14, 3),
+(37, 17, 'iPhone 16 Plus 128GB', 'S', 54995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 15, 2),
+(38, 18, 'iPhone 16 Pro Max 256GB', 's', 74995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 14, 3),
+(39, 1, 'iPhone 16 Pro Max 512GB', 's', 84995.00, 1, 0.00, '2025-03-01 16:00:00', 1, 14, 4),
+(40, 19, 'SAMSUNG GALAXY S10 PLUS 8+128GB', 'S', 9995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 4, 22),
+(41, 20, 'SAMSUNG GALAXY NOTE 10 PLUS 12+256GB', 'S', 13995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 6, 21),
+(42, 21, 'SAMSUNG GALAXY NOTE 20 ULTRA 12+128GB', 'S', 17995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 5, 20),
+(43, 22, 'SAMSUNG GALAXY S21 ULTRA 12+128GB', 'S', 17995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 5, 20),
+(44, 23, 'SAMSUNG GALAXY S23 ULTRA 12+256GB', 'S', 39495.00, 1, 0.00, '2023-01-01 12:00:00', 2, 13, 18),
+(45, 24, 'SAMSUNG GALAXY S25 ULTRA 12+512GB', 'S', 84995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 13, 17),
+(46, 25, 'SAMSUNG GALAXY A05 6+128GB', 'S', 7995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 2, 15),
+(47, 25, 'SAMSUNG GALAXY A05 4+64GB', 'S', 6995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 1, 16),
+(48, 26, 'SAMSUNG GALAXY A15 6+128GB', 'S', 8995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 2, 15),
 (49, 27, 'SAMSUNG GALAXY A25 5G 8+256GB', 'S', 12995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 4, 14),
-(50, 28, 'XIAOMI REDMI NOTE 13 5G 8+256GB', '', 10995.00, 1, 0.00, '2023-01-01 08:00:00', 3, NULL, NULL),
-(51, 29, 'XIAOMI REDMI NOTE 13 PRO PLUS 5G 12+256GB', '', 20995.00, 1, 0.00, '2023-01-01 08:00:00', 3, NULL, NULL),
-(52, 30, 'XIAOMI POCO X6 PRO 8+256 GB', '', 17495.00, 1, 0.00, '2023-01-01 08:00:00', 3, NULL, NULL),
-(53, 31, 'XIAOMI REDMI 14C 4+128GB', '', 7495.00, 1, 0.00, '2023-01-01 08:00:00', 3, NULL, NULL),
-(54, 32, 'XIAOMI REDMI NOTE 14 8+128GB', '', 10495.00, 1, 0.00, '2023-01-01 08:00:00', 3, NULL, NULL),
-(55, 32, 'XIAOMI REDMI NOTE 14 8+256GB', '', 11995.00, 1, 0.00, '2023-01-01 08:00:00', 3, NULL, NULL),
-(56, 33, 'XIAOMI REDMI NOTE 14 5G 12+256GB', '', 13995.00, 1, 0.00, '2023-01-01 08:00:00', 3, NULL, NULL),
-(57, 34, 'XIAOMI REDMI NOTE 14 PRO 8+256GB', '', 15995.00, 1, 0.00, '2023-01-01 08:00:00', 3, NULL, NULL),
-(58, 35, 'XIAOMI REDMI NOTE 14 PRO 5G 12+256GB', '', 17995.00, 1, 0.00, '2023-01-01 08:00:00', 3, NULL, NULL),
-(59, 36, 'XIAOMI REDMI NOTE 14 PRO PLUS 5G 12+256GB', '', 22995.00, 1, 0.00, '2023-01-01 08:00:00', 3, NULL, NULL),
+(50, 28, 'XIAOMI REDMI NOTE 13 5G 8+256GB', 's', 10995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 3, 7),
+(51, 29, 'XIAOMI REDMI NOTE 13 PRO PLUS 5G 12+256GB', 's', 20995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 5, 7),
+(52, 30, 'XIAOMI POCO X6 PRO 8+256 GB', 's', 17495.00, 1, 0.00, '2023-01-01 12:00:00', 3, 3, 7),
+(53, 31, 'XIAOMI REDMI 14C 4+128GB', 's', 7495.00, 1, 0.00, '2023-01-01 12:00:00', 3, 1, 15),
+(54, 32, 'XIAOMI REDMI NOTE 14 8+128GB', 's', 10495.00, 1, 0.00, '2023-01-01 12:00:00', 3, 3, 20),
+(55, 32, 'XIAOMI REDMI NOTE 14 8+256GB', 's', 11995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 3, 7),
+(56, 33, 'XIAOMI REDMI NOTE 14 5G 12+256GB', 's', 13995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 5, 7),
+(57, 34, 'XIAOMI REDMI NOTE 14 PRO 8+256GB', 's', 15995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 3, 7),
+(58, 35, 'XIAOMI REDMI NOTE 14 PRO 5G 12+256GB', 's', 17995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 5, 7),
+(59, 36, 'XIAOMI REDMI NOTE 14 PRO PLUS 5G 12+256GB', 's', 22995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 6, 14),
 (60, 37, 'Google Pixel 7 Pro 12+128GB', '', 17495.00, 1, 0.00, '2023-01-01 08:00:00', 4, NULL, NULL),
 (61, 38, 'Google Pixel 8 Pro 12+128GB', '', 24995.00, 1, 0.00, '2023-01-01 08:00:00', 4, NULL, NULL),
 (62, 39, 'INFINIX SMART 8 4+128GB', '', 4995.00, 1, 0.00, '2023-01-01 08:00:00', 19, NULL, NULL),
@@ -832,7 +840,7 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (79, 0, 'AMAZON FIRE 8 32GB', '', 2995.00, 5, 0.00, '2023-01-01 08:00:00', 5, NULL, NULL),
 (80, 0, 'AMAZON FIRE 8 64GB', '', 3495.00, 5, 0.00, '2023-01-01 08:00:00', 5, NULL, NULL),
 (81, 0, 'ASTRO 8R 32G', '', 3495.00, 5, 0.00, '2025-03-30 08:00:00', NULL, NULL, NULL),
-(82, 0, 'XIAOMI REDMI PAD SE 8.7 128GB ', '', 8495.00, 5, 0.00, '2023-01-01 08:00:00', 3, NULL, NULL),
+(82, 0, 'XIAOMI REDMI PAD SE 8.7 128GB', 's', 8495.00, 5, 0.00, '2023-01-01 12:00:00', 3, 1, 15),
 (83, 0, 'VORTEX T10 32GB ', '', 3495.00, 5, 0.00, '2023-01-01 08:00:00', 6, NULL, NULL),
 (84, 0, 'HOTPEPPER 32GB ', '', 3495.00, 5, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
 (85, 0, 'X10MAX 64GB ', '', 3995.00, 5, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
@@ -1126,7 +1134,7 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (504, 87, 'negro', 4, 'https://i.ebayimg.com/images/g/MykAAOSw-YVkWXfS/s-l1600.webp'),
 (505, 88, 'negro', 4, 'https://i.ebayimg.com/images/g/50cAAOSwUK5oNJNc/s-l1600.webp'),
 (506, 89, 'gris', 3, 'https://i.ebayimg.com/images/g/XX0AAOSwI0JmHwCc/s-l1600.webp'),
-(507, 90, 'gris', 4, 'https://i.ebayimg.com/images/g/0McAAeSwmJpoRghK/s-l1600.webp'),
+(507, 90, 'gris', 4, 'https://i.ebayimg.com/images/g/s4MAAOSw3BVju4Q9/s-l400.jpg'),
 (508, 91, 'gris', 3, 'https://i.ebayimg.com/images/g/sikAAOSwlgtl63K6/s-l1600.webp'),
 (509, 92, 'gris', 4, 'https://i.ebayimg.com/images/g/Aw8AAOSwLLdoAPyC/s-l1600.webp'),
 (510, 93, 'gris', 3, 'https://i.ebayimg.com/images/g/V7cAAOSw2g1mkIJN/s-l1600.webp'),
@@ -1210,7 +1218,10 @@ INSERT INTO `ram` (`id`, `capacidad`, `tipo`) VALUES
 (6, '12 GB', 'LPDDR4X'),
 (7, '16 GB', 'LPDDR5'),
 (8, '4 GB', 'LPDDR4'),
-(9, '6 GB', 'LPDDR5');
+(9, '6 GB', 'LPDDR5'),
+(13, '12 GB', 'LPDDR5X'),
+(14, '8 GB', 'LPDDR5E'),
+(15, '6 GB', 'LPDDR5E');
 
 -- --------------------------------------------------------
 
@@ -1229,8 +1240,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('bUonjqmLTcwrzx1Nr5a-Sr_aAij9Gnqb', 1753751849, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-07-29T00:59:55.755Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\"}}'),
-('vWDTa4Pr19lnh-NaeInel_s_XP_H8t30', 1753750009, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-07-28T23:57:43.454Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\"}}');
+('eRnHq-y68pUEJjbrmsWX4Ps3E8UqyVM6', 1753772283, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-07-29T06:35:45.594Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\"}}'),
+('uFMz68pp3e_rvERpr4rvz-gW0zJo5HcL', 1753770923, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-07-29T05:35:25.126Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\"}}');
 
 -- --------------------------------------------------------
 
@@ -1634,7 +1645,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT de la tabla `almacenamiento`
 --
 ALTER TABLE `almacenamiento`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de la tabla `baterias`
@@ -1748,7 +1759,7 @@ ALTER TABLE `p_variantes`
 -- AUTO_INCREMENT de la tabla `ram`
 --
 ALTER TABLE `ram`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
