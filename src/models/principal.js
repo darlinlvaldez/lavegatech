@@ -46,7 +46,7 @@ principal.obtenerProductos = async (categoria) => {
   v.color, 
   v.stock,
   v.img AS imagen,
-  r.capacidad, AS ram,
+  r.capacidad AS ram,
   a.capacidad AS almacenamiento
   FROM productos p
   JOIN categorias c ON p.categoria_id = c.id
