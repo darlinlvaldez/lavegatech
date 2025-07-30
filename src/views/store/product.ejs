@@ -39,7 +39,7 @@
 	<!-- Product details -->
 	<div class="col-md-5">
 		<div class="product-details">
-			<h2 class="product-name"><%= producto.nombre %></h2>
+			<h2 class="product-name"><%= producto.nombre %> <%= producto.ram %> + <%= producto.almacenamiento %></h2>
 			<div>
 			<div class="product-rating">
 			<% for (let i=1; i <=5; i++) { %>
@@ -106,8 +106,8 @@
 						<button class="add-to-cart-btn" id="add-to-cart-btn" data-id="<%= producto.id %>"
 							data-nombre="<%= producto.nombre %>" data-precio="<%= producto.precio %>"
 							data-descuento="<%= producto.descuento %>" data-stock="<%= producto.stock %>"
-							data-color="<%= colorSeleccionado %>">
-							<i class="fa fa-shopping-cart"></i>Añadir al carrito
+							data-color="<%= colorSeleccionado %>" data-almacenamiento="<%= producto.almacenamiento %>" 
+							data-ram="<%= producto.ram %>"> <i class="fa fa-shopping-cart"></i>Añadir al carrito
 						</button>
 					</div>
 				</div>
@@ -116,7 +116,8 @@
 				<a role="button" class="add-to-wishlist" data-product-id="<%= producto.id %>"
 					data-product-name="<%= producto.nombre %>" data-product-price="<%= producto.precio %>"
 					data-product-discount="<%= producto.descuento || 0 %>"
-					data-product-image="<%= producto.imagen %>" data-product-color="<%= colorSeleccionado %>">
+					data-product-image="<%= producto.imagen %>" data-product-color="<%= colorSeleccionado %>"
+					data-product-almacenamiento="<%= producto.almacenamiento %>" data-product-ram="<%= producto.ram %>">
 					<i class="fa fa-heart-o"></i>Favoritos</a>
 				</li>
 
@@ -396,7 +397,7 @@
 							<div class="product">
 								<div class="product-img">
 									<a href="/product/<%= producto.id %>?color=<%= producto.color %>">
-										<img src="<%= producto.imagen || '/img/iphone12black.png' %>" alt="<%= producto.nombre %>">
+										<img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">
 										<div class="product-label">
 										<% 
 										if (producto.descuento > 0) { 
@@ -419,7 +420,7 @@
 										<%= producto.categoria === 'moviles' ? 'Móviles' : producto.categoria.charAt(0).toUpperCase() + producto.categoria.slice(1) %>
 									</p>
 									<h3 class="product-name">
-											<%= producto.nombre %>
+											<%= producto.nombre %> <%= producto.ram %> + <%= producto.almacenamiento %>
 										</h3>
 									<h4 class="product-price">
                                         $<%= Number(producto.precio * (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>

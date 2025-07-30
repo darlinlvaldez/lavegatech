@@ -44,6 +44,8 @@ orderController.createOrder = async (req, res) => {
     const orderItems = cartItems.map(item => ({
       producto_id: item.producto_id,
       nombre_producto: item.nombre,
+      ram: item.ram,
+      almacenamiento: item.almacenamiento,
       colorSeleccionado: item.colorSeleccionado,
       cantidad: item.cantidad,
       precio_unitario: item.precio,

@@ -2,11 +2,14 @@ import db from "../database/mobiles.js";
 
 const cart = {};
 
-cart.addItem = async ({usuario_id, producto_id, colorSeleccionado, cantidad, descuento, precio, imagen, nombre}) => {
+cart.addItem = async ({usuario_id, producto_id, colorSeleccionado, cantidad, descuento, 
+  precio, imagen, nombre, ram, almacenamiento}) => {
   await db.query(
-    `INSERT INTO carrito (usuario_id, producto_id, colorSeleccionado, cantidad, descuento, precio, imagen, nombre) 
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-    [usuario_id, producto_id, colorSeleccionado, cantidad, descuento, precio, imagen, nombre]
+    `INSERT INTO carrito (usuario_id, producto_id, colorSeleccionado, cantidad, descuento, 
+    precio, imagen, nombre, ram, almacenamiento) 
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [usuario_id, producto_id, colorSeleccionado, cantidad, descuento, 
+      precio, imagen, nombre, ram, almacenamiento]
   );
 };
 
@@ -41,19 +44,24 @@ cart.itemExists = async (usuario_id, producto_id, colorSeleccionado) => {
 cart.getByUserId = async (usuario_id) => {
   const [rows] = await db.query(
     `SELECT 
-    c.id AS carrito_id, c.producto_id, c.colorSeleccionado, c.cantidad,
-    c.fecha_agregado, c.descuento, c.precio, c.imagen, c.nombre, 
-    v.stock AS stock_real,
-    p.categoria_id,
-    CASE 
+  c.id AS carrito_id, c.producto_id, c.colorSeleccionado, c.cantidad,
+  c.fecha_agregado, c.descuento, c.precio, c.imagen, c.nombre, 
+  v.stock AS stock_real,
+  p.categoria_id,
+  r.capacidad AS ram,
+  a.capacidad AS almacenamiento,
+  CASE 
     WHEN v.stock IS NULL OR v.stock < c.cantidad THEN 0 
     ELSE 1 
-    END AS stock_suficiente
-    FROM carrito c 
-    JOIN productos p ON c.producto_id = p.id 
-    LEFT JOIN p_variantes v ON c.producto_id = v.producto_id AND c.colorSeleccionado = v.color
-    WHERE c.usuario_id = ? 
-    ORDER BY c.fecha_agregado DESC`,
+  END AS stock_suficiente
+FROM carrito c 
+JOIN productos p ON c.producto_id = p.id 
+LEFT JOIN ram r ON p.ram_id = r.id
+LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
+LEFT JOIN p_variantes v ON c.producto_id = v.producto_id AND c.colorSeleccionado = v.color
+WHERE c.usuario_id = ? 
+ORDER BY c.fecha_agregado DESC
+`,
     [usuario_id]
   );
   
@@ -69,13 +77,17 @@ cart.getByUserId = async (usuario_id) => {
 
 cart.getCartToPay = async (usuario_id) => {
   const [rows] = await db.query(
-  "SELECT c.id as cart_id, c.producto_id, c.colorSeleccionado, c.cantidad," +
-  "c.descuento, c.precio, c.imagen, c.nombre, " +
-  "p.categoria_id, c.fecha_agregado " +
-  "FROM carrito c " +
-  "JOIN productos p ON c.producto_id = p.id " +
-  "WHERE c.usuario_id = ? " +
-  "ORDER BY c.fecha_agregado DESC",[usuario_id]
+    "SELECT c.id as cart_id, c.producto_id, c.colorSeleccionado, c.cantidad, " +
+    "c.descuento, c.precio, c.imagen, c.nombre, " +
+    "p.categoria_id, c.fecha_agregado, " +
+    "r.capacidad AS ram, a.capacidad AS almacenamiento " +
+    "FROM carrito c " +
+    "JOIN productos p ON c.producto_id = p.id " +
+    "LEFT JOIN ram r ON p.ram_id = r.id " +
+    "LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id " +
+    "WHERE c.usuario_id = ? " +
+    "ORDER BY c.fecha_agregado DESC",
+    [usuario_id]
   );
   return rows;
 };

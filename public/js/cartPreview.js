@@ -30,7 +30,7 @@ function renderCart(carrito, cartList, carritoCount, cartSummary, cartSubtotal) 
                         <img src="${item.imagen}" alt="${item.nombre}">
                     </div>
                     <div class="product-body">
-                        <h3 class="product-nombres">${item.nombre}</h3></a>
+                        <h3 class="product-nombres">${item.nombre} ${item.ram} + ${item.almacenamiento}</h3></a>
                         <h4 class="product-precios">
                             <span class="qty-cart">${item.cantidad}x</span> 
                             $${formatPrice(precioConDescuento)}

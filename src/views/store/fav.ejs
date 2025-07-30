@@ -17,7 +17,7 @@
 <body>
     <div class="container mt-5">
         <div class="fav-title"><br>
-            <h3 class="title">Lista de deseos</h3>
+            <h3 class="title">Lista de favoritos</h3>
         </div>
     
         <div class="fav-header">
@@ -70,7 +70,7 @@
                                         <%= producto.categoria === 'moviles' ? 'Móviles' : producto.categoria.charAt(0).toUpperCase() + producto.categoria.slice(1) %>
                                     </p>
                                     <h3 class="product-name">
-                                            <%= producto.nombre %>
+                                            <%= producto.nombre %> <%= producto.ram %> + <%= producto.almacenamiento %>
                                         </h3>
                                     <h4 class="product-price">
                                         $<%= Number(producto.precio * (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>

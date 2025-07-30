@@ -182,7 +182,7 @@
 														</div>
 														<div class="product-body">
 															<p class="product-category"><%= producto.categoria %></p>
-															<h3 class="product-name"><%= producto.nombre %></h3>
+															<h3 class="product-name"><%= producto.nombre %> <%= producto.ram %> + <%= producto.almacenamiento %></h3>
 															<h4 class="product-price">
 																$<%= Number(producto.precio * (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
 																<% if (producto.descuento > 0) { %>
@@ -204,8 +204,9 @@
 															<div class="product-btns">
 																<button class="add-to-wishlist" data-product-id="<%= producto.id %>" data-product-name="<%= producto.nombre %>"
 																	data-product-price="<%= producto.precio %>" data-product-discount="<%= producto.descuento || 0 %>"
-																	data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>">
-																	<i class="fa fa-heart-o"></i> <span class="tooltipp">Lista de deseo</span></button>
+																	data-product-image="<%= producto.imagen %>" data-product-color="<%= producto.color %>"
+																	data-product-almacenamiento="<%= producto.almacenamiento %>" data-product-ram="<%= producto.ram %>">
+																	<i class="fa fa-heart-o"></i> <span class="tooltipp">Favoritos</span></button>
 																	
 																	<% if (producto.esMovil) { %>
 																	<button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
@@ -220,7 +221,8 @@
 														<div class="add-to-cart">
 															<button class="add-to-cart-btn"
 															data-id="<%= producto.id %>" data-nombre="<%= producto.nombre %>" data-precio="<%= producto.precio %>" data-color="<%= producto.color %>"
-															data-descuento="<%= producto.descuento %>" data-stock="<%= producto.stock %>" data-imagen="<%= producto.imagen %>">
+															data-descuento="<%= producto.descuento %>" data-stock="<%= producto.stock %>" data-imagen="<%= producto.imagen %>" 
+															data-almacenamiento="<%= producto.almacenamiento %>" data-ram="<%= producto.ram %>">
 															<i class="fa fa-shopping-cart"></i> Añadir al carrito
 														</button>
 													</div>

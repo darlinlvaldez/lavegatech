@@ -12,10 +12,14 @@ principal.buscarProductos = async (query) => {
   p.fecha,
   c.categoria,
   v.color AS colores, 
-  v.img AS imagenes
+  v.img AS imagenes,
+  r.capacidad AS ram,
+  a.capacidad AS almacenamiento
   FROM productos p
   JOIN categorias c ON p.categoria_id = c.id
   LEFT JOIN p_variantes v ON p.id = v.producto_id 
+  LEFT JOIN ram r ON p.ram_id = r.id
+  LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
   WHERE p.nombre LIKE ? OR p.descripcion LIKE ?
   GROUP BY p.id
   LIMIT 10`;
@@ -41,12 +45,17 @@ principal.obtenerProductos = async (categoria) => {
   c.categoria,
   v.color, 
   v.stock,
-  v.img AS imagen
+  v.img AS imagen,
+  r.capacidad, AS ram,
+  a.capacidad AS almacenamiento
   FROM productos p
   JOIN categorias c ON p.categoria_id = c.id
-  LEFT JOIN p_variantes v ON p.id = v.producto_id 
+  LEFT JOIN p_variantes v ON p.id = v.producto_id
+  LEFT JOIN ram r ON p.ram_id = r.id
+  LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
   ${categoria ? `WHERE c.categoria = ?` : ''}
-  GROUP BY p.id`;
+  GROUP BY p.id
+  `;
   
   try {
     const params = categoria ? [categoria] : [];
@@ -79,10 +88,14 @@ principal.obtenerRecomendados = async () => {
   c.categoria,
   v.color, 
   v.stock,
-  v.img AS imagen
+  v.img AS imagen,
+  r.capacidad AS ram,
+  a.capacidad AS almacenamiento
   FROM productos p
   JOIN categorias c ON p.categoria_id = c.id
   LEFT JOIN p_variantes v ON p.id = v.producto_id 
+  LEFT JOIN ram r ON p.ram_id = r.id
+  LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
   GROUP BY p.id 
   LIMIT 20;`;
   

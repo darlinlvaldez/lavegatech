@@ -26,7 +26,7 @@
 .tittle5 {
     color: #2c3e50;
     margin-bottom: 10px; 
-    font-size: 1.6em; 
+    font-size: 1.3em; 
     font-weight: 500;
 }
 
@@ -57,7 +57,7 @@
 .card-header-details h4 {
     margin: 0;
     color: #2c3e50;
-    font-size: 1.2em; 
+    font-size: 1.3em; 
 }
 
 .card-body-details {
@@ -110,7 +110,7 @@
     margin-bottom: 1rem;
     color: #333;
     border-collapse: collapse;
-    font-size: 1em;
+    font-size: 0.9em;
 }
 
 .table-details th,
@@ -148,7 +148,7 @@
 .btn-details {
     display: block;
     width: fit-content;
-    margin: 1.2rem auto 0;
+    margin: 1.5rem auto 0;
     font-weight: 400;
     color: #fff;
     text-align: center;

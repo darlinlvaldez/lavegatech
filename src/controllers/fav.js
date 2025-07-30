@@ -6,7 +6,7 @@ const favController = {};
 favController.addToFav = async (req, res) => {
   try {
     const userId = req.session.user.id;
-    const { producto_id, colorSeleccionado, nombre, precio, descuento = 0, imagen } = req.body;
+    const { producto_id, colorSeleccionado, nombre, ram, almacenamiento, precio, descuento = 0, imagen } = req.body;
 
     if (!producto_id || !nombre || !precio) {
       return res.status(400).json({ 
@@ -17,7 +17,7 @@ favController.addToFav = async (req, res) => {
 
     if (!existingItem) {
       await fav.addItem({usuario_id: userId, producto_id, colorSeleccionado, descuento, 
-        precio, imagen, nombre});
+        precio, imagen, nombre, ram, almacenamiento});
     }
 
     res.json({success: true, count: await fav.getCount(userId) });

@@ -57,10 +57,14 @@ store.obtenerStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], 
     v.img AS imagen,
     c.categoria,
     v.stock,
-    v.color
+    v.color,
+    REPLACE(REPLACE(r.capacidad, 'GB', ''), 'TB', '') AS ram,
+    a.capacidad AS almacenamiento
     FROM productos p
     JOIN categorias c ON p.categoria_id = c.id
-    LEFT JOIN p_variantes v ON p.id = v.producto_id
+    LEFT JOIN p_variantes v ON p.id = v.producto_id 
+    LEFT JOIN ram r ON p.ram_id = r.id
+    LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
     ${whereClause}
     GROUP BY p.id
     ${orderByClause}

@@ -17,7 +17,7 @@ async function fetchCart(action, data = {}) {
 }
 
 async function addToCart(product) {
-  const { id, nombre, precio, cantidad = 1, color, descuento = 0, imagen } = product;
+  const { id, nombre, ram, almacenamiento, precio, cantidad = 1, color, descuento = 0, imagen } = product;
 
   try {
     const { authenticated } = await checkAuth();
@@ -38,7 +38,7 @@ async function addToCart(product) {
     }
 
     const safeQty = Math.min(parseInt(cantidad) || 1, stockReal);
-    const cartItem = {id, producto_id: id, nombre, precio, cantidad: safeQty,
+    const cartItem = {id, producto_id: id, nombre, ram, almacenamiento, precio, cantidad: safeQty,
       colorSeleccionado: color, descuento, imagen};
 
     if (!authenticated) {
@@ -141,6 +141,8 @@ document.addEventListener('click', async (e) => {
     await addToCart({
         id: btn.dataset.id,
         nombre: btn.dataset.nombre,
+        ram: btn.dataset.ram,
+        almacenamiento: btn.dataset.almacenamiento,
         precio: parseFloat(btn.dataset.precio),
         cantidad: document.getElementById('cantidad')?.value || 1,
         color: btn.dataset.color,

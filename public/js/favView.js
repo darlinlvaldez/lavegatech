@@ -1,6 +1,6 @@
 import { fetchFav, checkAuth } from './utils.js';
 import {loadFavPage} from './loadFavPage.js';
-import { sweetAlert } from './sweetAlert2.js';
+import {sweetAlert} from './sweetAlert2.js';
 
 window.renderButton = renderButton;
 
@@ -54,7 +54,7 @@ function renderButton(favItems) {
     document.getElementById("clear-fav-btn").addEventListener("click", handleClearFav);
     
   } else {
-    favContainer.innerHTML = "<p>No hay productos en tu lista de deseos.</p>";
+    favContainer.innerHTML = "<p>No hay productos en tu lista de favoritos.</p>";
     clearFavContainer.innerHTML = "";
     clearFavContainer.style.display = "none";
   }
@@ -77,7 +77,7 @@ function generateFavItemHTML(item) {
         <a href="/product/${productId}${color ? `?color=${encodeURIComponent(color)}` : ''}">
             <img src="${item.imagen}" alt="${item.nombre}" class="product-imagen">
             <div class="product-info">
-                <h5>${item.nombre}</h5>
+                <h5>${item.nombre} ${item.ram} + ${item.almacenamiento}</h5>
                 <b>Precio:</b>
                 <span class="product-price">
                     <b>$${formatPrice(finalPrice)}</b>
@@ -96,7 +96,9 @@ function generateFavItemHTML(item) {
         <div class="action-buttons">
             <button class="add-to-cart-btn"
                 data-id="${productId}" 
-                data-nombre="${item.nombre}" 
+                data-nombre="${item.nombre}"
+                data-ram="${item.ram}" 
+                data-almacenamiento="${item.almacenamiento}" 
                 data-precio="${price}" 
                 data-color="${color}"
                 data-descuento="${discount}" 

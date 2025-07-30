@@ -41,7 +41,9 @@ cartController.syncCart = async (req, res) => {
           descuento: item.descuento,
           precio: item.precio,
           imagen: item.imagen,
-          nombre: item.nombre});
+          nombre: item.nombre,
+          ram: item.ram,
+          almacenamiento: item.almacenamiento});
         }
       }
 
@@ -55,7 +57,7 @@ cartController.syncCart = async (req, res) => {
 cartController.addToCart = async (req, res) => {
   try {
     const userId = req.session.user.id;
-    const { producto_id, colorSeleccionado, cantidad = 1, nombre, precio, descuento = 0, imagen } = req.body;
+    const { producto_id, colorSeleccionado, cantidad = 1, nombre, ram, almacenamiento, precio, descuento = 0, imagen } = req.body;
 
     if (!producto_id || cantidad < 1 || !nombre || !precio) {
       return res.status(400).json({ success: false, message: "Datos inválidos" });
@@ -86,7 +88,7 @@ cartController.addToCart = async (req, res) => {
       
       await cart.addItem({
         usuario_id: userId, producto_id, colorSeleccionado, cantidad: cantidadFinal,
-        descuento, precio, imagen, nombre}); 
+        descuento, precio, imagen, nombre, ram, almacenamiento}); 
 
       res.json({success: true, count: await cart.getCount(userId),
          message: 'Producto agregado al carrito'});

@@ -13,7 +13,7 @@ product.detallesController = async (req, res) => {
     if (!producto) {
       return res.status(404).render("error", { mensaje: "Producto no encontrado" });
     }
-
+    
     const categorias = await principal.obtenerCategorias();
 
     producto.esMovil = producto.categoria?.toLowerCase() === "moviles";

@@ -148,7 +148,7 @@ async function loadCartPage() {
       <a href="/product/${productId}${color ? `?color=${encodeURIComponent(color)}` : ''}">
         <img src="${item.imagen}" alt="${item.nombre}" class="product-imagen">
         <div class="product-info">
-          <h5>${item.nombre}</h5>
+          <h5>${item.nombre} ${item.ram} + ${item.almacenamiento}</h5>
           <b>Precio:</b>
           <span class="product-price">
             <b>$${formatPrice(finalPrice)}</b>

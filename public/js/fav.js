@@ -23,6 +23,8 @@ async function toggleFavorite(button) {
     try {
         const productId = button.dataset.productId;
         const productName = button.dataset.productName;
+        const ramName = button.dataset.ramName;
+        const almacenamientoName = button.dataset.almacenamientoName;
         const productPrice = button.dataset.productPrice;
         const productDiscount = button.dataset.productDiscount;
         let productImage = button.dataset.productImage;
@@ -51,6 +53,8 @@ async function toggleFavorite(button) {
                     producto_id: productId,
                     colorSeleccionado: colorSelected,
                     nombre: productName,
+                    ram: ramName,
+                    almacenamiento: almacenamientoName,
                     precio: productPrice,
                     descuento: productDiscount,
                     imagen: productImage,
