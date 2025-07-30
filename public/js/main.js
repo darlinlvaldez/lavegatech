@@ -81,8 +81,8 @@ import { checkFavorites } from "./fav.js";
   });
 
   var $productImgs = $("#product-imgs");
-  var slideCount = $productImgs.find('.product-preview').length;
-  
+  var slideCount = $productImgs.find(".product-preview").length;
+
   var slickOptions = {
     slidesToShow: Math.min(3, slideCount),
     slidesToScroll: 1,
@@ -94,10 +94,10 @@ import { checkFavorites } from "./fav.js";
         breakpoint: 991,
         settings: {
           vertical: false,
-          dots: false
-        }
-      }
-    ]
+          dots: false,
+        },
+      },
+    ],
   };
 
   if (slideCount <= 3) {
@@ -107,17 +107,17 @@ import { checkFavorites } from "./fav.js";
       focusOnSelect: false,
       infinite: false,
       swipe: false,
-      touchMove: false
+      touchMove: false,
     });
-    $productImgs.addClass('few-items');
+    $productImgs.addClass("few-items");
   } else {
     $.extend(slickOptions, {
       arrows: true,
       centerMode: true,
       focusOnSelect: true,
-      infinite: true
+      infinite: true,
     });
-    $productImgs.removeClass('few-items');
+    $productImgs.removeClass("few-items");
   }
 
   $productImgs.slick(slickOptions);
@@ -133,121 +133,124 @@ import { checkFavorites } from "./fav.js";
   /////////////////////////////////////////
 
   function asegurarDosDecimales(input) {
-  input.value = parseFloat(input.value).toFixed(2);
-}
-
-const priceInputs = [document.getElementById("price-min"), document.getElementById("price-max")];
-
-priceInputs.forEach(input => {
-  if (input) {
-    input.addEventListener("input", function () {
-      if (!this.value.includes('.')) {
-        this.value = parseFloat(this.value).toFixed(2);
-      } else {
-        let parts = this.value.split('.');
-        this.value = parts[0] + '.' + '00';
-      }
-    });
-
-    input.addEventListener("blur", function () {
-      asegurarDosDecimales(this);
-    });
-  }
-});
-
-// Input number
-if (document.getElementById("price-slider")) {
-  $(".input-number").each(function () {
-    var $this = $(this),
-      $input = $this.find('input[type="number"]'),
-      up = $this.find(".qty-up"),
-      down = $this.find(".qty-down");
-
-    down.on("click", function () {
-      var value = parseFloat($input.val()) - 500.00; 
-      value = value < 0.00 ? 0.00 : value; 
-      $input.val(value.toFixed(2)); 
-      $input.change();
-      updatePriceSlider($this, value);
-    });
-
-    up.on("click", function () {
-      var value = parseFloat($input.val()) + 500.00; 
-      value = value > 100000.00 ? 100000.00 : value;
-      $input.val(value.toFixed(2)); 
-      $input.change();
-      updatePriceSlider($this, value);
-    });
-  });
-
-  var priceInputMax = document.getElementById("price-max"),
-    priceInputMin = document.getElementById("price-min"),
-    priceSlider = document.getElementById("price-slider"),
-    resetButton = document.getElementById("reset-filtro-precio");
-
-var defaultMin = window.defaultMin || 0;
-var defaultMax = window.defaultMax || 100000;
-
-var savedMin = localStorage.getItem("priceMin") || defaultMin;
-var savedMax = localStorage.getItem("priceMax") || defaultMax;
-
-if (priceInputMin) priceInputMin.value = savedMin;
-if (priceInputMax) priceInputMax.value = savedMax;
-
-  function updatePriceSlider(input) {
-    let min = parseFloat(priceInputMin.value) || defaultMin;
-    let max = parseFloat(priceInputMax.value) || defaultMax;
-
-    if (input.id === "price-min" && min > max) {
-      min = max;
-      priceInputMin.value = min;
-    }
-    if (input.id === "price-max" && max < min) {
-      max = min;
-      priceInputMax.value = max;
-    }
-
-    priceSlider.noUiSlider.set([min, max]);
-
-    localStorage.setItem("priceMin", min);
-    localStorage.setItem("priceMax", max);
+    input.value = parseFloat(input.value).toFixed(2);
   }
 
-  [priceInputMin, priceInputMax].forEach((input) => {
+  const priceInputs = [
+    document.getElementById("price-min"),
+    document.getElementById("price-max"),
+  ];
+
+  priceInputs.forEach((input) => {
     if (input) {
-      input.addEventListener("change", function () {
-        updatePriceSlider(input, this.value);
+      input.addEventListener("input", function () {
+        if (!this.value.includes(".")) {
+          this.value = parseFloat(this.value).toFixed(2);
+        } else {
+          let parts = this.value.split(".");
+          this.value = parts[0] + "." + "00";
+        }
+      });
+
+      input.addEventListener("blur", function () {
+        asegurarDosDecimales(this);
       });
     }
   });
 
-  if (priceSlider) {
-    noUiSlider.create(priceSlider, {
-      start: [savedMin, savedMax],
-      connect: true,
-      step: 0.01,
-      range: { min: defaultMin, max: defaultMax },
+  // Input number
+  if (document.getElementById("price-slider")) {
+    $(".input-number").each(function () {
+      var $this = $(this),
+        $input = $this.find('input[type="number"]'),
+        up = $this.find(".qty-up"),
+        down = $this.find(".qty-down");
+
+      down.on("click", function () {
+        var value = parseFloat($input.val()) - 500.0;
+        value = value < 0.0 ? 0.0 : value;
+        $input.val(value.toFixed(2));
+        $input.change();
+        updatePriceSlider($this, value);
+      });
+
+      up.on("click", function () {
+        var value = parseFloat($input.val()) + 500.0;
+        value = value > 100000.0 ? 100000.0 : value;
+        $input.val(value.toFixed(2));
+        $input.change();
+        updatePriceSlider($this, value);
+      });
     });
 
-    priceSlider.noUiSlider.on("update", function (values, handle) {
-      let value = parseFloat(values[handle]).toFixed(2);
-      (handle ? priceInputMax : priceInputMin).value = value;
-      localStorage.setItem(handle ? "priceMax" : "priceMin", value);
+    var priceInputMax = document.getElementById("price-max"),
+      priceInputMin = document.getElementById("price-min"),
+      priceSlider = document.getElementById("price-slider"),
+      resetButton = document.getElementById("reset-filtro-precio");
+
+    var defaultMin = window.defaultMin || 0;
+    var defaultMax = window.defaultMax || 100000;
+
+    var savedMin = localStorage.getItem("priceMin") || defaultMin;
+    var savedMax = localStorage.getItem("priceMax") || defaultMax;
+
+    if (priceInputMin) priceInputMin.value = savedMin;
+    if (priceInputMax) priceInputMax.value = savedMax;
+
+    function updatePriceSlider(input) {
+      let min = parseFloat(priceInputMin.value) || defaultMin;
+      let max = parseFloat(priceInputMax.value) || defaultMax;
+
+      if (input.id === "price-min" && min > max) {
+        min = max;
+        priceInputMin.value = min;
+      }
+      if (input.id === "price-max" && max < min) {
+        max = min;
+        priceInputMax.value = max;
+      }
+
+      priceSlider.noUiSlider.set([min, max]);
+
+      localStorage.setItem("priceMin", min);
+      localStorage.setItem("priceMax", max);
+    }
+
+    [priceInputMin, priceInputMax].forEach((input) => {
+      if (input) {
+        input.addEventListener("change", function () {
+          updatePriceSlider(input, this.value);
+        });
+      }
     });
+
+    if (priceSlider) {
+      noUiSlider.create(priceSlider, {
+        start: [savedMin, savedMax],
+        connect: true,
+        step: 0.01,
+        range: { min: defaultMin, max: defaultMax },
+      });
+
+      priceSlider.noUiSlider.on("update", function (values, handle) {
+        let value = parseFloat(values[handle]).toFixed(2);
+        (handle ? priceInputMax : priceInputMin).value = value;
+        localStorage.setItem(handle ? "priceMax" : "priceMin", value);
+      });
+    }
+
+    if (resetButton) {
+      resetButton.addEventListener("click", function () {
+        localStorage.removeItem("priceMin");
+        localStorage.removeItem("priceMax");
+
+        priceInputMin.value = defaultMin;
+        priceInputMax.value = defaultMax;
+
+        priceSlider.noUiSlider.set([defaultMin, defaultMax]);
+
+        actualizarProductos();
+      });
+    }
   }
-
-  if (resetButton) {
-    resetButton.addEventListener("click", function () {
-      localStorage.removeItem("priceMin");
-      localStorage.removeItem("priceMax");
-
-      priceInputMin.value = defaultMin;
-      priceInputMax.value = defaultMax;
-
-      priceSlider.noUiSlider.set([defaultMin, defaultMax]);
-
-      actualizarProductos();
-    });
-  }
-}
 })(jQuery);

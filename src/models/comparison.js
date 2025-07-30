@@ -46,10 +46,11 @@ comparison.getProductMovilIds = async (productIds) => {
   }
 };
 
-comparison.getDevice = async (ids) => {
-  let query = `
+comparison.getDevice = async (productIds) => {
+  const query = `
     SELECT 
-      m.id,
+      p.id,
+      p.movil_id,
       p.nombre,
       p.precio,
       p.descuento,
@@ -81,8 +82,8 @@ comparison.getDevice = async (ids) => {
       dim.peso AS dimensiones_peso,
       GROUP_CONCAT(DISTINCT ram.capacidad ORDER BY ram.capacidad SEPARATOR ' / ') AS ram_capacidades,
       GROUP_CONCAT(DISTINCT alm.capacidad ORDER BY alm.capacidad SEPARATOR ' / ') AS almacenamiento_capacidades
-    FROM moviles m
-    JOIN productos p ON m.id = p.id
+    FROM productos p
+    JOIN moviles m ON p.movil_id = m.id
     LEFT JOIN p_variantes v ON p.id = v.producto_id
     LEFT JOIN cpu ON m.cpu_id = cpu.id
     LEFT JOIN gpu ON m.gpu_id = gpu.id
@@ -95,12 +96,12 @@ comparison.getDevice = async (ids) => {
     LEFT JOIN ram ON vr.ram_id = ram.id
     LEFT JOIN variantes_almacenamiento va ON m.id = va.movil_id
     LEFT JOIN almacenamiento alm ON va.almacenamiento_id = alm.id
-    WHERE m.id IN (?)
-    GROUP BY m.id
+    WHERE p.id IN (?)
+    GROUP BY p.id
   `;
 
   try {
-    const [results] = await db.query(query, [ids]);
+    const [results] = await db.query(query, [productIds]);
     return results;
   } catch (err) {
     console.error("Error en comparación:", err);

@@ -33,7 +33,8 @@ comparisonController.comparer = async (req, res) => {
     }
     
     const devices = await comparison.getDevice(ids);
-    
+    console.log("Dispositivos cargados:", devices.map(d => d.nombre));
+
     res.json({devices, excludedMovilIds: uniqueMovilIds});
   } catch (err) {
     console.error("Error en comparación:", err);
