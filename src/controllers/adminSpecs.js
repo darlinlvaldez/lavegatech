@@ -1,187 +1,197 @@
-import specs from "../models/adminSpecs.js";
-import db from "../database/mobiles.js";
+  import specs from "../models/adminSpecs.js";
+  import db from "../database/mobiles.js";
 
-const specsController = {};
+  const specsController = {};
 
-specsController.listarMoviles = async (req, res) => {
-  try {
-    const Moviles = await specs.obtenerMoviles();
-    res.json(Moviles);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al obtener Moviles' });
-  }
-};
+  specsController.listarMoviles = async (req, res) => {
+    try {
+      const Moviles = await specs.obtenerMoviles();
+      res.json(Moviles);
+    } catch (error) {
+      res.status(500).json({ error: 'Error al obtener Moviles' });
+    }
+  };
 
-specsController.crearMovil = async (req, res) => {
-  try {
+  specsController.listarTodosProductos = async (req, res) => {
+    try {
+      const productos = await specs.obtenerTodosProductos();
+      res.json(productos);
+    } catch (error) {
+      console.error('Error al obtener todos los productos:', error);
+      res.status(500).json({ error: 'Error al obtener todos los productos' });
+    }
+  };
+
+  specsController.crearMovil = async (req, res) => {
+    try {
+      const { productIds = [], ...movilData } = req.body;
+      const movilId = await specs.agregarMovil(movilData);
+      
+      if (productIds.length > 0) {
+        await db.query("UPDATE productos SET movil_id = ? WHERE id IN (?)", [movilId, productIds]);
+      }
+      
+      res.status(201).json({ message: 'Comparación creada con éxito', id: movilId });
+    } catch (error) {
+      console.error('Error al crear comparación:', error);
+      res.status(500).json({ message: 'Error del servidor' });
+    }
+  };
+
+  specsController.editarMovil = async (req, res) => {
+    const { id } = req.params; // Este es el ID del móvil
     const { productIds = [], ...movilData } = req.body;
-    const movilId = await specs.agregarMovil(movilData);
-    
-    if (productIds.length > 0) {
-      await db.query("UPDATE productos SET movil_id = ? WHERE id IN (?)", [movilId, productIds]);
+
+    try {
+      // Primero actualizamos el móvil
+      const actualizado = await specs.actualizarMovil(id, movilData);
+      
+      // Limpiamos productos asociados
+      await db.query("UPDATE productos SET movil_id = NULL WHERE movil_id = ?", [id]);
+      
+      // Asignamos los nuevos productos
+      if (productIds.length > 0) {
+        await db.query("UPDATE productos SET movil_id = ? WHERE id IN (?)", [id, productIds]);
+      }
+      
+      if (actualizado) {
+        res.json({ message: 'Móvil actualizado con éxito' });
+      } else {
+        res.status(404).json({ message: 'Móvil no encontrado' });
+      }
+    } catch (error) {
+      console.error('Error al actualizar móvil:', error);
+      res.status(500).json({ message: 'Error del servidor' });
     }
-    
-    res.status(201).json({ message: 'Comparación creada con éxito', id: movilId });
-  } catch (error) {
-    console.error('Error al crear comparación:', error);
-    res.status(500).json({ message: 'Error del servidor' });
-  }
-};
+  };
 
-specsController.editarMovil = async (req, res) => {
-  const { id } = req.params;
-  const { productIds = [], ...movilData } = req.body;
-
-  try {
-    const [[producto]] = await db.query("SELECT movil_id FROM productos WHERE id = ?", [id]);
-    if (!producto || !producto.movil_id) {
-      return res.status(404).json({ message: 'Comparación no encontrada' });
+  specsController.borrarMovil = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const result = await specs.eliminarMovil(id); 
+      res.json({ success: result });
+    } catch (error) {
+      res.status(500).json({ error: 'Error al eliminar Movil' });
     }
+  };
 
-    const actualizado = await specs.actualizarMovil(producto.movil_id, movilData);
-    
-    if (productIds.length > 0) {
-      await db.query("UPDATE productos SET movil_id = ? WHERE id IN (?)", [producto.movil_id, productIds]);
+  // Tabla almacenamiento
+
+  specsController.listarAlmacenamiento = async (req, res) => {
+    try {
+      const datos = await specs.obtenerAlmacenamiento();
+      res.json(datos);
+    } catch (err) {
+      console.error("Error al listar almacenamiento:", err);
+      res.status(500).json({ error: "Error del servidor" });
     }
-    
-    if (actualizado) {
-      res.json({ message: 'Comparación actualizada con éxito' });
-    } else {
-      res.status(404).json({ message: 'Comparación no encontrada' });
+  };
+
+  specsController.crearAlmacenamiento = async (req, res) => {
+    try {
+      const id = await specs.agregarAlmacenamiento(req.body);
+      res.status(201).json({ message: "Almacenamiento creado con éxito", id });
+    } catch (err) {
+      console.error("Error al crear almacenamiento:", err);
+      res.status(500).json({ error: "Error al crear almacenamiento" });
     }
-  } catch (error) {
-    console.error('Error al actualizar comparación:', error);
-    res.status(500).json({ message: 'Error del servidor' });
-  }
-};
+  };
 
-specsController.borrarMovil = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const result = await specs.eliminarMovil(id); 
-    res.json({ success: result });
-  } catch (error) {
-    res.status(500).json({ error: 'Error al eliminar Movil' });
-  }
-};
-
-// Tabla almacenamiento
-
-specsController.listarAlmacenamiento = async (req, res) => {
-  try {
-    const datos = await specs.obtenerAlmacenamiento();
-    res.json(datos);
-  } catch (err) {
-    console.error("Error al listar almacenamiento:", err);
-    res.status(500).json({ error: "Error del servidor" });
-  }
-};
-
-specsController.crearAlmacenamiento = async (req, res) => {
-  try {
-    const id = await specs.agregarAlmacenamiento(req.body);
-    res.status(201).json({ message: "Almacenamiento creado con éxito", id });
-  } catch (err) {
-    console.error("Error al crear almacenamiento:", err);
-    res.status(500).json({ error: "Error al crear almacenamiento" });
-  }
-};
-
-specsController.editarAlmacenamiento = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const actualizado = await specs.actualizarAlmacenamiento(id, req.body);
-    if (actualizado) {
-      res.json({ message: "Almacenamiento actualizado con éxito" });
-    } else {
-      res.status(404).json({ message: "Registro no encontrado" });
+  specsController.editarAlmacenamiento = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const actualizado = await specs.actualizarAlmacenamiento(id, req.body);
+      if (actualizado) {
+        res.json({ message: "Almacenamiento actualizado con éxito" });
+      } else {
+        res.status(404).json({ message: "Registro no encontrado" });
+      }
+    } catch (err) {
+      console.error("Error al editar almacenamiento:", err);
+      res.status(500).json({ error: "Error al editar almacenamiento" });
     }
-  } catch (err) {
-    console.error("Error al editar almacenamiento:", err);
-    res.status(500).json({ error: "Error al editar almacenamiento" });
-  }
-};
+  };
 
-specsController.borrarAlmacenamiento = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const eliminado = await specs.eliminarAlmacenamiento(id);
-    if (eliminado) {
-      res.json({ message: "Almacenamiento eliminado con éxito" });
-    } else {
-      res.status(404).json({ message: "Registro no encontrado" });
+  specsController.borrarAlmacenamiento = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const eliminado = await specs.eliminarAlmacenamiento(id);
+      if (eliminado) {
+        res.json({ message: "Almacenamiento eliminado con éxito" });
+      } else {
+        res.status(404).json({ message: "Registro no encontrado" });
+      }
+    } catch (err) {
+      console.error("Error al borrar almacenamiento:", err);
+      res.status(500).json({ error: "Error al borrar almacenamiento" });
     }
-  } catch (err) {
-    console.error("Error al borrar almacenamiento:", err);
-    res.status(500).json({ error: "Error al borrar almacenamiento" });
-  }
-};
+  };
 
-// Tabla variantes almacenamiento 
+  // Tabla variantes almacenamiento 
 
-specsController.listarVariantesAlmacenamiento = async (req, res) => {
-  try {
-    const datos = await specs.obtenerVariantesAlmacenamiento();
-    res.json(datos);
-  } catch (err) {
-    console.error("Error al listar variantes de almacenamiento:", err);
-    res.status(500).json({ error: "Error del servidor" });
-  }
-};
-
-specsController.crearVarianteAlmacenamiento = async (req, res) => {
-  try {
-    const id = await specs.agregarVarianteAlmacenamiento(req.body);
-    res.status(201).json({ message: "Variante de almacenamiento creada con éxito", id });
-  } catch (err) {
-    console.error("Error al crear variante de almacenamiento:", err);
-    res.status(500).json({ error: "Error al crear variante de almacenamiento" });
-  }
-};
-
-specsController.editarVarianteAlmacenamiento = async (req, res) => {
-  try {
-    const { movil_id, almacenamiento_id } = req.params;
-    const { 
-      nuevo_movil_id = movil_id, 
-      nuevo_almacenamiento_id = almacenamiento_id 
-    } = req.body;
-
-    const actualizado = await specs.actualizarVarianteAlmacenamiento(
-      movil_id,
-      almacenamiento_id,
-      nuevo_movil_id,
-      nuevo_almacenamiento_id
-    );
-
-    if (actualizado) {
-      res.json({ message: "Variante actualizada correctamente" });
-    } else {
-      res.status(404).json({ message: "Variante no encontrada" });
+  specsController.listarVariantesAlmacenamiento = async (req, res) => {
+    try {
+      const datos = await specs.obtenerVariantesAlmacenamiento();
+      res.json(datos);
+    } catch (err) {
+      console.error("Error al listar variantes de almacenamiento:", err);
+      res.status(500).json({ error: "Error del servidor" });
     }
-  } catch (err) {
-    console.error("Error al actualizar variante:", err);
-    res.status(500).json({ 
-      error: "Error del servidor al actualizar variante",
-      details: err.message 
-    });
-  }
-};
+  };
 
-specsController.borrarVarianteAlmacenamiento = async (req, res) => {
-  try {
-    const { movil_id, almacenamiento_id } = req.params;
-    const eliminado = await specs.eliminarVarianteAlmacenamiento(movil_id, almacenamiento_id);
-    if (eliminado) {
-      res.json({ message: "Variante de almacenamiento eliminada con éxito" });
-    } else {
-      res.status(404).json({ message: "Registro no encontrado" });
+  specsController.crearVarianteAlmacenamiento = async (req, res) => {
+    try {
+      const id = await specs.agregarVarianteAlmacenamiento(req.body);
+      res.status(201).json({ message: "Variante de almacenamiento creada con éxito", id });
+    } catch (err) {
+      console.error("Error al crear variante de almacenamiento:", err);
+      res.status(500).json({ error: "Error al crear variante de almacenamiento" });
     }
-  } catch (err) {
-    console.error("Error al borrar variante de almacenamiento:", err);
-    res.status(500).json({ error: "Error al borrar variante de almacenamiento" });
-  }
-};
+  };
+
+  specsController.editarVarianteAlmacenamiento = async (req, res) => {
+    try {
+      const { movil_id, almacenamiento_id } = req.params;
+      const { 
+        nuevo_movil_id = movil_id, 
+        nuevo_almacenamiento_id = almacenamiento_id 
+      } = req.body;
+
+      const actualizado = await specs.actualizarVarianteAlmacenamiento(
+        movil_id,
+        almacenamiento_id,
+        nuevo_movil_id,
+        nuevo_almacenamiento_id
+      );
+
+      if (actualizado) {
+        res.json({ message: "Variante actualizada correctamente" });
+      } else {
+        res.status(404).json({ message: "Variante no encontrada" });
+      }
+    } catch (err) {
+      console.error("Error al actualizar variante:", err);
+      res.status(500).json({ 
+        error: "Error del servidor al actualizar variante",
+        details: err.message 
+      });
+    }
+  };
+
+  specsController.borrarVarianteAlmacenamiento = async (req, res) => {
+    try {
+      const { movil_id, almacenamiento_id } = req.params;
+      const eliminado = await specs.eliminarVarianteAlmacenamiento(movil_id, almacenamiento_id);
+      if (eliminado) {
+        res.json({ message: "Variante de almacenamiento eliminada con éxito" });
+      } else {
+        res.status(404).json({ message: "Registro no encontrado" });
+      }
+    } catch (err) {
+      console.error("Error al borrar variante de almacenamiento:", err);
+      res.status(500).json({ error: "Error al borrar variante de almacenamiento" });
+    }
+  };
 
 // Tabla baterias
 

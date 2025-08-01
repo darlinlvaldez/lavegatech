@@ -5,26 +5,29 @@ const specs = {};
 specs.obtenerMoviles = async () => {
   const query = `
     SELECT 
-      p.id,
-      p.nombre,
-      p.movil_id,
+      m.id,
+      m.cpu_id,
+      m.gpu_id,
+      m.pantalla_id,
+      m.camara_id,
+      m.bateria_id,
+      m.conectividad_id,
+      m.dimensionespeso_id,
       cpu.nombre AS cpu,
       gpu.modelo AS gpu,
       GROUP_CONCAT(DISTINCT CONCAT(r.capacidad, ' ', r.tipo)) AS ram,
       GROUP_CONCAT(DISTINCT CONCAT(a.capacidad, ' ', a.tipo)) AS almacenamiento,
       CONCAT(pantalla.tamaño, ' ', pantalla.tipo, ' ', pantalla.resolucion) AS pantalla,
-
       CONCAT(camara.principal, ' / Selfie: ', camara.selfie, ' / Video: ', camara.video) AS camara,
       CONCAT(baterias.capacidad, ' ', baterias.tipo, 
-             IF(baterias.carga_rapida IS NOT NULL, ', carga rápida: ' + baterias.carga_rapida, ''),
+             IF(baterias.carga_rapida IS NOT NULL, CONCAT(', carga rápida: ', baterias.carga_rapida), ''),
              IF(baterias.carga_inalambrica = 1, ', inalámbrica', '')
       ) AS bateria,
       CONCAT(conectividad.red, ', WiFi: ', conectividad.wifi, ', BT: ', conectividad.bluetooth, 
              IF(conectividad.nfc = 1, ', NFC', '')) AS conectividad,
-      CONCAT(dimensionespeso.altura, 'x', dimensionespeso.anchura, 'x', dimensionespeso.grosor, ' mm, ', dimensionespeso.peso, 'g') AS dimensionespeso
-
-    FROM productos p
-    JOIN moviles m ON p.movil_id = m.id
+      CONCAT(dimensionespeso.altura, 'x', dimensionespeso.anchura, 'x', dimensionespeso.grosor, ' mm, ', dimensionespeso.peso, 'g') AS dimensionespeso,
+      GROUP_CONCAT(DISTINCT IFNULL(p.nombre, 'Vacío') SEPARATOR ', ') AS nombre
+    FROM moviles m
     LEFT JOIN cpu ON m.cpu_id = cpu.id
     LEFT JOIN gpu ON m.gpu_id = gpu.id
     LEFT JOIN pantalla ON m.pantalla_id = pantalla.id
@@ -36,27 +39,38 @@ specs.obtenerMoviles = async () => {
     LEFT JOIN baterias ON m.bateria_id = baterias.id
     LEFT JOIN conectividad ON m.conectividad_id = conectividad.id
     LEFT JOIN dimensionespeso ON m.dimensionespeso_id = dimensionespeso.id
-
-    GROUP BY p.id
-    ORDER BY p.id DESC;
+    LEFT JOIN productos p ON p.movil_id = m.id
+    GROUP BY m.id
+    ORDER BY m.id DESC;
   `;
 
   const [rows] = await db.query(query);
   return rows;
 };
 
+specs.obtenerTodosProductos = async () => {
+  const query = `
+    SELECT 
+      p.id,
+      p.nombre,
+      p.movil_id
+    FROM productos p
+    ORDER BY p.nombre;
+  `;
+  const [rows] = await db.query(query);
+  return rows;
+};
+
 specs.eliminarMovil = async (id) => {
   try {
-    const [[producto]] = await db.query("SELECT movil_id FROM productos WHERE id = ?", [id]);
-    if (!producto) return false;
-
-    const movilId = producto.movil_id;
-
-    await db.query("DELETE FROM moviles WHERE id = ?", [movilId]);
-
-    await db.query("UPDATE productos SET movil_id = NULL WHERE id = ?", [id]);
-
-    return true;
+    // Primero desasociar todos los productos de este móvil
+    await db.query("UPDATE productos SET movil_id = NULL WHERE movil_id = ?", [id]);
+    
+    // Luego eliminar el móvil
+    const [result] = await db.query("DELETE FROM moviles WHERE id = ?", [id]);
+    
+    // Verificar que realmente se eliminó
+    return result.affectedRows > 0;
   } catch (err) {
     console.error("Error eliminando dispositivo:", err);
     return false;
@@ -140,9 +154,16 @@ specs.eliminarAlmacenamiento = async (id) => {
 
 specs.obtenerVariantesAlmacenamiento = async () => {
   const query = `
-    SELECT va.movil_id, va.almacenamiento_id, a.capacidad, a.tipo
+    SELECT 
+      va.movil_id, 
+      va.almacenamiento_id, 
+      a.capacidad, 
+      a.tipo,
+      IF(MIN(p.nombre) IS NULL, 'Vacío', MIN(p.nombre)) AS nombre_movil
     FROM variantes_almacenamiento va
     JOIN almacenamiento a ON va.almacenamiento_id = a.id
+    LEFT JOIN productos p ON p.movil_id = va.movil_id
+    GROUP BY va.movil_id, va.almacenamiento_id, a.capacidad, a.tipo
     ORDER BY va.movil_id DESC
   `;
   const [rows] = await db.query(query);
@@ -154,10 +175,15 @@ specs.agregarVarianteAlmacenamiento = async (data) => {
     INSERT INTO variantes_almacenamiento (movil_id, almacenamiento_id)
     VALUES (?, ?)
   `;
-  const [result] = await db.execute(query, [
-    data.movil_id,
-    data.almacenamiento_id
-  ]);
+console.log("Insertando variante:", data);
+
+const [result] = await db.execute(query, [
+  data.movil_id,
+  data.almacenamiento_id
+]);
+
+console.log("Resultado del insert:", result);
+
   return result.insertId;
 };
 
@@ -505,9 +531,17 @@ specs.eliminarRam = async (id) => {
 
 specs.obtenerVariantesRam = async () => {
   const query = `
-    SELECT vr.movil_id, vr.ram_id, r.capacidad, r.tipo
+    SELECT 
+      IFNULL(vr.movil_id, 'Vacío') AS movil_id,
+      vr.ram_id,
+      r.capacidad,
+      r.tipo,
+      IFNULL(MIN(p.nombre), 'Vacío') AS nombre_movil
     FROM variantes_ram vr
     JOIN ram r ON vr.ram_id = r.id
+    LEFT JOIN productos p ON p.movil_id = vr.movil_id
+    LEFT JOIN moviles m ON p.movil_id = m.id
+    GROUP BY vr.movil_id, vr.ram_id, r.capacidad, r.tipo
     ORDER BY vr.movil_id DESC
   `;
   const [rows] = await db.query(query);

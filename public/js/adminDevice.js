@@ -1,6 +1,5 @@
 import { showToast } from './toastify.js';
 import { sweetAlert } from './sweetAlert2.js';
-import { showValidation, clearError } from './showValidation.js';
 
 let dispositivos = [];
 let filtrarDispositivos = [];
@@ -36,10 +35,6 @@ const suggestionsBattery = document.getElementById("suggestionsBattery");
 const suggestionsConnectivity = document.getElementById("suggestionsConnectivity");
 const suggestionsSizeWeight = document.getElementById("suggestionsSizeWeight");
 
-const deviceErrorFields = [
-  "cpu", "gpu", "pantalla", "camara", "bateria", "conectividad", "dimensionespeso"
-];
-
 async function fetchCpus() {
   const res = await fetch('/api/specs/cpu');
   cpus = await res.json();
@@ -73,6 +68,18 @@ async function fetchConectividades() {
 async function fetchDimensiones() {
   const res = await fetch('/api/specs/dimensionespeso');
   dimensionespeso = await res.json();
+}
+
+async function fetchTodosProductos() {
+  try {
+    const res = await fetch("/api/specs/todos-productos");
+    if (!res.ok) throw new Error();
+    return await res.json();
+  } catch (err) {
+    console.error('Error al cargar todos los productos:', err);
+    showToast("Error al cargar productos", "#e74c3c", "alert-circle");
+    return [];
+  }
 }
 
 async function fetchAllSpecs() {
@@ -226,15 +233,19 @@ function renderProductosSeleccionados() {
   });
 }
 
-searchMobileInput.addEventListener("input", () => {
+// Modificar el evento de búsqueda para usar todos los productos
+searchMobileInput.addEventListener("input", async () => {
   const query = searchMobileInput.value.trim().toLowerCase();
   suggestionsMobile.innerHTML = "";
   
   if (query.length < 2) return;
 
-  const resultados = dispositivos.filter(d => 
-    d.nombre.toLowerCase().includes(query) &&
-    !productosSeleccionados.some(p => p.id === d.id)
+  // Obtener todos los productos para el autocompletado
+  const todosProductos = await fetchTodosProductos();
+
+  const resultados = todosProductos.filter(p => 
+    p.nombre.toLowerCase().includes(query) &&
+    !productosSeleccionados.some(sel => sel.id === p.id)
   ).slice(0, 10);
 
   if (resultados.length === 0) {
@@ -245,11 +256,11 @@ searchMobileInput.addEventListener("input", () => {
     return;
   }
 
-  resultados.forEach(d => {
+  resultados.forEach(p => {
     const div = document.createElement("div");
-    div.textContent = d.nombre;
+    div.textContent = p.nombre;
     div.addEventListener("click", () => {
-      productosSeleccionados.push({ id: d.id, nombre: d.nombre });
+      productosSeleccionados.push({ id: p.id, nombre: p.nombre });
       renderProductosSeleccionados();
       searchMobileInput.value = "";
       suggestionsMobile.innerHTML = "";
@@ -270,7 +281,6 @@ function renderMobiles() {
       <td>${d.id}</td>
       <td>${d.nombre}</td>
       <td>${d.ram || '-'}</td>
-      <td>${d.cpu || '-'}</td>
       <td>${d.almacenamiento || '-'}</td>
       <td>
         <button onclick="editDispositivo(${d.id})" class="edit-button">Editar</button>
@@ -302,62 +312,80 @@ addDeviceBtn.addEventListener("click", () => {
   deviceIdInput.value = "";
   productosSeleccionados = []; 
   renderProductosSeleccionados();
-  clearError(deviceErrorFields, "#deviceForm");
   deviceModal.classList.add("visible");
 });
 
 cancelDeviceModalBtn.addEventListener("click", () => {
   deviceModal.classList.remove("visible");
-  clearError(deviceErrorFields, "#deviceForm");
 });
 
-window.editDispositivo = async function (productoId) {
-  const dispositivo = dispositivos.find(d => d.id === productoId);
+window.editDispositivo = async function (movilId) {
+  const dispositivo = dispositivos.find(d => d.id === movilId);
   if (!dispositivo) return;
 
   deviceModalTitle.textContent = "Editar Dispositivo";
   deviceIdInput.value = dispositivo.id;
-  deviceIdInput.dataset.movilId = dispositivo.movil_id; 
+  deviceIdInput.dataset.movilId = dispositivo.id; 
 
-  productosSeleccionados = [];
-  if (dispositivo.movil_id) {
-    productosSeleccionados = dispositivos
-      .filter(d => d.movil_id === dispositivo.movil_id)
-      .map(d => ({ id: d.id, nombre: d.nombre }));
-    
+  const res = await fetch("/api/specs/todos-productos");
+  if (res.ok) {
+    const todos = await res.json();
+    const productosAsociados = todos.filter(p => p.movil_id === dispositivo.id);
+    productosSeleccionados = productosAsociados.map(p => ({ id: p.id, nombre: p.nombre }));
     renderProductosSeleccionados();
   }
 
-  deviceCpuInput.value = dispositivo.cpu || "";
-  deviceGpuInput.value = dispositivo.gpu || "";
-  deviceScreenInput.value = dispositivo.pantalla || "";
-  deviceCameraInput.value = dispositivo.camara || "";
-  deviceBatteryInput.value = dispositivo.bateria || "";
-  deviceConnectivityInput.value = dispositivo.conectividad || "";
-  deviceSizeWeightInput.value = dispositivo.dimensionespeso || "";
+  // Asegurar que los formatos coincidan exactamente
+  const cpu = cpus.find(c => c.id === dispositivo.cpu_id);
+  deviceCpuInput.value = cpu ? cpu.nombre : "";
+  
+  const gpu = gpus.find(g => g.id === dispositivo.gpu_id);
+  deviceGpuInput.value = gpu ? gpu.modelo : "";
+  
+  const pantalla = pantallas.find(p => p.id === dispositivo.pantalla_id);
+  deviceScreenInput.value = pantalla ? `${pantalla.tamaño} ${pantalla.resolucion} ${pantalla.tipo}` : "";
+  
+  const camara = camaras.find(c => c.id === dispositivo.camara_id);
+  deviceCameraInput.value = camara ? `${camara.principal} / Selfie: ${camara.selfie}` : "";
+  
+  const bateria = baterias.find(b => b.id === dispositivo.bateria_id);
+  deviceBatteryInput.value = bateria ? 
+    `${bateria.capacidad} ${bateria.tipo} ${bateria.carga_rapida ? 'Carga rápida' : ''} ${bateria.carga_inalambrica ? 'Inalámbrica' : ''}`.trim() : "";
+  
+  const conectividad = conectividades.find(c => c.id === dispositivo.conectividad_id);
+  deviceConnectivityInput.value = conectividad ? 
+    `${conectividad.red} ${conectividad.wifi} ${conectividad.bluetooth} ${conectividad.nfc ? 'NFC' : ''}`.trim() : "";
+  
+  const dimensiones = dimensionespeso.find(d => d.id === dispositivo.dimensionespeso_id);
+  deviceSizeWeightInput.value = dimensiones ? 
+    `${dimensiones.altura}x${dimensiones.anchura}x${dimensiones.grosor} ${dimensiones.peso}g` : "";
 
-  clearError(deviceErrorFields, "#deviceForm");
   deviceModal.classList.add("visible");
 };
 
 function buscarIdPorNombre(array, valorInput, campoNombre = null, formatter = null) {
-  if (!valorInput || valorInput.trim() === "") return undefined;
+  if (!valorInput || valorInput.trim() === "") return null; // Cambiado de undefined a null
+  
+  // Si el array está vacío, retornar null
+  if (!array || array.length === 0) return null;
   
   const foundItem = array.find(item => {
     if (formatter) {
-      return formatter(item).trim() === valorInput.trim();
+      const formattedValue = formatter(item).trim();
+      return formattedValue === valorInput.trim() || 
+             formattedValue.includes(valorInput.trim()) || 
+             valorInput.trim().includes(formattedValue);
     } else if (campoNombre) {
       return item[campoNombre] && item[campoNombre].trim() === valorInput.trim();
     }
     return false;
   });
   
-  return foundItem ? foundItem.id : undefined;
+  return foundItem ? foundItem.id : null;
 }
 
 deviceForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  clearError(deviceErrorFields, "#deviceForm");
 
   const productoId = deviceIdInput.value;
   const movilId = deviceIdInput.dataset.movilId;
@@ -370,45 +398,46 @@ deviceForm.addEventListener("submit", async (e) => {
   const id = deviceIdInput.value;
   const productIds = productosSeleccionados.map(p => p.id);
 
+  // Obtener los IDs actuales del dispositivo si estamos editando
+  const currentDevice = id ? dispositivos.find(d => d.id === parseInt(id)) : null;
+  
   const body = {
-    cpu_id: buscarIdPorNombre(cpus, deviceCpuInput.value.trim(), "nombre"),
-    gpu_id: buscarIdPorNombre(gpus, deviceGpuInput.value.trim(), "modelo"),
+    cpu_id: buscarIdPorNombre(cpus, deviceCpuInput.value.trim(), "nombre") ?? currentDevice?.cpu_id,
+    gpu_id: buscarIdPorNombre(gpus, deviceGpuInput.value.trim(), "modelo") ?? currentDevice?.gpu_id,
     pantalla_id: buscarIdPorNombre(pantallas, deviceScreenInput.value.trim(), null, (p) =>
       `${p.tamaño} ${p.resolucion} ${p.tipo}`.trim()
-    ),
+    ) ?? currentDevice?.pantalla_id,
     camara_id: buscarIdPorNombre(camaras, deviceCameraInput.value.trim(), null, (c) =>
       `${c.principal} / Selfie: ${c.selfie}`.trim()
-    ),
+    ) ?? currentDevice?.camara_id,
     bateria_id: buscarIdPorNombre(baterias, deviceBatteryInput.value.trim(), null, (b) =>
       `${b.capacidad} ${b.tipo} ${b.carga_rapida ? 'Carga rápida' : ''} ${b.carga_inalambrica ? 'Inalámbrica' : ''}`.trim()
-    ),
+    ) ?? currentDevice?.bateria_id,
     conectividad_id: buscarIdPorNombre(conectividades, deviceConnectivityInput.value.trim(), null, (c) =>
       `${c.red} ${c.wifi} ${c.bluetooth} ${c.nfc ? 'NFC' : ''}`.trim()
-    ),
+    ) ?? currentDevice?.conectividad_id,
     dimensionespeso_id: buscarIdPorNombre(dimensionespeso, deviceSizeWeightInput.value.trim(), null, (d) =>
       `${d.altura}x${d.anchura}x${d.grosor} ${d.peso}g`
-    ),
+    ) ?? currentDevice?.dimensionespeso_id,
     productIds 
   };
 
+  console.log("Datos enviados para actualizar móvil:", JSON.stringify(body, null, 2));
+
   try {
-  const url = productoId ? `/api/specs/movil/${productoId}` : "/api/specs/movil";
-  const method = productoId ? "PUT" : "POST";
-  
-  const res = await fetch(url, {
-    method,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body)
-  });
+    const url = productoId ? `/api/specs/movil/${productoId}` : "/api/specs/movil";
+    const method = productoId ? "PUT" : "POST";
+    
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
 
   const data = await res.json();
 
   if (!res.ok) {
-    if (data.validationError && Array.isArray(data.errors)) {
-      showValidation(data.errors, "#deviceForm");
-    } else {
-      showToast(data.message || "Error al guardar el dispositivo.", "#e74c3c", "alert-circle");
-    }
+    showToast(data.message || "Error al guardar el dispositivo.", "#e74c3c", "alert-circle");
     return;
   }
 

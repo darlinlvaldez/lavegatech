@@ -4,7 +4,6 @@ Revision de dashboard.
 Proveedores.
 Tamaño de las imagenes.
 
-
 Arreglar el carrusel.
 Arreglar la tabla de ram y almacennamiento en admin.
-Manejar la ram y el almacenamieto por separado y no en el nombre del producto.
+Arreglar zod en la tabla de agregar las especificaciones (si da el tiempo).

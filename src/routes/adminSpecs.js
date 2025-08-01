@@ -9,6 +9,7 @@ const router = express.Router();
 router.use(isAdmin());
 
 // Tabla moviles
+router.get('/todos-productos', specs.listarTodosProductos);
 router.get('/moviles', specs.listarMoviles);
 router.post('/movil',  specs.crearMovil);
 router.put('/movil/:id',specs.editarMovil);
@@ -76,8 +77,8 @@ router.delete('/ram/:id', specs.borrarRam);
 
 // Tabla Variantes RAM 
 router.get('/variantes_ram', specs.listarVariantesRam);
-router.post('/variantes_ram', validate(request.varianteRAM), specs.crearVarianteRam);
-router.put('/variantes_ram/:movil_id/:ram_id', validate(request.varianteRAM), specs.editarVarianteRam);
+router.post('/variantes_ram', specs.crearVarianteRam);
+router.put('/variantes_ram/:movil_id/:ram_id', specs.editarVarianteRam);
 router.delete('/variantes_ram/:movil_id/:ram_id', specs.borrarVarianteRam);
 
 export default router;

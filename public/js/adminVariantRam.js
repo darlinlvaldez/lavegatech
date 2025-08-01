@@ -26,12 +26,11 @@ function renderVariantesRAM() {
   const lista = variantesFiltradas.length > 0 ? variantesFiltradas : variantesRAM;
 
   lista.forEach(v => {
-    const movil = movilesDisponibles.find(m => m.id === v.movil_id) || {};
     const ram = ramsDisponibles.find(r => r.id === v.ram_id) || {};
     
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${movil.nombre || v.movil_id}</td>
+      <td>${v.nombre_movil || v.movil_id}</td>
       <td>${ram.capacidad ? `${ram.capacidad} ${ram.tipo}` : v.ram_id}</td>
       <td>
         <button onclick="editVarianteRAM(${v.movil_id}, ${v.ram_id})" class="edit-button">Editar</button>
@@ -45,10 +44,10 @@ function renderVariantesRAM() {
 searchVariantesRAMInput.addEventListener("input", () => {
   const query = searchVariantesRAMInput.value.trim().toLowerCase();
   variantesFiltradas = query ? variantesRAM.filter(v => {
-    const movil = movilesDisponibles.find(m => m.id === v.movil_id) || {};
+    const movilNombre = v.nombre_movil || "";
     const ram = ramsDisponibles.find(r => r.id === v.ram_id) || {};
     return (
-      (movil.nombre && movil.nombre.toLowerCase().includes(query)) ||
+      movilNombre.toLowerCase().includes(query)
       (ram.capacidad && ram.capacidad.toLowerCase().includes(query)) ||
       (ram.tipo && ram.tipo.toLowerCase().includes(query))
     );
@@ -69,10 +68,9 @@ addVarianteRAMBtn.addEventListener("click", async () => {
 
 cancelVarianteRAMModalBtn.addEventListener("click", () => {
   varianteRAMModal.classList.remove("visible");
-  clearError(productErrorFields,'#cancelVarianteRAMModalBtn');
 });
 
-function setupAutocomplete({ inputEl, suggestionsEl, dataArray, onSelect = null }) {
+function setupAutocomplete({ inputEl, suggestionsEl, dataArray, getTexto, onSelect = null }) {
   if (!Array.isArray(dataArray)) {
     console.error(`Datos no válidos para autocompletado en ${inputEl.id}`);
     return;
@@ -81,12 +79,13 @@ function setupAutocomplete({ inputEl, suggestionsEl, dataArray, onSelect = null 
   inputEl.addEventListener("input", () => {
     const query = inputEl.value.toLowerCase();
     suggestionsEl.innerHTML = "";
-    
+
     if (query.length === 0) return;
 
-    const resultados = dataArray
-      .filter(val => val && val.toLowerCase().includes(query))
-      .slice(0, 10);
+    const resultados = dataArray.filter(val => {
+      const texto = getTexto(val);
+      return texto.toLowerCase().includes(query);
+    });
 
     if (resultados.length === 0) {
       const noResults = document.createElement("div");
@@ -97,10 +96,11 @@ function setupAutocomplete({ inputEl, suggestionsEl, dataArray, onSelect = null 
     }
 
     resultados.forEach(item => {
+      const texto = getTexto(item);
       const div = document.createElement("div");
-      div.textContent = item;
+      div.textContent = texto;
       div.addEventListener("click", () => {
-        inputEl.value = item;
+        inputEl.value = texto;
         suggestionsEl.innerHTML = "";
         if (onSelect) onSelect(item);
       });
@@ -113,24 +113,39 @@ function setupRAMAutocomplete() {
   setupAutocomplete({
     inputEl: movilIdInput,
     suggestionsEl: movilSuggestions,
-    dataArray: movilesDisponibles.map(m => m.nombre),
-    onSelect: () => {} 
+    dataArray: movilesDisponibles,
+    getTexto: item => item.nombre_movil || "",
+    onSelect: (item) => {
+      movilIdInput.dataset.id = item.movil_id;
+    }
   });
 
   setupAutocomplete({
     inputEl: ramIdInput,
     suggestionsEl: ramSuggestions,
-    dataArray: ramsDisponibles.map(r => `${r.capacidad} ${r.tipo}`),
-    onSelect: () => {} 
+    dataArray: ramsDisponibles,
+    getTexto: item => `${item.capacidad} ${item.tipo}`,
+    onSelect: (item) => {
+      ramIdInput.dataset.id = item.id;
+    }
   });
 }
 
 async function fetchMovilesDisponibles() {
   try {
-    const res = await fetch("/api/specs/moviles");
-    movilesDisponibles = await res.json();
+    const res = await fetch("/api/specs/todos-productos");
+    const productos = await res.json();
+
+    movilesDisponibles = productos
+      .filter(p => p.movil_id && p.nombre)
+      .map(p => ({
+        movil_id: p.movil_id,
+        nombre_movil: p.nombre
+      }));
+
     setupRAMAutocomplete();
   } catch (err) {
+    console.error(err);
     showToast("Error al cargar móviles disponibles.", "#e74c3c", "alert-circle");
   }
 }
@@ -157,24 +172,21 @@ document.addEventListener("click", (e) => {
 varianteRAMForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const movilNombre = document.getElementById("movilIdInput").value.trim();
-  const ramTexto = document.getElementById("ramIdInput").value.trim();
+  const movilId = parseInt(document.getElementById("movilIdInput").dataset.id);
+const ramId = parseInt(document.getElementById("ramIdInput").dataset.id);
 
-  const movil = movilesDisponibles.find(m => m.nombre.trim().toLowerCase() === movilNombre.toLowerCase());
-  const ram = ramsDisponibles.find(r => (`${r.capacidad} ${r.tipo}`).trim().toLowerCase() === ramTexto.toLowerCase());
-
-  if (!movil || !ram) {
-    showToast("Debes seleccionar un móvil y una RAM válidos.", "#e74c3c", "alert-circle");
-    return;
-  }
+if (!movilId || !ramId) {
+  showToast("Debes seleccionar un móvil y una RAM válidos.", "#e74c3c", "alert-circle");
+  return;
+}
 
   const originalMovilId = varianteRAMForm.getAttribute("data-original-movil");
   const originalRamId = varianteRAMForm.getAttribute("data-original-ram");
   const isEditing = originalMovilId && originalRamId;
 
   const body = isEditing
-    ? JSON.stringify({ nuevo_movil_id: movil.id, nuevo_ram_id: ram.id })
-    : JSON.stringify({ movil_id: movil.id, ram_id: ram.id });
+  ? JSON.stringify({ nuevo_movil_id: movilId, nuevo_ram_id: ramId })
+  : JSON.stringify({ movil_id: movilId, ram_id: ramId });
 
   const url = isEditing
     ? `/api/specs/variantes_ram/${originalMovilId}/${originalRamId}`
@@ -192,14 +204,10 @@ varianteRAMForm.addEventListener("submit", async (e) => {
     const data = await res.json();
 
     if (!res.ok) {
-      if (data.validationError && Array.isArray(data.errors)) {
-        showValidation(data.errors, "#varianteRAMForm");
-      } else {
-        showToast(data.error || "Error al guardar el producto.", "#e74c3c", "alert-circle");
-      }
-      return;
-    }
-
+  showToast(data.error || "Error al guardar el producto.", "#e74c3c", "alert-circle");
+  return;
+}
+    
     showToast(isEditing ? "Variante RAM actualizada." : "Variante RAM agregada.", "#27ae60", "check-circle");
     varianteRAMModal.classList.remove("visible");
     varianteRAMForm.removeAttribute("data-original-movil");
@@ -214,7 +222,7 @@ window.editVarianteRAM = async function(movil_id, ram_id) {
   await fetchMovilesDisponibles();
   await fetchRAMsDisponibles();
 
-  const movil = movilesDisponibles.find(m => m.id === movil_id);
+  const movil = movilesDisponibles.find(m => m.movil_id === movil_id); 
   const ram = ramsDisponibles.find(r => r.id === ram_id);
 
   if (!movil || !ram) {
@@ -222,10 +230,14 @@ window.editVarianteRAM = async function(movil_id, ram_id) {
     return;
   }
 
+  movilIdInput.dataset.id = movil.movil_id; 
+  ramIdInput.dataset.id = ram.id;
+
   modalVarianteRAMTitle.textContent = "Editar Variante RAM";
-  document.getElementById("movilIdInput").value = movil.nombre;
-  document.getElementById("ramIdInput").value = `${ram.capacidad} ${ram.tipo}`;
-  
+
+  movilIdInput.value = movil.nombre_movil; 
+  ramIdInput.value = `${ram.capacidad} ${ram.tipo}`;
+
   varianteRAMForm.setAttribute("data-original-movil", movil_id);
   varianteRAMForm.setAttribute("data-original-ram", ram_id);
 
@@ -269,4 +281,5 @@ document.addEventListener("DOMContentLoaded", async () => {
   await fetchRAMsDisponibles();
   await fetchVariantesRAM();
   setupRAMAutocomplete();
+  renderVariantesRAM();
 });
