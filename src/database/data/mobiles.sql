@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-07-2025 a las 08:12:12
+-- Tiempo de generación: 01-08-2025 a las 21:26:51
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -32,15 +32,17 @@ CREATE TABLE `admin` (
   `username` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `is_active` tinyint(1) NOT NULL
+  `is_active` tinyint(1) NOT NULL,
+  `rol` varchar(20) DEFAULT 'editor'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `admin`
 --
 
-INSERT INTO `admin` (`id`, `username`, `password`, `created_at`, `is_active`) VALUES
-(1, 'darlin', '$2b$10$Ok1XvBwTGA.u.fapoo2L0ekADvsCq.a8Pkka6Pf3b.iFETqF.1Ia6', '2025-07-13 16:39:48', 1);
+INSERT INTO `admin` (`id`, `username`, `password`, `created_at`, `is_active`, `rol`) VALUES
+(1, 'darlin', '$2b$10$Ok1XvBwTGA.u.fapoo2L0ekADvsCq.a8Pkka6Pf3b.iFETqF.1Ia6', '2025-07-13 16:39:48', 1, 'editor'),
+(18, 'nilrad', '$2b$10$.3xBqsxHSufQwlJ4L1rrBeOv11Ho.DSt/GI6IfFJFx8dxKyqwuW/i', '2025-08-01 18:59:16', 1, 'soporte');
 
 -- --------------------------------------------------------
 
@@ -608,17 +610,16 @@ INSERT INTO `moviles` (`id`, `cpu_id`, `camara_id`, `bateria_id`, `gpu_id`, `con
 (6, 2, 4, 5, 2, 1, 6, NULL),
 (7, 2, 1, 6, 2, 1, 7, NULL),
 (8, 2, 1, 7, 2, 5, 8, NULL),
-(9, 3, 5, 8, 2, 5, 9, NULL),
+(9, 3, NULL, NULL, 2, NULL, NULL, NULL),
 (10, 3, 5, 9, 2, 5, 10, NULL),
 (11, 2, 7, 10, 2, 5, 11, NULL),
 (12, 2, 7, 11, 2, 2, 12, NULL),
-(13, 4, 6, 12, 3, 2, 13, NULL),
 (14, 4, 8, 9, 3, 2, 14, NULL),
 (15, 5, 7, 13, 2, 3, 15, NULL),
 (16, 2, 7, 14, 2, 5, 16, NULL),
 (17, 5, 7, 15, 2, 3, 17, NULL),
 (18, 5, 8, 16, 3, 4, 18, NULL),
-(19, 7, 9, 2, 5, 4, 19, 2),
+(19, 7, 9, 2, 5, 4, 19, NULL),
 (20, 7, 9, 3, 5, 4, 3, NULL),
 (21, 6, 9, 5, 4, 1, 6, NULL),
 (22, 6, 9, 7, 4, 1, 8, NULL),
@@ -643,25 +644,8 @@ INSERT INTO `moviles` (`id`, `cpu_id`, `camara_id`, `bateria_id`, `gpu_id`, `con
 (41, 15, 18, 23, 11, 4, 16, NULL),
 (42, 16, 19, 22, 12, 4, 17, NULL),
 (43, 16, 19, 22, 12, 4, 17, NULL),
-(44, 15, 18, 22, 11, 4, 16, NULL),
-(45, 17, NULL, NULL, 13, NULL, NULL, NULL),
-(46, 22, 19, 24, 14, 4, 19, 2),
-(47, 22, NULL, NULL, 13, NULL, NULL, NULL),
-(48, 19, 20, 26, 15, 6, 20, NULL),
-(49, 19, 20, 26, 15, 6, 20, NULL),
-(50, 20, 20, 27, 16, 6, 21, NULL),
-(51, 1, 21, 28, 1, 6, 22, NULL),
-(52, 21, 22, 29, 17, 8, 23, NULL),
-(53, 22, 23, 30, 11, 8, 24, NULL),
-(54, 23, 25, 31, 7, 8, 25, NULL),
-(55, 24, 24, 30, 18, 8, 24, NULL),
-(56, 24, 24, 32, 18, 8, 24, NULL),
-(57, 22, 23, 30, 11, 9, 26, NULL),
-(58, 22, 23, 30, 11, 9, 26, NULL),
-(59, 24, 24, 32, 18, 8, 26, NULL),
-(60, 22, 23, 30, 11, 9, 26, NULL),
-(70, 24, 20, 32, 16, 5, 26, 2),
-(73, 24, NULL, NULL, 7, NULL, NULL, NULL);
+(44, 22, 18, 32, 14, 4, 16, NULL),
+(45, 17, NULL, NULL, 13, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -709,7 +693,7 @@ CREATE TABLE `pantalla` (
 --
 
 INSERT INTO `pantalla` (`id`, `tamaño`, `resolucion`, `tipo`, `frecuencia`, `proteccion`) VALUES
-(2, '70', '1444p', 'ips', '60 hz', 'gorila');
+(5, '70', '1444p', 'ips', '60 hz', 'gorila');
 
 -- --------------------------------------------------------
 
@@ -823,7 +807,7 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (53, 31, 'XIAOMI REDMI 14C 4+128GB', 's', 7495.00, 1, 0.00, '2023-01-01 12:00:00', 3, 1, 15),
 (54, 32, 'XIAOMI REDMI NOTE 14 8+128GB', 's', 10495.00, 1, 0.00, '2023-01-01 12:00:00', 3, 3, 20),
 (55, 32, 'XIAOMI REDMI NOTE 14 8+256GB', 's', 11995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 3, 7),
-(56, 32, 'XIAOMI REDMI NOTE 14 5G 12+256GB', 's', 13995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 5, 7),
+(56, 33, 'XIAOMI REDMI NOTE 14 5G 12+256GB', 's', 13995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 5, 7),
 (57, 34, 'XIAOMI REDMI NOTE 14 PRO 8+256GB', 's', 15995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 3, 7),
 (58, 35, 'XIAOMI REDMI NOTE 14 PRO 5G 12+256GB', 's', 17995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 5, 7),
 (59, 36, 'XIAOMI REDMI NOTE 14 PRO PLUS 5G 12+256GB', 's', 22995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 6, 14),
@@ -836,9 +820,9 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (66, 43, 'ZTE A35 4+64GB', '', 4995.00, 1, 0.00, '2023-01-01 08:00:00', 20, NULL, NULL),
 (67, 44, 'ZTE BLADE V60 6+256GB ', '', 7495.00, 1, 0.00, '2023-01-01 08:00:00', 20, NULL, NULL),
 (68, 45, 'ZTE NUBIA NEO 2 5G 8+256GB', '', 11995.00, 1, 0.00, '2023-01-01 08:00:00', 20, NULL, NULL),
-(69, 73, 'MOTOROLA E14 2+64GB', '', 4995.00, 1, 0.00, '2023-01-01 08:00:00', 10, 1, NULL),
-(70, 73, 'MOTOROLA G04 4+128GB', '', 5995.00, 1, 0.00, '2023-01-01 08:00:00', 10, 1, NULL),
-(71, NULL, 'IPAD PRO 12.9-INCH 6TA GEN 128GB', '', 45995.00, 5, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
+(69, NULL, 'MOTOROLA E14 2+64GB', '', 4995.00, 1, 0.00, '2023-01-01 08:00:00', 10, NULL, NULL),
+(70, NULL, 'MOTOROLA G04 4+128GB', '', 5995.00, 1, 0.00, '2023-01-01 08:00:00', 10, NULL, NULL),
+(71, NULL, 'IPAD PRO 12.9-INCH 6TA GEN 128GB', '', 45995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
 (72, NULL, 'IPAD PRO 12.9 6TA GEN 256GB', '', 47495.00, 5, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
 (73, NULL, 'IPAD PRO M2 512GB 12.9 6TA GEN ', '', 49995.00, 5, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
 (74, NULL, 'IPAD PRO 13 PULGADAS M4 512GB', '', 57995.00, 5, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
@@ -952,7 +936,8 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (203, NULL, 'Monitor Asus VG1B 27 Pulgada 165HZ', '', 14995.00, 2, 0.00, '2023-01-01 08:00:00', 9, NULL, NULL),
 (204, NULL, 'Monitor LG Ultragear 34 Pulgada 160HZ', '', 24995.00, 2, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
 (206, NULL, 'Monitor Samsung G4 ODYSSEEY 27 Pulgada 240HZ', 's', 19995.00, 2, 0.00, '2023-01-01 12:00:00', 2, NULL, NULL),
-(207, NULL, 'Monitor Samsung G5 ODYSSEY 32 Pulgada 165HZ', 'siuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasd', 22995.00, 2, 0.00, '2023-01-03 08:00:00', 2, NULL, NULL);
+(207, NULL, 'Monitor Samsung G5 ODYSSEY 32 Pulgada 165HZ', 'siuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasd', 22995.00, 2, 0.00, '2023-01-03 08:00:00', 2, NULL, NULL),
+(218, NULL, 'nilrad', 'waos', 5000.00, 1, 0.00, '2025-08-01 07:54:14', 3, 1, 4);
 
 -- --------------------------------------------------------
 
@@ -1244,8 +1229,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('E1qBsrLO-xRC4CMDkXZ7Vjle-xx-YRiR', 1753859375, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-07-30T06:37:31.584Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":75,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}'),
-('uMHsvA7BecU2v0B71uhYgOmXGfGCP6C1', 1753856523, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-07-30T05:33:08.061Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":75,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}');
+('gRrvsnMtW1aaz96-hNdZJmqq5q2XcYpl', 1754079915, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-08-01T20:09:21.463Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":18,\"username\":\"nilrad\",\"rol\":\"soporte\"}}');
 
 -- --------------------------------------------------------
 
@@ -1315,10 +1299,6 @@ INSERT INTO `variantes_almacenamiento` (`movil_id`, `almacenamiento_id`) VALUES
 (11, 3),
 (12, 2),
 (12, 4),
-(13, 2),
-(13, 3),
-(13, 4),
-(18, 4),
 (19, 2),
 (20, 3),
 (21, 2),
@@ -1349,11 +1329,8 @@ INSERT INTO `variantes_almacenamiento` (`movil_id`, `almacenamiento_id`) VALUES
 (43, 1),
 (44, 3),
 (45, 3),
-(46, 1),
-(47, 2),
-(53, 6),
-(54, 2),
-(70, 1);
+(70, 29),
+(79, 13);
 
 -- --------------------------------------------------------
 
@@ -1385,7 +1362,6 @@ INSERT INTO `variantes_ram` (`movil_id`, `ram_id`) VALUES
 (10, 2),
 (11, 2),
 (12, 2),
-(13, 3),
 (18, 5),
 (19, 4),
 (20, 6),
@@ -1395,12 +1371,12 @@ INSERT INTO `variantes_ram` (`movil_id`, `ram_id`) VALUES
 (23, 5),
 (24, 7),
 (25, 1),
-(25, 2),
 (26, 2),
 (27, 3),
 (28, 3),
 (29, 5),
 (30, 3),
+(30, 9),
 (31, 1),
 (32, 3),
 (33, 5),
@@ -1416,20 +1392,7 @@ INSERT INTO `variantes_ram` (`movil_id`, `ram_id`) VALUES
 (42, 1),
 (43, 1),
 (44, 2),
-(45, 3),
-(46, 8),
-(47, 1),
-(53, 1),
-(54, 3),
-(55, 1),
-(56, 1),
-(57, 2),
-(58, 2),
-(59, 2),
-(59, 4),
-(59, 8),
-(60, 6),
-(70, 8);
+(45, 3);
 
 --
 -- Índices para tablas volcadas
@@ -1643,25 +1606,25 @@ ALTER TABLE `variantes_ram`
 -- AUTO_INCREMENT de la tabla `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `almacenamiento`
 --
 ALTER TABLE `almacenamiento`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT de la tabla `baterias`
 --
 ALTER TABLE `baterias`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT de la tabla `camara`
 --
 ALTER TABLE `camara`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de la tabla `carrito`
@@ -1691,7 +1654,13 @@ ALTER TABLE `clasificacion`
 -- AUTO_INCREMENT de la tabla `conectividad`
 --
 ALTER TABLE `conectividad`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT de la tabla `cpu`
+--
+ALTER TABLE `cpu`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `detalles_pedido`
@@ -1703,7 +1672,7 @@ ALTER TABLE `detalles_pedido`
 -- AUTO_INCREMENT de la tabla `dimensionespeso`
 --
 ALTER TABLE `dimensionespeso`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT de la tabla `envios`
@@ -1718,10 +1687,16 @@ ALTER TABLE `fav`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=712;
 
 --
+-- AUTO_INCREMENT de la tabla `gpu`
+--
+ALTER TABLE `gpu`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
 -- AUTO_INCREMENT de la tabla `moviles`
 --
 ALTER TABLE `moviles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- AUTO_INCREMENT de la tabla `pagos`
@@ -1733,7 +1708,7 @@ ALTER TABLE `pagos`
 -- AUTO_INCREMENT de la tabla `pantalla`
 --
 ALTER TABLE `pantalla`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
@@ -1745,7 +1720,7 @@ ALTER TABLE `pedidos`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=218;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=219;
 
 --
 -- AUTO_INCREMENT de la tabla `p_marcas`
@@ -1763,7 +1738,7 @@ ALTER TABLE `p_variantes`
 -- AUTO_INCREMENT de la tabla `ram`
 --
 ALTER TABLE `ram`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
@@ -1846,9 +1821,8 @@ ALTER TABLE `pedidos`
 -- Filtros para la tabla `productos`
 --
 ALTER TABLE `productos`
-  ADD CONSTRAINT `fk_almacenamiento` FOREIGN KEY (`almacenamiento_id`) REFERENCES `almacenamiento` (`id`),
-  ADD CONSTRAINT `fk_productos_moviles` FOREIGN KEY (`movil_id`) REFERENCES `moviles` (`id`),
-  ADD CONSTRAINT `fk_ram` FOREIGN KEY (`ram_id`) REFERENCES `ram` (`id`);
+  ADD CONSTRAINT `fk_productos_moviles` FOREIGN KEY (`movil_id`) REFERENCES `moviles` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `fk_ram` FOREIGN KEY (`ram_id`) REFERENCES `ram` (`id`) ON DELETE SET NULL;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
