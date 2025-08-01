@@ -25,22 +25,19 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/admin/products"
-                            class="<%= req.originalUrl === '/admin/products' ? 'active' : '' %>">
+                        <a href="/admin/products" class="<%= req.originalUrl === '/admin/products' ? 'active' : '' %>">
                             <i class="fas fa-box-open"></i>
                             <span>Productos</span>
                         </a>
                     </li>
                     <li>
-                        <a href="/admin/variants"
-                            class="<%= req.originalUrl === '/admin/variants' ? 'active' : '' %>">
+                        <a href="/admin/variants" class="<%= req.originalUrl === '/admin/variants' ? 'active' : '' %>">
                             <i class="fas fa-cogs"></i>
                             <span>Variantes</span>
                         </a>
                     </li>
                     <li>
-                        <a href="/admin/brandCategory"
-                            class="<%= req.originalUrl === '/admin/brandCategory' ? 'active' : '' %>">
+                        <a href="/admin/brandCategory" class="<%= req.originalUrl === '/admin/brandCategory' ? 'active' : '' %>">
                             <i class="fas fa-tags"></i>
                             <span>Marcas y Categorías</span>
                         </a>
@@ -58,31 +55,37 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/admin/shipping"
-                            class="<%= req.originalUrl === '/admin/shipping' ? 'active' : '' %>">
+                        <a href="/admin/shipping" class="<%= req.originalUrl === '/admin/shipping' ? 'active' : '' %>">
                             <i class="fas fa-city"></i>
                             <span>Ciudades de envío</span>
                         </a>
                     </li>
                     <li>
-                        <a href="/api/admin/orders"
-                            class="<%= req.originalUrl === '/api/admin/orders' ? 'active' : '' %>">
+                        <a href="/api/admin/orders" class="<%= req.originalUrl === '/api/admin/orders' ? 'active' : '' %>">
                             <i class="fas fa-shopping-cart"></i>
                             <span>Pedidos</span>
                         </a>
                     </li>
+
+                    <!-- Esta opción la pueden ver superadmin y editor -->
+                    <% if (admin?.rol === 'superadmin' || admin?.rol === 'editor') { %>
                     <li>
                         <a href="/admin/users" class="<%= req.originalUrl === '/admin/users' ? 'active' : '' %>">
                             <i class="fas fa-users"></i>
                             <span>Usuarios</span>
                         </a>
                     </li>
+                    <% } %>
+
+                    <!-- Por ejemplo: solo superadmin ve esta opción -->
+                    <% if (admin?.rol === 'superadmin') { %>
                     <li>
                         <a href="/admin/accounts" class="<%= req.originalUrl === '/admin/accounts' ? 'active' : '' %>">
                             <i class="fas fa-user-shield"></i>
                             <span>Administradores</span>
                         </a>
                     </li>
+                    <% } %>
                 </ul>
             </nav>
         </div>
@@ -95,3 +98,4 @@
         </div>
     </aside>
 </body>
+</html>

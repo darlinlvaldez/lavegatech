@@ -36,7 +36,8 @@ adminAuth.login = async (req, res) => {
       });
     }
 
-    req.session.admin = {id: foundAdmin.id, username: foundAdmin.username};
+    req.session.admin = { id: foundAdmin.id, username: foundAdmin.username, rol: foundAdmin.rol };
+
 
     return res.redirect('/api/admin/panel');
 
@@ -71,9 +72,9 @@ adminAuth.listarAdmins = async (req, res) => {
 
 adminAuth.crearAdmin = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, rol } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newAdmin = await admin.agregarAdmin({ username, password: hashedPassword });
+    const newAdmin = await admin.agregarAdmin({ username, password: hashedPassword, rol });
 
     res.status(201).json(newAdmin);
   } catch (error) {
@@ -85,14 +86,14 @@ adminAuth.crearAdmin = async (req, res) => {
 adminAuth.editarAdmin = async (req, res) => {
   try {
     const { id } = req.params;
-    const { username, password } = req.body;
+    const { username, password, rol } = req.body;
 
     let hashedPassword = null;
     if (password) {
       hashedPassword = await bcrypt.hash(password, 10);
     }
 
-    await admin.actualizarAdmin(id, { username, password: hashedPassword });
+    await admin.actualizarAdmin(id, { username, password: hashedPassword, rol });
     res.json({ success: true });
   } catch (error) {
     console.error(error);

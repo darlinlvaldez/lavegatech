@@ -107,7 +107,7 @@ request.shipping = z.object({
     .min(0.01, { message: ERROR_ZOD.FIELD_REQUIRED })
 }).strict();
 
-request.user = z.object({
+request.userAdmin = z.object({
   username: z
     .string()
     .trim()
@@ -116,7 +116,9 @@ request.user = z.object({
   password: z
     .string()
     .min(6, { message: ERROR_ZOD.PASSWORD_MIN })
-    .optional()
-  }).strict();
+    .optional(),
+    rol: z.enum(['superadmin', 'editor', 'soporte'], {
+  required_error: ERROR_ZOD.FIELD_REQUIRED})
+}).strict();
 
 export default request;

@@ -9,6 +9,14 @@ const userErrorFields = ["username", "password", "confirmPassword"];
 async function fetchAdmins() {
   const res = await fetch("/api/adminAuth/usuarios");
   const data = await res.json();
+
+  if (!res.ok) {
+    showToast(data.error || "Error al obtener administradores", "#e74c3c", "alert-circle");
+    admins = []; 
+    renderAdmins(); 
+    return;
+  }
+
   admins = data;
   renderAdmins();
 }
@@ -112,6 +120,7 @@ window.openEditModal = function(id) {
   document.getElementById("modalTitle").innerText = "Editar Administrador";
   document.getElementById("userId").value = admin.id;
   document.getElementById("username").value = admin.username;
+  document.getElementById("rol").value = admin.rol;
   document.getElementById("password").value = "";
   document.getElementById("passwordOptionalLabel").style.display = "inline";
   document.getElementById("userModal").classList.add("visible");
@@ -134,6 +143,7 @@ userForm.addEventListener("submit", async (event) => {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
   const confirmPassword = document.getElementById("confirmPassword").value;
+  const rol = document.getElementById("rol").value;
 
   if (password && password !== confirmPassword) {
     showValidation([
@@ -146,7 +156,7 @@ userForm.addEventListener("submit", async (event) => {
   const url = id ? `/api/adminAuth/usuarios/${id}` : "/api/adminAuth/usuarios";
   const method = id ? "PUT" : "POST";
 
-  const body = { username };
+  const body = { username, rol };
   if (password) body.password = password;
 
   try {

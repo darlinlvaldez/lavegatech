@@ -14,29 +14,29 @@ admin.obtenerAdmins = async () => {
   return rows;
 };
 
-admin.agregarAdmin = async ({ username, password }) => {
+admin.agregarAdmin = async ({ username, password, rol }) => {
   await db.query(`
-    INSERT INTO admin (username, password)
-    VALUES (?, ?)`,
-    [username, password]
+    INSERT INTO admin (username, password, rol)
+    VALUES (?, ?, ?)`,
+    [username, password, rol]
   );
 
   const [rows] = await db.query("SELECT * FROM admin WHERE username = ?", [username]);
   return rows[0];
 };
 
-admin.actualizarAdmin = async (id, { username, password }) => {
+admin.actualizarAdmin = async (id, { username, password, rol }) => {
   if (password) {
     await db.query(`
-      UPDATE admin SET username = ?, password = ?
+      UPDATE admin SET username = ?, password = ?, rol = ?
       WHERE id = ?`,
-      [username, password, id]
+      [username, password, rol, id]
     );
   } else {
     await db.query(`
-      UPDATE admin SET username = ?
+      UPDATE admin SET username = ?, rol = ?
       WHERE id = ?`,
-      [username, id]
+      [username, rol, id]
     );
   }
 };

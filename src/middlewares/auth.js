@@ -35,3 +35,19 @@ export function isAdmin({ redirect = false } = {}) {
     next();
   };
 }
+
+export function requireRole(...allowedRoles) {
+  return function (req, res, next) {
+    if (!req.session.admin) {
+      return res.status(401).json({ error: "No autenticado" });
+    }
+
+    const { rol } = req.session.admin;
+
+    if (!allowedRoles.includes(rol)) {
+      return res.status(403).json({ error: "Acceso denegado: rol no autorizado" });
+    }
+
+    next();
+  };
+}
