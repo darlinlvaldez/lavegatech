@@ -1,5 +1,6 @@
 import { showToast } from './toastify.js';
 import { sweetAlert } from './sweetAlert2.js';
+import { showValidation, clearError } from './showValidation.js';
 
 let dispositivos = [];
 let filtrarDispositivos = [];
@@ -35,39 +36,32 @@ const suggestionsBattery = document.getElementById("suggestionsBattery");
 const suggestionsConnectivity = document.getElementById("suggestionsConnectivity");
 const suggestionsSizeWeight = document.getElementById("suggestionsSizeWeight");
 
-async function fetchCpus() {
-  const res = await fetch('/api/specs/cpu');
-  cpus = await res.json();
+const camposFormulario = ["cpu_id", "gpu_id", "pantalla_id", "camara_id", 
+  "bateria_id", "conectividad_id", "dimensionespeso_id", "productIds"];
+
+async function fetchAndSet(url, setTo) {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Error al cargar ${url}`);
+    const data = await res.json();
+    setTo.length = 0;
+    setTo.push(...data);
+  } catch (err) {
+    console.error(`Error en fetch ${url}:`, err);
+    showToast(`Error al cargar ${url}`, "#e74c3c", "alert-circle");
+  }
 }
 
-async function fetchGpus() {
-  const res = await fetch('/api/specs/gpu');
-  gpus = await res.json();
-}
-
-async function fetchPantallas() {
-  const res = await fetch('/api/specs/pantalla');
-  pantallas = await res.json();
-}
-
-async function fetchBaterias() {
-  const res = await fetch('/api/specs/baterias');
-  baterias = await res.json();
-}
-
-async function fetchCamaras() {
-  const res = await fetch('/api/specs/camaras');
-  camaras = await res.json();
-}
-
-async function fetchConectividades() {
-  const res = await fetch('/api/specs/conectividades');
-  conectividades = await res.json();
-}
-
-async function fetchDimensiones() {
-  const res = await fetch('/api/specs/dimensionespeso');
-  dimensionespeso = await res.json();
+async function fetchAllSpecs() {
+  await Promise.all([
+    fetchAndSet('/api/specs/cpu', cpus),
+    fetchAndSet('/api/specs/gpu', gpus),
+    fetchAndSet('/api/specs/pantalla', pantallas),
+    fetchAndSet('/api/specs/baterias', baterias),
+    fetchAndSet('/api/specs/camaras', camaras),
+    fetchAndSet('/api/specs/conectividades', conectividades),
+    fetchAndSet('/api/specs/dimensionespeso', dimensionespeso)
+  ]);
 }
 
 async function fetchTodosProductos() {
@@ -80,18 +74,6 @@ async function fetchTodosProductos() {
     showToast("Error al cargar productos", "#e74c3c", "alert-circle");
     return [];
   }
-}
-
-async function fetchAllSpecs() {
-  await Promise.all([
-    fetchCpus(),
-    fetchGpus(),
-    fetchPantallas(),
-    fetchBaterias(),
-    fetchCamaras(),
-    fetchConectividades(),
-    fetchDimensiones()
-  ]);
 }
 
 function setupAutocomplete({ inputEl, suggestionsEl, dataArray, onSelect = null }) {
@@ -132,48 +114,28 @@ function setupAutocomplete({ inputEl, suggestionsEl, dataArray, onSelect = null 
 }
 
 function setupAllAutocompletes() {
-  
-setupAutocomplete({
-  inputEl: deviceCpuInput,
-  suggestionsEl: suggestionsCpu,
-  dataArray: cpus.map(cpu => cpu.nombre)
-});
+  const configs = [
+    { inputEl: deviceCpuInput, suggestionsEl: suggestionsCpu, data: cpus, format: c => c.nombre },
+    { inputEl: deviceGpuInput, suggestionsEl: suggestionsGpu, data: gpus, format: g => g.modelo },
+    { inputEl: deviceScreenInput, suggestionsEl: suggestionsScreen, 
+      data: pantallas, format: p => `${p.tamaño} ${p.resolucion} ${p.tipo}` },
+    { inputEl: deviceCameraInput, suggestionsEl: suggestionsCamera, 
+      data: camaras, format: c => `${c.principal} / Selfie: ${c.selfie}` },
+    { inputEl: deviceBatteryInput, suggestionsEl: suggestionsBattery, 
+      data: baterias, format: b => `${b.capacidad} ${b.tipo} ${b.carga_rapida ? 'Carga rápida' : ''} ${b.carga_inalambrica ? 'Inalámbrica' : ''}` },
+    { inputEl: deviceConnectivityInput, suggestionsEl: suggestionsConnectivity, 
+      data: conectividades, format: c => `${c.red} ${c.wifi} ${c.bluetooth} ${c.nfc ? 'NFC' : ''}` },
+    { inputEl: deviceSizeWeightInput, suggestionsEl: suggestionsSizeWeight, 
+      data: dimensionespeso, format: d => `${d.altura}x${d.anchura}x${d.grosor} ${d.peso}g` },
+  ];
 
-setupAutocomplete({
-  inputEl: deviceGpuInput,
-  suggestionsEl: suggestionsGpu,
-  dataArray: gpus.map(gpu => gpu.modelo)
-});
-
-setupAutocomplete({
-  inputEl: deviceScreenInput,
-  suggestionsEl: suggestionsScreen,
-  dataArray: pantallas.map(p => `${p.tamaño} ${p.resolucion} ${p.tipo}`)
-});
-
-setupAutocomplete({
-  inputEl: deviceCameraInput,
-  suggestionsEl: suggestionsCamera,
-  dataArray: camaras.map(c => `${c.principal} / Selfie: ${c.selfie}`)
-});
-
-setupAutocomplete({
-  inputEl: deviceBatteryInput,
-  suggestionsEl: suggestionsBattery,
-  dataArray: baterias.map(b => `${b.capacidad} ${b.tipo} ${b.carga_rapida ? 'Carga rápida' : ''} ${b.carga_inalambrica ? 'Inalámbrica' : ''}`)
-});
-
-setupAutocomplete({
-  inputEl: deviceConnectivityInput,
-  suggestionsEl: suggestionsConnectivity,
-  dataArray: conectividades.map(c => `${c.red} ${c.wifi} ${c.bluetooth} ${c.nfc ? 'NFC' : ''}`)
-});
-
-setupAutocomplete({
-  inputEl: deviceSizeWeightInput,
-  suggestionsEl: suggestionsSizeWeight,
-  dataArray: dimensionespeso.map(d => `${d.altura}x${d.anchura}x${d.grosor} ${d.peso}g`)
-});
+  configs.forEach(({ inputEl, suggestionsEl, data, format }) => {
+    setupAutocomplete({
+      inputEl,
+      suggestionsEl,
+      dataArray: data.map(format)
+    });
+  });
 }
 
 document.addEventListener("click", (e) => {
@@ -233,14 +195,12 @@ function renderProductosSeleccionados() {
   });
 }
 
-// Modificar el evento de búsqueda para usar todos los productos
 searchMobileInput.addEventListener("input", async () => {
   const query = searchMobileInput.value.trim().toLowerCase();
   suggestionsMobile.innerHTML = "";
   
   if (query.length < 2) return;
 
-  // Obtener todos los productos para el autocompletado
   const todosProductos = await fetchTodosProductos();
 
   const resultados = todosProductos.filter(p => 
@@ -280,8 +240,8 @@ function renderMobiles() {
     row.innerHTML = `
       <td>${d.id}</td>
       <td>${d.nombre}</td>
-      <td>${d.ram || '-'}</td>
-      <td>${d.almacenamiento || '-'}</td>
+      <td>${d.ram || 'Vacío'}</td>
+      <td>${d.almacenamiento || 'Vacío'}</td>
       <td>
         <button onclick="editDispositivo(${d.id})" class="edit-button">Editar</button>
         <button onclick="deleteDispositivo(${d.id})" class="delete-button">Eliminar</button>
@@ -312,11 +272,13 @@ addDeviceBtn.addEventListener("click", () => {
   deviceIdInput.value = "";
   productosSeleccionados = []; 
   renderProductosSeleccionados();
+  clearError(camposFormulario, "#deviceForm");
   deviceModal.classList.add("visible");
 });
 
 cancelDeviceModalBtn.addEventListener("click", () => {
   deviceModal.classList.remove("visible");
+  clearError(camposFormulario, "#deviceForm");
 });
 
 window.editDispositivo = async function (movilId) {
@@ -335,7 +297,6 @@ window.editDispositivo = async function (movilId) {
     renderProductosSeleccionados();
   }
 
-  // Asegurar que los formatos coincidan exactamente
   const cpu = cpus.find(c => c.id === dispositivo.cpu_id);
   deviceCpuInput.value = cpu ? cpu.nombre : "";
   
@@ -363,29 +324,19 @@ window.editDispositivo = async function (movilId) {
   deviceModal.classList.add("visible");
 };
 
-function buscarIdPorNombre(array, valorInput, campoNombre = null, formatter = null) {
-  if (!valorInput || valorInput.trim() === "") return null; // Cambiado de undefined a null
-  
-  // Si el array está vacío, retornar null
-  if (!array || array.length === 0) return null;
-  
-  const foundItem = array.find(item => {
-    if (formatter) {
-      const formattedValue = formatter(item).trim();
-      return formattedValue === valorInput.trim() || 
-             formattedValue.includes(valorInput.trim()) || 
-             valorInput.trim().includes(formattedValue);
-    } else if (campoNombre) {
-      return item[campoNombre] && item[campoNombre].trim() === valorInput.trim();
-    }
-    return false;
-  });
-  
-  return foundItem ? foundItem.id : null;
+function buscarIdPorNombre(array, inputValue, key = null, formatter = null) {
+  if (!inputValue?.trim()) return null;
+  inputValue = inputValue.trim();
+
+  return array.find(item => {
+    const value = formatter ? formatter(item).trim() : (key ? item[key]?.trim() : '');
+    return value === inputValue || value.includes(inputValue) || inputValue.includes(value);
+  })?.id ?? null;
 }
 
 deviceForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+  clearError(camposFormulario, "#deviceForm");
 
   const productoId = deviceIdInput.value;
   const movilId = deviceIdInput.dataset.movilId;
@@ -397,32 +348,27 @@ deviceForm.addEventListener("submit", async (e) => {
 
   const id = deviceIdInput.value;
   const productIds = productosSeleccionados.map(p => p.id);
-
-  // Obtener los IDs actuales del dispositivo si estamos editando
-  const currentDevice = id ? dispositivos.find(d => d.id === parseInt(id)) : null;
   
   const body = {
-    cpu_id: buscarIdPorNombre(cpus, deviceCpuInput.value.trim(), "nombre") ?? currentDevice?.cpu_id,
-    gpu_id: buscarIdPorNombre(gpus, deviceGpuInput.value.trim(), "modelo") ?? currentDevice?.gpu_id,
-    pantalla_id: buscarIdPorNombre(pantallas, deviceScreenInput.value.trim(), null, (p) =>
-      `${p.tamaño} ${p.resolucion} ${p.tipo}`.trim()
-    ) ?? currentDevice?.pantalla_id,
-    camara_id: buscarIdPorNombre(camaras, deviceCameraInput.value.trim(), null, (c) =>
-      `${c.principal} / Selfie: ${c.selfie}`.trim()
-    ) ?? currentDevice?.camara_id,
-    bateria_id: buscarIdPorNombre(baterias, deviceBatteryInput.value.trim(), null, (b) =>
-      `${b.capacidad} ${b.tipo} ${b.carga_rapida ? 'Carga rápida' : ''} ${b.carga_inalambrica ? 'Inalámbrica' : ''}`.trim()
-    ) ?? currentDevice?.bateria_id,
-    conectividad_id: buscarIdPorNombre(conectividades, deviceConnectivityInput.value.trim(), null, (c) =>
-      `${c.red} ${c.wifi} ${c.bluetooth} ${c.nfc ? 'NFC' : ''}`.trim()
-    ) ?? currentDevice?.conectividad_id,
-    dimensionespeso_id: buscarIdPorNombre(dimensionespeso, deviceSizeWeightInput.value.trim(), null, (d) =>
-      `${d.altura}x${d.anchura}x${d.grosor} ${d.peso}g`
-    ) ?? currentDevice?.dimensionespeso_id,
-    productIds 
-  };
-
-  console.log("Datos enviados para actualizar móvil:", JSON.stringify(body, null, 2));
+  cpu_id: deviceCpuInput.value.trim() ? buscarIdPorNombre(cpus, deviceCpuInput.value.trim(), "nombre") : undefined,
+  gpu_id: deviceGpuInput.value.trim() ? buscarIdPorNombre(gpus, deviceGpuInput.value.trim(), "modelo") : undefined,
+  pantalla_id: deviceScreenInput.value.trim() ? buscarIdPorNombre(pantallas, deviceScreenInput.value.trim(), null, (p) =>
+    `${p.tamaño} ${p.resolucion} ${p.tipo}`.trim()
+  ) : undefined,
+  camara_id: deviceCameraInput.value.trim() ? buscarIdPorNombre(camaras, deviceCameraInput.value.trim(), null, (c) =>
+    `${c.principal} / Selfie: ${c.selfie}`.trim()
+  ) : undefined,
+  bateria_id: deviceBatteryInput.value.trim() ? buscarIdPorNombre(baterias, deviceBatteryInput.value.trim(), null, (b) =>
+    `${b.capacidad} ${b.tipo} ${b.carga_rapida ? 'Carga rápida' : ''} ${b.carga_inalambrica ? 'Inalámbrica' : ''}`.trim()
+  ) : undefined,
+  conectividad_id: deviceConnectivityInput.value.trim() ? buscarIdPorNombre(conectividades, deviceConnectivityInput.value.trim(), null, (c) =>
+    `${c.red} ${c.wifi} ${c.bluetooth} ${c.nfc ? 'NFC' : ''}`.trim()
+  ) : undefined,
+  dimensionespeso_id: deviceSizeWeightInput.value.trim() ? buscarIdPorNombre(dimensionespeso, deviceSizeWeightInput.value.trim(), null, (d) =>
+    `${d.altura}x${d.anchura}x${d.grosor} ${d.peso}g`
+  ) : undefined,
+  productIds
+};
 
   try {
     const url = productoId ? `/api/specs/movil/${productoId}` : "/api/specs/movil";
@@ -437,7 +383,11 @@ deviceForm.addEventListener("submit", async (e) => {
   const data = await res.json();
 
   if (!res.ok) {
-    showToast(data.message || "Error al guardar el dispositivo.", "#e74c3c", "alert-circle");
+    if (data.validationError && Array.isArray(data.errors)) {
+      showValidation(data.errors, "#deviceForm");
+    } else {
+      showToast(data.message || "Error al guardar el dispositivo.", "#e74c3c", "alert-circle");
+    }
     return;
   }
 

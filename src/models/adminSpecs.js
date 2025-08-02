@@ -63,13 +63,10 @@ specs.obtenerTodosProductos = async () => {
 
 specs.eliminarMovil = async (id) => {
   try {
-    // Primero desasociar todos los productos de este móvil
     await db.query("UPDATE productos SET movil_id = NULL WHERE movil_id = ?", [id]);
     
-    // Luego eliminar el móvil
     const [result] = await db.query("DELETE FROM moviles WHERE id = ?", [id]);
     
-    // Verificar que realmente se eliminó
     return result.affectedRows > 0;
   } catch (err) {
     console.error("Error eliminando dispositivo:", err);

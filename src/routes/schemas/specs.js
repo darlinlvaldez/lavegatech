@@ -3,27 +3,16 @@ import { ERROR_ZOD } from "../../utils/error.js";
 
 const request = {};
 
-request.movil = z.object({
-nombre: z
-    .string()
-    .trim()
-    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
-    .max(100, { message: ERROR_ZOD.PRODUCT_NAME_MAX }),
-cpu: z
-    .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }),
-gpu: z
-    .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }),
-pantalla: z
-    .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }),
-camara: z
-    .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }),
-bateria: z
-    .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }),
-conectividad: z
-    .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }),
-dimensionespeso: z
-    .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }),
-}).strict()
+request.device = z.object({
+  cpu_id: z.number({ required_error: ERROR_ZOD.FIELD_REQUIRED }),
+  gpu_id: z.number({ required_error: ERROR_ZOD.FIELD_REQUIRED }),
+  pantalla_id: z.number({ required_error: ERROR_ZOD.FIELD_REQUIRED }),
+  camara_id: z.number({ required_error: ERROR_ZOD.FIELD_REQUIRED }),
+  bateria_id: z.number({ required_error: ERROR_ZOD.FIELD_REQUIRED }),
+  conectividad_id: z.number({ required_error: ERROR_ZOD.FIELD_REQUIRED }),
+  dimensionespeso_id: z.number({ required_error: ERROR_ZOD.FIELD_REQUIRED }),
+  productIds: z.array(z.number()).min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
+});
 
 request.pantalla = z.object({
 tipo: z
@@ -162,10 +151,10 @@ tipo: z
     .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
 }).strict(),
 
-request.varianteRAM = z.object({
-  nuevo_movil_id: z.number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }),
-  nuevo_ram_id: z.number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }),
-}).strict();
+request.varianteRam = z.object({
+  movil_id: z.number({ required_error: ERROR_ZOD.FIELD_REQUIRED }),
+  ram_id: z.number({ required_error: ERROR_ZOD.FIELD_REQUIRED })
+});
 
 request.varianteAlm = z.object({
   movil_id: z.number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }),

@@ -11,8 +11,8 @@ router.use(isAdmin());
 // Tabla moviles
 router.get('/todos-productos', requireRole('superadmin', 'admin', 'editor'), specs.listarTodosProductos);
 router.get('/moviles', requireRole('superadmin', 'admin', 'editor'), specs.listarMoviles);
-router.post('/movil', requireRole('superadmin', 'admin'), specs.crearMovil);
-router.put('/movil/:id', requireRole('superadmin', 'admin'), specs.editarMovil);
+router.post('/movil', requireRole('superadmin', 'admin'), validate(request.device), specs.crearMovil);
+router.put('/movil/:id', requireRole('superadmin', 'admin'), validate(request.device), specs.editarMovil);
 router.delete('/movil/:id', requireRole('superadmin'), specs.borrarMovil);
 
 // Tabla almacenamiento
