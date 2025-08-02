@@ -11,91 +11,107 @@
 </head>
 
 <body>
-    <aside class="sidebar">
-        <div class="sidebar-content">
-            <div class="sidebar-title">
-                <a>Hola, <%= admin?.username.toUpperCase() %></a>
-            </div>
-            <nav>
-                <ul>
-                    <li>
-                        <a href="/api/admin/panel" class="<%= req.originalUrl === '/api/admin/panel' ? 'active' : '' %>">
-                            <i class="fas fa-tachometer-alt"></i>
-                            <span>Panel Administrador</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/admin/products" class="<%= req.originalUrl === '/admin/products' ? 'active' : '' %>">
-                            <i class="fas fa-box-open"></i>
-                            <span>Productos</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/admin/variants" class="<%= req.originalUrl === '/admin/variants' ? 'active' : '' %>">
-                            <i class="fas fa-cogs"></i>
-                            <span>Variantes</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/admin/brandCategory" class="<%= req.originalUrl === '/admin/brandCategory' ? 'active' : '' %>">
-                            <i class="fas fa-tags"></i>
-                            <span>Marcas y Categorías</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/admin/device" class="<%= req.originalUrl === '/admin/device' ? 'active' : '' %>">
-                            <i class="fas fa-solid fa-arrow-right-arrow-left"></i>
-                            <span>Gestión de Comparación</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/admin/specs" class="<%= req.originalUrl === '/admin/specs' ? 'active' : '' %>">
-                            <i class="fas fa-sliders-h"></i>
-                            <span>Gestión de Especificaciones</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/admin/shipping" class="<%= req.originalUrl === '/admin/shipping' ? 'active' : '' %>">
-                            <i class="fas fa-city"></i>
-                            <span>Ciudades de envío</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/api/admin/orders" class="<%= req.originalUrl === '/api/admin/orders' ? 'active' : '' %>">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span>Pedidos</span>
-                        </a>
-                    </li>
-
-                    <!-- Esta opción la pueden ver superadmin y editor -->
-                    <% if (admin?.rol === 'superadmin' || admin?.rol === 'editor') { %>
-                    <li>
-                        <a href="/admin/users" class="<%= req.originalUrl === '/admin/users' ? 'active' : '' %>">
-                            <i class="fas fa-users"></i>
-                            <span>Usuarios</span>
-                        </a>
-                    </li>
-                    <% } %>
-
-                    <!-- Por ejemplo: solo superadmin ve esta opción -->
-                    <% if (admin?.rol === 'superadmin') { %>
-                    <li>
-                        <a href="/admin/accounts" class="<%= req.originalUrl === '/admin/accounts' ? 'active' : '' %>">
-                            <i class="fas fa-user-shield"></i>
-                            <span>Administradores</span>
-                        </a>
-                    </li>
-                    <% } %>
-                </ul>
-            </nav>
-        </div>
-        <form id="logout-form" action="/api/adminAuth/logout" method="POST" style="display: none;"></form>
-        <div class="logout">
-            <a href="#" onclick="document.getElementById('logout-form').submit(); return false;">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Cerrar Sesión</span>
+  <aside class="sidebar">
+    <div class="sidebar-content">
+      <div class="sidebar-title">
+        <a>Hola, <%= admin?.username.toUpperCase() %></a>
+      </div>
+      <nav>
+        <ul>
+          <% if (['superadmin', 'admin', 'editor', 'ventas', 'transportista'].includes(admin?.rol)) { %>
+          <li>
+            <a href="/api/admin/panel" class="<%= req.originalUrl === '/api/admin/panel' ? 'active' : '' %>">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Panel Administrador</span>
             </a>
-        </div>
-    </aside>
+          </li>
+          <% } %>
+
+          <% if (['superadmin', 'admin', 'editor'].includes(admin?.rol)) { %>
+          <li>
+            <a href="/admin/products" class="<%= req.originalUrl === '/admin/products' ? 'active' : '' %>">
+              <i class="fas fa-box-open"></i>
+              <span>Productos</span>
+            </a>
+          </li>
+          <li>
+            <a href="/admin/variants" class="<%= req.originalUrl === '/admin/variants' ? 'active' : '' %>">
+              <i class="fas fa-cogs"></i>
+              <span>Variantes</span>
+            </a>
+          </li>
+          <% } %>
+
+          <% if (['superadmin', 'admin', 'editor'].includes(admin?.rol)) { %>
+          <li>
+            <a href="/admin/brandCategory" class="<%= req.originalUrl === '/admin/brandCategory' ? 'active' : '' %>">
+              <i class="fas fa-tags"></i>
+              <span>Marcas y Categorías</span>
+            </a>
+          </li>
+          <li>
+            <a href="/admin/device" class="<%= req.originalUrl === '/admin/device' ? 'active' : '' %>">
+              <i class="fas fa-solid fa-arrow-right-arrow-left"></i>
+              <span>Gestión de Comparación</span>
+            </a>
+          </li>
+          <% } %>
+
+          <% if (['superadmin', 'admin', 'editor'].includes(admin?.rol)) { %>
+          <li>
+            <a href="/admin/specs" class="<%= req.originalUrl === '/admin/specs' ? 'active' : '' %>">
+              <i class="fas fa-sliders-h"></i>
+              <span>Gestión de Especificaciones</span>
+            </a>
+          </li>
+          <% } %>
+
+          <% if (['superadmin', 'admin', 'ventas', 'transportista'].includes(admin?.rol)) { %>
+          <li>
+            <a href="/admin/shipping" class="<%= req.originalUrl === '/admin/shipping' ? 'active' : '' %>">
+              <i class="fas fa-city"></i>
+              <span>Ciudades de envío</span>
+            </a>
+          </li>
+          <% } %>
+
+          <% if (['superadmin', 'admin', 'ventas', 'transportista'].includes(admin?.rol)) { %>
+          <li>
+            <a href="/api/admin/orders" class="<%= req.originalUrl === '/api/admin/orders' ? 'active' : '' %>">
+              <i class="fas fa-shopping-cart"></i>
+              <span>Pedidos</span>
+            </a>
+          </li>
+          <% } %>
+
+          <% if (['superadmin', 'admin'].includes(admin?.rol)) { %>
+          <li>
+            <a href="/admin/users" class="<%= req.originalUrl === '/admin/users' ? 'active' : '' %>">
+              <i class="fas fa-users"></i>
+              <span>Usuarios</span>
+            </a>
+          </li>
+          <% } %>
+
+          <% if (admin?.rol === 'superadmin') { %>
+          <li>
+            <a href="/admin/accounts" class="<%= req.originalUrl === '/admin/accounts' ? 'active' : '' %>">
+              <i class="fas fa-user-shield"></i>
+              <span>Administradores</span>
+            </a>
+          </li>
+          <% } %>
+        </ul>
+      </nav>
+    </div>
+
+    <form id="logout-form" action="/api/adminAuth/logout" method="POST" style="display: none;"></form>
+    <div class="logout">
+      <a href="#" onclick="document.getElementById('logout-form').submit(); return false;">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Cerrar Sesión</span>
+      </a>
+    </div>
+  </aside>
 </body>
 </html>

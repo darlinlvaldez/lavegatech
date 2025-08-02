@@ -38,7 +38,6 @@ adminAuth.login = async (req, res) => {
 
     req.session.admin = { id: foundAdmin.id, username: foundAdmin.username, rol: foundAdmin.rol };
 
-
     return res.redirect('/api/admin/panel');
 
   } catch (error) {

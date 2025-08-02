@@ -13,6 +13,6 @@ router.patch('/usuarios/:id/estado', isAdmin(), requireRole('superadmin'), admin
 router.delete('/usuarios/:id', isAdmin(), requireRole('superadmin'), adminAuth.borrarAdmin);
 
 router.post('/login', validate(request.login), adminAuth.login);
-router.post('/logout', isAdmin(), adminAuth.logout)
+router.post('/logout', isAdmin(), adminAuth.logout);
 
 export default router;

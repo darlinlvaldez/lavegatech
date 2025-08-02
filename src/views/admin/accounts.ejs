@@ -28,9 +28,10 @@
           <thead>
             <tr>
               <th style="width: 15%">ID</th>
-              <th style="width: 25%">Nombre de Usuario</th>
-              <th style="width: 25%">Fecha de Creación</th>
-              <th style="width: 25%">Estado</th>
+              <th style="width: 20%">Nombre de Usuario</th>
+              <th style="width: 20%">Rol</th>
+              <th style="width: 20%">Fecha de Creación</th>
+              <th style="width: 20%">Estado</th>
               <th style="width: 10%">Acciones</th>
             </tr>
           </thead>
@@ -66,10 +67,13 @@
       </div>
       <div class="form-group">
       <label for="rol">Rol:</label>
-      <select id="rol" name="rol">
+      <select id="rol" name="rol" required>
+        <option value="">Selecciona el rol</option>
         <option value="superadmin">Superadmin</option>
+        <option value="admin">Admin</option>
         <option value="editor">Editor</option>
-        <option value="soporte">Soporte</option>
+        <option value="ventas">Ventas</option>
+        <option value="transportista">Transportista</option>
       </select>
       <div class="error-text" data-error-for="rol"></div>
     </div>

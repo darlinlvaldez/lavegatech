@@ -117,8 +117,11 @@ request.userAdmin = z.object({
     .string()
     .min(6, { message: ERROR_ZOD.PASSWORD_MIN })
     .optional(),
-    rol: z.enum(['superadmin', 'editor', 'soporte'], {
-  required_error: ERROR_ZOD.FIELD_REQUIRED})
+  rol: z.string({
+    required_error: ERROR_ZOD.FIELD_REQUIRED
+  }).refine(val => ['superadmin', 'admin', 'editor', 'soporte', 'editor', 'ventas', 'transportista'].includes(val), {
+    message: ERROR_ZOD.FIELD_REQUIRED
+  })
 }).strict();
 
 export default request;

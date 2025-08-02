@@ -4,7 +4,7 @@ import { sweetAlert } from './sweetAlert2.js';
 
 let admins = [];
 
-const userErrorFields = ["username", "password", "confirmPassword"];
+const userErrorFields = ["username", "password", "confirmPassword", "rol"];
 
 async function fetchAdmins() {
   const res = await fetch("/api/adminAuth/usuarios");
@@ -53,6 +53,7 @@ function renderAdmins() {
     row.innerHTML = `
       <td>${admin.id}</td>
       <td>${admin.username}</td>
+      <td>${admin.rol}</td>
       <td>${new Date(admin.created_at).toLocaleString()}</td>
       <td>${estadoBtn}</td>
       <td>${botones}</td>
@@ -108,6 +109,7 @@ function openAddModal() {
   document.getElementById("userId").value = "";
   document.getElementById("username").value = "";
   document.getElementById("password").value = "";
+  document.getElementById("rol").value = "";
   document.getElementById("passwordOptionalLabel").style.display = "none";
   document.getElementById("userModal").classList.add("visible");
   document.getElementById("password").setAttribute("required", "true");
@@ -130,6 +132,12 @@ window.openEditModal = function(id) {
 function closeModal() {
   document.getElementById("userModal").classList.remove("visible");
   clearError(userErrorFields, "#userForm");
+
+  document.getElementById("username").value = "";
+  document.getElementById("password").value = "";
+  document.getElementById("confirmPassword").value = "";
+  document.getElementById("rol").value = "";
+  document.getElementById("userId").value = "";
 }
 
 const userForm = document.getElementById("userForm");

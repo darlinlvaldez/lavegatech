@@ -9,71 +9,83 @@
         </header>
 
         <main class="main-content-area">
-
             <div class="dashboard">
+                <% if (['superadmin', 'admin', 'ventas', 'transportista'].includes(admin?.rol)) { %>
                 <a href="/api/admin/orders" class="card">
-                    <div class="icon">🛒</div>
+                    <div class="icon"><i class="fas fa-shopping-cart"></i></div>
                     <div class="info">
-                    <div class="title">Pedidos totales</div>
-                    <div class="value" id="pedidosTotales"><%= result.pedidos %></div>
+                        <div class="title">Pedidos totales</div>
+                        <div class="value" id="pedidosTotales"><%= result.pedidos %></div>
                     </div>
                 </a>
+                <% } %>
+
+                <% if (['superadmin', 'admin', 'editor'].includes(admin?.rol)) { %>
                 <a href="/admin/products" class="card">
-                    <div class="icon">📦</div>
+                    <div class="icon"><i class="fas fa-box-open"></i></div>
                     <div class="info">
-                    <div class="title">Productos totales</div>
-                    <div class="value" id="productosTotales"><%= result.productos %></div>
+                        <div class="title">Productos totales</div>
+                        <div class="value" id="productosTotales"><%= result.productos %></div>
                     </div>
                 </a>
+                <% } %>
+
+                <% if (['superadmin', 'admin'].includes(admin?.rol)) { %>
                 <a href="/admin/users" class="card">
-                    <div class="icon">👥</div>
+                    <div class="icon"><i class="fas fa-users"></i></div>
                     <div class="info">
-                    <div class="title">Usuarios registrados</div>
-                    <div class="value" id="usuariosRegistrados"><%= result.usuarios %></div>
+                        <div class="title">Usuarios registrados</div>
+                        <div class="value" id="usuariosRegistrados"><%= result.usuarios %></div>
                     </div>
                 </a>
+                <% } %>
+
+                <% if (['superadmin', 'admin', 'ventas'].includes(admin?.rol)) { %>
                 <a href="/admin/sales" class="card">
-                    <div class="icon">💰</div>
+                    <div class="icon"><i class="fas fa-chart-line"></i></div>
                     <div class="info">
-                    <div class="title">Ventas completadas</div>
-                    <div class="value" id="ventasCompletadas">$<%= result.ventas.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></div>
+                        <div class="title">Ventas completadas</div>
+                        <div class="value" id="ventasCompletadas">$<%= result.ventas.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></div>
                     </div>
                 </a>
+                <% } %>
             </div>
 
+            <% if (['superadmin', 'admin', 'transportista', 'ventas'].includes(admin?.rol)) { %>
             <section class="shipping-section">
-                <h2 style="margin-top: 40px; margin-bottom: 20px;">Estados de Envío</h2>
+                <h2 style="margin-top: 40px; margin-bottom: 20px;"><i class="fas fa-truck"></i> Estados de Envío</h2>
                 <div class="dashboard">
                     <a href="/api/admin/orders?estado=pendiente" class="card">
-                    <div class="icon">📨</div>
-                    <div class="info">
-                        <div class="title">Pendientes de envío</div>
-                        <div class="value" id="enviosPendientes"><%= result.envios.pendientes %></div>
-                    </div>
+                        <div class="icon"><i class="fas fa-clock"></i></div>
+                        <div class="info">
+                            <div class="title">Pendientes de envío</div>
+                            <div class="value" id="enviosPendientes"><%= result.envios.pendientes %></div>
+                        </div>
                     </a>
                     <a href="/api/admin/orders?estado=en_camino" class="card">
-                    <div class="icon">🚚</div>
-                    <div class="info">
-                        <div class="title">En camino</div>
-                        <div class="value" id="enviosEnCamino"><%= result.envios.enviados %></div>
-                    </div>
+                        <div class="icon"><i class="fas fa-truck-moving"></i></div>
+                        <div class="info">
+                            <div class="title">En camino</div>
+                            <div class="value" id="enviosEnCamino"><%= result.envios.enviados %></div>
+                        </div>
                     </a>
                     <a href="/api/admin/orders?estado=entregado" class="card">
-                    <div class="icon">✅</div>
-                    <div class="info">
-                        <div class="title">Entregados</div>
-                        <div class="value" id="enviosEntregados"><%= result.envios.entregados %></div>
-                    </div>
+                        <div class="icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="info">
+                            <div class="title">Entregados</div>
+                            <div class="value" id="enviosEntregados"><%= result.envios.entregados %></div>
+                        </div>
                     </a>
                     <a href="/api/admin/orders?estado=cancelado" class="card">
-                    <div class="icon">❌</div>
-                    <div class="info">
-                        <div class="title">Cancelados</div>
-                        <div class="value" id="enviosCancelados"><%= result.envios.cancelados %></div>
-                    </div>
+                        <div class="icon"><i class="fas fa-times-circle"></i></div>
+                        <div class="info">
+                            <div class="title">Cancelados</div>
+                            <div class="value" id="enviosCancelados"><%= result.envios.cancelados %></div>
+                        </div>
                     </a>
                 </div>
             </section>
+            <% } %>
         </main>
     </div>
 </body>

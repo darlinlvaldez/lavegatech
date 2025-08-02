@@ -9,7 +9,7 @@ admin.findByUsername = async (username) => {
 
 admin.obtenerAdmins = async () => {
   const [rows] = await db.query(
-    "SELECT id, username, created_at, is_active FROM admin"
+    "SELECT id, username, created_at, is_active, rol FROM admin"
   );
   return rows;
 };
