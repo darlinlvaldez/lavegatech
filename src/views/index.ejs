@@ -78,7 +78,7 @@ document.querySelector(".tablink").click();
                                             <%= producto.categoria === 'moviles' ? 'Móviles' : producto.categoria.charAt(0).toUpperCase() + producto.categoria.slice(1) %>
                                         </p>
                                         <h3 class="product-name">
-                                                <%= producto.nombre %><%= producto.nombre %><%= producto.ram %> + <%= producto.almacenamiento %>
+                                                <%= producto.nombre %> <%= producto.ram %> + <%= producto.almacenamiento %>
                                             </h3>
                                             <h4 class="product-price">
                                                 $<%= Number(producto.precio * (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
@@ -109,7 +109,7 @@ document.querySelector(".tablink").click();
                                                 <span class="tooltipp">Comparar</span></button>
                                                 <% } %>
 
-                                            <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
+                                            
                                         </div>
                                     </div>
                                     <div class="add-to-cart">
@@ -179,7 +179,7 @@ document.querySelector(".tablink").click();
                                                 <span class="tooltipp">Comparar</span></button>
                                                 <% } %>
                                                 
-                                            <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
+                                            
                                         </div>
                                     </div>
                                     <div class="add-to-cart">
@@ -250,7 +250,7 @@ document.querySelector(".tablink").click();
                                                 <span class="tooltipp">Comparar</span></button>
                                                 <% } %>
 
-                                            <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
+                                            
                                         </div>
                                     </div>
                                     <div class="add-to-cart">
@@ -319,8 +319,6 @@ document.querySelector(".tablink").click();
                                                 <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
                                                 <span class="tooltipp">Comparar</span></button>
                                                 <% } %>
-                                                
-                                            <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
                                         </div>
                                     </div>
                                     <div class="add-to-cart">
@@ -389,7 +387,7 @@ document.querySelector(".tablink").click();
                                                 <span class="tooltipp">Comparar</span></button>
                                                 <% } %>
 
-                                            <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
+                                            
                                         </div>
                                     </div>
                                     <div class="add-to-cart">
@@ -523,7 +521,7 @@ document.querySelector(".tablink").click();
                                                         <span class="tooltipp">Comparar</span></button>
                                                         <% } %>
 
-                                                        <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Vistazo rapido</span></button>
+                                                        
                                                     </div>
                                                 </div>
                                                 <div class="add-to-cart">

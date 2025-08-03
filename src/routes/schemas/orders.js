@@ -32,7 +32,7 @@ request.order = z.object({
   telefono: z
     .string()
     .length(10, { message: ERROR_ZOD.NUMBER_MIN }),
-    envio_diferente: z
+  envio_diferente: z
     .number()
     .int()
     .min(0)

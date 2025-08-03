@@ -11,7 +11,7 @@ orderController.createOrder = async (req, res) => {
     }
 
     const userId = req.session.user.id;
-    const { nombre, apellido, email, direccion, ciudad, 
+    const { nombre, apellido, email, direccion, 
       distrito, telefono, ciudad_envio_id, envio_diferente} = req.body;
 
     if (!nombre || !direccion || !telefono || !email) {

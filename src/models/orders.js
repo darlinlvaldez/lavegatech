@@ -8,16 +8,15 @@ orders.createOrder = async (orderData, items, costoEnvio) => {
     await conn.beginTransaction();
 
       const [orderResult] = await conn.query(
-      `INSERT INTO pedidos (user_id, nombre, apellido, email, direccion, ciudad, 
+      `INSERT INTO pedidos (user_id, nombre, apellido, email, direccion, 
         distrito, telefono, total, status, ciudad_envio_id, envio_diferente) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         orderData.user_id,
         orderData.nombre,
         orderData.apellido,
         orderData.email,
         orderData.direccion,
-        orderData.ciudad,
         orderData.distrito,
         orderData.telefono,
         orderData.total,
@@ -144,11 +143,11 @@ orders.checkStock = async (items) => {
 
 orders.getOrderById = async (orderId, userId) => {
   const [order] = await db.query(
-    `SELECT p.*, c.costo_envio, e.estado_envio 
-     FROM pedidos p 
-     LEFT JOIN ciudades_envio c ON p.ciudad_envio_id = c.id 
-     LEFT JOIN envios e ON p.id = e.pedido_id
-     WHERE p.id = ? AND p.user_id = ?`,
+    `SELECT p.*, c.nombre AS nombre_ciudad_envio, c.costo_envio, e.estado_envio 
+    FROM pedidos p 
+    LEFT JOIN ciudades_envio c ON p.ciudad_envio_id = c.id 
+    LEFT JOIN envios e ON p.id = e.pedido_id
+    WHERE p.id = ? AND p.user_id = ?`,
     [orderId, userId]
   );
 

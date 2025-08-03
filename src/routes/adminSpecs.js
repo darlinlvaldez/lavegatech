@@ -53,8 +53,8 @@ router.delete('/dimensionespeso/:id', requireRole('superadmin'), specs.borrarDim
 
 // Tabla variantes Almacenamiento
 router.get('/variantes_almacenamiento', requireRole('superadmin', 'admin', 'editor'), specs.listarVariantesAlmacenamiento);
-router.post('/variantes_almacenamiento', requireRole('superadmin', 'admin'), validate(request.varianteAlm), specs.crearVarianteAlmacenamiento);
-router.put('/variantes_almacenamiento/:movil_id/:almacenamiento_id', requireRole('superadmin', 'admin'), validate(request.varianteAlm), specs.editarVarianteAlmacenamiento);
+router.post('/variantes_almacenamiento', requireRole('superadmin', 'admin'), specs.crearVarianteAlmacenamiento);
+router.put('/variantes_almacenamiento/:movil_id/:almacenamiento_id', requireRole('superadmin', 'admin'), specs.editarVarianteAlmacenamiento);
 router.delete('/variantes_almacenamiento/:movil_id/:almacenamiento_id', requireRole('superadmin'), specs.borrarVarianteAlmacenamiento);
 
 // Tabla gpu
