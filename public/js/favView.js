@@ -17,7 +17,6 @@ async function handleClearFav() {
     const authData = await checkAuth();
 
     if (!authData.authenticated) {
-      localStorage.removeItem("favoritos");
       await loadCartPreview();
       return;
     }
@@ -66,7 +65,8 @@ function renderButton(favItems) {
 }
 
 function generateFavItemHTML(item) {
-    const productId = item.id || item.producto_id;
+  
+    const productId = item.producto_id;
     const color = item.colorSeleccionado;
     const price = Number(item.precio) || 0;
     const discount = Number(item.descuento) || 0;
@@ -95,19 +95,13 @@ function generateFavItemHTML(item) {
         </div>
         <div class="action-buttons">
             <button class="add-to-cart-btn"
-                data-id="${productId}" 
-                data-nombre="${item.nombre}"
-                data-ram="${item.ram}" 
-                data-almacenamiento="${item.almacenamiento}" 
-                data-precio="${price}" 
-                data-color="${color}"
-                data-descuento="${discount}" 
-                data-stock="${item.stockPorColor}"
-                data-imagen="${item.imagen}">
-                <i class="fa fa-shopping-cart"></i> Añadir al carrito
-            </button>
+        data-id="${item.producto_id || productId}" 
+        data-color="${item.colorSeleccionado || item.color || ''}">
+    <i class="fa fa-shopping-cart"></i> Añadir al carrito
+    </button>
+
             </div>
-            <i class="bi bi-trash remove-btn" onclick="removeFromFav('${productId}', '${color}')"></i>
+            <i class="bi bi-trash remove-btn" onclick="removeFromFav('${productId}', '${color}', '${item.variante_id}')"></i>
         </div>`;
     }
 

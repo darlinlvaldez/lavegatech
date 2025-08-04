@@ -11,7 +11,7 @@ product.detallesController = async (req, res) => {
     const producto = await product.obtenerDetalles(id);
 
     if (!producto) {
-      return res.status(404).render("error", { mensaje: "Producto no encontrado" });
+      return res.status(404).render("error", { message: "Producto no encontrado" });
     }
     
     const categorias = await principal.obtenerCategorias();

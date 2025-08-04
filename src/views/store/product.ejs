@@ -103,22 +103,25 @@
 					</div>
 					<br><br>
 					<div class="add-to-cart">
-						<button class="add-to-cart-btn" id="add-to-cart-btn" data-id="<%= producto.id %>"
-							data-nombre="<%= producto.nombre %>" data-precio="<%= producto.precio %>"
-							data-descuento="<%= producto.descuento %>" data-stock="<%= producto.stock %>"
-							data-color="<%= colorSeleccionado %>" data-almacenamiento="<%= producto.almacenamiento %>" 
-							data-ram="<%= producto.ram %>"> <i class="fa fa-shopping-cart"></i>Añadir al carrito
+						<button class="add-to-cart-btn" id="add-to-cart-btn" 
+						data-id="<%= producto.id %>"
+						data-color="<%= producto.color %>"
+						data-ram="<%= producto.ram %>"
+						data-almacenamiento="<%= producto.almacenamiento %>"
+						data-stock="<%= producto.stock %>"
+						data-nombre="<%= producto.nombre %>"
+						data-precio="<%= producto.precio %>"
+						data-imagen="<%= producto.imagen %>">
+						<i class="fa fa-shopping-cart"></i> Añadir al carrito
 						</button>
 					</div>
 				</div>
 				<ul class="product-btns">
 				<li>
-				<a role="button" class="add-to-wishlist" data-product-id="<%= producto.id %>"
-					data-product-name="<%= producto.nombre %>" data-product-price="<%= producto.precio %>"
-					data-product-discount="<%= producto.descuento || 0 %>"
-					data-product-image="<%= producto.imagen %>" data-product-color="<%= colorSeleccionado %>"
-					data-product-almacenamiento="<%= producto.almacenamiento %>" data-product-ram="<%= producto.ram %>">
-					<i class="fa fa-heart-o"></i>Favoritos</a>
+				<a role="button" class="add-to-wishlist" 
+				data-product-id="<%= producto.id %>" 
+                data-product-color="<%= producto.color %>">
+				<i class="fa fa-heart-o"></i>Favoritos</a>
 				</li>
 
 				<% if (producto.esMovil) { %>

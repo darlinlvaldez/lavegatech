@@ -4,35 +4,56 @@ import product from "../models/product.js";
 const favController = {};
 
 favController.addToFav = async (req, res) => {
-  try {
-    const userId = req.session.user.id;
-    const { producto_id, colorSeleccionado, nombre, ram, almacenamiento, precio, descuento = 0, imagen } = req.body;
+    try {
+        const userId = req.session.user.id;
+        const { producto_id, colorSeleccionado } = req.body;
 
-    if (!producto_id || !nombre || !precio) {
-      return res.status(400).json({ 
-        success: false, message: 'Datos inválidos'});
+        if (!producto_id || !colorSeleccionado) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Datos inválidos'
+            });
+        }
+
+        const variante = await fav.getVariant(producto_id, colorSeleccionado);
+        const variante_id = variante ? variante.id : null;
+
+        if (!variante_id) {
+            return res.status(400).json({
+                success: false,
+                message: 'Variante no encontrada para el color seleccionado'
+            });
+        }
+
+        const existingItem = await fav.itemExists(userId, producto_id, variante_id);
+
+        if (!existingItem) {
+            await fav.addItem({
+                usuario_id: userId,
+                producto_id,
+                variante_id
+            });
+        }
+
+        res.json({
+            success: true,
+            count: await fav.getCount(userId)
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al agregar a favoritos'
+        });
     }
-
-    const existingItem = await fav.itemExists(userId, producto_id, colorSeleccionado);
-
-    if (!existingItem) {
-      await fav.addItem({usuario_id: userId, producto_id, colorSeleccionado, descuento, 
-        precio, imagen, nombre, ram, almacenamiento});
-    }
-
-    res.json({success: true, count: await fav.getCount(userId) });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({success: false, message: 'Error al agregar a favControlleroritos'});
-  }
 };
 
 favController.removeFromFav = async (req, res) => {
   try {
     const userId = req.session.user.id;
-    const { producto_id, colorSeleccionado } = req.body;
+    const { producto_id, variante_id } = req.body; 
 
-    await fav.removeItem(userId, producto_id, colorSeleccionado);
+    await fav.removeItem(userId, producto_id, variante_id); 
     
     res.json({success: true, count: await fav.getCount(userId) });
   } catch (error) {

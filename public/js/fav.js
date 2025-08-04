@@ -22,19 +22,8 @@ async function toggleFavorite(button) {
 
     try {
         const productId = button.dataset.productId;
-        const productName = button.dataset.productName;
-        const ramName = button.dataset.productRam;
-        const almacenamientoName = button.dataset.productAlmacenamiento;
-        const productPrice = button.dataset.productPrice;
-        const productDiscount = button.dataset.productDiscount;
-        let productImage = button.dataset.productImage;
-        const colorSelected = button.dataset.productColor;
+        const color = button.dataset.productColor;
         const isAlreadyAdded = button.classList.contains('added');
-
-        if (!productImage && document.getElementById('product-main-img')) {
-            const slider = $('#product-main-img');
-            if (slider.length) productImage = slider.find('.slick-current img').attr('src');
-        }
 
         const authData = await checkAuth();
         if (!authData.authenticated) {
@@ -43,7 +32,7 @@ async function toggleFavorite(button) {
         }
 
         if (isAlreadyAdded) {
-            await removeFromFav(productId, colorSelected);
+            await removeFromFav(productId, color);
             setButtonState(button, false);
         } else {
             await fetchFav('/fav/add', {
@@ -51,14 +40,7 @@ async function toggleFavorite(button) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     producto_id: productId,
-                    colorSeleccionado: colorSelected,
-                    nombre: productName,
-                    ram: ramName,
-                    almacenamiento: almacenamientoName,
-                    precio: productPrice,
-                    descuento: productDiscount,
-                    imagen: productImage,
-                    stockPorColor: window.productData?.stocksPorColor?.[colorSelected]
+                    colorSeleccionado: color
                 })
             });
             setButtonState(button, true);
@@ -80,14 +62,16 @@ async function checkFavorites() {
             const data = await fetchFav('/fav/items');
             if (data.success && data.items) favorites = data.items;
         }
+        
         document.querySelectorAll('.add-to-wishlist').forEach(button => {
             const productId = button.dataset.productId;
             const currentColor = button.dataset.productColor;
             const isFav = favorites.some(item => 
-                item.id == productId && item.colorSeleccionado == currentColor
+                item.producto_id == productId && item.colorSeleccionado == currentColor
             );
             setButtonState(button, isFav);
         });
+        
         updateFavCount(favorites.length);
     } catch (error) {
         console.error("Error al verificar favoritos:", error);
@@ -117,24 +101,29 @@ document.addEventListener('DOMContentLoaded', () => {
     checkFavorites();
 });
 
-async function removeFromFav(productId, color) {
-    const authData = await checkAuth();
-    if (!authData.authenticated) return;
+async function removeFromFav(productId, color, varianteId) {
+  const authData = await checkAuth();
+  if (!authData.authenticated) return;
 
-    try {
-        const data = await fetchFav('/fav/remove', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ producto_id: productId, colorSeleccionado: color })
-        });
-        
-        if (data.success) {
-            updateFavCount(data.count || 0);
-            loadFavPage();
-        }
-    } catch (error) {
-        console.error('Error al eliminar de favoritos:', error);
+  try {
+    const data = await fetchFav('/fav/remove', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        producto_id: productId, 
+        colorSeleccionado: color,
+        variante_id: varianteId
+      })
+    });
+
+    if (data.success) {
+      updateFavCount(data.count || 0);
+      loadFavPage();
     }
+  } catch (error) {
+    console.error('Error al eliminar de favoritos:', error);
+  }
 }
+
 
 export { checkFavorites };
