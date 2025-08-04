@@ -18,15 +18,6 @@ cart.getVariant = async (producto_id, color) => {
   return rows[0] || null;
 };
 
-cart.getStockByVariantId = async (variante_id) => {
-  const [rows] = await db.query(
-    "SELECT stock FROM p_variantes WHERE id = ?",
-    [variante_id]
-  );
-  return rows[0]?.stock || 0;
-};
-
-
 cart.updateQuantity = async (identifier, usuario_id, value) => {
   if (typeof identifier === 'number') {
     await db.query(
