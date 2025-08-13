@@ -250,7 +250,7 @@ auth.forgotPassword = async (req, res) => {
       return renderError(res, 'login/forgotPass/newpass', ERROR_MESSAGES.PASSWORDS_DONT_MATCH, { 
         email, validationErrors: {password: ERROR_MESSAGES.PASSWORDS_DONT_MATCH,
           confirm: ERROR_MESSAGES.PASSWORDS_DONT_MATCH} });
-       }
+      }
 
     if (!code.resetPending.get(email)) {
       return renderError(res, 'login/forgotPass/newpass', ERROR_MESSAGES.NO_RESET_REQUEST, { 
@@ -285,16 +285,6 @@ auth.formEmail = async (req, res) => {
     return renderError(res, 'store/contact', null, {
       nombre, email, asunto, mensaje, success: false,
       validationErrors: req.validationError.fields
-    });
-  }
-
-  if (!nombre || !email || !asunto || !mensaje) {
-    return renderError(res, 'store/contact', ERROR_MESSAGES.MISSING_FIELDS, {
-      nombre, email, asunto, mensaje, success: false,
-      validationErrors: {nombre: !nombre && ERROR_MESSAGES.REQUIRED_FIELD,
-        email: !email && ERROR_MESSAGES.REQUIRED_FIELD,
-        asunto: !asunto && ERROR_MESSAGES.REQUIRED_FIELD,
-        mensaje: !mensaje && ERROR_MESSAGES.REQUIRED_FIELD}
     });
   }
 

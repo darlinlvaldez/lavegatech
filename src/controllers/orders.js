@@ -5,19 +5,10 @@ const orderController = {};
 
 orderController.createOrder = async (req, res) => {
   try {
-    if (!req.session.user) {
-      return res.status(401).json({ 
-        success: false, message: 'No autorizado'});
-    }
-
+    
     const userId = req.session.user.id;
     const { nombre, apellido, email, direccion, 
       distrito, telefono, ciudad_envio_id, envio_diferente} = req.body;
-
-    if (!nombre || !direccion || !telefono || !email) {
-      return res.status(400).json({ 
-        success: false, message: 'Faltan datos requeridos'});
-    }
 
     const cartItems = await cart.getCartToPay(userId);
     if (cartItems.length === 0) { 
