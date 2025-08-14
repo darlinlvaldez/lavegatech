@@ -1,5 +1,5 @@
-import fav from "../models/fav.js"
-import product from "../models/product.js";
+import fav from "../../models/fav.js"
+import product from "../../models/product.js";
 
 const favController = {};
 

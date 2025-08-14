@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
-import user from "../models/auth.js";
-import emailService from '../services/email.js';
-import code from '../utils/generateCode.js';
-import {ERROR_MESSAGES} from '../utils/error.js';
-import {CODE_EXPIRATION, RESEND_COOLDOWN} from '../utils/generateCode.js';
+import user from "../../models/auth.js";
+import emailService from '../../services/email.js';
+import code from '../../utils/generateCode.js';
+import {ERROR_MESSAGES} from '../../utils/error.js';
+import {CODE_EXPIRATION, RESEND_COOLDOWN} from '../../utils/generateCode.js';
 
 const auth = {};
 

@@ -1,6 +1,6 @@
-import store from '../models/store.js';
-import rating from "../models/rating.js";
-import db from "../database/mobiles.js";
+import store from '../../models/store.js';
+import rating from "../../models/rating.js";
+import db from "../../database/mobiles.js";
 
 store.storeController = async (req, res) => {
   try {

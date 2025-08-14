@@ -1,5 +1,5 @@
-import principal from '../models/principal.js';
-import rating from "../models/rating.js";
+import principal from '../../models/principal.js';
+import rating from "../../models/rating.js";
 
 principal.productosController = async (req, res) => {
   try {

@@ -1,5 +1,5 @@
-import orders from '../models/orders.js';
-import cart from '../models/cart.js';
+import orders from '../../models/store/orders.js';
+import cart from '../../models/cart.js';
 
 const orderController = {};
 

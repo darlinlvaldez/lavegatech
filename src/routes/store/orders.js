@@ -1,8 +1,8 @@
 import express from 'express';
 import orders from '../controllers/orders.js';
-import validate from '../middlewares/validateRequest.js';
-import request from './schemas/orders.js';
-import { isAuth } from '../middlewares/auth.js';
+import validate from '../../middlewares/validateRequest.js';
+import request from '../schemas/orders.js';
+import { isAuth } from '../../middlewares/auth.js';
 
 const router = express.Router();
 

@@ -1,4 +1,4 @@
-import rating from '../models/rating.js';
+import rating from '../../models/rating.js';
 
 const ratingController = {};
 

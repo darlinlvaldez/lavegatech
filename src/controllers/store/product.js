@@ -1,7 +1,7 @@
-import product from "../models/product.js";
-import rating from "../models/rating.js";
-import comparison from "../models/comparison.js";
-import principal from '../models/principal.js';
+import product from "../../models/store/product.js";
+import rating from "../../models/rating.js";
+import comparison from "../../models/comparison.js";
+import principal from '../../models/principal.js';
 
 product.detallesController = async (req, res) => {
   try {

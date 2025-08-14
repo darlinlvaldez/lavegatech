@@ -20,8 +20,8 @@ import orders from './src/routes/orders.js';
 import rating from './src/routes/rating.js';
 import comparison from './src/routes/comparison.js'; 
 import admin from './src/routes/admin.js';
-import adminAuth from './src/routes/adminAuth.js';
-import specs from './src/routes/adminSpecs.js';
+import adminAuth from './src/routes/authAdmin.js';
+import specs from './src/routes/specsAdmin.js';
 
 const app = express();
 

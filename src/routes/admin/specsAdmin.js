@@ -1,8 +1,8 @@
 import express from 'express';
 import specs from '../controllers/adminSpecs.js';
-import validate from '../middlewares/validateRequest.js';
-import request from './schemas/specs.js';
-import { isAdmin, requireRole } from '../middlewares/auth.js';
+import validate from '../../middlewares/validateRequest.js';
+import request from '../schemas/specs.js';
+import { isAdmin, requireRole } from '../../middlewares/auth.js';
 
 const router = express.Router();
 
