@@ -1,6 +1,6 @@
-import { showToast } from './toastify.js';
-import { showValidation, clearError } from "./showValidation.js";
-import { sweetAlert } from './sweetAlert2.js';
+import { showToast } from '../../utils/toastify.js';
+import { showValidation, clearError } from "../../utils/showValidation.js";
+import { sweetAlert } from '../../utils/sweetAlert2.js';
 
 let admins = [];
 

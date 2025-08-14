@@ -1,4 +1,4 @@
-import { fetchFav, checkAuth, updateFavCount } from './utils.js';
+import { fetchFav, checkAuth, updateFavCount } from '../utils/utils.js';
 import { loadFavPage } from './loadFavPage.js';
 
 window.removeFromFav = removeFromFav;

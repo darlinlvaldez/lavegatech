@@ -1,4 +1,4 @@
-import { showToast } from './toastify.js';
+import { showToast } from '../toastify.js';
 
 const searchInput = document.getElementById("searchPedidosInput");
 const pedidos = document.querySelectorAll(".list-group-product");
