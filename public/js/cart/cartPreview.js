@@ -1,4 +1,4 @@
-import { loadCartPreview } from '../loadCartPreview.js';
+import { loadCartPreview } from '../cart/loadCartPreview.js';
 
 window.renderCart = renderCart;
 

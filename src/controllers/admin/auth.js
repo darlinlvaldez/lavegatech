@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import admin from '../../models/adminAuth.js';
+import admin from '../../models/admin/auth.js';
 import { renderError, ERROR_MESSAGES } from '../../utils/error.js';
 
 const adminAuth = {};

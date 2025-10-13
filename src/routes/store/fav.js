@@ -1,5 +1,5 @@
 import express from 'express';
-import fav from '../controllers/fav.js';
+import fav from '../../controllers/store/fav.js';
 import {isAuth} from '../../middlewares/auth.js';
 
 const router = express.Router();

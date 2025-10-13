@@ -1,4 +1,4 @@
-import cart from '../../models/cart.js';
+import cart from '../../models/store/cart.js';
 import product from "../../models/store/product.js";
 
 const cartController = {};
@@ -245,7 +245,7 @@ cartController.getRelated = async (req, res) => {
         [lastCart.carrito_id], [lastCart.categoria_id]);
     }
 
-    res.render("store/cart", {cartItems, productRelacionados, isAuthenticated: !!userId});
+    res.render("store/clients/cart", {cartItems, productRelacionados, isAuthenticated: !!userId});
   } catch (error) {
     console.error("Error al cargar la página del carrito:", error);
     res.status(500).render("error", { mensaje: error.message });

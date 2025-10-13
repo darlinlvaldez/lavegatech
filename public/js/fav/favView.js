@@ -1,6 +1,6 @@
 import { fetchFav, checkAuth } from '../utils/utils.js';
 import {loadFavPage} from './loadFavPage.js';
-import {sweetAlert} from '../sweetAlert2.js';
+import {sweetAlert} from '../utils/sweetAlert2.js';
 
 window.renderButton = renderButton;
 

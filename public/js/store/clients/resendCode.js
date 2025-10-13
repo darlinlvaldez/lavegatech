@@ -1,4 +1,4 @@
-import { showToast } from "./toastify.js";
+import { showToast } from "../../utils/toastify.js";
 
 document.addEventListener('DOMContentLoaded', () => {
   const resendForm = document.getElementById('resendForm');

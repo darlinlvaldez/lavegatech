@@ -1,4 +1,4 @@
-import comparison from "../../models/comparison.js";
+import comparison from "../../models/store/comparison.js";
 
 const comparisonController = {};
 

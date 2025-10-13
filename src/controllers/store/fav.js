@@ -1,5 +1,5 @@
-import fav from "../../models/fav.js"
-import product from "../../models/product.js";
+import fav from "../../models/store/fav.js"
+import product from "../../models/store/product.js";
 
 const favController = {};
 
@@ -102,7 +102,7 @@ favController.getFavPage = async (req, res) => {
         [lastFav.id], [lastFav.categoria_id]);
     }
 
-    res.render('store/fav', {
+    res.render('store/clients/fav', {
       favItems, productRelacionados, isAuthenticated: true
     });
   } catch (error) {

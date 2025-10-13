@@ -1,5 +1,5 @@
 import express from 'express';
-import admin from '../controllers/admin.js';
+import admin from '../../controllers/admin/admin.js';
 import validate from '../../middlewares/validateRequest.js';
 import request from '../schemas/admin.js';
 import { isAdmin, requireRole } from '../../middlewares/auth.js';

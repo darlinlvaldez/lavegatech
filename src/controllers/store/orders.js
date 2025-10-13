@@ -1,5 +1,5 @@
 import orders from '../../models/store/orders.js';
-import cart from '../../models/cart.js';
+import cart from '../../models/store/cart.js';
 
 const orderController = {};
 
@@ -156,7 +156,7 @@ orderController.showUserOrders = async (req, res) => {
     const userId = req.session.user.id;
     const userOrders = await orders.getUserOrders(userId);
 
-    res.render('store/showOrders', {user: req.session.user, orders: userOrders});
+    res.render('store/orders/showOrders', {user: req.session.user, orders: userOrders});
   } catch (error) {
     console.error('Error al obtener pedidos:', error);
     res.status(500).render('error', { message: 'Error al cargar tus pedidos' });
@@ -171,7 +171,7 @@ orderController.showOrderDetails = async (req, res) => {
       return res.status(404).render('error', { message: 'Pedido no encontrado' });
     }
 
-    res.render('store/orderDetails', {user: req.session.user, order});
+    res.render('store/orders/orderDetails', {user: req.session.user, order});
   } catch (error) {
     console.error('Error al obtener pedido:', error);
     res.status(500).render('error', { message: 'Error al cargar el pedido' });

@@ -1,4 +1,4 @@
-import { checkFavorites } from "./fav.js";
+import { checkFavorites } from "../../fav/fav.js";
 
 (function ($) {
   "use strict";

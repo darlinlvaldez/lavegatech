@@ -1,4 +1,4 @@
-import { showToast } from "./toastify.js";
+import { showToast } from "../../utils/toastify.js";
 
 document.addEventListener('DOMContentLoaded', function() {
   const comparisonForm = document.getElementById('comparison-form');

@@ -1,6 +1,6 @@
-<%- include('../partials/header.ejs') %>
+<%- include('../../partials/header.ejs') %>
 
-  <link rel="stylesheet" href="/css/toastify.css">
+  <link rel="stylesheet" href="/css/utils/toastify.css">
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
@@ -13,12 +13,10 @@
 		const precioMax = document.getElementById('price-max').value;
 
 		const categorias = Array.from(document.querySelectorAll('input[name="categoria"]:checked'))
-			.map(checkbox => checkbox.value)
-			.join(',');
+			.map(checkbox => checkbox.value).join(',');
 
 		const marcas = Array.from(document.querySelectorAll('input[name="marca"]:checked'))
-			.map(checkbox => checkbox.value)
-			.join(',');
+			.map(checkbox => checkbox.value).join(',');
 
 		const pagina = 1;
 
@@ -33,8 +31,8 @@
 </script>
 
 <script>
-  var defaultMin = <%= defaultMin %> || 0;
-  var defaultMax = <%= defaultMax %> || 100000;
+  var defaultMin = <%= defaultMin %>;
+  var defaultMax = <%= defaultMax %>;
 </script>
   
 <!-- BREADCRUMB -->
@@ -299,11 +297,11 @@
 										</div>
 										<!-- /SECTION -->
 
-	<%- include('../partials/footer.ejs') %>
+	<%- include('../../partials/footer.ejs') %>
 
 	</body>
 	
-	<script src="/js/buttonComparison.js"></script>
+	<script src="/js/utils/buttonComparison.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 	<script src="https://unpkg.com/feather-icons"></script>
 

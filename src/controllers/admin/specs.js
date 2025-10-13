@@ -1,4 +1,4 @@
-import specs from "../../models/adminSpecs.js";
+import specs from "../../models/admin/specs.js";
 import db from "../../database/mobiles.js";
 
 const specsController = {};

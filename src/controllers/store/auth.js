@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import config from '../../../config.js';
-import user from '../../models/auth.js';
+import user from '../../models/store/auth.js';
 import emailService from '../../services/email.js';
 import code from '../../utils/generateCode.js';
 import {ERROR_MESSAGES, renderError} from '../../utils/error.js';

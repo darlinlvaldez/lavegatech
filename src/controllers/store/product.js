@@ -1,7 +1,7 @@
 import product from "../../models/store/product.js";
-import rating from "../../models/rating.js";
-import comparison from "../../models/comparison.js";
-import principal from '../../models/principal.js';
+import rating from "../../models/store/rating.js";
+import comparison from "../../models/store/comparison.js";
+import principal from '../../models/store/principal.js';
 
 product.detallesController = async (req, res) => {
   try {
@@ -39,7 +39,7 @@ product.detallesController = async (req, res) => {
 
     const dispositivos = await comparison.getDevice([id]);
 
-    res.render("store/product", {
+    res.render("store/clients/product", {
       producto: {
         ...producto,
         categorias,

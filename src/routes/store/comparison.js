@@ -1,5 +1,5 @@
 import express from 'express';
-import comparison  from '../controllers/comparison.js';
+import comparison  from '../../controllers/store/comparison.js';
 
 const router = express.Router();
 

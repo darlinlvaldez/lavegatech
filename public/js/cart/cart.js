@@ -41,20 +41,10 @@ async function addToCart(product) {
     }
 
     const safeQty = Math.min(parseInt(cantidad) || 1, stockReal);
-    // Suponiendo que window.productData tiene variantes con su id por color
-const variante_id = window.productData?.variantes?.find(v => v.color === color)?.id || null;
+    const variante_id = window.productData?.variantes?.find(v => v.color === color)?.id || null;
 
-const cartItem = { 
-  producto_id: id, 
-  variante_id,  // agregar variante_id
-  colorSeleccionado: color, 
-  cantidad: safeQty,
-  nombre, 
-  precio, 
-  imagen, 
-  ram, 
-  almacenamiento
-};
+    const cartItem = { producto_id: id, variante_id, colorSeleccionado: color, 
+      cantidad: safeQty, nombre, precio, imagen, ram, almacenamiento };
 
 
     if (!authenticated) {
@@ -102,10 +92,10 @@ window.addEventListener("load", async () => {
     const { authenticated } = await checkAuth();
     if (!authenticated) return;
 
-    const res = await fetchCart("sync", { items: localCart }); // Envías el localStorage al backend
+    const res = await fetchCart("sync", { items: localCart }); 
 
     if (res.ok) {
-      localStorage.removeItem("carrito"); // Solo borras si la sincronización fue exitosa
+      localStorage.removeItem("carrito"); 
     }
   } catch (error) {
     console.error("Sync Error:", error);

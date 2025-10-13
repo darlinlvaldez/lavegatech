@@ -1,4 +1,4 @@
-import {checkAuth, checkStock} from './utils.js';
+import {checkAuth, checkStock} from '../utils/utils.js';
 
 async function loadCartPreview() {
     let carrito = [];

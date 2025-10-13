@@ -1,7 +1,7 @@
 import express from 'express';
 import validate from '../../middlewares/validateRequest.js';
 import request from '../schemas/admin.js';
-import adminAuth from '../controllers/adminAuth.js';
+import adminAuth from '../../controllers/admin/auth.js';
 import { isAdmin, requireRole} from '../../middlewares/auth.js';
 
 const router = express.Router();

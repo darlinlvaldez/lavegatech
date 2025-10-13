@@ -1,6 +1,6 @@
-import { showToast } from '../toastify.js';
-import { sweetAlert } from '../sweetAlert2.js';
-import { showValidation, clearError } from '../showValidation.js';
+import { showToast } from '../../utils/toastify.js';
+import { sweetAlert } from '../../utils/sweetAlert2.js';
+import { showValidation, clearError } from '../../utils/showValidation.js';
 
 let gpus = [];
 let gpusFiltradas = [];

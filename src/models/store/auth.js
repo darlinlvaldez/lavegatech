@@ -1,4 +1,4 @@
-import db from "../database/mobiles.js";
+import db from "../../database/mobiles.js";
 
 const user = {};
 

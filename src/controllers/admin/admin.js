@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import admin from '../../models/admin.js';
+import admin from '../../models/admin/admin.js';
 
 const adminController = {};
 

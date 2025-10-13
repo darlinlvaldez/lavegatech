@@ -1,5 +1,5 @@
-import { showToast } from "./toastify.js";
-import { showValidation, clearError } from "./showValidation.js";
+import { showToast } from '../../utils/toastify.js';
+import { showValidation, clearError } from '../../utils/showValidation.js';
 
 window.openModal = openModal;
 window.closeModal = closeModal;

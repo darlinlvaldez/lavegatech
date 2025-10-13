@@ -1,5 +1,5 @@
-import { getRealStock } from './utils.js';
-import { showToast } from "./toastify.js";
+import { getRealStock } from '../../utils/utils.js';
+import { showToast } from "../../utils/toastify.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
   const orderProducts = document.querySelector(".order-products");

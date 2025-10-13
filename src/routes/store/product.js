@@ -1,8 +1,8 @@
 import express from 'express';
-import principal from '../controllers/principal.js';
-import store from '../controllers/store.js';
-import product from "../controllers/product.js";
-import comparison  from '../controllers/comparison.js';
+import principal from '../../controllers/store/principal.js';
+import store from '../../controllers/store/store.js';
+import product from "../../controllers/store/product.js";
+import comparison  from '../../controllers/store/comparison.js';
 
 const router = express.Router();
 
