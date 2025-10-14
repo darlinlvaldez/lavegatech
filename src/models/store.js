@@ -94,6 +94,16 @@ store.totalProductos = async (categorias = [], marcas = [], precioMin, precioMax
     }
 };
 
+store.obtenerRangoPrecios = async () => {
+  const query = `SELECT MIN(precio) AS minPrecio, MAX(precio) AS maxPrecio FROM productos`;
+  try {
+    const [results] = await db.query(query);
+    return results[0];
+  } catch (err) {
+    throw new Error("Error al obtener rango de precios: " + err.message);
+  }
+};
+
 store.cantidadCategoria = async () => {
     const query = `
     SELECT  

@@ -73,8 +73,7 @@ cartController.addToCart = async (req, res) => {
     const variante = await cart.getVariant(producto_id, colorSeleccionado);
     
     if (!variante) {
-      return res.status(404).json({
-        success: false,
+      return res.status(404).json({success: false,
         message: "Variante no encontrada para este producto y color"
       });
     }
@@ -82,8 +81,7 @@ cartController.addToCart = async (req, res) => {
     const { id: variante_id, stock: stockReal } = variante;
 
     if (stockReal <= 0) {
-      return res.status(400).json({
-        success: false,
+      return res.status(400).json({success: false,
         message: "Este producto está agotado. Haz clic para ver otras variantes disponibles."
       });
     }
