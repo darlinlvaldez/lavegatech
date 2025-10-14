@@ -23,6 +23,38 @@
     font-size: 32px;
 }
 
+.icon i.fa-shopping-cart {
+    color: #ff9800;
+}
+
+.icon i.fa-box-open {
+    color: #2196F3;
+}
+
+.icon i.fa-users {
+    color: #9C27B0; 
+}
+
+.icon i.fa-chart-line {
+    color: #4CAF50; 
+}
+
+.icon i.fa-clock {
+    color: #FFC107; 
+}
+
+.icon i.fa-truck-moving {
+    color: #03A9F4; 
+}
+
+.icon i.fa-check-circle {
+    color: #4CAF50;
+}
+
+.icon i.fa-times-circle {
+    color: #F44336;
+}
+
 .info {
     display: flex;
     flex-direction: column;

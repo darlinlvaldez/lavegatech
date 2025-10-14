@@ -125,7 +125,7 @@ app.get('/about', (req, res) => {
 });
 
 app.get('/order', isAuth(), (req, res) => {
-  res.render('store/order');  
+  res.render('store/orders/order');  
 });
 
 app.get('/comparison', (req, res) => {
@@ -133,11 +133,11 @@ app.get('/comparison', (req, res) => {
 });
 
 app.get('/conditions', (req, res) => {
-  res.render('information/conditions');  
+  res.render('store/information/conditions');  
 });
 
 app.get('/warranty', (req, res) => {
-  res.render('information/warranty');  
+  res.render('store/information/warranty');  
 });
 
 app.get('/admin/sales', isAdmin(), (req, res) => {

@@ -9,7 +9,7 @@ const router = express.Router();
 router.use(isAdmin());
 
 // Tabla moviles
-router.get('/todos-productos', requireRole('superadmin', 'admin', 'editor'), specs.listarTodosProductos);
+router.get('/todos-productos', requireRole('superadmin', 'admin', 'editor'), specs.listarProductos);
 router.get('/moviles', requireRole('superadmin', 'admin', 'editor'), specs.listarMoviles);
 router.post('/movil', requireRole('superadmin', 'admin'), validate(request.device), specs.crearMovil);
 router.put('/movil/:id', requireRole('superadmin', 'admin'), validate(request.device), specs.editarMovil);

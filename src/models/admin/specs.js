@@ -20,11 +20,10 @@ specs.obtenerMoviles = async () => {
       CONCAT(pantalla.tamaño, ' ', pantalla.tipo, ' ', pantalla.resolucion) AS pantalla,
       CONCAT(camara.principal, ' / Selfie: ', camara.selfie, ' / Video: ', camara.video) AS camara,
       CONCAT(baterias.capacidad, ' ', baterias.tipo, 
-             IF(baterias.carga_rapida IS NOT NULL, CONCAT(', carga rápida: ', baterias.carga_rapida), ''),
-             IF(baterias.carga_inalambrica = 1, ', inalámbrica', '')
-      ) AS bateria,
-      CONCAT(conectividad.red, ', WiFi: ', conectividad.wifi, ', BT: ', conectividad.bluetooth, 
-             IF(conectividad.nfc = 1, ', NFC', '')) AS conectividad,
+      IF(baterias.carga_rapida IS NOT NULL, CONCAT(', carga rápida: ', baterias.carga_rapida), ''),
+      IF(baterias.carga_inalambrica = 1, ', inalámbrica', '')) AS bateria,
+      CONCAT(conectividad.red, ', WiFi: ', conectividad.wifi, ', BT: ', conectividad.bluetooth,
+      IF(conectividad.nfc = 1, ', NFC', '')) AS conectividad,
       CONCAT(dimensionespeso.altura, 'x', dimensionespeso.anchura, 'x', dimensionespeso.grosor, ' mm, ', dimensionespeso.peso, 'g') AS dimensionespeso,
       GROUP_CONCAT(DISTINCT IFNULL(p.nombre, 'Vacío') SEPARATOR ', ') AS nombre
     FROM moviles m
@@ -48,7 +47,7 @@ specs.obtenerMoviles = async () => {
   return rows;
 };
 
-specs.obtenerTodosProductos = async () => {
+specs.obtenerProductos = async () => {
   const query = `
     SELECT 
       p.id,
@@ -113,6 +112,14 @@ specs.actualizarMovil = async (id, data) => {
 
   const [result] = await db.execute(sql, params);
   return result.affectedRows;
+};
+
+specs.actualizarId = async (movilId, productIds = []) => {
+  await db.query("UPDATE productos SET movil_id = NULL WHERE movil_id = ?", [movilId]);
+
+  if (productIds.length > 0) {
+    await db.query("UPDATE productos SET movil_id = ? WHERE id IN (?)", [movilId, productIds]);
+  }
 };
 
 // Tabla almacenamiento

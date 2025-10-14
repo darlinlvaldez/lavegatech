@@ -182,7 +182,7 @@ admin.obtenerAlm = async () => {
 // Categorias
 
 admin.obtenerCategorias = async () => {
-  const [rows] = await db.query("SELECT id, categoria, imagen FROM categorias ORDER BY categoria");
+  const [rows] = await db.query("SELECT id, categoria, imagen FROM categorias ORDER BY id DESC");
   return rows;
 };
 
@@ -210,7 +210,7 @@ admin.asociarCategoriasMarca = async (marcaId, categoriasIds) => {
 // Marcas
 
 admin.obtenerMarcas = async () => {
-  const [marcas] = await db.query("SELECT id, nombre, logo FROM p_marcas ORDER BY nombre");
+  const [marcas] = await db.query("SELECT id, nombre, logo FROM p_marcas ORDER BY id DESC;");
 
   const [asociaciones] = await db.query(`
     SELECT m.id AS marca_id, c.id AS categoria_id, c.categoria

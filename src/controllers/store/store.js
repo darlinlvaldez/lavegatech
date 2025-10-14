@@ -1,5 +1,5 @@
-import store from '../models/store.js';
-import rating from "../models/rating.js";
+import store from '../../models/store/store.js';
+import rating from "../../models/store/rating.js";
 
 store.storeController = async (req, res) => {
   try {
@@ -34,7 +34,7 @@ store.storeController = async (req, res) => {
       producto.esMovil = producto.categoria?.toLowerCase() === "moviles";
     }
 
-    res.render("store/store", {productos, totalProduct, limite, pagina, orden, categorias,
+    res.render("store/clients/store", {productos, totalProduct, limite, pagina, orden, categorias,
       marcas: marcasFiltradas, marcasFiltradas, cantCategoria, cantMarcas, precioMin,
       precioMax, defaultMin, defaultMax, req
     });

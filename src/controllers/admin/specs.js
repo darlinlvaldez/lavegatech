@@ -12,9 +12,9 @@ specsController.listarMoviles = async (req, res) => {
   }
 };
 
-specsController.listarTodosProductos = async (req, res) => {
+specsController.listarProductos = async (req, res) => {
   try {
-    const productos = await specs.obtenerTodosProductos();
+    const productos = await specs.obtenerProductos();
     res.json(productos);
   } catch (error) {
     console.error('Error al obtener todos los productos:', error);
@@ -25,12 +25,11 @@ specsController.listarTodosProductos = async (req, res) => {
 specsController.crearMovil = async (req, res) => {
   try {
     const { productIds = [], ...movilData } = req.body;
+
     const movilId = await specs.agregarMovil(movilData);
-    
-    if (productIds.length > 0) {
-      await db.query("UPDATE productos SET movil_id = ? WHERE id IN (?)", [movilId, productIds]);
-    }
-    
+
+    await specs.actualizarId(movilId, productIds);
+
     res.status(201).json({ message: 'Comparación creada con éxito', id: movilId });
   } catch (error) {
     console.error('Error al crear comparación:', error);
@@ -44,14 +43,9 @@ specsController.editarMovil = async (req, res) => {
 
   try {
     const actualizado = await specs.actualizarMovil(id, movilData);
-    
-    await db.query("UPDATE productos SET movil_id = NULL WHERE movil_id = ?", [id]);
-    
-    if (productIds.length > 0) {
-      await db.query("UPDATE productos SET movil_id = ? WHERE id IN (?)", [id, productIds]);
-    }
-    
+
     if (actualizado) {
+      await specs.actualizarId(id, productIds);
       res.json({ message: 'Móvil actualizado con éxito' });
     } else {
       res.status(404).json({ message: 'Móvil no encontrado' });
