@@ -1,0 +1,53 @@
+    <%- include('../../partials/header.ejs') %> 
+
+<head>
+  <link rel="stylesheet" href="/css/store/orders.css">
+</head>
+
+<html>
+<body>
+
+    <div class="container-user">
+        <h2>Mis Pedidos</h2>
+        
+        <% if (orders.length === 0) { %>
+            <div class="alert-info-user">
+                No has realizado ningún pedido aún.
+            </div>
+            <a href="/" class="btn-user">Ir a la tienda</a>
+        <% } else { %>
+            <div class="list-group-user">
+                <% orders.forEach(order => { %>
+                    <a href="/api/order/orderDetails/<%= order.id %>" class="list-group-product">
+                        <div class="d-flex-user w-100-user justify-content-user">
+                            <h5 class="mb-1">Pedido #<%= order.id %></h5>
+                            <div class="right-info-user">
+                                <span class="badge-user 
+                                    <%= order.estado_envio === 'enviado' ? 'bg-info-user' :
+                                        order.estado_envio === 'entregado' ? 'bg-success-user' :
+                                        order.estado_envio === 'cancelado' ? 'bg-danger-user' :
+                                        'bg-warning-user' %> ms-2">
+                                    <%= order.estado_envio ? order.estado_envio.toUpperCase() : 'PENDIENTE' %>
+                                </span>
+                                <small class="text-muted-user"><%= new Date(order.fecha_creacion).toLocaleDateString() %></small>
+                            </div>
+                        </div>
+                        <p class="mb-1-user">
+                            <span class="strong-details">Total:</span> $<%= Number(order.total).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %>
+                            <span class="badge-user <%= order.status === 'pagado' ? 'bg-success-user' : 'bg-warning-user' %> ms-2">
+                                <%= order.status %>
+                            </span>
+                        </p>
+                        <small class="text-muted-user">
+                            <%= order.direccion %>, <%= order.ciudad %>
+                        </small>
+                    </a>
+                <% }); %>
+            </div>
+        <% } %>
+    </div>
+
+    <%- include('../../partials/footer.ejs') %>
+    
+</body>
+</html>

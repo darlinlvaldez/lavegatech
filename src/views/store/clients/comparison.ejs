@@ -1,0 +1,53 @@
+<%- include('../../partials/header.ejs') %>
+
+
+<head>
+    <link rel="stylesheet" href="/css/store/comparison.css">
+    <link rel="stylesheet" href="/css/store/search.css">
+    <link rel="stylesheet" href="/css/utils/toastify.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+
+<body>
+  <div id="comparison-page" class="body-comparison">
+    <div class="container-comparison">
+      <h1 class="tittle-comparison">Comparador de Dispositivos Móviles</h1>
+      <p class="description-comparison">
+        Compara especificaciones clave para tomar la mejor decisión.
+      </p>
+
+      <div class="search-comparison">
+        <form id="comparison-form">
+          <div class="search-container">
+            <div class="search-input-wrapper">
+              <input class="input-comparison mobile-search" placeholder="Buscar dispositivos para comparar"
+                id="comparison-search">
+              <div id="buscar-results" class="search-results-dropdown-comparison"></div>
+              <div class="search-icon-btn-comparison">
+                <i class="fa fa-search"></i>
+              </div>
+            </div>
+            <button type="submit" class="search-comparison-btn">
+              <i class="fa-solid fa-arrow-right-arrow-left"></i> Comparar
+            </button>
+          </div>
+          <div id="selected-devices" class="selected-devices-container"></div>
+          <input type="hidden" id="mobile-ids" name="mobileIds">
+        </form>
+        <div id="comparison-results" class="comparison-results-container">
+          <div class="device-cards-wrapper-comparison"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <%- include('../../partials/footer.ejs') %>
+
+</body>
+
+    <script src="/js/store/clients/comparison.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+	  <script src="https://unpkg.com/feather-icons"></script>
+
+</html>

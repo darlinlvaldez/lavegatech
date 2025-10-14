@@ -1,6 +1,6 @@
 <%- include('../admin/dashboard.ejs') %>
 
-<link rel="stylesheet" href="/css/adminPanel.css">
+<link rel="stylesheet" href="/css/admin/panel.css">
 
 <body>
     <div class="main-content">
@@ -53,7 +53,7 @@
 
             <% if (['superadmin', 'admin', 'transportista', 'ventas'].includes(admin?.rol)) { %>
             <section class="shipping-section">
-                <h2 style="margin-top: 40px; margin-bottom: 20px;"><i class="fas fa-truck"></i> Estados de Envío</h2>
+                <h2 style="margin-top: 40px; margin-bottom: 20px;"><i class="fas fa-truck"></i> Estados de Envíos</h2>
                 <div class="dashboard">
                     <a href="/api/admin/orders?estado=pendiente" class="card">
                         <div class="icon"><i class="fas fa-clock"></i></div>

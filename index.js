@@ -11,17 +11,17 @@ import sessionAdmin from './src/middlewares/sessionAdmin.js';
 import { userLocals, adminLocals } from './src/middlewares/userLocals.js';
 
 // Routes
-import store from './src/routes/product.js';
-import auth from './src/routes/auth.js';
-import userProfile from './src/routes/userProfile.js';  
-import cart from './src/routes/cart.js';
-import fav from './src/routes/fav.js';
-import orders from './src/routes/orders.js';
-import rating from './src/routes/rating.js';
-import comparison from './src/routes/comparison.js'; 
-import admin from './src/routes/admin.js';
-import adminAuth from './src/routes/adminAuth.js';
-import specs from './src/routes/adminSpecs.js';
+import store from './src/routes/store/product.js';
+import auth from './src/routes/store/auth.js';
+import userProfile from './src/routes/store/userProfile.js';  
+import cart from './src/routes/store/cart.js';
+import fav from './src/routes/store/fav.js';
+import orders from './src/routes/store/orders.js';
+import rating from './src/routes/store/rating.js';
+import comparison from './src/routes/store/comparison.js'; 
+import admin from './src/routes/admin/admin.js';
+import adminAuth from './src/routes/admin/auth.js';
+import specs from './src/routes/admin/specs.js';
 
 const app = express();
 
@@ -82,7 +82,7 @@ app.post('/mant', async (req, res) => {
 });
 
 app.get('/account', isAuth(), (req, res) => {
-  res.render('profile/account', { user: req.session.user, error: null, email: null });
+  res.render('store/profile/account', { user: req.session.user, error: null, email: null });
 });
 
 app.get('/login', isAuth({ redirect: true }), (req, res) => {
@@ -116,12 +116,12 @@ app.get('/mant', (req, res) => {
 });
 
 app.get('/contact', (req, res) => {
-  res.render('store/contact', {nombre: '', email: '', mensaje: '', asunto: '', 
+  res.render('store/clients/contact', {nombre: '', email: '', mensaje: '', asunto: '', 
     error: [], success: false, validationErrors: {}, query: req.query});
 });
 
 app.get('/about', (req, res) => {
-  res.render('store/about');  
+  res.render('store/clients/about');  
 });
 
 app.get('/order', isAuth(), (req, res) => {
@@ -129,7 +129,7 @@ app.get('/order', isAuth(), (req, res) => {
 });
 
 app.get('/comparison', (req, res) => {
-  res.render('comparison/comparison');  
+  res.render('store/clients/comparison');  
 });
 
 app.get('/conditions', (req, res) => {
