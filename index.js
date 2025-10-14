@@ -129,7 +129,7 @@ app.get('/order', isAuth(), (req, res) => {
 });
 
 app.get('/comparison', (req, res) => {
-  res.render('comparison/comparison');  
+  res.render('store/clients/comparison');  
 });
 
 app.get('/conditions', (req, res) => {

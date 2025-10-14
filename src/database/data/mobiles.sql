@@ -1355,10 +1355,10 @@ INSERT INTO `variantes_almacenamiento` (`movil_id`, `almacenamiento_id`) VALUES
 -- Estructura de tabla para la tabla `variantes_ram`
 --
 
-CREATE TABLE `variantes_ram` (
-  `movil_id` int(11) NOT NULL,
-  `ram_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  CREATE TABLE `variantes_ram` (
+    `movil_id` int(11) NOT NULL,
+    `ram_id` int(11) NOT NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `variantes_ram`
