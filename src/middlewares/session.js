@@ -6,5 +6,5 @@ export default session({
     resave: false,
     saveUninitialized: false,
     store: sessionStore,
-    cookie: { secure: false, maxAge: 3600000, httpOnly: true, sameSite: 'strict'} 
+    cookie: { secure: false, maxAge: 345600000, httpOnly: true, sameSite: 'strict'} 
   });

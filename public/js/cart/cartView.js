@@ -1,4 +1,4 @@
-import { checkAuth, getRealStock, updateItem } from '../utils/utils.js';
+import { checkAuth, getRealStock } from '../utils/utils.js';
 import { loadCartPreview } from './loadCartPreview.js';
 import { showToast } from '../utils/toastify.js';
 import { sweetAlert } from '../utils/sweetAlert2.js';
@@ -6,19 +6,47 @@ import { sweetAlert } from '../utils/sweetAlert2.js';
 window.updateQuantity = async function(element, change, productId, color) {
   try {
     const stockReal = await getRealStock(productId, color);
-    
-    const newQuantity = element.tagName === 'SELECT' 
+
+    const newQuantity = element.tagName === 'SELECT'
       ? parseInt(element.value) : Math.max(1, parseInt(element.value) + change);
-    
     const finalQuantity = Math.min(newQuantity, stockReal);
-    
-    await updateItem({
-      productId, color, newQuantity: finalQuantity,
-      element: document.querySelector(`.cart-item[data-id="${productId}"][data-color="${color}"]`)
-    });
+    const isRemove = finalQuantity <= 0;
+
+    const authData = await checkAuth();
+    let cart = JSON.parse(localStorage.getItem('carrito')) || [];
+    const itemIndex = cart.findIndex(item => item.colorSeleccionado === color && item.producto_id === productId);
+
+    if (itemIndex >= 0) {
+      isRemove ? cart.splice(itemIndex, 1) : cart[itemIndex].cantidad = finalQuantity;
+    }
+
+    if (!authData.authenticated) {
+      localStorage.setItem('carrito', JSON.stringify(cart));
+    }
+
+    if (authData.authenticated) {
+      const action = isRemove ? 'remove-item' : 'update-quantity';
+      const body = { producto_id: productId, colorSeleccionado: color,
+        ...(action === 'update-quantity' && { cantidad: finalQuantity })
+      };
+
+      const response = await fetch(`/cart/${action}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+        credentials: 'include'
+      });
+
+      if (!response.ok) throw new Error(`Error al ${action} item`);
+    }
+
+    if (element) {
+      isRemove ? element.closest('.cart-item')?.remove() : totalForItem(productId, color);
+    }
 
     totalCart();
     await loadCartPreview();
+
   } catch (error) {
     console.error('Error en updateQuantity:', error);
     showToast("Error al actualizar la cantidad. Intente nuevamente.", "#e74c3c", "alert-circle");
@@ -138,6 +166,7 @@ async function loadCartPage() {
     const discount = Number(item.descuento) || 0;
     const finalPrice = discount > 0 ? price * (1 - discount/100) : price;
     const quantity = Math.min(item.cantidad || 1, stock);
+    const especificaciones = item.especificaciones || '';
     const itemTotal = finalPrice * quantity;
     
     total += itemTotal;
@@ -148,7 +177,7 @@ async function loadCartPage() {
       <a href="/product/${productId}${color ? `?color=${encodeURIComponent(color)}` : ''}">
         <img src="${item.imagen}" alt="${item.nombre}" class="product-imagen">
         <div class="product-info">
-          <h5>${item.nombre} ${item.ram} + ${item.almacenamiento}</h5>
+          <h5>${item.nombre} ${especificaciones} </h5>
           <b>Precio:</b>
           <span class="product-price">
             <b>$${formatPrice(finalPrice)}</b>

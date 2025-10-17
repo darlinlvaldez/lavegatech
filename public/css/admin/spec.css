@@ -38,6 +38,12 @@
   color: #374151;
 }
 
+#tab1 p {
+  max-width: 100%;
+  white-space: normal;
+  word-break: break-word;
+}
+
 @media (min-width: 768px) {
   .specs-grid {
     grid-template-columns: repeat(2, 1fr);

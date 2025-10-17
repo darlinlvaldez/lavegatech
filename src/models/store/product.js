@@ -5,19 +5,20 @@ const product = {};
 product.obtenerDetalles = async (id) => {
   const query = `
   SELECT 
-  p.id,
-  p.nombre,
-  p.descripcion,
-  p.precio,
-  p.descuento,
-  p.fecha,
-  p.categoria_id AS categoriaId,
-  c.categoria,
-  v.color,
-  v.stock,
-  v.img,
-  r.capacidad AS ram,
-  a.capacidad AS almacenamiento
+    p.id,
+    p.nombre,
+    p.descripcion,
+    p.precio,
+    p.descuento,
+    p.fecha,
+    p.categoria_id AS categoriaId,
+    c.categoria,
+    v.color,
+    v.stock,
+    v.img,
+    r.capacidad AS ram,
+    a.capacidad AS almacenamiento,
+    CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
   FROM productos p
   JOIN categorias c ON p.categoria_id = c.id
   LEFT JOIN p_variantes v ON p.id = v.producto_id 
@@ -65,7 +66,8 @@ product.obtenerRelacionados = async (productoId, categoriaId) => {
     v.stock AS stock,
     v.img AS imagen,
     r.capacidad AS ram,
-    a.capacidad AS almacenamiento
+    a.capacidad AS almacenamiento,
+    CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
     FROM productos p
     JOIN categorias c ON p.categoria_id = c.id
     LEFT JOIN p_variantes v ON p.id = v.producto_id 

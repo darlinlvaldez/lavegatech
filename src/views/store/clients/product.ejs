@@ -2,7 +2,7 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 <link rel="stylesheet" href="/css/utils/toastify.css">
-<link rel="stylesheet" href="/css/store/spec.css">
+<link rel="stylesheet" href="/css/admin/spec.css">
 
 <!-- SECTION -->
 <div class="section">
@@ -39,7 +39,7 @@
 	<!-- Product details -->
 	<div class="col-md-5">
 		<div class="product-details">
-			<h2 class="product-name"><%= producto.nombre %> <%= producto.ram %> + <%= producto.almacenamiento %></h2>
+			<h2 class="product-name"><%= producto.nombre %> <%= producto.especificaciones %></h2>
 			<div>
 			<div class="product-rating">
 			<% for (let i=1; i <=5; i++) { %>
@@ -423,7 +423,7 @@
 										<%= producto.categoria === 'moviles' ? 'Móviles' : producto.categoria.charAt(0).toUpperCase() + producto.categoria.slice(1) %>
 									</p>
 									<h3 class="product-name">
-											<%= producto.nombre %> <%= producto.ram %> + <%= producto.almacenamiento %>
+											<%= producto.nombre %> <%= producto.especificaciones %>
 										</h3>
 									<h4 class="product-price">
                                         $<%= Number(producto.precio * (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>

@@ -56,7 +56,8 @@ cart.getByUserId = async (usuario_id) => {
       p.nombre, p.precio, p.descuento, p.categoria_id,
       v.color AS colorSeleccionado, v.img AS imagen, v.stock AS stock_real,
       r.capacidad AS ram,
-      a.capacidad AS almacenamiento
+      a.capacidad AS almacenamiento,
+      CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
     FROM carrito c
     JOIN productos p ON c.producto_id = p.id
     JOIN p_variantes v ON c.variante_id = v.id
@@ -79,19 +80,20 @@ cart.getByUserId = async (usuario_id) => {
 cart.getCartToPay = async (usuario_id) => {
   const [rows] = await db.query(
     `SELECT 
-       c.id AS cart_id,
-       c.producto_id,
-       c.cantidad,
-       p.nombre,
-       p.precio,
-       p.descuento,
-       p.categoria_id,
-       c.fecha_agregado,
-       r.capacidad AS ram,
-       a.capacidad AS almacenamiento,
-       v.color AS colorSeleccionado,
-       v.img AS imagen,
-       v.stock
+      c.id AS cart_id,
+      c.producto_id,
+      c.cantidad,
+      p.nombre,
+      p.precio,
+      p.descuento,
+      p.categoria_id,
+      c.fecha_agregado,
+      r.capacidad AS ram,
+      a.capacidad AS almacenamiento,
+      CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones,
+      v.color AS colorSeleccionado,
+      v.img AS imagen,
+      v.stock
     FROM carrito c
     JOIN productos p ON c.producto_id = p.id
     LEFT JOIN p_variantes v ON c.variante_id = v.id

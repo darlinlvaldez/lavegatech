@@ -1,4 +1,4 @@
-import {checkAuth, checkStock} from '../utils/utils.js';
+import { checkAuth } from '../utils/utils.js';
 
 async function loadCartPreview() {
     let carrito = [];
@@ -6,6 +6,12 @@ async function loadCartPreview() {
     const carritoCount = document.getElementById('carrito-count');
     const cartSummary = document.getElementById('cart-summary');
     const cartSubtotal = document.getElementById('cart-subtotal');
+
+    const filterStock = async (items, isServerCart = false) => {
+        const filtered = items.filter(item => item.cantidad > 0);
+        if (!isServerCart) localStorage.setItem('carrito', JSON.stringify(filtered));
+        return filtered;
+    };
 
     try {
         const authData = await checkAuth();
@@ -19,7 +25,7 @@ async function loadCartPreview() {
             if (contentType && contentType.includes('application/json')) {
                 const data = await res.json();
                 if (data.success && Array.isArray(data.items)) {
-                    carrito = await checkStock(data.items, true);
+                    carrito = await filterStock(data.items, true);
                 }
             } else {
                 const text = await res.text();
@@ -32,10 +38,10 @@ async function loadCartPreview() {
 
     if (carrito.length === 0) {
         const localCart = JSON.parse(localStorage.getItem('carrito')) || [];
-        carrito = await checkStock(localCart, false);
+        carrito = await filterStock(localCart, false);
     }
 
     renderCart(carrito, cartList, carritoCount, cartSummary, cartSubtotal);
 }
 
-export {loadCartPreview};
+export { loadCartPreview };

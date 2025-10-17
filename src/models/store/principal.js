@@ -14,7 +14,8 @@ principal.buscarProductos = async (query) => {
   v.color AS colores, 
   v.img AS imagenes,
   r.capacidad AS ram,
-  a.capacidad AS almacenamiento
+  a.capacidad AS almacenamiento,
+  CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
   FROM productos p
   JOIN categorias c ON p.categoria_id = c.id
   LEFT JOIN p_variantes v ON p.id = v.producto_id 
@@ -47,7 +48,8 @@ principal.obtenerProductos = async (categoria) => {
   v.stock,
   v.img AS imagen,
   r.capacidad AS ram,
-  a.capacidad AS almacenamiento
+  a.capacidad AS almacenamiento,
+  CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
   FROM productos p
   JOIN categorias c ON p.categoria_id = c.id
   LEFT JOIN p_variantes v ON p.id = v.producto_id
@@ -90,7 +92,8 @@ principal.obtenerRecomendados = async () => {
   v.stock,
   v.img AS imagen,
   r.capacidad AS ram,
-  a.capacidad AS almacenamiento
+  a.capacidad AS almacenamiento,
+  CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
   FROM productos p
   JOIN categorias c ON p.categoria_id = c.id
   LEFT JOIN p_variantes v ON p.id = v.producto_id 

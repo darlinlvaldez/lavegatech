@@ -59,7 +59,8 @@ store.obtenerStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], 
     v.stock,
     v.color,
     REPLACE(REPLACE(r.capacidad, 'GB', ''), 'TB', '') AS ram,
-    a.capacidad AS almacenamiento
+    a.capacidad AS almacenamiento,
+    CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
     FROM productos p
     JOIN categorias c ON p.categoria_id = c.id
     LEFT JOIN p_variantes v ON p.id = v.producto_id 
