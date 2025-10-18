@@ -18,7 +18,8 @@ router.get('/productos',  requireRole('superadmin', 'admin', 'editor'), admin.li
 router.post('/productos',  requireRole('superadmin', 'admin', 'editor'), validate(request.product), admin.crearItems);
 router.put('/productos/:id',  requireRole('superadmin', 'admin', 'editor'), validate(request.product), admin.editarItems);
 router.delete('/productos/:id',  requireRole('superadmin', 'admin'), admin.borrarItems);
-
+router.patch('/productos/:id/itemEstado', requireRole('superadmin', 'admin', 'editor'), admin.productoEstado);
+    
 // Variantes
 router.get('/variantes',  requireRole('superadmin', 'admin', 'editor'), admin.listarVariantes);
 router.post('/variantes',  requireRole('superadmin', 'admin', 'editor'), validate(request.variant), admin.crearVariante);

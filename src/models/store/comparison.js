@@ -19,7 +19,7 @@ comparison.searchDevice = async (query, excludeMovilIds = []) => {
     INNER JOIN (SELECT movil_id, MIN(id) AS min_id
     FROM productos 
     WHERE movil_id IS NOT NULL GROUP BY movil_id) AS sub ON p.movil_id = sub.movil_id AND p.id = sub.min_id
-    WHERE p.categoria_id = (SELECT id FROM categorias WHERE categoria = 'moviles')
+    WHERE p.categoria_id = (SELECT id FROM categorias WHERE categoria = 'moviles') AND p.activo = 1
     AND (p.nombre LIKE ? OR p.descripcion LIKE ?)
     ${excludeMovilIds.length > 0 ? 'AND p.movil_id NOT IN (' + excludeMovilIds.map(() => '?').join(',') + ')' : ''}
     LIMIT 10
@@ -100,7 +100,7 @@ comparison.getDevice = async (productIds) => {
     LEFT JOIN ram ON vr.ram_id = ram.id
     LEFT JOIN variantes_almacenamiento va ON m.id = va.movil_id
     LEFT JOIN almacenamiento alm ON va.almacenamiento_id = alm.id
-    WHERE p.id IN (?)
+    WHERE p.id IN (?) AND p.activo = 1
     GROUP BY p.id
   `;
 

@@ -63,7 +63,7 @@ cart.getByUserId = async (usuario_id) => {
     JOIN p_variantes v ON c.variante_id = v.id
     LEFT JOIN ram r ON p.ram_id = r.id
     LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
-    WHERE c.usuario_id = ?
+    WHERE c.usuario_id = ? AND p.activo = 1
     ORDER BY c.fecha_agregado DESC
   `, [usuario_id]);
 
@@ -99,7 +99,7 @@ cart.getCartToPay = async (usuario_id) => {
     LEFT JOIN p_variantes v ON c.variante_id = v.id
     LEFT JOIN ram r ON p.ram_id = r.id
     LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
-    WHERE c.usuario_id = ?
+    WHERE c.usuario_id = ? AND p.activo = 1
     ORDER BY c.fecha_agregado DESC`,
     [usuario_id]
   );
@@ -108,7 +108,10 @@ cart.getCartToPay = async (usuario_id) => {
 
 cart.getCount = async (usuario_id) => {
   const [rows] = await db.query(
-    "SELECT COUNT(*) as count FROM carrito WHERE usuario_id = ?",
+    `SELECT COUNT(*) as count
+    FROM carrito c
+    JOIN productos p ON c.producto_id = p.id
+    WHERE c.usuario_id = ? AND p.activo = 1`,
     [usuario_id]);
   return rows[0].count;
 };

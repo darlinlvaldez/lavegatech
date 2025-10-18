@@ -35,7 +35,7 @@ request.product = z.object({
   categoria: z
     .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }),
   marca: z
-    .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED }),
+    .number().nullable(),
   ram: z
     .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED })
     .nonnegative({ message: ERROR_ZOD.FIELD_NEGATIVE })

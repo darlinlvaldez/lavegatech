@@ -34,27 +34,50 @@ function renderProducts() {
       dateStyle: "short", timeStyle: "short"
     });
     
+    const estadoTexto = product.activo ? "Activo" : "Inactivo";
+    const estadoClase = product.activo ? "estado-activo" : "estado-inactivo";
+
     row.innerHTML = `
       <td class="truncate-cell">${product.id || ''}</td>
-      <td class="truncate-cell">${product.nombre || ''}</td>
+      <td class="truncate-cell">${product.nombre || ''} ${product.especificaciones || ''}</td>
       <td class="truncate-cell">${product.descripcion || ''}</td>
       <td>$${formatPrice(parseFloat(product.precio)) || 0}</td>
       <td>$${(product.descuento != null ? parseFloat(product.descuento).toFixed(2) : '0.00')}</td>
       <td>${product.categoria || ''}</td>
       <td>${product.marca || ''}</td>
       <td>${fechaFormateada || ''}</td>
+      <td>
+        <button class="estado-btn ${estadoClase}" onclick="itemEstado(${product.id})">
+          ${estadoTexto}
+        </button>
+      </td>
       <td class="actions">
-        <button onclick="editProduct(${product.id})" class="edit-button">
-          Editar
-        </button>
-        <button onclick="deleteProduct(${product.id})" class="delete-button">
-          Eliminar
-        </button>
+        <button onclick="editProduct(${product.id})" class="edit-button">Editar</button>
+        <button onclick="deleteProduct(${product.id})" class="delete-button">Eliminar</button>
       </td>
     `;
     productsTableBody.appendChild(row);
   });
 }
+
+window.itemEstado = async function(id) {
+  try {
+    const res = await fetch(`/api/admin/productos/${id}/itemEstado`, {
+      method: "PATCH"
+    });
+    
+    if (!res.ok) throw new Error("Error al cambiar el estado");
+
+    const updatedProduct = await res.json();
+
+    const index = products.findIndex(p => p.id === id);
+    if (index !== -1) products[index].activo = updatedProduct.activo;
+
+    renderProducts();
+  } catch (err) {
+    showToast("No se pudo cambiar el estado del producto.", "#e74c3c", "alert-circle");
+  }
+};
 
 const searchProductInput = document.getElementById("searchProductInput");
 

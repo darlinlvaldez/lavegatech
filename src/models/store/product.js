@@ -24,7 +24,7 @@ product.obtenerDetalles = async (id) => {
   LEFT JOIN p_variantes v ON p.id = v.producto_id 
   LEFT JOIN ram r ON p.ram_id = r.id
   LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
-  WHERE p.id = ?`;
+  WHERE p.id = ? AND p.activo = 1`;
 
   const [results] = await db.query(query, [id]);
   if (!results.length) return null;
@@ -59,7 +59,7 @@ product.obtenerRelacionados = async (productoId, categoriaId) => {
     p.id,
     p.nombre,
     p.precio,
-    p.descuento,
+    p.descuento,  
     p.fecha,
     c.categoria,
     v.color AS color, 
@@ -73,7 +73,7 @@ product.obtenerRelacionados = async (productoId, categoriaId) => {
     LEFT JOIN p_variantes v ON p.id = v.producto_id 
     LEFT JOIN ram r ON p.ram_id = r.id
     LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
-    WHERE p.id NOT IN (${placeholders}) 
+    WHERE p.id NOT IN (${placeholders}) AND p.activo = 1
     AND p.categoria_id IN (${catPlaceholders})
     GROUP BY p.id 
     LIMIT 4`;

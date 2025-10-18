@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-08-2025 a las 11:53:44
+-- Tiempo de generación: 18-10-2025 a las 06:58:19
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -80,7 +80,9 @@ INSERT INTO `almacenamiento` (`id`, `capacidad`, `tipo`) VALUES
 (19, '128GB', 'UFS 4.0'),
 (20, '128GB', 'UFS 3.1'),
 (21, '256GB', 'UFS 3.0'),
-(22, '128GB', 'UFS 2.1');
+(22, '128GB', 'UFS 2.1'),
+(31, '256GB', 'eMMC 5.1'),
+(32, '64GB', 'eMMC 5.1');
 
 -- --------------------------------------------------------
 
@@ -198,9 +200,8 @@ CREATE TABLE `carrito` (
 --
 
 INSERT INTO `carrito` (`id`, `usuario_id`, `producto_id`, `cantidad`, `fecha_agregado`, `variante_id`) VALUES
-(82, 75, 1, 1, '2025-08-04 09:49:51', 384),
-(83, 75, 1, 1, '2025-08-04 09:49:57', 383),
-(84, 75, 1, 2, '2025-08-04 09:50:04', 382);
+(104, 75, 45, 1, '2025-10-18 01:23:55', 463),
+(106, 75, 68, 1, '2025-10-18 01:24:37', 488);
 
 -- --------------------------------------------------------
 
@@ -402,7 +403,12 @@ INSERT INTO `detalles_pedido` (`id`, `order_id`, `producto_id`, `nombre_producto
 (201, 187, 2, 'iPhone 12', 1, 17995.00, 0.00, 17995.00, 'verde', '4GB', '128GB'),
 (202, 188, 4, 'iPhone 12 Pro', 1, 21995.00, 0.00, 21995.00, 'negro', '6GB', '128GB'),
 (203, 189, 1, 'iPhone 12', 1, 15995.00, 20.00, 12796.00, 'blanco', '4GB', '64GB'),
-(204, 190, 4, 'iPhone 12 Pro', 2, 21995.00, 0.00, 43990.00, 'negro', '6GB', '128GB');
+(204, 190, 4, 'iPhone 12 Pro', 2, 21995.00, 0.00, 43990.00, 'negro', '6GB', '128GB'),
+(205, 191, 1, 'iPhone 12', 1, 15995.00, 20.00, 12796.00, 'verde', '4GB', '64GB'),
+(206, 192, 98, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 1, 39995.00, 0.00, 39995.00, 'negro', NULL, NULL),
+(207, 192, 1, 'iPhone 12', 2, 15995.00, 20.00, 25592.00, 'verde', '4GB', '64GB'),
+(208, 192, 1, 'iPhone 12', 1, 15995.00, 20.00, 12796.00, 'blanco', '4GB', '64GB'),
+(209, 193, 68, 'ZTE NUBIA NEO 2 5G', 1, 11995.00, 0.00, 11995.00, 'negro', '8GB', '256GB');
 
 -- --------------------------------------------------------
 
@@ -479,7 +485,10 @@ INSERT INTO `envios` (`id`, `pedido_id`, `estado_envio`, `costo_envio`, `fecha_e
 (28, 187, 'pendiente', 150.00, NULL, NULL, NULL),
 (29, 188, 'pendiente', 50.00, NULL, NULL, NULL),
 (30, 189, 'pendiente', 50.00, NULL, NULL, NULL),
-(31, 190, 'pendiente', 50.00, NULL, NULL, NULL);
+(31, 190, 'pendiente', 50.00, NULL, NULL, NULL),
+(32, 191, 'pendiente', 50.00, NULL, NULL, NULL),
+(33, 192, 'enviado', 50.00, '2025-10-16 22:38:03', NULL, NULL),
+(34, 193, 'pendiente', 250.00, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -500,9 +509,7 @@ CREATE TABLE `fav` (
 --
 
 INSERT INTO `fav` (`id`, `usuario_id`, `producto_id`, `fecha_agregado`, `variante_id`) VALUES
-(745, 75, 1, '2025-08-04 09:49:41', 382),
-(746, 75, 1, '2025-08-04 09:49:47', 383),
-(747, 75, 1, '2025-08-04 09:49:49', 384);
+(752, 75, 68, '2025-10-18 01:25:00', 488);
 
 -- --------------------------------------------------------
 
@@ -683,7 +690,10 @@ INSERT INTO `pagos` (`id`, `order_id`, `metodo_pago`, `estado_pago`, `paypal_ord
 (105, 187, 'paypal', 'completado', '3UX55859GS037781D', '2025-08-03 14:19:28'),
 (106, 188, 'paypal', 'completado', '1YL808383Y551703W', '2025-08-03 19:30:12'),
 (107, 189, 'paypal', 'completado', '9EC457641R297010P', '2025-08-03 19:32:00'),
-(108, 190, 'paypal', 'completado', '4CD01368KK565624P', '2025-08-04 04:09:37');
+(108, 190, 'paypal', 'completado', '4CD01368KK565624P', '2025-08-04 04:09:37'),
+(109, 191, 'paypal', 'completado', '0EW680760K419350E', '2025-08-13 19:36:01'),
+(110, 192, 'paypal', 'completado', '001768496S223730D', '2025-10-16 22:37:03'),
+(111, 193, 'paypal', 'completado', '0V72617907948725A', '2025-10-17 21:18:38');
 
 -- --------------------------------------------------------
 
@@ -742,7 +752,10 @@ INSERT INTO `pedidos` (`id`, `user_id`, `nombre`, `apellido`, `email`, `direccio
 (187, 75, 'Darlin', 'L. Valdez', 'nilradlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', '8295542244', 18145.00, 'pagado', '2025-08-03 14:19:28', 2, 0),
 (188, 75, 'Darlin', 'L. Valdez', 'nilradlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', '8295542244', 22045.00, 'pagado', '2025-08-03 19:30:12', 1, 0),
 (189, 75, 'Darlin', 'L. Valdez', 'nilradlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', '8295542244', 12846.00, 'pagado', '2025-08-03 19:32:00', 1, 0),
-(190, 75, 'Darlin', 'L. Valdez', 'nilradlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', '8295542244', 44040.00, 'pagado', '2025-08-04 04:09:37', 1, 0);
+(190, 75, 'Darlin', 'L. Valdez', 'nilradlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', '8295542244', 44040.00, 'pagado', '2025-08-04 04:09:37', 1, 0),
+(191, 75, 'Darlin', 'L. Valdez', 'nilradlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', '8295542244', 12846.00, 'pagado', '2025-08-13 19:36:01', 1, 0),
+(192, 75, 'Darlin', 'L. Valdez', 'nilradlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', '8295542244', 78433.00, 'pagado', '2025-10-16 22:37:03', 1, 0),
+(193, 75, 'Darlin', 'L. Valdez', 'nilradlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', '8295542244', 12245.00, 'pagado', '2025-10-17 21:18:38', 4, 0);
 
 -- --------------------------------------------------------
 
@@ -761,197 +774,197 @@ CREATE TABLE `productos` (
   `fecha` timestamp NOT NULL DEFAULT current_timestamp(),
   `marca_id` int(11) DEFAULT NULL,
   `ram_id` int(11) DEFAULT NULL,
-  `almacenamiento_id` int(11) DEFAULT NULL
+  `almacenamiento_id` int(11) DEFAULT NULL,
+  `activo` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `productos`
 --
 
-INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `categoria_id`, `descuento`, `fecha`, `marca_id`, `ram_id`, `almacenamiento_id`) VALUES
-(1, 1, 'iPhone 12', 'Experimenta el rendimiento y la elegancia del iPhone 12 de 64GB, un dispositivo que combina potencia, diseño y eficiencia. Equipado con 4GB de RAM, ofrece una experiencia fluida tanto en multitarea como en juegos y aplicaciones exigentes.\n\nEste equipo está en condición Triple A (AAA), lo que significa que ha sido cuidadosamente reacondicionado para lucir y funcionar como nuevo. Ideal para quienes desean la calidad de Apple a un precio más accesible.', 15995.00, 1, 20.00, '2025-08-05 23:06:00', 1, 1, 1),
-(2, 1, 'iPhone 12', 's', 17995.00, 1, 0.00, '2025-08-02 00:00:00', 1, 1, 2),
-(3, 1, 'iPhone 12', 's', 19495.00, 1, 0.00, '2025-08-02 04:00:00', 1, 1, 3),
-(4, 2, 'iPhone 12 Pro', 's', 21995.00, 1, 0.00, '2025-08-02 00:00:00', 1, 2, 2),
-(5, 2, 'iPhone 12 Pro 256GB', 's', 23995.00, 1, 0.00, '2025-08-01 20:00:00', 1, 2, 3),
-(6, 3, 'iPhone 12 Pro Max 128GB', 's', 27495.00, 1, 0.00, '2025-08-01 20:00:00', 1, 2, 2),
-(7, 3, 'iPhone 12 Pro Max 256GB', 's', 28995.00, 1, 0.00, '2025-05-31 16:00:00', 1, 2, 3),
-(8, 3, 'iPhone 12 Pro Max 512GB', 's', 29995.00, 1, 0.00, '2025-05-01 16:00:00', 1, 2, 4),
-(9, 4, 'iPhone 13', 'S', 23995.00, 1, 0.00, '2025-05-01 20:00:00', 1, 1, 2),
-(10, 4, 'iPhone 13 256GB', 'S', 25495.00, 1, 0.00, '2025-05-01 16:00:00', 1, 1, 3),
-(11, 5, 'iPhone 13 Pro 128GB', 'S', 28495.00, 1, 0.00, '2025-05-14 16:00:00', 1, 2, 2),
-(12, 5, 'iPhone 13 Pro 256GB', 'S', 30995.00, 1, 0.00, '2025-03-11 16:00:00', 1, 2, 3),
-(13, 6, 'iPhone 13 Pro Max 128GB', 'S', 32995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 2, 2),
-(14, 6, 'iPhone 13 Pro Max 256GB', 'S', 35995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 2, 3),
-(15, 6, 'iPhone 13 Pro Max 512GB', 'S', 37495.00, 1, 0.00, '2023-01-01 16:00:00', 1, 2, 4),
-(16, 7, 'iPhone 14', 'S', 26495.00, 1, 0.00, '2023-01-01 20:00:00', 1, 1, 2),
-(17, 7, 'iPhone 14 256GB', 'S', 27995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 1, 3),
-(18, 8, 'iPhone 14 Plus 128GB', 'S', 28995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 1, 2),
-(19, 8, 'iPhone 14 Plus 256GB', 'S', 30995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 1, 3),
-(20, 9, 'iPhone 14 Pro 128GB', 'S', 34495.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 2),
-(21, 9, 'iPhone 14 Pro 256GB', 'S', 36495.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 3),
-(22, 9, 'iPhone 14 Pro 512GB', 'S', 38995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 4),
-(23, 10, 'iPhone 14 Pro Max 128GB', 'S', 41495.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 2),
-(24, 10, 'iPhone 14 Pro Max 256GB', 'S', 43995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 3),
-(25, 10, 'iPhone 14 Pro Max 512GB', 'S', 46495.00, 1, 0.00, '2023-01-01 12:00:00', 1, 9, 4),
-(26, 11, 'iPhone 15 128GB', 'S', 35995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 2),
-(27, 11, 'iPhone 15 256GB', 'S', 37995.00, 1, 0.00, '2023-01-01 12:00:00', 1, 9, 3),
-(28, 12, 'iPhone 15 Plus 128GB', 'S', 38995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 2),
-(29, 12, 'iPhone 15 Plus 512GB', 'S', 42995.00, 1, 0.00, '2023-01-01 20:00:00', 1, 9, 4),
-(32, 14, 'iPhone 15 Pro Max 256GB', 'S', 54995.00, 1, 0.00, '2023-01-01 20:00:00', 1, 3, 3),
-(33, 14, 'iPhone 15 Pro Max 512GB', 'S', 57995.00, 1, 0.00, '2023-01-01 20:00:00', 1, 3, 4),
-(34, 14, 'iPhone 15 Pro Max 1TB', 'S', 61995.00, 1, 0.00, '2023-01-01 12:00:00', 1, 5, 5),
-(35, 15, 'iPhone 16 128GB', 'S', 52495.00, 1, 0.00, '2023-01-01 16:00:00', 1, 15, 4),
-(36, 16, 'iPhone 16E 256GB', 'S', 44995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 14, 3),
-(37, 17, 'iPhone 16 Plus 128GB', 'S', 54995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 15, 2),
-(38, 18, 'iPhone 16 Pro Max 256GB', 's', 74995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 14, 3),
-(39, 18, 'iPhone 16 Pro Max 512GB', 's', 84995.00, 1, 0.00, '2025-03-01 16:00:00', 1, 14, 4),
-(40, 19, 'SAMSUNG GALAXY S10 PLUS 8+128GB', 'S', 9995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 4, 22),
-(41, 20, 'SAMSUNG GALAXY NOTE 10 PLUS 12+256GB', 'S', 13995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 6, 21),
-(42, 21, 'SAMSUNG GALAXY NOTE 20 ULTRA 12+128GB', 'S', 17995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 5, 20),
-(43, 22, 'SAMSUNG GALAXY S21 ULTRA 12+128GB', 'S', 17995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 5, 20),
-(44, 23, 'SAMSUNG GALAXY S23 ULTRA 12+256GB', 'S', 39495.00, 1, 0.00, '2023-01-01 12:00:00', 2, 13, 18),
-(45, 24, 'SAMSUNG GALAXY S25 ULTRA 12+512GB', 'S', 84995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 13, 17),
-(46, 25, 'SAMSUNG GALAXY A05 6+128GB', 'S', 7995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 2, 15),
-(47, 25, 'SAMSUNG GALAXY A05 4+64GB', 'S', 6995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 1, 16),
-(48, 26, 'SAMSUNG GALAXY A15 6+128GB', 'S', 8995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 2, 15),
-(49, 27, 'SAMSUNG GALAXY A25 5G 8+256GB', 'S', 12995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 4, 14),
-(50, 28, 'XIAOMI REDMI NOTE 13 5G 8+256GB', 's', 10995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 3, 7),
-(51, 29, 'XIAOMI REDMI NOTE 13 PRO PLUS 5G 12+256GB', 's', 20995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 5, 7),
-(52, 30, 'XIAOMI POCO X6 PRO 8+256 GB', 's', 17495.00, 1, 0.00, '2023-01-01 12:00:00', 3, 3, 7),
-(53, 31, 'XIAOMI REDMI 14C 4+128GB', 's', 7495.00, 1, 0.00, '2023-01-01 12:00:00', 3, 1, 15),
-(54, 32, 'XIAOMI REDMI NOTE 14 8+128GB', 's', 10495.00, 1, 0.00, '2023-01-01 12:00:00', 3, 3, 20),
-(55, 32, 'XIAOMI REDMI NOTE 14 8+256GB', 's', 11995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 3, 7),
-(56, 33, 'XIAOMI REDMI NOTE 14 5G 12+256GB', 's', 13995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 5, 7),
-(57, 34, 'XIAOMI REDMI NOTE 14 PRO 8+256GB', 's', 15995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 3, 7),
-(58, 35, 'XIAOMI REDMI NOTE 14 PRO 5G 12+256GB', 's', 17995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 5, 7),
-(59, 36, 'XIAOMI REDMI NOTE 14 PRO PLUS 5G 12+256GB', 's', 22995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 6, 14),
-(60, 37, 'Google Pixel 7 Pro 12+128GB', '', 17495.00, 1, 0.00, '2023-01-01 08:00:00', 4, NULL, NULL),
-(61, 38, 'Google Pixel 8 Pro 12+128GB', '', 24995.00, 1, 0.00, '2023-01-01 08:00:00', 4, NULL, NULL),
-(62, 39, 'INFINIX SMART 8 4+128GB', '', 4995.00, 1, 0.00, '2023-01-01 08:00:00', 19, NULL, NULL),
-(63, 40, 'INFINIX SMART 9 4+128GB', '', 5995.00, 1, 0.00, '2023-01-01 08:00:00', 19, NULL, NULL),
-(64, 41, 'INFINIX HOT 50I 6+256GB', '', 7495.00, 1, 0.00, '2023-01-01 08:00:00', 19, NULL, NULL),
-(65, 42, 'ZTE A35 CORE 4+64GB', '', 3995.00, 1, 0.00, '2023-01-01 08:00:00', 20, NULL, NULL),
-(66, 43, 'ZTE A35 4+64GB', '', 4995.00, 1, 0.00, '2023-01-01 08:00:00', 20, NULL, NULL),
-(67, 44, 'ZTE BLADE V60 6+256GB ', '', 7495.00, 1, 0.00, '2023-01-01 08:00:00', 20, NULL, NULL),
-(68, 45, 'ZTE NUBIA NEO 2 5G 8+256GB', '', 11995.00, 1, 0.00, '2023-01-01 08:00:00', 20, NULL, NULL),
-(69, 84, 'MOTOROLA E14 2+64GB', '', 4995.00, 1, 0.00, '2023-01-01 08:00:00', 10, NULL, NULL),
-(70, 84, 'MOTOROLA G04 4+128GB', '', 5995.00, 1, 0.00, '2023-01-01 08:00:00', 10, NULL, NULL),
-(71, NULL, 'IPAD PRO 12.9-INCH 6TA GEN 128GB', '', 45995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(72, NULL, 'IPAD PRO 12.9 6TA GEN 256GB', '', 47495.00, 5, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(73, NULL, 'IPAD PRO M2 512GB 12.9 6TA GEN ', '', 49995.00, 5, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(74, NULL, 'IPAD PRO 13 PULGADAS M4 512GB', '', 57995.00, 5, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(75, NULL, 'IPAD PRO 13 PULGADAS M4 256GB', '', 54995.00, 5, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(76, NULL, 'IPAD 10 GEN 64GB', '', 23495.00, 5, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(79, NULL, 'AMAZON FIRE 8 32GB', '', 2995.00, 5, 0.00, '2023-01-01 08:00:00', 5, NULL, NULL),
-(80, NULL, 'AMAZON FIRE 8 64GB', '', 3495.00, 5, 0.00, '2023-01-01 08:00:00', 5, NULL, NULL),
-(81, NULL, 'ASTRO 8R 32G', '', 3495.00, 5, 0.00, '2025-03-30 08:00:00', NULL, NULL, NULL),
-(82, NULL, 'XIAOMI REDMI PAD SE 8.7 128GB', 's', 8495.00, 5, 0.00, '2023-01-01 12:00:00', 3, 1, 15),
-(83, NULL, 'VORTEX T10 32GB ', '', 3495.00, 5, 0.00, '2023-01-01 08:00:00', 6, NULL, NULL),
-(84, NULL, 'HOTPEPPER 32GB ', '', 3495.00, 5, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(85, NULL, 'X10MAX 64GB ', '', 3995.00, 5, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(86, NULL, 'VORTEX T10 PRO MAX 64GB ', '', 3995.00, 5, 0.00, '2023-01-01 08:00:00', 6, NULL, NULL),
-(87, NULL, 'SKYPAD 10 32GB ', '', 3495.00, 5, 0.00, '2023-01-01 08:00:00', 7, NULL, NULL),
-(88, NULL, 'SKYPAD 10 PRO MAX 64GB ', '', 3995.00, 5, 0.00, '2023-01-01 08:00:00', 7, NULL, NULL),
-(89, NULL, 'Macbook Pro 13-Inch 2020 i5-8ram 512GB', '', 31995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(90, NULL, 'Macbook Air 13-Inch 2020 i3-8ram 256GB', '', 29495.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(91, NULL, 'Macbook Pro 16-Inch 2019 i7-16ram 512GB', '', 34995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(92, NULL, 'Macbook Pro 16-Inch 2019 i9-32Ram 512GB', '', 39995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(93, NULL, 'Macbook Pro 16-Inch 2019 i9-16Ram 1TB', '', 41995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(94, NULL, 'Macbook Air M1 8Ram 256GB ', '', 44995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(95, NULL, 'Macbook Pro M2 2022 8-Ram 256GB', '', 51995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(96, NULL, 'Macbook Air 15-Inch M2 256GB ', '', 54995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(97, NULL, 'HP Victus i5 12GEN 3050TI 8+512GB ', '', 33495.00, 3, 0.00, '2023-01-01 08:00:00', 8, NULL, NULL),
-(98, NULL, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 'waos', 39995.00, 3, 0.00, '2025-06-23 16:00:00', 9, NULL, NULL),
-(99, NULL, 'HP 15.6Inch i5 12GEN 8+256GB ', '', 23995.00, 3, 0.00, '2023-01-01 08:00:00', 8, NULL, NULL),
-(100, NULL, 'HP i5 13GEN 8+256GB ', '', 24995.00, 3, 0.00, '2023-01-01 08:00:00', 8, NULL, NULL),
-(108, NULL, 'SAMSUNG GALAXY TAB A9+ 64GB', 's', 11495.00, 5, 0.00, '2023-01-01 12:00:00', 2, 1, 12),
-(109, NULL, 'SAMSUNG GALAXY TAB A9+ 128GB', 's', 13495.00, 5, 0.00, '2023-01-01 12:00:00', 2, 1, 6),
-(120, NULL, 'Macbook Pro 13-Inch 2020 i5 8+512GB', '', 31995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(121, NULL, 'Macbook Air 13-Inch 2020 i3 8+256GB ', '', 29495.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(122, NULL, 'Macbook Pro 16-Inch 2019 i7 16+512GB ', '', 34995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(123, NULL, 'Macbook Pro 16-Inch 2019 i9 32+512GB ', '', 39995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(124, NULL, 'Macbook Pro 16-Inch 2019 i9 16+1TB', '', 41995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(125, NULL, 'Macbook Air M1 8+256GB ', '', 44995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(126, NULL, 'Macbook Pro M2 2022 8+256GB', '', 51995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(127, NULL, 'Macbook Air 15-Inch M2 256GB', '', 54995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(128, NULL, 'HP Victus i5 12GEN 3050TI 8+512GB ', '', 33495.00, 3, 0.00, '2023-01-01 08:00:00', 8, NULL, NULL),
-(130, NULL, 'HP 15.6Inch i5 12GEN 8+256GB ', '', 23995.00, 3, 0.00, '2023-01-01 08:00:00', 8, NULL, NULL),
-(131, NULL, 'HP i5-13Gen-8Ram HP 256GB ', '', 24995.00, 3, 0.00, '2023-01-01 08:00:00', 8, NULL, NULL),
-(132, NULL, 'Lenovo i3-12GEN 8+256GB ', '', 21495.00, 3, 0.00, '2023-01-01 08:00:00', 10, NULL, NULL),
-(133, NULL, 'SAMSUNG WATCH 6 CLASSIC', '', 12995.00, 6, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(134, NULL, 'SAMSUNG WATCH 6', '', 11995.00, 6, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(135, NULL, 'SAMSUNG WATCH 7', '', 15995.00, 6, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(136, NULL, 'Samsung Galaxy Buds 3', '', 8495.00, 6, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(137, NULL, 'Samsung Galaxy Buds 2', '', 5995.00, 6, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(138, NULL, 'BEATS SOLO 4', '', 8495.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(139, NULL, 'BEATS STUDIO PRO', '', 9995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(140, NULL, 'XIAOMI REDMI BUDS 4 ACTIVE', '', 1995.00, 6, 0.00, '2023-01-01 08:00:00', 3, NULL, NULL),
-(142, NULL, 'AIRPODS GEN 2', '', 4995.00, 6, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(143, NULL, 'AIRPODS GEN 3', '', 9995.00, 6, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(144, NULL, 'AIRPODS GEN 4 CANCELACION DE RUIDO', '', 12995.00, 6, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(145, NULL, 'AIRPODS PRO 2 TIPO C OPEN BOX', '', 10995.00, 6, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(146, NULL, 'RAZER BARRACUDA X', '', 4995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(147, NULL, 'APPLE WATCH SE 2', '', 10495.00, 6, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(148, NULL, 'APPLE WATCH SERIE 7', '', 12994.00, 6, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(149, NULL, 'APPLE WATCH SERIE 8', '', 14495.00, 6, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(150, NULL, 'APPLE WATCH SERIE ULTRA', '', 24995.00, 6, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(151, NULL, 'APPLE WATCH SERIE 9', '', 16495.00, 6, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL),
-(152, NULL, 'Smart TV Onn 32 Pulgadas', '', 9995.00, 2, 0.00, '2023-01-01 08:00:00', 14, NULL, NULL),
-(153, NULL, 'Smart TV Onn 43 Pulgadas', '', 14995.00, 2, 0.00, '2023-01-01 08:00:00', 14, NULL, NULL),
-(154, NULL, 'Smart TV Onn 65 Pulgadas', '', 28995.00, 2, 0.00, '2023-01-01 08:00:00', 14, NULL, NULL),
-(155, NULL, 'Smart TV Onn 75 Pulgadas', '', 36995.00, 2, 0.00, '2023-01-01 08:00:00', 14, NULL, NULL),
-(156, NULL, 'Smart TV Phillips 32 Pulgadas', '', 9995.00, 2, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(157, NULL, 'Smart TV TCL Androide 32 Pulgadas', '', 10995.00, 2, 0.00, '2023-01-01 08:00:00', 11, NULL, NULL),
-(158, NULL, 'Smart TV TCL Roku 43 Pulgadas', '', 16495.00, 2, 0.00, '2023-01-01 08:00:00', 11, NULL, NULL),
-(159, NULL, 'Smart TV TCL Roku 55 Pulgadas', '', 23995.00, 2, 0.00, '2023-01-01 08:00:00', 11, NULL, NULL),
-(160, NULL, 'Smart TV TCL Google 55 Pulgadas', '', 24995.00, 2, 0.00, '2023-01-01 08:00:00', 11, NULL, NULL),
-(161, NULL, 'Smart TV TCL Fire TV 58 Pulgadas', '', 27495.00, 2, 0.00, '2023-01-01 08:00:00', 11, NULL, NULL),
-(162, NULL, 'Smart TV TCL Roku 65 Pulgadas', '', 30995.00, 2, 0.00, '2025-03-14 08:00:00', 11, NULL, NULL),
-(163, NULL, 'Smart TV TCL Google 65 Pulgadas', '', 34995.00, 2, 0.00, '2023-01-01 08:00:00', 11, NULL, NULL),
-(164, NULL, 'Smart TV TCL Roku 85 Pulgadas', '', 74995.00, 2, 0.00, '2023-01-01 08:00:00', 11, NULL, NULL),
-(165, NULL, 'Smart TV WESTINGHOUSE ROKU 43 Pulgadas', '', 14995.00, 2, 0.00, '2023-01-01 08:00:00', 13, NULL, NULL),
-(166, NULL, 'Smart TV WESTINGHOUSE ROKU 65 Pulgadas', '', 28495.00, 2, 0.00, '2023-01-01 08:00:00', 13, NULL, NULL),
-(167, NULL, 'Smart TV HISENSE GOOGLE 43 Pulgadas', '', 16995.00, 2, 0.00, '2023-01-01 08:00:00', 12, NULL, NULL),
-(168, NULL, 'Smart TV HISENSE GOOGLE QLED D5 43 Pulgadas', '', 18995.00, 2, 0.00, '2023-01-01 08:00:00', 12, NULL, NULL),
-(169, NULL, 'Smart TV HISENSE A7 Google 50 Pulgadas', '', 21495.00, 2, 0.00, '2023-01-01 08:00:00', 12, NULL, NULL),
-(170, NULL, 'Smart TV HISENSE QLED QD5 2024 55 Pulgadas', '', 27495.00, 2, 0.00, '2023-01-01 08:00:00', 12, NULL, NULL),
-(171, NULL, 'Smart TV HISENSE QLED D5 GOOGLE 65 Pulgadas', '', 37495.00, 2, 0.00, '2023-01-01 08:00:00', 12, NULL, NULL),
-(172, NULL, 'Smart TV HISENSE S7N CANVAS QLED GOOGLE 65 Pulgadas', 'siuuuusaddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd', 62495.00, 2, 0.00, '2023-01-01 12:00:00', 12, NULL, NULL),
-(173, NULL, 'Smart TV HISENSE A7 Google 75 Pulgadas', '', 42995.00, 2, 0.00, '2023-01-01 08:00:00', 12, NULL, NULL),
-(174, NULL, 'Smart TV HISENSE QLED QD6 GOOGLE 75 Pulgadas', '', 49995.00, 2, 0.00, '2023-01-01 08:00:00', 12, NULL, NULL),
-(175, NULL, 'Smart TV HISENSE A7 Google 85 Pulgadas', '', 82995.00, 2, 0.00, '2023-01-01 08:00:00', 12, NULL, NULL),
-(176, NULL, 'Smart TV SAMSUNG SERIE 7 2024 55 Pulgadas', '', 28995.00, 2, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(177, NULL, 'Smart TV SAMSUNG QLED Q6 55 Pulgadas', '', 34995.00, 2, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(178, NULL, 'Smart TV SAMSUNG DU7200 2024 65 Pulgadas', '', 36495.00, 2, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(179, NULL, 'Smart TV SAMSUNG 75 Pulgadas', '', 54995.00, 2, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(180, NULL, 'Aire Acondicionado Inverter D WORLD 12000', '', 20995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(181, NULL, 'Aire Acondicionado Inverter GBR 18000', '', 32495.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(182, NULL, 'Aire Acondicionado Inverter TCL 24000', '', 44495.00, 6, 0.00, '2023-01-01 08:00:00', 11, NULL, NULL),
-(183, NULL, 'Aire Acondicionado Inverter Black+Decker 12000', '', 23495.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(184, NULL, 'PlayStation 5 Slim', '', 33995.00, 4, 0.00, '2025-03-13 08:00:00', 15, NULL, NULL),
-(185, NULL, 'Onyx Studio 8', '', 12995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(186, NULL, 'Subwofer Barra de Sonido LG', '', 7995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(187, NULL, 'Samsung Barra de Sonido iHome 120w', '', 5995.00, 6, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(188, NULL, 'Samsung Barra de Sonido iHome 180w', '', 7995.00, 6, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL),
-(189, NULL, 'Freidora de Aire Brentwood 4L', '', 3995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(190, NULL, 'Freidora de Aire Ninja Speed 6L', '', 7495.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(191, NULL, 'Microonda Sokany', '', 5995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(192, NULL, 'MOUSE RAZER DEATHADDER ESSENTIAL', '', 2495.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(193, NULL, 'TECLADO RAZER ORNATA V3', '', 4995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(194, NULL, 'JBL FLIP 5', '', 5995.00, 6, 0.00, '2023-01-01 08:00:00', 18, NULL, NULL),
-(195, NULL, 'JBL PARTYBOX ON-THE-GO', '', 19995.00, 6, 0.00, '2023-01-01 08:00:00', 18, NULL, NULL),
-(196, NULL, 'JBL BOOMBOX3', '', 26495.00, 6, 0.00, '2023-01-01 08:00:00', 18, NULL, NULL),
-(197, NULL, 'JBL CHARGE 5', '', 9495.00, 6, 0.00, '2023-01-01 08:00:00', 18, NULL, NULL),
-(198, NULL, 'JBL CLIP 4', '', 4495.00, 6, 0.00, '2023-01-01 08:00:00', 18, NULL, NULL),
-(199, NULL, 'JBL GO 3', '', 2995.00, 6, 0.00, '2023-01-01 08:00:00', 18, NULL, NULL),
-(200, NULL, 'SONY SRS-XG500', '', 22495.00, 6, 0.00, '2023-01-01 08:00:00', 15, NULL, NULL),
-(201, NULL, 'ANIKER SOUNDCORE', '', 2995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(202, NULL, 'SOUNDCORE BOOM 2 PLUS', '', 14995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(203, NULL, 'Monitor Asus VG1B 27 Pulgada 165HZ', '', 14995.00, 2, 0.00, '2023-01-01 08:00:00', 9, NULL, NULL),
-(204, NULL, 'Monitor LG Ultragear 34 Pulgada 160HZ', '', 24995.00, 2, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL),
-(206, NULL, 'Monitor Samsung G4 ODYSSEEY 27 Pulgada 240HZ', 's', 19995.00, 2, 0.00, '2023-01-01 12:00:00', 2, NULL, NULL),
-(207, NULL, 'Monitor Samsung G5 ODYSSEY 32 Pulgada 165HZ', 'siuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasd', 22995.00, 2, 0.00, '2023-01-03 16:00:00', 2, NULL, NULL);
+INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `categoria_id`, `descuento`, `fecha`, `marca_id`, `ram_id`, `almacenamiento_id`, `activo`) VALUES
+(1, 1, 'iPhone 12', 'Experimenta el rendimiento y la elegancia del iPhone 12 de 64GB, un dispositivo que combina potencia, diseño y eficiencia. Equipado con 4GB de RAM, ofrece una experiencia fluida tanto en multitarea como en juegos y aplicaciones exigentes.\n\nEste equipo está en condición Triple A (AAA), lo que significa que ha sido cuidadosamente reacondicionado para lucir y funcionar como nuevo. Ideal para quienes desean la calidad de Apple a un precio más accesible.', 15995.00, 1, 20.00, '2025-08-05 23:06:00', 1, 1, 1, 1),
+(2, 1, 'iPhone 12', 's', 17995.00, 1, 0.00, '2025-08-02 00:00:00', 1, 1, 2, 1),
+(3, 1, 'iPhone 12', 's', 19495.00, 1, 0.00, '2025-08-02 04:00:00', 1, 1, 3, 1),
+(4, 2, 'iPhone 12 Pro', 's', 21995.00, 1, 0.00, '2025-08-02 00:00:00', 1, 2, 2, 1),
+(5, 2, 'iPhone 12 Pro', 's', 23995.00, 1, 0.00, '2025-08-01 20:00:00', 1, 2, 3, 1),
+(6, 3, 'iPhone 12 Pro Max', 's', 27495.00, 1, 0.00, '2025-08-01 20:00:00', 1, 2, 2, 1),
+(7, 3, 'iPhone 12 Pro Max', 's', 28995.00, 1, 0.00, '2025-05-31 16:00:00', 1, 2, 3, 1),
+(8, 3, 'iPhone 12 Pro Max', 's', 29995.00, 1, 0.00, '2025-05-01 16:00:00', 1, 2, 4, 1),
+(9, 4, 'iPhone 13', 'S', 23995.00, 1, 0.00, '2025-05-01 20:00:00', 1, 1, 2, 1),
+(10, 4, 'iPhone 13', 'S', 25495.00, 1, 0.00, '2025-05-01 16:00:00', 1, 1, 3, 1),
+(11, 5, 'iPhone 13 Pro', 'S', 28495.00, 1, 0.00, '2025-05-14 16:00:00', 1, 2, 2, 1),
+(12, 5, 'iPhone 13 Pro', 'S', 30995.00, 1, 0.00, '2025-03-11 16:00:00', 1, 2, 3, 1),
+(13, 6, 'iPhone 13 Pro Max', 'S', 32995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 2, 2, 1),
+(14, 6, 'iPhone 13 Pro Max', 'S', 35995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 2, 3, 1),
+(15, 6, 'iPhone 13 Pro Max', 'S', 37495.00, 1, 0.00, '2023-01-01 16:00:00', 1, 2, 4, 1),
+(16, 7, 'iPhone 14', 'S', 26495.00, 1, 0.00, '2023-01-01 20:00:00', 1, 1, 2, 1),
+(17, 7, 'iPhone 14 ', 'S', 27995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 1, 3, 1),
+(18, 8, 'iPhone 14 Plus', 'S', 28995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 1, 2, 1),
+(19, 8, 'iPhone 14 Plus', 'S', 30995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 1, 3, 1),
+(20, 9, 'iPhone 14 Pro ', 'S', 34495.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 2, 1),
+(21, 9, 'iPhone 14 Pro', 'S', 36495.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 3, 1),
+(22, 9, 'iPhone 14 Pro', 'S', 38995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 4, 1),
+(23, 10, 'iPhone 14 Pro Max', 'S', 41495.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 2, 1),
+(24, 10, 'iPhone 14 Pro Max', 'S', 43995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 3, 1),
+(25, 10, 'iPhone 14 Pro Max', 'S', 46495.00, 1, 0.00, '2023-01-01 12:00:00', 1, 9, 4, 1),
+(26, 11, 'iPhone 15', 'S', 35995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 2, 1),
+(27, 11, 'iPhone 15', 'S', 37995.00, 1, 0.00, '2023-01-01 12:00:00', 1, 9, 3, 1),
+(28, 12, 'iPhone 15 Plus', 'S', 38995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 9, 2, 1),
+(29, 12, 'iPhone 15 Plus', 'S', 42995.00, 1, 0.00, '2023-01-01 20:00:00', 1, 9, 4, 1),
+(32, 14, 'iPhone 15 Pro Max', 'S', 54995.00, 1, 0.00, '2023-01-01 20:00:00', 1, 3, 3, 1),
+(33, 14, 'iPhone 15 Pro Max', 'S', 57995.00, 1, 0.00, '2023-01-01 20:00:00', 1, 3, 4, 1),
+(34, 14, 'iPhone 15 Pro Max', 'S', 61995.00, 1, 0.00, '2023-01-01 12:00:00', 1, 5, 5, 1),
+(35, 15, 'iPhone 16', 'S', 52495.00, 1, 0.00, '2023-01-01 16:00:00', 1, 15, 4, 1),
+(36, 16, 'iPhone 16E', 'S', 44995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 14, 3, 1),
+(37, 17, 'iPhone 16 Plus', 'S', 54995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 15, 2, 1),
+(38, 18, 'iPhone 16 Pro Max', 's', 74995.00, 1, 0.00, '2023-01-01 16:00:00', 1, 14, 3, 1),
+(39, 18, 'iPhone 16 Pro Max', 's', 84995.00, 1, 0.00, '2025-03-01 16:00:00', 1, 14, 4, 1),
+(40, 19, 'SAMSUNG GALAXY S10 PLUS', 'S', 9995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 4, 22, 1),
+(41, 20, 'SAMSUNG GALAXY NOTE 10 PLUS', 'S', 13995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 6, 21, 1),
+(42, 21, 'SAMSUNG GALAXY NOTE 20 ULTRA', 'S', 17995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 5, 20, 1),
+(43, 22, 'SAMSUNG GALAXY S21 ULTRA', 'S', 17995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 5, 20, 1),
+(44, 23, 'SAMSUNG GALAXY S23 ULTRA', 'S', 39495.00, 1, 0.00, '2023-01-01 12:00:00', 2, 13, 18, 1),
+(45, 24, 'SAMSUNG GALAXY S25 ULTRA', 'S', 84995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 13, 17, 1),
+(46, 25, 'SAMSUNG GALAXY A05', 'S', 7995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 2, 15, 1),
+(47, 25, 'SAMSUNG GALAXY A05', 'S', 6995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 1, 16, 1),
+(48, 26, 'SAMSUNG GALAXY A15', 'S', 8995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 2, 15, 1),
+(49, 27, 'SAMSUNG GALAXY A25 5G', 'S', 12995.00, 1, 0.00, '2023-01-01 12:00:00', 2, 4, 14, 1),
+(50, 28, 'XIAOMI REDMI NOTE 13 5G', 's', 10995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 3, 7, 1),
+(51, 29, 'XIAOMI REDMI NOTE 13 PRO PLUS 5G ', 's', 20995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 5, 7, 1),
+(52, 30, 'XIAOMI POCO X6 PRO', 's', 17495.00, 1, 0.00, '2023-01-01 12:00:00', 3, 3, 7, 1),
+(53, 31, 'XIAOMI REDMI 14C', 's', 7495.00, 1, 0.00, '2023-01-01 12:00:00', 3, 1, 15, 1),
+(54, 32, 'XIAOMI REDMI NOTE 14', 's', 10495.00, 1, 0.00, '2023-01-01 12:00:00', 3, 3, 20, 1),
+(55, 32, 'XIAOMI REDMI NOTE 14', 's', 11995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 3, 7, 1),
+(56, 33, 'XIAOMI REDMI NOTE 14 5G ', 's', 13995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 5, 7, 1),
+(57, 34, 'XIAOMI REDMI NOTE 14 PRO ', 's', 15995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 3, 7, 1),
+(58, 35, 'XIAOMI REDMI NOTE 14 PRO 5G', 's', 17995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 5, 7, 1),
+(59, 36, 'XIAOMI REDMI NOTE 14 PRO PLUS 5G', 's', 22995.00, 1, 0.00, '2023-01-01 12:00:00', 3, 6, 14, 1),
+(60, 37, 'Google Pixel 7 Pro', 's', 17495.00, 1, 0.00, '2023-01-01 12:00:00', 4, 13, 20, 1),
+(61, 38, 'Google Pixel 8 Pro', 's', 24995.00, 1, 0.00, '2023-01-01 12:00:00', 4, 13, 20, 1),
+(62, 39, 'INFINIX SMART 8', 's', 4995.00, 1, 0.00, '2023-01-01 12:00:00', 19, 1, 15, 1),
+(63, 40, 'INFINIX SMART 9', 's', 5995.00, 1, 0.00, '2023-01-01 12:00:00', 19, 1, 15, 1),
+(64, 41, 'INFINIX HOT 50I', 'S', 7495.00, 1, 0.00, '2023-01-01 12:00:00', 19, 2, 31, 1),
+(65, 42, 'ZTE A35 CORE', 's', 3995.00, 1, 0.00, '2023-01-01 16:00:00', 20, 1, 32, 1),
+(67, 44, 'ZTE BLADE V60', 's', 7495.00, 1, 0.00, '2023-01-01 12:00:00', 20, 2, 14, 1),
+(68, 45, 'ZTE NUBIA NEO 2 5G', 's', 11995.00, 1, 0.00, '2023-01-01 12:00:00', 20, 4, 14, 1),
+(69, 84, 'MOTOROLA E14', 'S', 4995.00, 1, 0.00, '2023-01-01 12:00:00', 10, 18, 16, 1),
+(70, 84, 'MOTOROLA G04', 's', 5995.00, 1, 0.00, '2023-01-01 16:00:00', NULL, 1, 15, 1),
+(71, NULL, 'IPAD PRO 12.9-INCH 6TA GEN 128GB', '', 45995.00, 1, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(72, NULL, 'IPAD PRO 12.9 6TA GEN 256GB', '', 47495.00, 5, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(73, NULL, 'IPAD PRO M2 512GB 12.9 6TA GEN ', '', 49995.00, 5, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(74, NULL, 'IPAD PRO 13 PULGADAS M4 512GB', '', 57995.00, 5, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(75, NULL, 'IPAD PRO 13 PULGADAS M4 256GB', '', 54995.00, 5, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(76, NULL, 'IPAD 10 GEN 64GB', '', 23495.00, 5, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(79, NULL, 'AMAZON FIRE 8 32GB', '', 2995.00, 5, 0.00, '2023-01-01 08:00:00', 5, NULL, NULL, 1),
+(80, NULL, 'AMAZON FIRE 8 64GB', '', 3495.00, 5, 0.00, '2023-01-01 08:00:00', 5, NULL, NULL, 1),
+(81, NULL, 'ASTRO 8R 32G', '', 3495.00, 5, 0.00, '2025-03-30 08:00:00', NULL, NULL, NULL, 1),
+(82, NULL, 'XIAOMI REDMI PAD SE 8.7 128GB', 's', 8495.00, 5, 0.00, '2023-01-01 12:00:00', 3, 1, 15, 1),
+(83, NULL, 'VORTEX T10 32GB ', '', 3495.00, 5, 0.00, '2023-01-01 08:00:00', 6, NULL, NULL, 1),
+(84, NULL, 'HOTPEPPER 32GB ', '', 3495.00, 5, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, 1),
+(85, NULL, 'X10MAX 64GB ', '', 3995.00, 5, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, 1),
+(86, NULL, 'VORTEX T10 PRO MAX 64GB ', '', 3995.00, 5, 0.00, '2023-01-01 08:00:00', 6, NULL, NULL, 1),
+(87, NULL, 'SKYPAD 10 32GB ', '', 3495.00, 5, 0.00, '2023-01-01 08:00:00', 7, NULL, NULL, 1),
+(88, NULL, 'SKYPAD 10 PRO MAX 64GB ', '', 3995.00, 5, 0.00, '2023-01-01 08:00:00', 7, NULL, NULL, 1),
+(89, NULL, 'Macbook Pro 13-Inch 2020 i5-8ram 512GB', '', 31995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(90, NULL, 'Macbook Air 13-Inch 2020 i3-8ram 256GB', '', 29495.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(91, NULL, 'Macbook Pro 16-Inch 2019 i7-16ram 512GB', '', 34995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(92, NULL, 'Macbook Pro 16-Inch 2019 i9-32Ram 512GB', '', 39995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(93, NULL, 'Macbook Pro 16-Inch 2019 i9-16Ram 1TB', '', 41995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(94, NULL, 'Macbook Air M1 8Ram 256GB ', '', 44995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(95, NULL, 'Macbook Pro M2 2022 8-Ram 256GB', '', 51995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(96, NULL, 'Macbook Air 15-Inch M2 256GB ', '', 54995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(97, NULL, 'HP Victus i5 12GEN 3050TI 8+512GB ', '', 33495.00, 3, 0.00, '2023-01-01 08:00:00', 8, NULL, NULL, 1),
+(98, NULL, 'Asus Tuf Gaming F15 i5-12GEN 16Ram-3050 512GB', 'waos', 39995.00, 3, 0.00, '2025-06-23 16:00:00', 9, NULL, NULL, 1),
+(99, NULL, 'HP 15.6Inch i5 12GEN 8+256GB ', '', 23995.00, 3, 0.00, '2023-01-01 08:00:00', 8, NULL, NULL, 1),
+(100, NULL, 'HP i5 13GEN 8+256GB ', '', 24995.00, 3, 0.00, '2023-01-01 08:00:00', 8, NULL, NULL, 1),
+(108, NULL, 'SAMSUNG GALAXY TAB A9+ 64GB', 's', 11495.00, 5, 0.00, '2023-01-01 12:00:00', 2, 1, 12, 1),
+(109, NULL, 'SAMSUNG GALAXY TAB A9+ 128GB', 's', 13495.00, 5, 0.00, '2023-01-01 12:00:00', 2, 1, 6, 1),
+(120, NULL, 'Macbook Pro 13-Inch 2020 i5 8+512GB', '', 31995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(121, NULL, 'Macbook Air 13-Inch 2020 i3 8+256GB ', '', 29495.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(122, NULL, 'Macbook Pro 16-Inch 2019 i7 16+512GB ', '', 34995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(123, NULL, 'Macbook Pro 16-Inch 2019 i9 32+512GB ', '', 39995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(124, NULL, 'Macbook Pro 16-Inch 2019 i9 16+1TB', '', 41995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(125, NULL, 'Macbook Air M1 8+256GB ', '', 44995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(126, NULL, 'Macbook Pro M2 2022 8+256GB', '', 51995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(127, NULL, 'Macbook Air 15-Inch M2 256GB', '', 54995.00, 3, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(128, NULL, 'HP Victus i5 12GEN 3050TI 8+512GB ', '', 33495.00, 3, 0.00, '2023-01-01 08:00:00', 8, NULL, NULL, 1),
+(130, NULL, 'HP 15.6Inch i5 12GEN 8+256GB ', '', 23995.00, 3, 0.00, '2023-01-01 08:00:00', 8, NULL, NULL, 1),
+(131, NULL, 'HP i5-13Gen-8Ram HP 256GB ', '', 24995.00, 3, 0.00, '2023-01-01 08:00:00', 8, NULL, NULL, 1),
+(132, NULL, 'Lenovo i3-12GEN 8+256GB ', '', 21495.00, 3, 0.00, '2023-01-01 08:00:00', 10, NULL, NULL, 1),
+(133, NULL, 'SAMSUNG WATCH 6 CLASSIC', '', 12995.00, 6, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL, 1),
+(134, NULL, 'SAMSUNG WATCH 6', '', 11995.00, 6, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL, 1),
+(135, NULL, 'SAMSUNG WATCH 7', '', 15995.00, 6, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL, 1),
+(136, NULL, 'Samsung Galaxy Buds 3', '', 8495.00, 6, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL, 1),
+(137, NULL, 'Samsung Galaxy Buds 2', '', 5995.00, 6, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL, 1),
+(138, NULL, 'BEATS SOLO 4', '', 8495.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, 1),
+(139, NULL, 'BEATS STUDIO PRO', '', 9995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, 1),
+(140, NULL, 'XIAOMI REDMI BUDS 4 ACTIVE', '', 1995.00, 6, 0.00, '2023-01-01 08:00:00', 3, NULL, NULL, 1),
+(142, NULL, 'AIRPODS GEN 2', '', 4995.00, 6, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(143, NULL, 'AIRPODS GEN 3', '', 9995.00, 6, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(144, NULL, 'AIRPODS GEN 4 CANCELACION DE RUIDO', '', 12995.00, 6, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(145, NULL, 'AIRPODS PRO 2 TIPO C OPEN BOX', '', 10995.00, 6, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(146, NULL, 'RAZER BARRACUDA X', '', 4995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, 1),
+(147, NULL, 'APPLE WATCH SE 2', '', 10495.00, 6, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(148, NULL, 'APPLE WATCH SERIE 7', '', 12994.00, 6, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(149, NULL, 'APPLE WATCH SERIE 8', '', 14495.00, 6, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(150, NULL, 'APPLE WATCH SERIE ULTRA', '', 24995.00, 6, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(151, NULL, 'APPLE WATCH SERIE 9', '', 16495.00, 6, 0.00, '2023-01-01 08:00:00', 1, NULL, NULL, 1),
+(152, NULL, 'Smart TV Onn 32 Pulgadas', '', 9995.00, 2, 0.00, '2023-01-01 08:00:00', 14, NULL, NULL, 1),
+(153, NULL, 'Smart TV Onn 43 Pulgadas', '', 14995.00, 2, 0.00, '2023-01-01 08:00:00', 14, NULL, NULL, 1),
+(154, NULL, 'Smart TV Onn 65 Pulgadas', '', 28995.00, 2, 0.00, '2023-01-01 08:00:00', 14, NULL, NULL, 1),
+(155, NULL, 'Smart TV Onn 75 Pulgadas', '', 36995.00, 2, 0.00, '2023-01-01 08:00:00', 14, NULL, NULL, 1),
+(156, NULL, 'Smart TV Phillips 32 Pulgadas', '', 9995.00, 2, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, 1),
+(157, NULL, 'Smart TV TCL Androide 32 Pulgadas', '', 10995.00, 2, 0.00, '2023-01-01 08:00:00', 11, NULL, NULL, 1),
+(158, NULL, 'Smart TV TCL Roku 43 Pulgadas', '', 16495.00, 2, 0.00, '2023-01-01 08:00:00', 11, NULL, NULL, 1),
+(159, NULL, 'Smart TV TCL Roku 55 Pulgadas', '', 23995.00, 2, 0.00, '2023-01-01 08:00:00', 11, NULL, NULL, 1),
+(160, NULL, 'Smart TV TCL Google 55 Pulgadas', '', 24995.00, 2, 0.00, '2023-01-01 08:00:00', 11, NULL, NULL, 1),
+(161, NULL, 'Smart TV TCL Fire TV 58 Pulgadas', '', 27495.00, 2, 0.00, '2023-01-01 08:00:00', 11, NULL, NULL, 1),
+(162, NULL, 'Smart TV TCL Roku 65 Pulgadas', '', 30995.00, 2, 0.00, '2025-03-14 08:00:00', 11, NULL, NULL, 1),
+(163, NULL, 'Smart TV TCL Google 65 Pulgadas', '', 34995.00, 2, 0.00, '2023-01-01 08:00:00', 11, NULL, NULL, 1),
+(164, NULL, 'Smart TV TCL Roku 85 Pulgadas', '', 74995.00, 2, 0.00, '2023-01-01 08:00:00', 11, NULL, NULL, 1),
+(165, NULL, 'Smart TV WESTINGHOUSE ROKU 43 Pulgadas', '', 14995.00, 2, 0.00, '2023-01-01 08:00:00', 13, NULL, NULL, 1),
+(166, NULL, 'Smart TV WESTINGHOUSE ROKU 65 Pulgadas', '', 28495.00, 2, 0.00, '2023-01-01 08:00:00', 13, NULL, NULL, 1),
+(167, NULL, 'Smart TV HISENSE GOOGLE 43 Pulgadas', '', 16995.00, 2, 0.00, '2023-01-01 08:00:00', 12, NULL, NULL, 1),
+(168, NULL, 'Smart TV HISENSE GOOGLE QLED D5 43 Pulgadas', '', 18995.00, 2, 0.00, '2023-01-01 08:00:00', 12, NULL, NULL, 1),
+(169, NULL, 'Smart TV HISENSE A7 Google 50 Pulgadas', '', 21495.00, 2, 0.00, '2023-01-01 08:00:00', 12, NULL, NULL, 1),
+(170, NULL, 'Smart TV HISENSE QLED QD5 2024 55 Pulgadas', '', 27495.00, 2, 0.00, '2023-01-01 08:00:00', 12, NULL, NULL, 1),
+(171, NULL, 'Smart TV HISENSE QLED D5 GOOGLE 65 Pulgadas', '', 37495.00, 2, 0.00, '2023-01-01 08:00:00', 12, NULL, NULL, 1),
+(172, NULL, 'Smart TV HISENSE S7N CANVAS QLED GOOGLE 65 Pulgadas', 'siuuuusaddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd', 62495.00, 2, 0.00, '2023-01-01 12:00:00', 12, NULL, NULL, 1),
+(173, NULL, 'Smart TV HISENSE A7 Google 75 Pulgadas', '', 42995.00, 2, 0.00, '2023-01-01 08:00:00', 12, NULL, NULL, 1),
+(174, NULL, 'Smart TV HISENSE QLED QD6 GOOGLE 75 Pulgadas', '', 49995.00, 2, 0.00, '2023-01-01 08:00:00', 12, NULL, NULL, 1),
+(175, NULL, 'Smart TV HISENSE A7 Google 85 Pulgadas', '', 82995.00, 2, 0.00, '2023-01-01 08:00:00', 12, NULL, NULL, 1),
+(176, NULL, 'Smart TV SAMSUNG SERIE 7 2024 55 Pulgadas', '', 28995.00, 2, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL, 1),
+(177, NULL, 'Smart TV SAMSUNG QLED Q6 55 Pulgadas', '', 34995.00, 2, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL, 1),
+(178, NULL, 'Smart TV SAMSUNG DU7200 2024 65 Pulgadas', '', 36495.00, 2, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL, 1),
+(179, NULL, 'Smart TV SAMSUNG 75 Pulgadas', '', 54995.00, 2, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL, 1),
+(180, NULL, 'Aire Acondicionado Inverter D WORLD 12000', '', 20995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, 1),
+(181, NULL, 'Aire Acondicionado Inverter GBR 18000', '', 32495.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, 1),
+(182, NULL, 'Aire Acondicionado Inverter TCL 24000', '', 44495.00, 6, 0.00, '2023-01-01 08:00:00', 11, NULL, NULL, 1),
+(183, NULL, 'Aire Acondicionado Inverter Black+Decker 12000', '', 23495.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, 1),
+(184, NULL, 'PlayStation 5 Slim', '', 33995.00, 4, 0.00, '2025-03-13 08:00:00', 15, NULL, NULL, 1),
+(185, NULL, 'Onyx Studio 8', '', 12995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, 1),
+(186, NULL, 'Subwofer Barra de Sonido LG', '', 7995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, 1),
+(187, NULL, 'Samsung Barra de Sonido iHome 120w', '', 5995.00, 6, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL, 1),
+(188, NULL, 'Samsung Barra de Sonido iHome 180w', '', 7995.00, 6, 0.00, '2023-01-01 08:00:00', 2, NULL, NULL, 1),
+(189, NULL, 'Freidora de Aire Brentwood 4L', '', 3995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, 1),
+(190, NULL, 'Freidora de Aire Ninja Speed 6L', '', 7495.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, 1),
+(191, NULL, 'Microonda Sokany', '', 5995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, 1),
+(192, NULL, 'MOUSE RAZER DEATHADDER ESSENTIAL', '', 2495.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, 1),
+(193, NULL, 'TECLADO RAZER ORNATA V3', '', 4995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, 1),
+(194, NULL, 'JBL FLIP 5', '', 5995.00, 6, 0.00, '2023-01-01 08:00:00', 18, NULL, NULL, 1),
+(195, NULL, 'JBL PARTYBOX ON-THE-GO', '', 19995.00, 6, 0.00, '2023-01-01 08:00:00', 18, NULL, NULL, 1),
+(196, NULL, 'JBL BOOMBOX3', '', 26495.00, 6, 0.00, '2023-01-01 08:00:00', 18, NULL, NULL, 1),
+(197, NULL, 'JBL CHARGE 5', '', 9495.00, 6, 0.00, '2023-01-01 08:00:00', 18, NULL, NULL, 1),
+(198, NULL, 'JBL CLIP 4', '', 4495.00, 6, 0.00, '2023-01-01 08:00:00', 18, NULL, NULL, 1),
+(199, NULL, 'JBL GO 3', '', 2995.00, 6, 0.00, '2023-01-01 08:00:00', 18, NULL, NULL, 1),
+(200, NULL, 'SONY SRS-XG500', '', 22495.00, 6, 0.00, '2023-01-01 08:00:00', 15, NULL, NULL, 1),
+(201, NULL, 'ANIKER SOUNDCORE', '', 2995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, 1),
+(202, NULL, 'SOUNDCORE BOOM 2 PLUS', '', 14995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, 1),
+(203, NULL, 'Monitor Asus VG1B 27 Pulgada 165HZ', '', 14995.00, 2, 0.00, '2023-01-01 08:00:00', 9, NULL, NULL, 1),
+(204, NULL, 'Monitor LG Ultragear 34 Pulgada 160HZ', '', 24995.00, 2, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, 1),
+(206, NULL, 'Monitor Samsung G4 ODYSSEEY 27 Pulgada 240HZ', 's', 19995.00, 2, 0.00, '2023-01-01 12:00:00', 2, NULL, NULL, 1),
+(207, NULL, 'Monitor Samsung G5 ODYSSEY 32 Pulgada 165HZ', 'siuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasdsiuuuusaddddassdasdasdasdasdddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdasdasd', 22995.00, 2, 0.00, '2025-12-10 20:00:00', 2, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -1014,9 +1027,9 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (375, 24, 'purpura', 3, 'https://i.ebayimg.com/images/g/Yu0AAOSwG0hkW5uL/s-l1600.webp'),
 (376, 24, 'blanco', 4, 'https://i.ebayimg.com/images/g/b~YAAOSwNzNkW5tc/s-l1600.webp'),
 (377, 25, 'dorado', 1, 'https://i.ebayimg.com/images/g/0MgAAOSwWIpkW5u-/s-l1600.webp'),
-(382, 1, 'blanco', 2, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg'),
+(382, 1, 'blanco', 1, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg'),
 (383, 1, 'negro', 4, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/a75941f0-0032-4680-bda0-ba070e5f9982.jpg'),
-(384, 1, 'verde', 4, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg'),
+(384, 1, 'verde', 1, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg'),
 (385, 2, 'verde', 3, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg'),
 (386, 2, 'pupura', 4, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/b01801bc-4c3c-411e-9ff0-dac6b4e34a87.jpg'),
 (387, 3, 'blanco', 0, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/6caf4891-9655-4247-a11c-9719a3db6244.jpg'),
@@ -1118,7 +1131,7 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (485, 65, 'verde', 4, 'https://i.ebayimg.com/images/g/zKIAAOSwkOdoVDu2/s-l1600.webp'),
 (486, 66, 'negro', 4, 'https://i.ebayimg.com/images/g/lxMAAOSw~0VnD0FB/s-l1600.webp'),
 (487, 67, 'blanco', 4, 'https://i.ebayimg.com/images/g/JmYAAOSw7YZoN8ef/s-l1600.webp'),
-(488, 68, 'negro', 3, 'https://i.ebayimg.com/images/g/trcAAOSwvNJoSn1R/s-l1600.webp'),
+(488, 68, 'negro', 2, 'https://i.ebayimg.com/images/g/trcAAOSwvNJoSn1R/s-l1600.webp'),
 (489, 69, 'negro', 3, 'https://i.ebayimg.com/images/g/Ov8AAOSwIohn-pPd/s-l1600.webp'),
 (490, 70, 'verde', 4, 'https://i.ebayimg.com/images/g/kJgAAOSwNGBnRH9e/s-l1600.webp'),
 (491, 71, 'gris', 3, 'https://i.ebayimg.com/images/g/LEgAAOSwgGNk-7cy/s-l1600.webp'),
@@ -1145,7 +1158,7 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (512, 95, 'gris', 3, 'https://i.ebayimg.com/images/g/OYQAAeSwY9Jof-O4/s-l1600.webp'),
 (513, 96, 'gris', 4, 'https://i.ebayimg.com/images/g/ow0AAOSweCZmTlsv/s-l1600.webp'),
 (514, 97, 'negro', 3, 'https://i.ebayimg.com/images/g/K3cAAeSwNdRofnVu/s-l1600.webp'),
-(515, 98, 'negro', 4, 'https://i.ebayimg.com/images/g/HVUAAOSwUZBn0x~s/s-l1600.webp'),
+(515, 98, 'negro', 3, 'https://i.ebayimg.com/images/g/HVUAAOSwUZBn0x~s/s-l1600.webp'),
 (516, 99, 'gris', 3, 'https://i.ebayimg.com/images/g/l-oAAOSwoIRnTibC/s-l1600.webp'),
 (517, 100, 'gris', 4, 'https://i.ebayimg.com/images/g/F2cAAOSwoeFoUczn/s-l1600.webp'),
 (518, 108, 'gris', 3, 'https://i.ebayimg.com/images/g/2NIAAeSwk0Joe2w7/s-l1600.webp'),
@@ -1194,7 +1207,55 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (563, 168, 'negro', 4, 'https://i.ebayimg.com/images/g/GOIAAOSwJkBoLzNi/s-l960.webp'),
 (564, 169, 'negro', 4, 'https://i.ebayimg.com/images/g/yq0AAOSwhTlnl5GM/s-l1600.webp'),
 (565, 170, 'negro', 4, 'https://i.ebayimg.com/images/g/RnkAAeSwqZtnziem/s-l960.webp'),
-(566, 171, 'negro', 4, 'https://i.ebayimg.com/images/g/9MsAAOSw7lBi0mCu/s-l960.webp');
+(566, 171, 'negro', 4, 'https://i.ebayimg.com/images/g/9MsAAOSw7lBi0mCu/s-l960.webp'),
+(567, 172, 'negro', 4, 'https://m.media-amazon.com/images/I/71cWAzRYvWL._SX522_.jpg'),
+(568, 173, 'negro', 4, 'https://i.ebayimg.com/images/g/Kz8AAOSwiJ5kWfPb/s-l960.webp'),
+(569, 176, 'negro', 4, 'https://i.ebayimg.com/images/g/V2gAAOSwNSlnb43S/s-l1600.webp'),
+(570, 177, 'negro', 4, 'https://i.ebayimg.com/images/g/V5MAAeSwyXFohpfG/s-l1600.webp'),
+(571, 178, 'negro', 4, 'https://i.ebayimg.com/images/g/V2gAAOSwNSlnb43S/s-l1600.webp'),
+(572, 179, 'negro', 4, 'https://shop.samsung.com/latin/pub/media/catalog/product/cache/a69170b4a4f0666a52473c2224ba9220/q/n/qn65qn900cfxza_001_front_titan-black_2_1_1.png'),
+(573, 180, 'blanco', 4, 'https://casacuesta.com/media/catalog/product/cache/afcac67a0d77755283578b677f040f2b/3/3/3350104-1.jpg'),
+(574, 181, 'blanco', 4, 'https://casacuesta.com/media/catalog/product/cache/afcac67a0d77755283578b677f040f2b/3/3/3338451-1__1729812230.jpg'),
+(575, 182, 'blanco', 4, 'https://casacuesta.com/media/catalog/product/cache/afcac67a0d77755283578b677f040f2b/3/3/3310342-1.jpg'),
+(576, 183, 'blanco', 4, 'https://img.tcheloco.com.py/85231-home_default/aire-acondicionado-blackdecker-12000btu-220v60hz-inverter.jpg'),
+(577, 184, 'blanco', 4, 'https://media.direct.playstation.com/is/image/sierialto/ps5-slim-model-hero-new'),
+(578, 185, 'azul', 4, 'https://culturasonora.es/wp-content/uploads/2024/01/Onyx-Studio-8cultura.jpg'),
+(579, 186, 'negro', 4, 'https://www.lg.com/content/dam/channel/wcms/es/productos/he/2024/barras-de-sonido/s90tr/lgcom/gallery/02_lg_S90TR_basic_medium_350x350.jpg'),
+(580, 187, 'negro', 4, 'https://m.media-amazon.com/images/I/31dC-vrN7CL._UF894,1000_QL80_.jpg'),
+(581, 188, 'negro', 4, 'https://images-na.ssl-images-amazon.com/images/I/51x9zdI38GL._AC_UL495_SR435,495_.jpg'),
+(582, 189, 'negro', 4, 'https://m.media-amazon.com/images/I/61oOTu-kfDL._UF894,1000_QL80_.jpg'),
+(583, 190, 'gris', 4, 'https://m.media-amazon.com/images/I/51KfYfuFpSL._UF894,1000_QL80_.jpg'),
+(584, 191, 'blanco', 4, 'https://img.yfisher.com/m6289/1749537156900-00/jpg70-t4-width440.webp'),
+(585, 192, 'negro', 4, 'https://m.media-amazon.com/images/I/415qavdCboL._SS400_.jpg'),
+(586, 193, 'negro', 4, 'https://geeky.sfo2.cdn.digitaloceanspaces.com/geekydrop_production/thumbnail--RmRLKDHTiQ.png'),
+(587, 194, 'negro', 4, 'https://www.jbl.es/dw/image/v2/BFND_PRD/on/demandware.static/-/Sites-masterCatalog_Harman/default/dw5bf3296f/JBL_CHARGE5_HERO_BLACK_0046_x1.png?sw=400&sh=400&sm=fit&sfrm=png'),
+(588, 194, 'azul', 4, 'https://www.jbl.es/dw/image/v2/BFND_PRD/on/demandware.static/-/Sites-masterCatalog_Harman/default/dwb72930cc/JBL_Flip5_Product%20Photo_Hero_RiverTeal-1605x1605-hero.png?sw=400&sh=400&sm=fit&sfrm=png'),
+(589, 195, 'negro', 4, 'https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6576/6576525_sd.jpg;maxHeight=828;maxWidth=400?format=webp'),
+(590, 196, 'verde', 4, 'https://www.jbl.com/dw/image/v2/BFND_PRD/on/demandware.static/-/Sites-masterCatalog_Harman/default/dwcf80711d/1_JBL_BOOMBOX_3_SQUAD_HERO_33262_x2.png?sw=400&sh=400&sm=fit&sfrm=png'),
+(591, 197, 'negro', 4, 'https://www.jbl.es/dw/image/v2/BFND_PRD/on/demandware.static/-/Sites-masterCatalog_Harman/default/dwcbb4fd11/1_JBL_BOOMBOX_3_HERO_BLACK_33216_x2.png?sw=400&sh=400&sm=fit&sfrm=png'),
+(592, 198, 'negro', 4, 'https://www.jbl.es/dw/image/v2/BFND_PRD/on/demandware.static/-/Sites-masterCatalog_Harman/default/dw962d962e/JBL_CLIP4_HERO_STANDARD_TRIPLE_BLACK_0737_x1.png?sw=400&sh=400&sm=fit&sfrm=png'),
+(593, 199, 'negro', 4, 'https://www.jbl.es/dw/image/v2/BFND_PRD/on/demandware.static/-/Sites-masterCatalog_Harman/default/dwafaeef0d/JBL_GO_4_HERO_BLACK_48156_x4.png?sw=400&sh=400&sm=fit&sfrm=png'),
+(594, 200, 'negro', 4, 'https://store.sony.com.my/cdn/shop/products/4_2de458d2-fb0f-4855-b54d-49af66939e8a_400x.jpg?v=1710152324'),
+(595, 201, 'negro', 4, 'https://m.media-amazon.com/images/I/51QReosscPL._UF894,1000_QL80_.jpg'),
+(596, 202, 'negro', 4, 'https://pisces.bbystatic.com/image2/BestBuy_US/images/products/37316ee8-f080-4809-a447-98bd68af8441.png;maxHeight=828;maxWidth=400?format=webp'),
+(597, 203, 'negro', 4, 'https://www.asus.com/media/global/gallery/0osdprj9mpap1rub_setting_xxx_0_90_end_2000.png'),
+(598, 204, 'negro', 4, 'https://media.us.lg.com/transform/ecomm-PDPGallery-1100x730/35c1d0be-389f-4a74-8818-9d38650a6b6e/md07515480-zoom-01-jpg?io=transform:fill,width:596'),
+(599, 205, 'negro', 4, 'https://casacuesta.com/media/catalog/product/cache/afcac67a0d77755283578b677f040f2b/3/3/3352805-1__1747070732.jpg'),
+(600, 206, 'negro', 4, 'https://cdn.hooli.com.do/wp-content/uploads/2023/08/02185424/front.png'),
+(601, 207, 'negro', 4, 'https://casacuesta.com/media/catalog/product/cache/afcac67a0d77755283578b677f040f2b/3/3/3344468-1__1715126132.jpg'),
+(602, 131, 'Gris', 2, 'https://http2.mlstatic.com/D_Q_NP_2X_680852-MRD69531082702_052023-N.webp'),
+(603, 84, 'Gris', 1, 'https://mobilestoreonline.com/wp-content/uploads/2025/04/Andriod-13-400x400.png'),
+(604, 120, 'Gris', 1, 'https://i.ebayimg.com/images/g/oAwAAOSw--1lEYcs/s-l400.jpg'),
+(605, 121, 'Rosado', 2, 'https://i.ebayimg.com/images/g/gN0AAOSwy3Rl12Xi/s-l400.jpg'),
+(606, 122, 'Gris', 3, 'https://i.ebayimg.com/images/g/nUoAAeSwABJow0IF/s-l400.jpg'),
+(607, 123, 'Gris', 1, 'https://i.ebayimg.com/images/g/HdMAAOSwVVhl1aaH/s-l400.jpg'),
+(608, 124, 'Gris', 1, 'https://i.ebayimg.com/images/g/6ZQAAOSwmIhhFik4/s-l400.jpg'),
+(609, 125, 'Gris', 1, 'https://i.ebayimg.com/images/g/6ZsAAOSwUtJm9T0O/s-l400.jpg'),
+(610, 126, 'Gris', 1, 'https://i.ebayimg.com/images/g/sOcAAeSw8hNo4ffQ/s-l400.jpg'),
+(612, 96, 'Negro', 1, 'https://www.plug.tech/cdn/shop/files/MacbookAirM2Midnight_Ariel_1_fac3ecc7-63e6-46a9-8c02-0a26e637e206.png?v=1717170330&width=1445'),
+(613, 96, 'Negro', 2, 'https://www.plug.tech/cdn/shop/files/MacbookAirM2Midnight_Ariel_1_fac3ecc7-63e6-46a9-8c02-0a26e637e206.png?v=1717170330&width=1445'),
+(614, 174, 'Negro', 2, 'https://hisense.com.pe/static/1fee299aec5f19ca4ecea543fbc6bb4f/cd18a/75Q6.jpg'),
+(615, 175, 'Negro', 1, 'https://www.megaaudio.com.mx/cdn/shop/files/Pantalla-Hisense-85A7H_01.jpg?v=1736465649&width=416');
 
 -- --------------------------------------------------------
 
@@ -1224,7 +1285,8 @@ INSERT INTO `ram` (`id`, `capacidad`, `tipo`) VALUES
 (9, '6GB', 'LPDDR5'),
 (13, '12GB', 'LPDDR5X'),
 (14, '8GB', 'LPDDR5E'),
-(15, '6GB', 'LPDDR5E');
+(15, '6GB', 'LPDDR5E'),
+(18, '2GB', 'LPDDR4X');
 
 -- --------------------------------------------------------
 
@@ -1243,10 +1305,11 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('EGej77NhLC875lMcLRkvc1to0O2dO7h9', 1754296908, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-08-04T07:42:56.822Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":75,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}'),
-('h2DeFwInCvHPzXKVi5tek5uC93JaDib9', 1754291596, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-08-04T07:12:35.174Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\",\"rol\":\"superadmin\"}}'),
-('nmvWCwNvYxVL2pe4dVwdCb3fuLMUQOYG', 1754304615, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-08-04T10:47:53.063Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":75,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}'),
-('XRrizK7CixoZ2y6ryUpMCq8NZF7AGh1K', 1754293154, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-08-04T06:39:48.596Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":75,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}');
+('BQJ8KtCZFlEj1WRpiDQGp4gFNA2XAVvg', 1760761300, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-18T04:21:25.582Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\",\"rol\":\"superadmin\"}}'),
+('ohwSaRnKtSrOMWhfW-R0Z6yvpy0VyEWj', 1760764277, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-18T04:12:23.189Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\",\"rol\":\"superadmin\"}}'),
+('qJcsIAYbFAKNFx76upjtj_rZ_PAODQk-', 1760767026, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-18T05:21:28.652Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\",\"rol\":\"superadmin\"}}'),
+('tAkr8A7jZtYX1hD_01WHyV_6CD7Je-R2', 1760756450, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-18T02:02:35.952Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":75,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}'),
+('YFwoHgoZPFNBwc7RzS0CihrMU3i_Q8Yx', 1760760407, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-18T03:09:00.472Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\",\"rol\":\"superadmin\"}}');
 
 -- --------------------------------------------------------
 
@@ -1355,10 +1418,10 @@ INSERT INTO `variantes_almacenamiento` (`movil_id`, `almacenamiento_id`) VALUES
 -- Estructura de tabla para la tabla `variantes_ram`
 --
 
-  CREATE TABLE `variantes_ram` (
-    `movil_id` int(11) NOT NULL,
-    `ram_id` int(11) NOT NULL
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `variantes_ram` (
+  `movil_id` int(11) NOT NULL,
+  `ram_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `variantes_ram`
@@ -1632,7 +1695,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT de la tabla `almacenamiento`
 --
 ALTER TABLE `almacenamiento`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT de la tabla `baterias`
@@ -1650,13 +1713,13 @@ ALTER TABLE `camara`
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
 
 --
 -- AUTO_INCREMENT de la tabla `categorias`
 --
 ALTER TABLE `categorias`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT de la tabla `ciudades_envio`
@@ -1686,7 +1749,7 @@ ALTER TABLE `cpu`
 -- AUTO_INCREMENT de la tabla `detalles_pedido`
 --
 ALTER TABLE `detalles_pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=205;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=210;
 
 --
 -- AUTO_INCREMENT de la tabla `dimensionespeso`
@@ -1698,13 +1761,13 @@ ALTER TABLE `dimensionespeso`
 -- AUTO_INCREMENT de la tabla `envios`
 --
 ALTER TABLE `envios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT de la tabla `fav`
 --
 ALTER TABLE `fav`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=748;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=753;
 
 --
 -- AUTO_INCREMENT de la tabla `gpu`
@@ -1722,7 +1785,7 @@ ALTER TABLE `moviles`
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
 
 --
 -- AUTO_INCREMENT de la tabla `pantalla`
@@ -1734,13 +1797,13 @@ ALTER TABLE `pantalla`
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=191;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=194;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=219;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=221;
 
 --
 -- AUTO_INCREMENT de la tabla `p_marcas`
@@ -1752,13 +1815,13 @@ ALTER TABLE `p_marcas`
 -- AUTO_INCREMENT de la tabla `p_variantes`
 --
 ALTER TABLE `p_variantes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=567;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=616;
 
 --
 -- AUTO_INCREMENT de la tabla `ram`
 --
 ALTER TABLE `ram`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`

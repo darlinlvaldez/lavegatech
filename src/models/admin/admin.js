@@ -112,21 +112,25 @@ admin.actualizarEstadoEnvio = async (estado_envio, pedidoId) => {
 admin.obtenerItems = async () => {
   const query = `
     SELECT 
-    p.id, 
-    p.nombre, 
-    p.precio, 
-    p.descripcion, 
-    p.descuento, 
-    p.categoria_id AS categoria_id,
-    p.marca_id AS marca_id,
-    p.almacenamiento_id,
-    p.ram_id,
-    c.categoria AS categoria,
-    m.nombre AS marca,
-    p.fecha
+      p.id, 
+      p.nombre, 
+      p.precio, 
+      p.descripcion, 
+      p.descuento, 
+      p.categoria_id AS categoria_id,
+      p.marca_id AS marca_id,
+      p.almacenamiento_id,
+      p.ram_id,
+      p.activo, -- <-- agregar esto
+      CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones,
+      c.categoria AS categoria,
+      m.nombre AS marca,
+      p.fecha
     FROM productos p
     LEFT JOIN categorias c ON p.categoria_id = c.id
     LEFT JOIN p_marcas m ON p.marca_id = m.id
+    LEFT JOIN ram r ON p.ram_id = r.id
+    LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
     ORDER BY p.id DESC
   `;
   const [rows] = await db.query(query);
@@ -165,6 +169,16 @@ admin.eliminarItems = async (id) => {
   const query = `DELETE FROM productos WHERE id = ?`;
   const [result] = await db.query(query, [id]);
   return result.affectedRows;
+};
+
+admin.itemEstado = async (id) => {
+  const query = `UPDATE productos SET activo = NOT activo WHERE id = ?`;
+  const [result] = await db.query(query, [id]);
+
+  if (result.affectedRows === 0) return null;
+
+  const [rows] = await db.query(`SELECT id, activo FROM productos WHERE id = ?`, [id]);
+  return rows[0]; 
 };
 
 // Ram y Almacenamiento

@@ -21,7 +21,7 @@ principal.buscarProductos = async (query) => {
   LEFT JOIN p_variantes v ON p.id = v.producto_id 
   LEFT JOIN ram r ON p.ram_id = r.id
   LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
-  WHERE p.nombre LIKE ? OR p.descripcion LIKE ?
+  WHERE (p.nombre LIKE ? OR p.descripcion LIKE ?) AND p.activo = 1
   GROUP BY p.id
   LIMIT 10`;
 
@@ -55,6 +55,7 @@ principal.obtenerProductos = async (categoria) => {
   LEFT JOIN p_variantes v ON p.id = v.producto_id
   LEFT JOIN ram r ON p.ram_id = r.id
   LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
+  WHERE p.activo = 1
   ${categoria ? `WHERE c.categoria = ?` : ''}
   GROUP BY p.id
   `;
@@ -99,6 +100,7 @@ principal.obtenerRecomendados = async () => {
   LEFT JOIN p_variantes v ON p.id = v.producto_id 
   LEFT JOIN ram r ON p.ram_id = r.id
   LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
+  WHERE p.activo = 1  
   GROUP BY p.id 
   LIMIT 20;`;
   

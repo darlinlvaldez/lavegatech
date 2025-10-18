@@ -3,7 +3,7 @@ import db from "../../database/mobiles.js";
 const store = {};
 
 const construirWhereClause = (categorias = [], marcas = [], precioMin = null, precioMax = null) => {
-  const condiciones = [];
+  const condiciones = ["p.activo = 1"];
 
   const tieneCategorias = categorias.length > 0;
   const tieneMarcas = marcas.length > 0;
@@ -110,7 +110,7 @@ store.cantidadCategoria = async () => {
     SELECT  
     c.id AS categoria_id, 
     c.categoria, 
-    COUNT(p.id) AS cantidad
+    COUNT(CASE WHEN p.activo = 1 THEN p.id END) AS cantidad
     FROM categorias c
     LEFT JOIN productos p ON c.id = p.categoria_id
     GROUP BY c.id`;
@@ -130,7 +130,7 @@ store.cantidadMarcas = async (categorias = []) => {
     `SELECT
     m.id AS marca_id,
     m.nombre AS marca,
-    COUNT(DISTINCT p.id) AS cantidad
+    COUNT(DISTINCT CASE WHEN p.activo = 1 THEN p.id END) AS cantidad
     FROM p_marcas m
     INNER JOIN marca_categoria mc ON m.id = mc.marca_id
     LEFT JOIN productos p ON p.marca_id = m.id 

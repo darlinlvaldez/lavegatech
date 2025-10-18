@@ -43,35 +43,35 @@ fav.itemExists = async (usuario_id, producto_id, variante_id) => {
 fav.getByUserId = async (usuario_id) => {
     const [rows] = await db.query(
         `SELECT 
-            f.id,
-            p.id as producto_id,
-            p.nombre,
-            p.descripcion,
-            p.precio,
-            p.descuento,
-            p.categoria_id,
-            p.marca_id,
-            v.id as variante_id,
-            v.color as colorSeleccionado,
-            v.img as imagen,
-            v.stock as stockPorColor,
-            r.capacidad AS ram, 
-            a.capacidad AS almacenamiento
-         FROM fav f
-         JOIN productos p ON f.producto_id = p.id
-         LEFT JOIN p_variantes v ON f.variante_id = v.id
-         LEFT JOIN ram r ON p.ram_id = r.id
-         LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
-         WHERE f.usuario_id = ?
-         ORDER BY f.fecha_agregado DESC`,
-        [usuario_id]
+        f.id,
+        p.id as producto_id,
+        p.nombre,
+        p.descripcion,
+        p.precio,
+        p.descuento,
+        p.categoria_id,
+        p.marca_id,
+        v.id as variante_id,
+        v.color as colorSeleccionado,
+        v.img as imagen,
+        v.stock as stockPorColor,
+        r.capacidad AS ram, 
+        a.capacidad AS almacenamiento
+        FROM fav f
+        JOIN productos p ON f.producto_id = p.id
+        LEFT JOIN p_variantes v ON f.variante_id = v.id
+        LEFT JOIN ram r ON p.ram_id = r.id
+        LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
+        WHERE f.usuario_id = ? AND p.activo = 1
+        ORDER BY f.fecha_agregado DESC`,
+    [usuario_id]
     );
     return rows;
 };
 
 fav.getCount = async (usuario_id) => {
   const [rows] = await db.query(
-    "SELECT COUNT(*) as count FROM fav WHERE usuario_id = ?",
+    "SELECT COUNT(*) as count FROM fav WHERE usuario_id = ? AND p.activo = 1",
     [usuario_id]
   );
   return rows[0].count;

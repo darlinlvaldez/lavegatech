@@ -47,7 +47,7 @@ adminController.estadoEnvio = async (req, res) => {
 // Productos
 
 adminController.listarItems = async (req, res) => {
-  try {
+  try { 
     const productos = await admin.obtenerItems();
     res.json(productos);
   } catch (err) {
@@ -87,6 +87,22 @@ adminController.borrarItems = async (req, res) => {
     res.json({ success: affectedRows > 0 });
   } catch (err) {
     res.status(500).json({ error: 'Error al eliminar producto' });
+  }
+};
+
+adminController.productoEstado = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const actualizarItem = await admin.itemEstado(id);
+
+    if (!actualizarItem) {
+      return res.status(404).json({ error: "Producto no encontrado" });
+    }
+
+    res.json(actualizarItem);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al actualizar estado del producto" });
   }
 };
 
@@ -300,7 +316,7 @@ adminController.borrarCategoria = async (req, res) => {
     const { id } = req.params;
     await admin.eliminarCategoria(id);
     res.json({ success: true });
-  } catch (error) {
+  } catch (error) { 
     console.error(error);
     res.status(500).json({ error: 'Error al eliminar la categoría' });
   }
