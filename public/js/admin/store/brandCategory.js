@@ -25,12 +25,11 @@ const cancelBrandModalBtn = document.getElementById("cancelBrandModalBtn");
 const modalBrandTitle = document.getElementById("modalBrandTitle");
 const brandIdInput = document.getElementById("brandId");
 const brandNameInput = document.getElementById("brandName");
-const brandLogoInput = document.getElementById("brandLogo");
 const searchMarcaInput = document.getElementById("searchMarcaInput");
 
-const categoryErrorFields = ["categoria", "imagen"];
+const categoryErrorFields = ["categoria"];
 
-const brandErrorFields = ["nombre", "logo"];
+const brandErrorFields = ["nombre"];
 
 function renderCategories() {
   categoriesTableBody.innerHTML = "";
@@ -42,7 +41,6 @@ function renderCategories() {
     row.innerHTML = `
       <td>${cat.id}</td>
       <td>${cat.categoria}</td>
-      <td>${cat.imagen}</td>
       <td>
         <button onclick="editCategory(${cat.id})" class="edit-button">Editar</button>
         <button onclick="deleteCategory(${cat.id})" class="delete-button">Eliminar</button>
@@ -90,7 +88,6 @@ addCategoryBtn.addEventListener("click", () => {
 cancelCategoryModalBtn.addEventListener("click", () => {
   categoryModal.classList.remove("visible");
   clearError(categoryErrorFields,'#categoryForm');
-
 });
 
 categoryForm.addEventListener("submit", async (e) => {
@@ -100,9 +97,7 @@ categoryForm.addEventListener("submit", async (e) => {
 
   const id = categoryIdInput.value;
   const categoria = categoryNameInput.value;
-  const imagen = categoryImageInput.value;
-
-  const body = JSON.stringify({ categoria, imagen });
+  const body = JSON.stringify({ categoria });
 
   const url = id ? `/api/admin/categorias/${id}` : "/api/admin/categorias";
   const method = id ? "PUT" : "POST";
@@ -182,7 +177,6 @@ function renderBrands() {
     row.innerHTML = `
       <td>${brand.id}</td>
       <td>${brand.nombre}</td>
-      <td><img src="${brand.logo}" alt="${brand.nombre}" style="max-height: 40px;"></td>
       <td>${categoriasNombres}</td>
       <td>
         <button onclick="editBrand(${brand.id})" class="edit-button">Editar</button>
@@ -228,12 +222,11 @@ brandForm.addEventListener("submit", async (e) => {
 
   const id = brandIdInput.value;
   const nombre = brandNameInput.value;
-  const logo = brandLogoInput.value;
   const categoriasSeleccionadas = Array.from(
     document.querySelectorAll('input[name="brandCategories"]:checked')
   ).map((input) => parseInt(input.value));
 
-  const body = JSON.stringify({ nombre, logo, categorias: categoriasSeleccionadas });
+  const body = JSON.stringify({ nombre, categorias: categoriasSeleccionadas });
 
   const url = id ? `/api/admin/marcas/${id}` : "/api/admin/marcas";
   const method = id ? "PUT" : "POST";
@@ -270,7 +263,6 @@ window.editBrand = function (id) {
   if (brand) {
     modalBrandTitle.textContent = "Editar Marca";
     brandNameInput.value = brand.nombre;
-    brandLogoInput.value = brand.logo;
     brandIdInput.value = brand.id;
 
     renderCategoryCheckboxes(); 

@@ -25,6 +25,7 @@ router.get('/variantes',  requireRole('superadmin', 'admin', 'editor'), admin.li
 router.post('/variantes',  requireRole('superadmin', 'admin', 'editor'), validate(request.variant), admin.crearVariante);
 router.put('/variantes/:id',  requireRole('superadmin', 'admin', 'editor'), validate(request.variant), admin.editarVariante);
 router.delete('/variantes/:id',  requireRole('superadmin', 'admin'), admin.borrarVariante);
+router.post('/variantes/upload',  requireRole('superadmin', 'admin', 'editor'), admin.imagenArchivo);
 
 // Marcas
 router.get('/marcas',  requireRole('superadmin', 'admin', 'editor'), admin.listarMarcas);
@@ -55,9 +56,5 @@ router.get('/orders/:id',  requireRole('superadmin', 'admin',  'ventas', 'transp
 // Usuarios/Clientes
 router.get('/usuarios',  requireRole('superadmin', 'admin'), admin.listarUsuarios);
 router.patch('/usuarios/:id/estado',  requireRole('superadmin', 'admin'), admin.actualizarEstado);
-
-// Cargar Imagen 
-router.post('/variantes/upload',  requireRole('superadmin', 'admin', 'editor'), admin.cargarImagen);
-
 
 export default router;

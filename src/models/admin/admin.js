@@ -121,7 +121,7 @@ admin.obtenerItems = async () => {
       p.marca_id AS marca_id,
       p.almacenamiento_id,
       p.ram_id,
-      p.activo, -- <-- agregar esto
+      p.activo,
       CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones,
       c.categoria AS categoria,
       m.nombre AS marca,
@@ -196,16 +196,16 @@ admin.obtenerAlm = async () => {
 // Categorias
 
 admin.obtenerCategorias = async () => {
-  const [rows] = await db.query("SELECT id, categoria, imagen FROM categorias ORDER BY id DESC");
+  const [rows] = await db.query("SELECT id, categoria FROM categorias ORDER BY id DESC");
   return rows;
 };
 
-admin.crearCategoria = async (categoria, imagen) => {
-  await db.query("INSERT INTO categorias (categoria, imagen) VALUES (?, ?)", [categoria, imagen]);
+admin.crearCategoria = async (categoria) => {
+  await db.query("INSERT INTO categorias (categoria) VALUES (?)", [categoria]);
 };
 
-admin.actualizarCategoria = async (id, categoria, imagen) => {
-  await db.query("UPDATE categorias SET categoria = ?, imagen = ? WHERE id = ?", [categoria, imagen, id]);
+admin.actualizarCategoria = async (id, categoria) => {
+  await db.query("UPDATE categorias SET categoria = ? WHERE id = ?", [categoria, id]);
 };
 
 admin.eliminarCategoria = async (id) => {
@@ -224,7 +224,7 @@ admin.asociarCategoriasMarca = async (marcaId, categoriasIds) => {
 // Marcas
 
 admin.obtenerMarcas = async () => {
-  const [marcas] = await db.query("SELECT id, nombre, logo FROM p_marcas ORDER BY id DESC;");
+  const [marcas] = await db.query("SELECT id, nombre FROM p_marcas ORDER BY id DESC;");
 
   const [asociaciones] = await db.query(`
     SELECT m.id AS marca_id, c.id AS categoria_id, c.categoria
@@ -241,15 +241,15 @@ admin.obtenerMarcas = async () => {
   });
 };
 
-admin.agregarMarca = async (nombre, logo, categorias = []) => {
-  const [result] = await db.query("INSERT INTO p_marcas (nombre, logo) VALUES (?, ?)", [nombre, logo]);
+admin.agregarMarca = async (nombre, categorias = []) => {
+  const [result] = await db.query("INSERT INTO p_marcas (nombre) VALUES (?)", [nombre]);
   const marcaId = result.insertId;
   await admin.asociarCategoriasMarca(marcaId, categorias);
   return marcaId;
 };
 
-admin.editarMarca = async (id, nombre, logo, categorias = []) => {
-  await db.query("UPDATE p_marcas SET nombre = ?, logo = ? WHERE id = ?", [nombre, logo, id]);
+admin.editarMarca = async (id, nombre, categorias = []) => {
+  await db.query("UPDATE p_marcas SET nombre = ? WHERE id = ?", [nombre, id]);
   await admin.asociarCategoriasMarca(id, categorias);
 };
 

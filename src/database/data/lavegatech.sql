@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-10-2025 a las 06:58:19
+-- Tiempo de generación: 18-10-2025 a las 20:47:39
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `mobiles`
+-- Base de datos: `lavegatech`
 --
 
 -- --------------------------------------------------------
@@ -211,21 +211,20 @@ INSERT INTO `carrito` (`id`, `usuario_id`, `producto_id`, `cantidad`, `fecha_agr
 
 CREATE TABLE `categorias` (
   `id` int(11) NOT NULL,
-  `categoria` varchar(100) NOT NULL,
-  `imagen` varchar(250) NOT NULL
+  `categoria` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `categorias`
 --
 
-INSERT INTO `categorias` (`id`, `categoria`, `imagen`) VALUES
-(1, 'moviles', 'img/moviles.png'),
-(2, 'smarttv', 'img/smarttv.png'),
-(3, 'laptops', 'img/laptops.png'),
-(4, 'consolas', 'img/consolas.png'),
-(5, 'tablets', 'img/tablets.png'),
-(6, 'otros', 'img/otros.png');
+INSERT INTO `categorias` (`id`, `categoria`) VALUES
+(1, 'moviles'),
+(2, 'smarttv'),
+(3, 'laptops'),
+(4, 'consolas'),
+(5, 'tablets'),
+(6, 'otros');
 
 -- --------------------------------------------------------
 
@@ -591,7 +590,9 @@ INSERT INTO `marca_categoria` (`marca_id`, `categoria_id`) VALUES
 (18, 6),
 (19, 1),
 (19, 6),
-(20, 1);
+(20, 1),
+(34, 2),
+(34, 6);
 
 -- --------------------------------------------------------
 
@@ -974,33 +975,33 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 
 CREATE TABLE `p_marcas` (
   `id` int(11) NOT NULL,
-  `nombre` varchar(50) NOT NULL,
-  `logo` varchar(255) DEFAULT NULL
+  `nombre` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `p_marcas`
 --
 
-INSERT INTO `p_marcas` (`id`, `nombre`, `logo`) VALUES
-(1, 'Apple', 'img/marcas/apple.png'),
-(2, 'Samsung', 'img/marcas/samsung.png'),
-(3, 'Xiaomi', 'img/marcas/xiaomi.png'),
-(4, 'Google', 'img/marcas/google.png'),
-(5, 'Amazon', 'img/marcas/amazon.png'),
-(6, 'Vortex', 'img/marcas/vortex.png'),
-(7, 'Skypad', 'img/marcas/skypad.png'),
-(8, 'HP', 'img/marcas/hp.png'),
-(9, 'Asus', 'img/marcas/asus.png'),
-(10, 'Lenovo', 'img/marcas/lenovo.png'),
-(11, 'TCL', 'img/marcas/tcl.png'),
-(12, 'Hisense', 'img/marcas/hisense.png'),
-(13, 'Westinghouse', 'img/marcas/westinghouse.png'),
-(14, 'Onn', 'img/marcas/onn.png'),
-(15, 'Sony', 'img/marcas/sony.png'),
-(18, 'JBL', 'img/marcas/jbl.png'),
-(19, 'Infinix', 'img/marcas/jbl.png'),
-(20, 'ZTE', 'img/marcas/jbl.png');
+INSERT INTO `p_marcas` (`id`, `nombre`) VALUES
+(5, 'Amazon'),
+(1, 'Apple'),
+(9, 'Asus'),
+(4, 'Google'),
+(12, 'Hisense'),
+(8, 'HP'),
+(19, 'Infinix'),
+(18, 'JBL'),
+(10, 'Lenovo'),
+(34, 'nilrad'),
+(14, 'Onn'),
+(2, 'Samsung'),
+(7, 'Skypad'),
+(15, 'Sony'),
+(11, 'TCL'),
+(6, 'Vortex'),
+(13, 'Westinghouse'),
+(3, 'Xiaomi'),
+(20, 'ZTE');
 
 -- --------------------------------------------------------
 
@@ -1305,11 +1306,9 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('BQJ8KtCZFlEj1WRpiDQGp4gFNA2XAVvg', 1760761300, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-18T04:21:25.582Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\",\"rol\":\"superadmin\"}}'),
-('ohwSaRnKtSrOMWhfW-R0Z6yvpy0VyEWj', 1760764277, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-18T04:12:23.189Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\",\"rol\":\"superadmin\"}}'),
-('qJcsIAYbFAKNFx76upjtj_rZ_PAODQk-', 1760767026, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-18T05:21:28.652Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\",\"rol\":\"superadmin\"}}'),
-('tAkr8A7jZtYX1hD_01WHyV_6CD7Je-R2', 1760756450, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-18T02:02:35.952Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":75,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}'),
-('YFwoHgoZPFNBwc7RzS0CihrMU3i_Q8Yx', 1760760407, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-18T03:09:00.472Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\",\"rol\":\"superadmin\"}}');
+('brQACvmB5Uwo6NQG-ZTSt7qjmo8FPaxq', 1760816827, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-18T19:22:53.108Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\",\"rol\":\"superadmin\"}}'),
+('F26N2a6JU0ZI3GN8MHoz7gpPKT04KOMS', 1760815296, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-18T18:22:29.315Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\",\"rol\":\"superadmin\"}}'),
+('U5pZC29iA9SGStkTeINmROfqK0AYWkWo', 1760811187, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-18T17:18:36.638Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\",\"rol\":\"superadmin\"}}');
 
 -- --------------------------------------------------------
 
@@ -1719,7 +1718,7 @@ ALTER TABLE `carrito`
 -- AUTO_INCREMENT de la tabla `categorias`
 --
 ALTER TABLE `categorias`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT de la tabla `ciudades_envio`
@@ -1809,13 +1808,13 @@ ALTER TABLE `productos`
 -- AUTO_INCREMENT de la tabla `p_marcas`
 --
 ALTER TABLE `p_marcas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT de la tabla `p_variantes`
 --
 ALTER TABLE `p_variantes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=616;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=622;
 
 --
 -- AUTO_INCREMENT de la tabla `ram`

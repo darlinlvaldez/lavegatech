@@ -1,5 +1,7 @@
 import path from 'path';
 import fs from 'fs';
+import sharp from "sharp";
+import axios from "axios";
 import admin from '../../models/admin/admin.js';
 
 const adminController = {};
@@ -141,12 +143,17 @@ adminController.crearVariante = async (req, res) => {
   try {
     const { producto_id, color, stock, img } = req.body;
 
-    const success = await admin.agregarVariante({ producto_id, color, stock, img });
+    if (/^https?:\/\//.test(img)) {
+      const response = await axios.get(img, { responseType: "arraybuffer" });
+      await adminController.validarImagen(Buffer.from(response.data));
+    }
 
+    const success = await admin.agregarVariante({ producto_id, color, stock, img });
     res.status(201).json({ success });
+
   } catch (error) {
     console.error("Error al crear variante:", error);
-    res.status(500).json({ error: 'Error al crear variante' });
+    res.status(400).json({ error: error.message || "Error al crear variante" });
   }
 };
 
@@ -165,45 +172,62 @@ adminController.editarVariante = async (req, res) => {
     const { id } = req.params;
     const { color, stock, img, producto_id } = req.body;
 
+    if (/^https?:\/\//.test(img)) {
+      const response = await axios.get(img, { responseType: "arraybuffer" });
+      await adminController.validarImagen(Buffer.from(response.data));
+    }
+
     const success = await admin.actualizarVariante({
       id, color, stock, img, producto_id});
 
     res.json({ success });
   } catch (error) {
-    res.status(500).json({ error: 'Error al editar variante' });
+    res.status(500).json({ error: error.message || 'Error al editar variante' });
   }
 };
 
-adminController.cargarImagen = async (req, res) => {
-  try {
+adminController.validarImagen = async (buffer) => {
+  const metadata = await sharp(buffer).metadata();
+  const { width, height } = metadata;
+
+  if (width < 400 || height < 400 || width > 500 || height > 500) {
+    throw new Error(`La imagen debe tener entre 400x400 y 500x500 píxeles. (Actual: ${width}x${height})`);
+  }
+
+  return true;
+};
+
+adminController.imagenArchivo = async (req, res) => {
+   try {
     if (!req.files || !req.files.img) {
-      return res.status(400).json({ error: 'No se ha subido ningún archivo' });
+      return res.status(400).json({ error: "No se ha subido ningún archivo" });
     }
 
     const imgFile = req.files.img;
-
     const allowedExtensions = /png|jpg|jpeg/;
     const ext = path.extname(imgFile.name).toLowerCase();
 
     if (!allowedExtensions.test(ext)) {
-      return res.status(400).json({ error: 'Formato de imagen no permitido' });
+      return res.status(400).json({ error: "Formato de imagen no permitido" });
     }
 
-    const uploadPath = path.join(process.cwd(), 'public', 'uploads');
+    await adminController.validarImagen(imgFile.data);
 
+    const uploadPath = path.join(process.cwd(), "public", "uploads");
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true });
     }
 
     const fileName = `${Date.now()}_${imgFile.name}`;
+    const savePath = path.join(uploadPath, fileName);
 
-    await imgFile.mv(path.join(uploadPath, fileName));
+    await imgFile.mv(savePath);
 
     return res.status(200).json({ path: `/uploads/${fileName}` });
 
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: 'Error al subir la imagen' });
+    return res.status(400).json({ error: error.message || "Error al subir la imagen" });
   }
 };
 
@@ -256,8 +280,8 @@ adminController.listarMarcas = async (req, res) => {
 
 adminController.crearMarca = async (req, res) => {
   try {
-    const { nombre, logo, categorias } = req.body;
-    await admin.agregarMarca(nombre, logo, categorias || []);
+    const { nombre, categorias } = req.body;
+    await admin.agregarMarca(nombre, categorias || []);
     res.json({ success: true });
   } catch (error) {
     console.error(error);
@@ -268,8 +292,8 @@ adminController.crearMarca = async (req, res) => {
 adminController.editarMarca = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, logo, categorias } = req.body;
-    await admin.editarMarca(id, nombre, logo, categorias || []);
+    const { nombre, categorias } = req.body;
+    await admin.editarMarca(id, nombre, categorias || []);
     res.json({ success: true });
   } catch (error) {
     console.error(error);
@@ -290,8 +314,8 @@ adminController.borrarMarca = async (req, res) => {
 
 adminController.agregarCategoria = async (req, res) => {
   try {
-    const { categoria, imagen } = req.body;
-    await admin.crearCategoria(categoria, imagen);
+    const { categoria } = req.body;
+    await admin.crearCategoria(categoria);
     res.json({ success: true });
   } catch (error) {
     console.error(error);
@@ -302,8 +326,8 @@ adminController.agregarCategoria = async (req, res) => {
 adminController.editarCategoria = async (req, res) => {
   try {
     const { id } = req.params;
-    const { categoria, imagen } = req.body;
-    await admin.actualizarCategoria(id, categoria, imagen);
+    const { categoria } = req.body;
+    await admin.actualizarCategoria(id, categoria);
     res.json({ success: true });
   } catch (error) {
     console.error(error);

@@ -2,6 +2,19 @@ import { showToast } from '../../utils/toastify.js';
 import { sweetAlert } from '../../utils/sweetAlert2.js';
 import { showValidation, clearError } from '../../utils/showValidation.js';
 
+const variantesTableBody = document.getElementById("variantesTableBody");
+const addVarianteBtn = document.getElementById("addVarianteBtn");
+const varianteModal = document.getElementById("varianteModal");
+const cancelModalBtn = document.getElementById("cancelModalBtn");
+const varianteForm = document.getElementById("varianteForm");
+
+const varianteIdInput = document.getElementById("varianteId");
+const varianteColorInput = document.getElementById("varianteColor");
+const varianteStockInput = document.getElementById("varianteStock");
+const varianteImgInput = document.getElementById("varianteImg");
+const modalTitle = document.getElementById("modalTitle");
+const varianteImgFileInput = document.getElementById("varianteImgFile");
+
 let variantes = [];
 let filteredVariantes = [];
 
@@ -46,19 +59,6 @@ document.addEventListener("click", (e) => {
     sugerenciasProducto.innerHTML = "";
   }
 });
-
-const variantesTableBody = document.getElementById("variantesTableBody");
-const addVarianteBtn = document.getElementById("addVarianteBtn");
-const varianteModal = document.getElementById("varianteModal");
-const cancelModalBtn = document.getElementById("cancelModalBtn");
-const varianteForm = document.getElementById("varianteForm");
-
-const varianteIdInput = document.getElementById("varianteId");
-const varianteColorInput = document.getElementById("varianteColor");
-const varianteStockInput = document.getElementById("varianteStock");
-const varianteImgInput = document.getElementById("varianteImg");
-const modalTitle = document.getElementById("modalTitle");
-const varianteImgFileInput = document.getElementById("varianteImgFile");
 
 const errorFields = ["producto_id", "color", "stock", "img"]
 
@@ -137,17 +137,17 @@ varianteForm.addEventListener("submit", async (e) => {
 
   const id = varianteIdInput.value;
   if (!productoIdSeleccionado) {
-  showValidation([{ path: "producto_id", message: "Debe seleccionar un producto válido" }], "#varianteForm");
-  return;
-}
+    showValidation([{ path: "producto_id", message: "Debe seleccionar un producto válido" }], "#varianteForm");
+    return;
+  }
 
-const producto_id = productoIdSeleccionado;
-
+  const producto_id = productoIdSeleccionado;
   const color = varianteColorInput.value;
   const stock = parseInt(varianteStockInput.value);
 
   let imgPath = varianteImgInput.value.trim();
 
+  // Subida de archivo
   if (varianteImgFileInput.files.length > 0) {
     const file = varianteImgFileInput.files[0];
     const formData = new FormData();
@@ -159,13 +159,15 @@ const producto_id = productoIdSeleccionado;
         body: formData,
       });
 
+      const uploadData = await uploadRes.json();
+
       if (!uploadRes.ok) {
-        showToast("Error al subir la imagen.", "#e74c3c", "alert-circle");
+        showToast(uploadData.error || "Error al subir la imagen.", "#e74c3c", "alert-circle");
         return;
       }
 
-      const uploadData = await uploadRes.json();
       imgPath = uploadData.path;
+
     } catch {
       showToast("Error inesperado al subir la imagen.", "#e74c3c", "alert-circle");
       return;
@@ -177,6 +179,7 @@ const producto_id = productoIdSeleccionado;
     return;
   }
 
+  // Guardar variante
   const body = JSON.stringify({ producto_id, color, stock, img: imgPath });
   const url = id ? `/api/admin/variantes/${id}` : "/api/admin/variantes";
   const method = id ? "PUT" : "POST";
@@ -191,11 +194,7 @@ const producto_id = productoIdSeleccionado;
     const data = await res.json();
 
     if (!res.ok) {
-      if (data.validationError && Array.isArray(data.errors)) {
-        showValidation(data.errors, "#varianteForm");
-      } else {
-        showToast(data.error || "Error al guardar la variante.", "#e74c3c", "alert-circle");
-      }
+      showToast(data.error || "Error al guardar la variante.", "#e74c3c", "alert-circle");
       return;
     }
 
