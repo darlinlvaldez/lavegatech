@@ -162,33 +162,34 @@ async function loadCartPage() {
     const stock = await getRealStock(productId, color);
     if (stock <= 0) continue;
 
-    const price = Number(item.precio) || 0;
-    const discount = Number(item.descuento) || 0;
-    const finalPrice = discount > 0 ? price * (1 - discount/100) : price;
-    const quantity = Math.min(item.cantidad || 1, stock);
-    const especificaciones = item.especificaciones || '';
-    const itemTotal = finalPrice * quantity;
+      const discount = Number(item.descuento) || 0;
+  const tax = Number(item.impuesto) || 0;
+  const finalPrice = Number(item.precio) || 0; // ya viene con descuento + impuesto
+  const priceBeforeDiscount = finalPrice / (1 - discount/100); // calcular precio antes del descuento
+  const quantity = Math.min(item.cantidad || 1, stock);
+  const especificaciones = item.especificaciones || '';
+  const itemTotal = finalPrice * quantity;
     
     total += itemTotal;
     totalItems += quantity;
     
     html += `
     <div class="cart-item" data-id="${productId}" data-color="${color}">
-      <a href="/product/${productId}${color ? `?color=${encodeURIComponent(color)}` : ''}">
-        <img src="${item.imagen}" alt="${item.nombre}" class="product-imagen">
-        <div class="product-info">
-          <h5>${item.nombre} ${especificaciones} </h5>
-          <b>Precio:</b>
-          <span class="product-price">
-            <b>$${formatPrice(finalPrice)}</b>
-            ${discount > 0 ? `
-              <del class="product-old-price">$${formatPrice(price)}</del>
-              <span class="sale">-${discount.toFixed(2)}%</span>` : ''}
-          </span>
-          <div class="item-total">
-            <span><strong>Total:</strong></span>
-            $${formatPrice(itemTotal)}
-          </div>
+    <a href="/product/${productId}${color ? `?color=${encodeURIComponent(color)}` : ''}">
+      <img src="${item.imagen}" alt="${item.nombre}" class="product-imagen">
+      <div class="product-info">
+        <h5>${item.nombre} ${especificaciones}</h5>
+        <b>Precio:</b>
+        <span class="product-price">
+          <b>$${formatPrice(finalPrice)}</b>
+          ${discount > 0 ? `
+            <del class="product-old-price">$${formatPrice(priceBeforeDiscount)}</del>
+            <span class="sale">-${discount.toFixed(2)}%</span> ` : ''}
+        </span>
+        <div class="item-total">
+          <span><strong>Total:</strong></span>
+          $${formatPrice(itemTotal)}
+        </div>
         </a>
       </div>
       <div class="product-items">

@@ -1,4 +1,5 @@
 import db from "../../database/mobiles.js";
+import {impuestoDescuento} from "../../utils/applyTax.js";
 
 const principal = {};
 
@@ -8,6 +9,7 @@ principal.buscarProductos = async (query) => {
   p.id,
   p.nombre,
   p.precio,
+  p.impuesto,
   p.descuento,
   p.fecha,
   c.categoria,
@@ -29,7 +31,7 @@ principal.buscarProductos = async (query) => {
 
   try {
     const [results] = await db.query(searchQuery, params);
-    return results;
+    return impuestoDescuento(results);
   } catch (err) {
     throw new Error("Error al buscar productos: " + err.message);
   }
@@ -41,6 +43,7 @@ principal.obtenerProductos = async (categoria) => {
   p.id,
   p.nombre,
   p.precio,
+  p.impuesto,
   p.descuento,
   p.fecha,
   c.categoria,
@@ -63,7 +66,7 @@ principal.obtenerProductos = async (categoria) => {
   try {
     const params = categoria ? [categoria] : [];
     const [results] = await db.query(query, params);
-    return results;
+    return impuestoDescuento(results);
   } catch (err) {
     throw new Error("Error al obtener los productos: " + err.message);
   }
@@ -86,6 +89,7 @@ principal.obtenerRecomendados = async () => {
   p.id,
   p.nombre,
   p.precio,
+  p.impuesto,
   p.descuento,
   p.fecha,
   c.categoria,
@@ -106,7 +110,10 @@ principal.obtenerRecomendados = async () => {
   
   try {
       const [results] = await db.query(query);
-      return results;
+      console.log(results);
+
+    return impuestoDescuento(results);
+    
   } catch (err) {
       console.error("Error al obtener productos recomendados:", err);
       return [];

@@ -1,4 +1,5 @@
 import db from "../../database/mobiles.js";
+import {impuestoDescuento} from "../../utils/applyTax.js";
 
 const product = {};
 
@@ -9,6 +10,7 @@ product.obtenerDetalles = async (id) => {
     p.nombre,
     p.descripcion,
     p.precio,
+    p.impuesto,
     p.descuento,
     p.fecha,
     p.categoria_id AS categoriaId,
@@ -27,24 +29,27 @@ product.obtenerDetalles = async (id) => {
   WHERE p.id = ? AND p.activo = 1`;
 
   const [results] = await db.query(query, [id]);
-  if (!results.length) return null;
+if (!results.length) return null;
 
-  const producto = {
-    ...results[0],
-    stocksPorColor: {},
-    imagenesPorColor: {},
-    colores: [],
-  };
+const productoFinal = impuestoDescuento([results[0]])[0];
 
-  results.forEach(({ color, stock, img }) => {
-    if (color) {
-      producto.stocksPorColor[color] = stock;
-      producto.imagenesPorColor[color] = img;
-      producto.colores.push(color);
-    }
-  });
+const producto = {
+  ...productoFinal,
+  stocksPorColor: {},
+  imagenesPorColor: {},
+  colores: [],
+};
 
-  return producto;
+results.forEach(({ color, stock, img }) => {
+  if (color) {
+    producto.stocksPorColor[color] = stock;
+    producto.imagenesPorColor[color] = img;
+    producto.colores.push(color);
+  }
+});
+
+return producto;
+
 };
 
 product.obtenerRelacionados = async (productoId, categoriaId) => {
@@ -59,6 +64,7 @@ product.obtenerRelacionados = async (productoId, categoriaId) => {
     p.id,
     p.nombre,
     p.precio,
+    p.impuesto,
     p.descuento,  
     p.fecha,
     c.categoria,
@@ -80,7 +86,7 @@ product.obtenerRelacionados = async (productoId, categoriaId) => {
 
   try {
     const [results] = await db.query(query, [...ids, ...cats]);
-    return results;
+    return impuestoDescuento(results);
   } catch (err) {
     console.error("Error al obtener productos relacionados:", err);
     return [];

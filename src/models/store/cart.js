@@ -1,4 +1,5 @@
 import db from "../../database/mobiles.js";
+import {impuestoDescuento} from "../../utils/applyTax.js";
 
 const cart = {};
 
@@ -53,7 +54,7 @@ cart.getByUserId = async (usuario_id) => {
       c.variante_id,  
       c.cantidad, 
       c.fecha_agregado,
-      p.nombre, p.precio, p.descuento, p.categoria_id,
+      p.nombre, p.precio, p.descuento, p.categoria_id, p.impuesto,
       v.color AS colorSeleccionado, v.img AS imagen, v.stock AS stock_real,
       r.capacidad AS ram,
       a.capacidad AS almacenamiento,
@@ -67,14 +68,16 @@ cart.getByUserId = async (usuario_id) => {
     ORDER BY c.fecha_agregado DESC
   `, [usuario_id]);
 
-  for (const item of rows) {
+  const precioFinal = impuestoDescuento(rows);
+
+  for (const item of precioFinal) {
     if (item.stock_real !== null && item.cantidad > item.stock_real) {
       await cart.updateQuantity(item.carrito_id, usuario_id, item.stock_real);
       item.cantidad = item.stock_real;
     }
   }
 
-  return rows;
+  return precioFinal;
 };
 
 cart.getCartToPay = async (usuario_id) => {
@@ -85,6 +88,7 @@ cart.getCartToPay = async (usuario_id) => {
       c.cantidad,
       p.nombre,
       p.precio,
+      p.impuesto,
       p.descuento,
       p.categoria_id,
       c.fecha_agregado,
@@ -103,7 +107,9 @@ cart.getCartToPay = async (usuario_id) => {
     ORDER BY c.fecha_agregado DESC`,
     [usuario_id]
   );
-  return rows;
+  const precioFinal = impuestoDescuento(rows);
+
+  return precioFinal;
 };
 
 cart.getCount = async (usuario_id) => {

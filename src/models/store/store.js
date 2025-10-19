@@ -1,4 +1,5 @@
 import db from "../../database/mobiles.js";
+import {impuestoDescuento} from "../../utils/applyTax.js";
 
 const store = {};
 
@@ -52,6 +53,7 @@ store.obtenerStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], 
     p.id,
     p.nombre,
     p.precio,
+    p.impuesto,
     p.descuento,
     p.fecha,
     v.img AS imagen,
@@ -73,7 +75,7 @@ store.obtenerStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], 
 
     try {
         const [results] = await db.query(query, [limite, offset]);
-        return results;
+        return impuestoDescuento(results);
     } catch (err) {
         throw new Error("Error al obtener los productos: " + err.message);
     }
