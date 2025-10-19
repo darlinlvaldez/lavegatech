@@ -154,8 +154,12 @@ orders.getOrderById = async (orderId, userId) => {
   if (order.length === 0) return null;
 
   const [items] = await db.query(
-    `SELECT * FROM detalles_pedido WHERE order_id = ?`, [orderId]
-  );
+  `SELECT dp.*, 
+  CONCAT(dp.ram, '+', dp.almacenamiento) AS especificaciones
+  FROM detalles_pedido dp
+  WHERE order_id = ?`,
+  [orderId]
+);
 
   return {
     ...order[0],

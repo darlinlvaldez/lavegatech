@@ -71,7 +71,7 @@ fav.getByUserId = async (usuario_id) => {
 
 fav.getCount = async (usuario_id) => {
   const [rows] = await db.query(
-    "SELECT COUNT(*) as count FROM fav WHERE usuario_id = ? AND p.activo = 1",
+    "SELECT COUNT(*) as count FROM fav WHERE usuario_id = ? ",
     [usuario_id]
   );
   return rows[0].count;

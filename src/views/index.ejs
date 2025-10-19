@@ -451,17 +451,31 @@ document.querySelector(".tablink").click();
             <!-- shop -->
             <div class="col-md-4 col-xs-6">
                 <div class="shop">
-                    <div class="shop-img">
-                        <img src="/<%= categoria.imagen %>" alt="<%= categoria.categoria %>">
+                     <div class="shop-img">
+                        <img 
+                            src="
+                            <% if (categoria.categoria === 'moviles') { %>/img/moviles.png
+                            <% } else if (categoria.categoria === 'smarttv') { %>/img/smarttv.png
+                            <% } else if (categoria.categoria === 'laptops') { %>/img/laptops.png
+                            <% } else if (categoria.categoria === 'consolas') { %>/img/consolas.png
+                            <% } else if (categoria.categoria === 'tablets') { %>/img/tablets.png
+                            <% } else { %>/img/otros.png
+                            <% } %>" 
+                            alt="<%= categoria.categoria %>">
                     </div>
                     <div class="shop-body">
-						<h3>Colección de<br><%= 
-							categoria.categoria === 'moviles' ? 'Móviles' :
-							categoria.categoria === 'smarttv' ? 'SmartTV' : 
-							categoria.categoria === 'otros' ? 'Tech & Home' : 
-							categoria.categoria.charAt(0).toUpperCase() + categoria.categoria.slice(1) %>
-						</h3>
-					   <a href="/store/1?&categoria=<%= categoria.id %>" class="cta-btn">Comprar ahora<i class="fa fa-arrow-circle-right"></i></a>
+                        <h3>
+                            Colección de<br>
+                            <%= 
+                                categoria.categoria === 'moviles' ? 'Móviles' :
+                                categoria.categoria === 'smarttv' ? 'SmartTV' :
+                                categoria.categoria === 'otros' ? 'Tech & Hogar' :
+                                categoria.categoria.charAt(0).toUpperCase() + categoria.categoria.slice(1) 
+                            %>
+                        </h3>
+                        <a href="/store/1?&categoria=<%= categoria.id %>" class="cta-btn">
+                            Comprar ahora<i class="fa fa-arrow-circle-right"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -546,7 +560,7 @@ document.querySelector(".tablink").click();
                                                     </div>
                                                 </div>
                                                 <div class="add-to-cart">
-                                                    <button class="add-to-cart-btn"
+                                        <button class="add-to-cart-btn"
                                         data-id="<%= producto.id %>"
                                         data-color="<%= producto.color %>"
                                         data-ram="<%= producto.ram %>"

@@ -1,5 +1,6 @@
 import orders from '../../models/store/orders.js';
 import cart from '../../models/store/cart.js';
+import { getExchangeRate } from '../../services/exchange.js';
 
 const orderController = {};
 
@@ -44,7 +45,8 @@ orderController.createOrder = async (req, res) => {
       subtotal: (item.precio * (1 - (item.descuento || 0) / 100)) * item.cantidad
     }));
 
-    res.json({success: true, orderData, orderItems, total});
+    res.json({success: true, orderData, orderItems, totalPesos: total});
+
   } catch (error) {
     console.error('Error al crear orden:', error);
     res.status(500).json({success: false, 
@@ -65,8 +67,7 @@ orderController.getCities = async function (req, res) {
 
 orderController.processPayment = async (req, res) => {
   try {
-    const { orderData, orderItems } = req.body; 
-    const {paymentDetails, payerId, paymentId } = req.body;
+    const { orderData, orderItems, paymentDetails, payerId, paymentId, pagadoDolares } = req.body;
     
     if (!req.session.user) {
       return res.status(401).json({ success: false, message: 'No autorizado'});
@@ -92,9 +93,8 @@ orderController.processPayment = async (req, res) => {
       return sum + (precioFinal * item.cantidad);
     }, 0) + costoEnvio;
 
-    const tasaCambio = 60.56; 
-    const pagadoDolares = parseFloat(paymentDetails.purchase_units[0].amount.value);
-    const pagadoPesos = pagadoDolares * tasaCambio;
+    const tasaCambio = await getExchangeRate();
+    const pagadoPesos = pagadoDolares / tasaCambio;
 
     if (Math.abs(pagadoPesos - totalPesos) > 1) { 
       return res.status(400).json({success: false,
@@ -127,6 +127,15 @@ orderController.processPayment = async (req, res) => {
     
     res.status(500).json({success: false, 
       message: 'Error al procesar el pago', error: error.message});
+  }
+};
+
+orderController.getExchange = async (req, res) => {
+  try {
+    const rate = await getExchangeRate();
+    res.json({ success: true, rate });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
   }
 };
 

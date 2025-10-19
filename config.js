@@ -24,7 +24,10 @@ const config = {
   // PAYPAL
   CLIENT_ID: process.env.CLIENT_ID,
   CLIENT_SECRET: process.env.CLIENT_SECRET,
-  API_URL: process.env.API_URL
+  API_URL: process.env.API_URL,
+
+  // EXCHANGERATE
+  EXCHANGE: process.env.EXCHANGE
 };
 
 export default config;

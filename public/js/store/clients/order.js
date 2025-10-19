@@ -10,22 +10,17 @@ document.addEventListener("DOMContentLoaded", async function () {
     const cartRes = await fetch("/cart/items", { credentials: "include" });
     const cartData = await cartRes.json();
 
-    if (!cartData.success || !cartData.items || cartData.items.length === 0) {
-      orderProducts.innerHTML = "<p>No hay productos en tu orden.</p>";
-      orderTotal.textContent = "$0.00";
-      return;
-    }
-
     const validItems = await Promise.all(cartData.items.map(async item => {
       const stock = await getRealStock(item.producto_id, item.colorSeleccionado);
       return stock > 0 ? item : null;
     })).then(items => items.filter(Boolean));
 
-    if (validItems.length === 0) {
-      orderProducts.innerHTML = "<p>No hay productos disponibles en tu orden.</p>";
-      orderTotal.textContent = "$0.00";
-      return;
-    }
+    if (!cartData.success || !cartData.items || cartData.items.length === 0 || validItems.length === 0) {
+  orderProducts.innerHTML = "<p>No hay productos disponibles en tu orden.</p>";
+  orderTotal.textContent = "$0.00";
+  return;
+}
+
 
     let total = 0;
     orderProducts.innerHTML = "";
@@ -37,7 +32,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       total += subtotal;
 
       orderProducts.innerHTML += ` <div class="order-col">
-      <div>${item.cantidad}x ${item.nombre} ${item.ram} + ${item.almacenamiento} ${item.colorSeleccionado.toUpperCase()}</div>
+      <div>${item.cantidad}x ${item.nombre} ${item.especificaciones || ""} ${item.colorSeleccionado.toUpperCase()}</div>
       <div>$${formatPrice(subtotal)}</div>
       </div>`; 
     });
@@ -251,7 +246,7 @@ altTelInput?.addEventListener("input", (e) => {
             body: JSON.stringify(getFormData()),
           })
           .then(handleApiError)
-          .then((data) => {
+          .then(async(data) => {
             if (!data.success) {
               throw new Error(data.message || "Error al crear la orden"); 
             }
@@ -261,8 +256,9 @@ altTelInput?.addEventListener("input", (e) => {
               orderItems: data.orderItems,
             };
 
-            const tasaCambio = 60.56;
-            const totalEnDolares = (data.total / tasaCambio).toFixed(2);
+            const tasaCambio = await fetch('/api/order/exchange-rate').then(res => res.json()).then(data => data.rate);
+
+            const totalEnDolares = (data.totalPesos * tasaCambio).toFixed(2);
 
             return actions.order.create({
               purchase_units: [
@@ -290,7 +286,8 @@ altTelInput?.addEventListener("input", (e) => {
               paymentMethod: "paypal",
               paymentDetails: details,
               payerId: details.payer.payer_id,
-              paymentId: details.id}),
+              paymentId: details.id,
+              pagadoDolares: parseFloat(details.purchase_units[0].amount.value)}),
             })
           )
           .then(handleApiError).then((data) => {
