@@ -1,5 +1,5 @@
 import db from "../../database/mobiles.js";
-import {impuestoDescuento} from "../../utils/applyTax.js";
+import {impuestoDescuento} from "../../utils/applyRate.js";
 
 const principal = {};
 
@@ -109,8 +109,7 @@ principal.obtenerRecomendados = async () => {
   LIMIT 20;`;
   
   try {
-      const [results] = await db.query(query);
-      console.log(results);
+    const [results] = await db.query(query);
 
     return impuestoDescuento(results);
     

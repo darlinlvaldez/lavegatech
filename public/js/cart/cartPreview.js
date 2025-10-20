@@ -1,8 +1,10 @@
 import { loadCartPreview } from '../cart/loadCartPreview.js';
+import { calculateItem } from '../utils/calculateItem.js'; 
 
 window.renderCart = renderCart;
 
 function renderCart(carrito, cartList, carritoCount, cartSummary, cartSubtotal) {
+    
     if (carrito.length === 0) {
         if (cartList) cartList.innerHTML = '<p>No hay productos en el carrito.</p>';
         if (carritoCount) carritoCount.textContent = '0';
@@ -15,38 +17,34 @@ function renderCart(carrito, cartList, carritoCount, cartSummary, cartSubtotal) 
     let html = '';
 
     carrito.forEach(item => {
-        const precio = parseFloat(item.precio) || 0;
-        const descuento = parseFloat(item.descuento) || 0;
-        const precioConDescuento = descuento > 0 ? precio * (1 - descuento / 100) : precio;
-        total += precioConDescuento * item.cantidad;
+        const data = calculateItem(item);
 
-        const productId = item.id || item.producto_id;
-        const color = item.colorSeleccionado || item.colorSeleccionado;
+        total += data.total;
 
         html += `
-            <div class="product-widget">
-                <a href="/product/${productId}${color ? `?color=${encodeURIComponent(color)}` : ''}">
-                    <div class="product-img">
-                        <img src="${item.imagen}" alt="${item.nombre}">
-                    </div>
-                    <div class="product-body">
-                        <h3 class="product-nombres">${item.nombre} ${item.ram} + ${item.almacenamiento}</h3></a>
-                        <h4 class="product-precios">
-                            <span class="qty-cart">${item.cantidad}x</span> 
-                            $${formatPrice(precioConDescuento)}
-                        </h4>
-                    </div>
-                    <button class="delete" onclick="deleteProduct('${productId}', '${color}')">
-                        <i class="fa fa-close"></i>
-                    </button>
+        <div class="product-widget">
+            <a href="/product/${data.productId}${data.color ? `?color=${encodeURIComponent(data.color)}` : ''}">
+                <div class="product-img">
+                    <img src="${item.imagen}" alt="${item.nombre}">
+                </div>
+                <div class="product-body">
+                    <h3 class="product-nombres">${item.nombre} ${data.especificaciones}</h3>
+                    <h4 class="product-precios">
+                    <span class="qty-cart">${data.cantidad}x</span> 
+                    $${formatPrice(data.precioFinal)}
+                </h4>
             </div>
-        `;
+            </a>
+            <button class="delete" onclick="deleteProduct('${data.productId}', '${data.color}')">
+                <i class="fa fa-close"></i>
+            </button>
+        </div>`;
     });
 
     if (cartList) cartList.innerHTML = html;
-    if (carritoCount) carritoCount.textContent = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+    if (carritoCount) carritoCount.textContent = carrito.reduce((sum, item) => sum + (Number(item.cantidad) || 1), 0);
     if (cartSummary) cartSummary.textContent = `${carrito.length} producto(s) seleccionado(s)`;
     if (cartSubtotal) cartSubtotal.textContent = `SUBTOTAL: $${formatPrice(total)}`;
 }
 
-export { loadCartPreview };
+export { loadCartPreview, calculateItem };

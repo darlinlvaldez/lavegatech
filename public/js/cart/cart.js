@@ -44,8 +44,8 @@ async function addToCart(product) {
     const variante_id = window.productData?.variantes?.find(v => v.color === color)?.id || null;
 
     const cartItem = { producto_id: id, variante_id, colorSeleccionado: color, 
-      cantidad: safeQty, nombre, precio, imagen, ram, almacenamiento };
-
+      cantidad: safeQty, nombre, precio, impuesto: product.impuesto || 0, 
+      descuento: product.descuento || 0, imagen, ram, almacenamiento };
 
     if (!authenticated) {
       const localCart = JSON.parse(localStorage.getItem("carrito")) || [];
@@ -166,6 +166,8 @@ document.addEventListener("click", async (e) => {
     stock: parseInt(btn.dataset.stock) || 0,
     nombre: btn.dataset.nombre,
     precio: parseFloat(btn.dataset.precio),
+    descuento: parseFloat(btn.dataset.descuento) || 0,
+    impuesto: parseFloat(btn.dataset.impuesto) || 0,    
     imagen: getImage(),
   });
 });

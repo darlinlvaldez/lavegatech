@@ -1,5 +1,7 @@
 import { checkAuth, getRealStock } from '../utils/utils.js';
 import { loadCartPreview } from './loadCartPreview.js';
+import { fetchCartItems } from '../utils/apis.js';
+import { calculateItem } from '../utils/calculateItem.js'; 
 import { showToast } from '../utils/toastify.js';
 import { sweetAlert } from '../utils/sweetAlert2.js';
 
@@ -124,98 +126,70 @@ async function handleClearCart() {
 }
 
 async function loadCartPage() {
-  let cart = JSON.parse(localStorage.getItem('carrito')) || [];
-  
-  try {
-    const authData = await checkAuth();
-    if (authData.authenticated) {
-      const response = await fetch('/cart/items', { credentials: 'include' });
-      if (response.ok) {
-        const { success, items } = await response.json();
-        if (success && items) {
-          cart = [...cart, ...items.filter(serverItem => 
-            !cart.some(item => 
-              (item.id === serverItem.producto_id || item.producto_id === serverItem.producto_id) &&
-              item.colorSeleccionado === serverItem.colorSeleccionado
-            )
-          )];
-        }
-      }
-    }
-  } catch (error) {
-    console.error("Error al obtener carrito:", error);
-  }
+    const cart = await fetchCartItems();
 
-  const container = document.getElementById('cart-items-container');
-  const countElement = document.getElementById('cart-items-count');
-  const totalElement = document.getElementById('cart-total');
-  
-  if (!container || !countElement || !totalElement) return;
+    const container = document.getElementById('cart-items-container');
+    const countElement = document.getElementById('cart-items-count');
+    const totalElement = document.getElementById('cart-total');
 
-  let html = '';
-  let total = 0;
-  let totalItems = 0;
-  
-  for (const item of cart) {
-    const productId = item.id || item.producto_id;
-    const color = item.colorSeleccionado;
-    const stock = await getRealStock(productId, color);
-    if (stock <= 0) continue;
+    if (!container || !countElement || !totalElement) return;
 
-      const discount = Number(item.descuento) || 0;
-  const tax = Number(item.impuesto) || 0;
-  const finalPrice = Number(item.precio) || 0; // ya viene con descuento + impuesto
-  const priceBeforeDiscount = finalPrice / (1 - discount/100); // calcular precio antes del descuento
-  const quantity = Math.min(item.cantidad || 1, stock);
-  const especificaciones = item.especificaciones || '';
-  const itemTotal = finalPrice * quantity;
+    let html = '';
+    let total = 0;
+    let totalItems = 0;
+
+    for (const item of cart) {
+        const stock = await getRealStock(item.id || item.producto_id, item.colorSeleccionado);
+        if (stock <= 0) continue;
+
+        const data = calculateItem(item, stock);
+
+        total += data.total;
+        totalItems += data.cantidad;
     
-    total += itemTotal;
-    totalItems += quantity;
-    
-    html += `
-    <div class="cart-item" data-id="${productId}" data-color="${color}">
-    <a href="/product/${productId}${color ? `?color=${encodeURIComponent(color)}` : ''}">
-      <img src="${item.imagen}" alt="${item.nombre}" class="product-imagen">
-      <div class="product-info">
-        <h5>${item.nombre} ${especificaciones}</h5>
-        <b>Precio:</b>
-        <span class="product-price">
-          <b>$${formatPrice(finalPrice)}</b>
-          ${discount > 0 ? `
-            <del class="product-old-price">$${formatPrice(priceBeforeDiscount)}</del>
-            <span class="sale">-${discount.toFixed(2)}%</span> ` : ''}
+      html += `
+      <div class="cart-item" data-id="${data.productId}" data-color="${data.color}">
+      <a href="/product/${data.productId}${data.color ? `?color=${encodeURIComponent(data.color)}` : ''}">
+        <img src="${item.imagen}" alt="${item.nombre}" class="product-imagen">
+        <div class="product-info">
+          <h5>${item.nombre} ${data.especificaciones}</h5>
+          <b>Precio:</b>
+          <span class="product-price">
+            <b>$${formatPrice(data.precioFinal)}</b>
+            ${data.descuento > 0 ? `
+            <del class="product-old-price">$${formatPrice(data.precioAntesDescuento)}</del>
+            <span class="sale">-${data.descuento.toFixed(2)}%</span>` : ''}
         </span>
-        <div class="item-total">
-          <span><strong>Total:</strong></span>
-          $${formatPrice(itemTotal)}
+          <div class="item-total">
+            <span><strong>Total:</strong></span>
+            $${formatPrice(data.total)}
+          </div>
+          </a>
         </div>
-        </a>
-      </div>
-      <div class="product-items">
-        <span class="label">Color</span>
-        <div class="color-item">
-          ${color ? `<span>${color}</span>` : '<span>No disponible</span>'}
-        </div>
-      </div>
-      <div data-id="${productId}" data-color="${color}">
-        <div class="qty-cantidad">
-          <span>Cantidad</span>
-          <div class="input-number product-quantity">
-            <select class="input-select" 
-              onchange="updateQuantity(this, 0, '${productId}', '${color}')">
-              ${Array.from({length: Math.min(stock, 20)}, (_, i) => 
-                `<option value="${i+1}" ${i+1 === quantity ? 'selected' : ''}>${i+1}</option>`
-              ).join('')}
-            </select>
+        <div class="product-items">
+          <span class="label">Color</span>
+          <div class="color-item">
+            ${data.color ? `<span>${data.color}</span>` : '<span>No disponible</span>'}
           </div>
         </div>
-      </div>
-      <div class="col-md-1">
-        <i class="bi bi-trash remove-btn" onclick="deleteProduct('${productId}', '${color}')"></i>
-      </div>
-    </div>`;
-  }
+        <div data-id="${data.productId}" data-color="${data.color}">
+          <div class="qty-cantidad">
+            <span>Cantidad</span>
+            <div class="input-number product-quantity">
+              <select class="input-select" 
+                onchange="updateQuantity(this, 0, '${data.productId}', '${data.color}')">
+                ${Array.from({length: Math.min(stock, 20)}, (_, i) =>
+                  `<option value="${i+1}" ${i+1 === data.cantidad ? 'selected' : ''}>${i+1}</option>`
+              ).join('')}
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-1">
+          <i class="bi bi-trash remove-btn" onclick="deleteProduct('${data.productId}', '${data.color}')"></i>
+        </div>
+      </div>`;
+    }
 
   container.innerHTML = html || '<p>No hay productos disponibles en el carrito.</p>';
   countElement.textContent = `${totalItems} ${totalItems === 1 ? 'producto' : 'productos'}`;
