@@ -1,4 +1,5 @@
 import db from "../../database/mobiles.js";
+import {impuestoDescuento} from "../../utils/applyRate.js";
 
 const fav = {};
 
@@ -48,6 +49,7 @@ fav.getByUserId = async (usuario_id) => {
         p.nombre,
         p.descripcion,
         p.precio,
+        p.impuesto,
         p.descuento,
         p.categoria_id,
         p.marca_id,
@@ -56,7 +58,8 @@ fav.getByUserId = async (usuario_id) => {
         v.img as imagen,
         v.stock as stockPorColor,
         r.capacidad AS ram, 
-        a.capacidad AS almacenamiento
+        a.capacidad AS almacenamiento,
+        CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
         FROM fav f
         JOIN productos p ON f.producto_id = p.id
         LEFT JOIN p_variantes v ON f.variante_id = v.id
@@ -66,7 +69,10 @@ fav.getByUserId = async (usuario_id) => {
         ORDER BY f.fecha_agregado DESC`,
     [usuario_id]
     );
-    return rows;
+
+    const precioFinal = impuestoDescuento(rows);
+
+    return precioFinal;
 };
 
 fav.getCount = async (usuario_id) => {

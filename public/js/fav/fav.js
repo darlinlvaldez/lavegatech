@@ -125,5 +125,4 @@ async function removeFromFav(productId, color, varianteId) {
   }
 }
 
-
 export { checkFavorites };

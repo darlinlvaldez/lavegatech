@@ -107,6 +107,7 @@ cart.getCartToPay = async (usuario_id) => {
     ORDER BY c.fecha_agregado DESC`,
     [usuario_id]
   );
+  
   const precioFinal = impuestoDescuento(rows);
 
   return precioFinal;

@@ -9,10 +9,11 @@ function calculateItem(item, stock = Infinity) {
 
     const productId = item.id || item.producto_id;
     const color = item.colorSeleccionado || "";
+    const varianteId = item.variante_id || null;
 
     return {
         precioFinal, descuento, impuesto, cantidad, especificaciones,
-        precioAntesDescuento, total, productId, color
+        precioAntesDescuento, total, productId, color, varianteId
     };
 }
 

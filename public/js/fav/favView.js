@@ -1,5 +1,6 @@
-import { fetchFav, checkAuth } from '../utils/utils.js';
+import {fetchFav, checkAuth} from '../utils/utils.js';
 import {loadFavPage} from './loadFavPage.js';
+import {calculateItem} from '../utils/calculateItem.js'; 
 import {sweetAlert} from '../utils/sweetAlert2.js';
 
 window.renderButton = renderButton;
@@ -66,43 +67,38 @@ function renderButton(favItems) {
 
 function generateFavItemHTML(item) {
   
-    const productId = item.producto_id;
-    const color = item.colorSeleccionado;
-    const price = Number(item.precio) || 0;
-    const discount = Number(item.descuento) || 0;
-    const finalPrice = discount > 0 ? price * (1 - discount/100) : price;
-    
-    return `
-    <div class="fav-item" data-id="${productId}" data-color="${color}">
-        <a href="/product/${productId}${color ? `?color=${encodeURIComponent(color)}` : ''}">
+  const data = calculateItem(item);
+  
+  return ` 
+  <div class="fav-item" data-id="${data.productId}" data-color="${data.color}">
+        <a href="/product/${data.productId}${data.color ? `?color=${encodeURIComponent(data.color)}` : ''}">
             <img src="${item.imagen}" alt="${item.nombre}" class="product-imagen">
             <div class="product-info">
-                <h5>${item.nombre} ${item.ram} + ${item.almacenamiento}</h5>
+                <h5>${item.nombre} ${data.especificaciones}</h5>
                 <b>Precio:</b>
-                <span class="product-price">
-                    <b>$${formatPrice(finalPrice)}</b>
-                    ${discount > 0 ? `
-                        <del class="product-old-price">$${formatPrice(price)}</del>
-                        <span class="sale">-${discount.toFixed(2)}%</span>` : ''}
+                <span class="product-price">  
+                    <b>$${formatPrice(data.precioFinal)}</b>
+                    ${data.descuento > 0 ? `
+                      <del class="product-old-price">$${formatPrice(data.precioAntesDescuento)}</del>
+                      <span class="sale">-${data.descuento.toFixed(2)}%</span> ` : ''}
                 </span>
                 </a>
             </div>
         <div class="product-items">
             <span class="label">Color</span>
             <div class="color-item">
-                ${color ? `<span>${color}</span>` : '<span>No disponible</span>'}
+                ${data.color ? `<span>${data.color}</span>` : '<span>No disponible</span>'}
             </div>
         </div>
         <div class="action-buttons">
             <button class="add-to-cart-btn"
-        data-id="${item.producto_id || productId}" 
-        data-color="${item.colorSeleccionado || item.color || ''}">
-    <i class="fa fa-shopping-cart"></i> Añadir al carrito
-    </button>
-
-            </div>
-            <i class="bi bi-trash remove-btn" onclick="removeFromFav('${productId}', '${color}', '${item.variante_id}')"></i>
-        </div>`;
+            data-id="${data.productId}" 
+            data-color="${data.color}">
+            <i class="fa fa-shopping-cart"></i> Añadir al carrito
+          </button>
+        </div>
+          <i class="bi bi-trash remove-btn" onclick="removeFromFav('${data.productId}', '${data.color}', '${data.varianteId}')"></i>
+      </div>`;
     }
 
 export {generateFavItemHTML};
