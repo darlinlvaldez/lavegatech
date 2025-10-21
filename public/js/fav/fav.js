@@ -31,10 +31,16 @@ async function toggleFavorite(button) {
             return;
         }
 
-        if (isAlreadyAdded) {
-            await removeFromFav(productId, color);
+        const data = await fetchFav('/fav/items');
+        const favs = data.success && data.items ? data.items : [];
+
+        const favItem = favs.find(item => item.producto_id == productId && item.colorSeleccionado == color);
+        const varianteId = favItem ? favItem.variante_id : null;
+
+        if (isAlreadyAdded && varianteId) {
+            await removeFromFav(productId, color, varianteId);
             setButtonState(button, false);
-        } else {
+        } else if (!isAlreadyAdded) {
             await fetchFav('/fav/add', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

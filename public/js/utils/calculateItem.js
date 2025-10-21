@@ -7,7 +7,7 @@ function calculateItem(item, stock = Infinity) {
     const precioAntesDescuento = descuento > 0 ? precioFinal / (1 - descuento / 100) : precioFinal;
     const total = precioFinal * cantidad;
 
-    const productId = item.id || item.producto_id;
+    const productId = item.producto_id || item.id;
     const color = item.colorSeleccionado || "";
     const varianteId = item.variante_id || null;
 

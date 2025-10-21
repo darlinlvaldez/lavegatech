@@ -10,8 +10,7 @@ favController.addToFav = async (req, res) => {
 
         if (!producto_id || !colorSeleccionado) {
             return res.status(400).json({ 
-                success: false, 
-                message: 'Datos inválidos'
+                success: false, message: 'Datos inválidos'
             });
         }
 
@@ -28,21 +27,17 @@ favController.addToFav = async (req, res) => {
         const existingItem = await fav.itemExists(userId, producto_id, variante_id);
 
         if (!existingItem) {
-            await fav.addItem({
-                usuario_id: userId,
-                producto_id,
-                variante_id
+            await fav.addItem({usuario_id: userId, 
+              producto_id, variante_id
             });
         }
 
-        res.json({
-            success: true,
-            count: await fav.getCount(userId)
+        res.json({success: true, 
+          count: await fav.getCount(userId)
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({
-            success: false,
+        res.status(500).json({success: false,
             message: 'Error al agregar a favoritos'
         });
     }
