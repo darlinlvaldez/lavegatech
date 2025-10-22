@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   const orderTotal = document.querySelector(".order-total");
 
   try {
-
     const cartRes = await fetch("/cart/items", { credentials: "include" });
     const cartData = await cartRes.json();
 
@@ -16,29 +15,28 @@ document.addEventListener("DOMContentLoaded", async function () {
     })).then(items => items.filter(Boolean));
 
     if (!cartData.success || !cartData.items || cartData.items.length === 0 || validItems.length === 0) {
-  orderProducts.innerHTML = "<p>No hay productos disponibles en tu orden.</p>";
-  orderTotal.textContent = "$0.00";
-  return;
-}
-
+      orderProducts.innerHTML = "<p>No hay productos disponibles en tu orden.</p>";
+      orderTotal.textContent = "$0.00";
+      return;
+    }
 
     let total = 0;
     orderProducts.innerHTML = "";
 
-    cartData.items.forEach((item) => {
-      const precioFinal = item.descuento > 0 ? item.precio * (1 - item.descuento / 100) : item.precio;
-
-      const subtotal = precioFinal * item.cantidad;
+    validItems.forEach((item) => {
+      const subtotal = item.precio * item.cantidad;
       total += subtotal;
 
-      orderProducts.innerHTML += ` <div class="order-col">
-      <div>${item.cantidad}x ${item.nombre} ${item.especificaciones || ""} ${item.colorSeleccionado.toUpperCase()}</div>
-      <div>$${formatPrice(subtotal)}</div>
-      </div>`; 
+      orderProducts.innerHTML += ` 
+        <div class="order-col">
+          <div>${item.cantidad}x ${item.nombre} ${item.especificaciones || ""} ${item.colorSeleccionado.toUpperCase()}</div>
+          <div>$${formatPrice(subtotal)}</div>
+        </div>`; 
     });
 
     orderTotal.textContent = `$${formatPrice(total)}`;
     orderTotal.dataset.subtotal = total;
+
   } catch (error) {
     console.error("Error al cargar el carrito:", error);
     orderProducts.innerHTML = "<p>Error al cargar los productos. Por favor intenta nuevamente.</p>";

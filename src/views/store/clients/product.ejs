@@ -58,12 +58,12 @@
 			</div>
 			<div>
 				<h3 class="product-price">
-				$<%= Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-				<% if (producto.descuento > 0) { %>
-					<del class="product-old-price">$<%= Number(producto.precio / (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></del>
+				$<%= (Number(producto.precio) * (1 - (producto.descuento /
+				100))).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %>
+				<% if (producto.descuento> 0) { %>
+				<del class="product-old-price">$<%=Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></del>
 				<% } %>
 				</h3>
-
 				<span class="product-available">
 					<p id="stockDisponible">
 						Cantidad disponible: <% if (stocksPorColor) { %>
@@ -103,19 +103,17 @@
 					</div>
 					<br><br>
 					<div class="add-to-cart">
-					<button class="add-to-cart-btn"
-							data-id="<%= producto.id %>"
-							data-color="<%= producto.color %>"
-							data-ram="<%= producto.ram %>"
-							data-almacenamiento="<%= producto.almacenamiento %>"
-							data-stock="<%= producto.stock %>"
-							data-nombre="<%= producto.nombre %>"
-							data-precio="<%= producto.precio %>"
-							data-descuento="<%= producto.descuento %>"   
-							data-impuesto="<%= producto.impuesto %>"       
-							data-imagen="<%= producto.imagen %>">
+						<button class="add-to-cart-btn" id="add-to-cart-btn" 
+						data-id="<%= producto.id %>"
+						data-color="<%= producto.color %>"
+						data-ram="<%= producto.ram %>"
+						data-almacenamiento="<%= producto.almacenamiento %>"
+						data-stock="<%= producto.stock %>"
+						data-nombre="<%= producto.nombre %>"
+						data-precio="<%= producto.precio %>"
+						data-imagen="<%= producto.imagen %>">
 						<i class="fa fa-shopping-cart"></i> Añadir al carrito
-					</button>
+						</button>
 					</div>
 				</div>
 				<ul class="product-btns">
@@ -428,10 +426,10 @@
 											<%= producto.nombre %> <%= producto.especificaciones %>
 										</h3>
 									<h4 class="product-price">
-									$<%= Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-									<% if (producto.descuento > 0) { %>
-										<del class="product-old-price">$<%= Number(producto.precio / (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></del>
-									<% } %>
+                                        $<%= Number(producto.precio * (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                        <% if (producto.descuento > 0) { %>
+                                        <del class="product-old-price">$<%= Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></del>
+                                        <% } %>
                                     </h4></a>
 								</div>
 							</div>

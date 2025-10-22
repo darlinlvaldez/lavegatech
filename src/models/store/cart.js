@@ -87,7 +87,7 @@ cart.getCartToPay = async (usuario_id) => {
       c.producto_id,
       c.cantidad,
       p.nombre,
-      p.precio,
+      p.precio AS precioOriginal,
       p.impuesto,
       p.descuento,
       p.categoria_id,
@@ -108,9 +108,7 @@ cart.getCartToPay = async (usuario_id) => {
     [usuario_id]
   );
   
-  const precioFinal = impuestoDescuento(rows);
-
-  return precioFinal;
+  return rows;
 };
 
 cart.getCount = async (usuario_id) => {

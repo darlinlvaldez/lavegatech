@@ -92,9 +92,19 @@ function generateFavItemHTML(item) {
         </div>
         <div class="action-buttons">
             <button class="add-to-cart-btn"
-            data-id="${data.productId}" 
+            data-id="${data.productId}"
+            data-variante-id="${data.varianteId}"
+            data-color="${data.color}"
+            data-ram="${item.ram || ''}"
+            data-almacenamiento="${item.almacenamiento || ''}"
+            data-stock="${item.cantidad || 0}"
+            data-nombre="${item.nombre}"
+            data-precio="${item.precio || 0}"
+            data-descuento="${item.descuento || 0}"
+            data-impuesto="${item.impuesto || 0}"
+            data-imagen="${item.imagen || ''}">
             <i class="fa fa-shopping-cart"></i> Añadir al carrito
-          </button>
+        </button>
         </div>
           <i class="bi bi-trash remove-btn" onclick="removeFromFav('${data.productId}', '${data.varianteId}')"></i>
       </div>`;
