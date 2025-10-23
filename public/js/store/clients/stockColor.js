@@ -28,9 +28,19 @@ async function changeColor(selectOrEvent, productId) {
 
   cambiarImagen(productId, color);
 
+  
+
   const addToCartBtn = document.getElementById('add-to-cart-btn');
   if (addToCartBtn) {
     addToCartBtn.dataset.color = color;
+    
+    const variantesPorColor = window.productData.variantesPorColor || {};
+    const varianteId = variantesPorColor[color];
+    
+    if (varianteId) {
+      addToCartBtn.dataset.variante_id = varianteId;
+      console.log('Variante ID actualizado:', varianteId, 'para color:', color);
+    }
   }
   
   history.replaceState({ color }, '', `/product/${productId}?color=${encodedColor}`);

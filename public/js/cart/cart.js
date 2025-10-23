@@ -17,7 +17,7 @@ async function fetchCart(action, data = {}) {
 }
 
 async function addToCart(product) {
-  const { id, color, cantidad = 1, nombre, precio, imagen, ram, almacenamiento } = product;
+  const { id, variante_id, color, cantidad = 1, nombre, precio, imagen, ram, almacenamiento, descuento, impuesto } = product;
 
   try {
     const { authenticated } = await checkAuth();
@@ -41,11 +41,10 @@ async function addToCart(product) {
     }
 
     const safeQty = Math.min(parseInt(cantidad) || 1, stockReal);
-    const variante_id = window.productData?.variantes?.find(v => v.color === color)?.id || null;
 
     const cartItem = { producto_id: id, variante_id, colorSeleccionado: color, 
-      cantidad: safeQty, nombre, precio, impuesto: product.impuesto || 0, 
-      descuento: product.descuento || 0, imagen, ram, almacenamiento };
+      cantidad: safeQty, nombre, precio, impuesto: impuesto || 0, 
+      descuento: descuento || 0, imagen, ram, almacenamiento };
 
     if (!authenticated) {
       const localCart = JSON.parse(localStorage.getItem("carrito")) || [];
@@ -159,6 +158,7 @@ document.addEventListener("click", async (e) => {
 
   await addToCart({
     id: btn.dataset.id,
+    variante_id: btn.dataset.variante_id,
     ram: btn.dataset.ram,
     almacenamiento: btn.dataset.almacenamiento,
     cantidad: document.getElementById("cantidad")?.value || 1,
@@ -167,7 +167,7 @@ document.addEventListener("click", async (e) => {
     nombre: btn.dataset.nombre,
     precio: parseFloat(btn.dataset.precio),
     descuento: parseFloat(btn.dataset.descuento) || 0,
-    impuesto: parseFloat(btn.dataset.impuesto) || 0,    
+    impuesto: parseFloat(btn.dataset.impuesto) || 0,
     imagen: getImage(),
   });
 });

@@ -15,6 +15,7 @@ product.obtenerDetalles = async (id) => {
     p.fecha_publicacion,
     p.categoria_id AS categoriaId,
     c.categoria,
+    v.id AS variante_id,
     v.color,
     v.stock,
     v.img,
@@ -29,29 +30,29 @@ product.obtenerDetalles = async (id) => {
   WHERE p.id = ? AND p.activo = 1`;
 
   const [results] = await db.query(query, [id]);
-if (!results.length) return null;
+  if (!results.length) return null;
 
-const productoFinal = impuestoDescuento([results[0]])[0];
+  const productoFinal = impuestoDescuento([results[0]])[0];
 
-const producto = {
-  ...productoFinal,
-  stocksPorColor: {},
-  imagenesPorColor: {},
-  colores: [],
+  const producto = {
+    ...productoFinal,
+    stocksPorColor: {},
+    imagenesPorColor: {},
+    colores: [],
+    variantesPorColor: {}  
+  };
+
+  results.forEach(({ color, stock, img, variante_id }) => {
+    if (color) {
+      producto.stocksPorColor[color] = stock;
+      producto.imagenesPorColor[color] = img;
+      producto.colores.push(color);
+      producto.variantesPorColor[color] = variante_id; 
+    }
+  });
+
+  return producto;
 };
-
-results.forEach(({ color, stock, img }) => {
-  if (color) {
-    producto.stocksPorColor[color] = stock;
-    producto.imagenesPorColor[color] = img;
-    producto.colores.push(color);
-  }
-});
-
-return producto;
-
-};
-
 product.obtenerRelacionados = async (productoId, categoriaId) => {
   const ids = Array.isArray(productoId) ? productoId : [productoId];
   const cats = Array.isArray(categoriaId) ? categoriaId : [categoriaId];

@@ -8,7 +8,9 @@
 <div class="section">
 	<!-- container -->
 	<div class="container">
-		<div id="product-root" data-product-stocks='<%- JSON.stringify(stocksPorColor) %>'
+		<div id="product-root" 
+			data-product-stocks='<%- JSON.stringify(stocksPorColor) %>'
+			data-product-variantes='<%- JSON.stringify(variantesPorColor) %>'
 			data-product-id="<%= producto.id %>">
 			<!-- row -->
 			<div class="row">
@@ -23,18 +25,18 @@
 					</div>
 				</div>
 
-<!-- Product thumb imgs -->
-<div class="col-md-2 col-md-pull-5">
-	<div id="product-imgs">
-		<% for (const [color, imagen] of Object.entries(imagenesPorColor)) { %>
-			<div class="product-preview"
-				onclick="changeColor({ value: '<%= color %>' }, '<%= producto.id %>')"
-				data-product-id="<%= producto.id %>">
-				<img src="<%= imagen %>" alt="<%= color %>" class="product-img">
-			</div>
-			<% } %>
-		</div>
-	</div>
+			<!-- Product thumb imgs -->
+			<div class="col-md-2 col-md-pull-5">
+				<div id="product-imgs">
+					<% for (const [color, imagen] of Object.entries(imagenesPorColor)) { %>
+						<div class="product-preview"
+							onclick="changeColor({ value: '<%= color %>' }, '<%= producto.id %>')"
+							data-product-id="<%= producto.id %>">
+							<img src="<%= imagen %>" alt="<%= color %>" class="product-img">
+						</div>
+						<% } %>
+					</div>
+				</div>
 
 	<!-- Product details -->
 	<div class="col-md-5">
@@ -105,12 +107,15 @@
 					<div class="add-to-cart">
 						<button class="add-to-cart-btn" id="add-to-cart-btn" 
 						data-id="<%= producto.id %>"
+						data-variante_id="<%= producto.variante_id %>"
 						data-color="<%= producto.color %>"
 						data-ram="<%= producto.ram %>"
 						data-almacenamiento="<%= producto.almacenamiento %>"
 						data-stock="<%= producto.stock %>"
 						data-nombre="<%= producto.nombre %>"
 						data-precio="<%= producto.precio %>"
+						data-impuesto="<%= producto.impuesto %>"
+						data-descuento="<%= producto.descuento %>"
 						data-imagen="<%= producto.imagen %>">
 						<i class="fa fa-shopping-cart"></i> Añadir al carrito
 						</button>

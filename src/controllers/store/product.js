@@ -56,6 +56,7 @@ product.detallesController = async (req, res) => {
       imagenesPorColor: producto.imagenesPorColor,
       colorSeleccionado: colorActual,
       stocksPorColor: producto.stocksPorColor,
+      variantesPorColor: producto.variantesPorColor,
       currentUrl: req.originalUrl,
       colores: producto.colores,
       user: req.session.user || null,
