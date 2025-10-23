@@ -25,6 +25,8 @@ product.detallesController = async (req, res) => {
       return res.redirect( `/product/${id}?color=${encodeURIComponent(colorActual)}`);
     }
 
+    const varianteActual = producto.variantesPorColor[colorActual];
+
     const totalReviews = await rating.countByProductId(id);
 
     const reviews = await rating.findByProductId(id, paginaReviews, limiteReviews);
@@ -43,6 +45,7 @@ product.detallesController = async (req, res) => {
       producto: {
         ...producto,
         categorias,
+        variante_id: varianteActual,
         reviews,
         averageRating: averageRating || 0,
         ratingDistribution,

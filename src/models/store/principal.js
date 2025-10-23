@@ -13,6 +13,7 @@ principal.buscarProductos = async (query) => {
   p.descuento,
   p.fecha_publicacion,
   c.categoria,
+  v.id AS variante_id,
   v.color AS colores, 
   v.img AS imagenes,
   r.capacidad AS ram,
@@ -47,6 +48,7 @@ principal.obtenerProductos = async (categoria) => {
   p.descuento,
   p.fecha_publicacion,
   c.categoria,
+  v.id AS variante_id,
   v.color, 
   v.stock,
   v.img AS imagen,
@@ -96,6 +98,7 @@ principal.obtenerRecomendados = async () => {
   v.color, 
   v.stock,
   v.img AS imagen,
+  v.id AS variante_id,
   r.capacidad AS ram,
   a.capacidad AS almacenamiento,
   CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones

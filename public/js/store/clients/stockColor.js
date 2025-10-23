@@ -71,12 +71,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (productRoot) {
         window.productData = {
             stocksPorColor: JSON.parse(productRoot.dataset.productStocks),
+            variantesPorColor: JSON.parse(productRoot.dataset.productVariantes || '{}'),
             productId: productRoot.dataset.productId
         };
-    } else {window.productData = {
-        stocksPorColor: {},
-        productId: null};
+    } else {
+        window.productData = {
+            stocksPorColor: {},
+            variantesPorColor: {},
+            productId: null
+        };
     }
+    
+    syncColorFromURL();
 });
 
 function syncColorFromURL() {
