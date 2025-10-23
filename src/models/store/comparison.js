@@ -1,4 +1,5 @@
 import db from "../../database/mobiles.js";
+import {impuestoDescuento} from "../../utils/applyRate.js";
 
 const comparison = {};
 
@@ -9,6 +10,7 @@ comparison.searchDevice = async (query, excludeMovilIds = []) => {
     p.movil_id,
     p.nombre,
     p.precio,
+    p.impuesto,
     p.descuento,
     p.fecha,
     v.color AS colores,
@@ -32,7 +34,7 @@ comparison.searchDevice = async (query, excludeMovilIds = []) => {
 
   try {
     const [results] = await db.query(searchQuery, params);
-    return results;
+    return impuestoDescuento(results);
   } catch (err) {
     throw new Error("Error al buscar móviles: " + err.message);
   }
@@ -57,6 +59,7 @@ comparison.getDevice = async (productIds) => {
       p.movil_id,
       p.nombre,
       p.precio,
+      p.impuesto,
       p.descuento,
       v.img AS imagen,
       pant.tamaño AS pantalla_tamaño,
@@ -106,7 +109,7 @@ comparison.getDevice = async (productIds) => {
 
   try {
     const [results] = await db.query(query, [productIds]);
-    return results;
+    return impuestoDescuento(results);
   } catch (err) {
     console.error("Error en comparación:", err);
     throw new Error("Error al obtener dispositivos para comparar: " + err.message);

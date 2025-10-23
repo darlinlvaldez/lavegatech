@@ -1,3 +1,4 @@
+import { calculateItem } from "../../utils/calculateItem.js";
 import { showToast } from "../../utils/toastify.js";
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -74,7 +75,7 @@ function displaySearchResults(products) {
   }
   
   availableProducts.forEach(product => {
-    const precioDescuento = Number(product.precio) * (1 - (product.descuento / 100));
+    const calc = calculateItem(product);
     const productElement = document.createElement('div');
     productElement.className = 'search-result-item';
     productElement.innerHTML = `
@@ -82,9 +83,9 @@ function displaySearchResults(products) {
       <div class="product-info">
         <h4>${product.nombre}</h4>
         <div class="product-price">
-          $${formatPrice(precioDescuento)}
-          ${product.descuento > 0 ? `<del class="product-old-price">$${formatPrice(Number(product.precio))}</del>` : ''}
-        </div>
+        $${formatPrice(calc.precioFinal)}
+          ${product.descuento > 0 ? `<del class="product-old-price">$${formatPrice(calc.precioAntesDescuento)}</del>` : ''}
+      </div>
       </div>
     `;
 
@@ -199,7 +200,7 @@ function displayComparisonResults(devices) {
   
   devices.forEach((device, index) => {
     const colorClass = comparisonColors[index]; 
-    const precioDescuento = Number(device.precio) * (1 - (device.descuento / 100));
+    const calc = calculateItem(device);
     const deviceCard = document.createElement('div');
     deviceCard.className = `device-card ${colorClass}`;
 
@@ -210,9 +211,9 @@ function displayComparisonResults(devices) {
       </div>
       
         <div class="product-price">
-          $${formatPrice(precioDescuento)}
-          ${device.descuento > 0 ? `<del class="product-old-price">$${formatPrice(Number(device.precio))}</del>` : ''}
-        </div>
+        $${formatPrice(calc.precioFinal)}
+          ${device.descuento > 0 ? `<del class="product-old-price">$${formatPrice(calc.precioAntesDescuento)}</del>` : ''}
+      </div>
       </div><br>
         
         <div class="specs-grid">
