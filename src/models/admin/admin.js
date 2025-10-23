@@ -140,15 +140,15 @@ admin.obtenerItems = async () => {
 };
 
 admin.agregarItems = async ({nombre, precio, descripcion, impuesto, 
-    descuento, categoria, marca, almacenamiento_id, ram_id}) => {
+    descuento, categoria, marca, almacenamiento_id, ram_id, fecha_publicacion}) => {
         
     const query = `INSERT INTO productos 
     (nombre, precio, descripcion, impuesto, descuento, categoria_id, marca_id, 
-    almacenamiento_id, ram_id) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    almacenamiento_id, ram_id, fecha_publicacion) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     
     const [result] = await db.query(query, [nombre, precio, descripcion, 
-      impuesto, descuento, categoria, marca, almacenamiento_id, ram_id]);
+      impuesto, descuento, categoria, marca, almacenamiento_id, ram_id, fecha_publicacion]);
 
   return result.insertId;
 };

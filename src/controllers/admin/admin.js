@@ -59,9 +59,11 @@ adminController.listarItems = async (req, res) => {
 
 adminController.crearItems = async (req, res) => {
   try {
-    const { nombre, precio, descuento, impuesto, descripcion, categoria, marca, ram, almacenamiento} = req.body;
-    const insertId = await admin.agregarItems({ nombre, precio, descuento, impuesto,
-      descripcion, categoria, marca, almacenamiento_id: almacenamiento, ram_id: ram});
+    const { nombre, precio, descuento, impuesto, descripcion, categoria, 
+      marca, ram, almacenamiento, fecha_publicacion} = req.body;
+
+    const insertId = await admin.agregarItems({ nombre, precio, descuento, impuesto, descripcion, 
+      categoria, marca, almacenamiento_id: almacenamiento, ram_id: ram, fecha_publicacion});
 
     res.json({ success: true, id: insertId });
   } catch (err) {

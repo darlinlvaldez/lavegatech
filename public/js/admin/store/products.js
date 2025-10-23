@@ -101,13 +101,6 @@ searchProductInput.addEventListener("input", () => {
   renderProducts();
 });
 
-addProductBtn.addEventListener("click", () => {
-  modalTitle.textContent = "Añadir Nuevo Producto";
-  productForm.reset();
-  productIdInput.value = ""; 
-  productModal.classList.add("visible"); 
-});
-
 cancelModalBtn.addEventListener("click", () => {
   productModal.classList.remove("visible");
   clearError(productErrorFields,'#productForm');
@@ -129,8 +122,8 @@ productForm.addEventListener("submit", async (e) => {
     almacenamiento: almSelect.value ? parseInt(almSelect.value) : null,
     ram: ramSelect.value ? parseInt(ramSelect.value) : null,
     marca: marcaInput.value ? parseInt(marcaInput.value) : null,
-    ...(id ? { fecha_publicacion: fechaInput?.value || null } : {}),
-  };
+    fecha_publicacion: fechaInput.value || null
+  };  
 
   try {
     const res = await fetch(id ? `/api/admin/productos/${id}` : "/api/admin/productos", {
@@ -217,7 +210,8 @@ addProductBtn.addEventListener("click", () => {
   modalTitle.textContent = "Añadir Nuevo Producto";
   productForm.reset();
   productIdInput.value = ""; 
-  document.getElementById("fechaGroup").style.display = "none";
+  document.getElementById("fechaGroup").style.display = "block";
+  fechaInput.value = new Date().toISOString().slice(0, 16);
   productModal.classList.add("visible"); 
 });
 
