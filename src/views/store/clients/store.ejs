@@ -169,12 +169,9 @@
 												<% if (producto.descuento> 0) { %>
 													<span class="sale">-<%= producto.descuento %>%</span>
 													<% } %>
-														<% const fechaCreacion=new Date(producto.fecha); const
-															hoy=new Date(); const diferenciaDias=(hoy -
-															fechaCreacion) / (1000 * 60 * 60 * 24); if
-															(diferenciaDias <=30) { %>
-															<span class="new">Nuevo</span>
-															<% } %>
+														<% if (producto.fecha_publicacion) { %>
+														<span class="new">Nuevo</span>
+														<% } %>
 															</div>
 														</div>
 														<div class="product-body">

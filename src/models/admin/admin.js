@@ -115,7 +115,8 @@ admin.obtenerItems = async () => {
       p.id, 
       p.nombre, 
       p.precio, 
-      p.descripcion, 
+      p.descripcion,
+      p.impuesto, 
       p.descuento, 
       p.categoria_id AS categoria_id,
       p.marca_id AS marca_id,
@@ -125,7 +126,8 @@ admin.obtenerItems = async () => {
       CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones,
       c.categoria AS categoria,
       m.nombre AS marca,
-      p.fecha
+      p.fecha,
+      p.fecha_publicacion
     FROM productos p
     LEFT JOIN categorias c ON p.categoria_id = c.id
     LEFT JOIN p_marcas m ON p.marca_id = m.id
@@ -137,30 +139,30 @@ admin.obtenerItems = async () => {
   return rows;
 };
 
-admin.agregarItems = async ({nombre, precio, descripcion, 
+admin.agregarItems = async ({nombre, precio, descripcion, impuesto, 
     descuento, categoria, marca, almacenamiento_id, ram_id}) => {
         
     const query = `INSERT INTO productos 
-    (nombre, precio, descripcion, descuento, categoria_id, marca_id, 
+    (nombre, precio, descripcion, impuesto, descuento, categoria_id, marca_id, 
     almacenamiento_id, ram_id) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     
     const [result] = await db.query(query, [nombre, precio, descripcion, 
-      descuento, categoria, marca, almacenamiento_id, ram_id]);
+      impuesto, descuento, categoria, marca, almacenamiento_id, ram_id]);
 
   return result.insertId;
 };
 
-admin.actualizarItems = async ({id, nombre, precio, descripcion, 
-    descuento, categoria, marca, fecha, almacenamiento_id, ram_id}) => {
+admin.actualizarItems = async ({id, nombre, precio, descripcion, impuesto,
+    descuento, categoria, marca, fecha_publicacion, almacenamiento_id, ram_id}) => {
     const query = `UPDATE productos 
-    SET nombre = ?, precio = ?, descripcion = ?, descuento = ?, 
-    categoria_id = ?, marca_id = ?, fecha = ?, almacenamiento_id = ?, ram_id = ?
+    SET nombre = ?, precio = ?, descripcion = ?, impuesto = ?, descuento = ?, 
+    categoria_id = ?, marca_id = ?, fecha_publicacion = ?, almacenamiento_id = ?, ram_id = ?
     WHERE id = ?`;
     
-    const [result] = await db.query(query, [nombre, precio, 
-    descripcion, descuento, categoria, marca, fecha, 
-    almacenamiento_id, ram_id, id]);
+    const [result] = await db.query(query, [nombre, precio, descripcion, 
+      impuesto, descuento, categoria, marca, fecha_publicacion, 
+      almacenamiento_id, ram_id, id]);
 
   return result.affectedRows;
 };

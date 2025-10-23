@@ -26,12 +26,14 @@ const construirWhereClause = (categorias = [], marcas = [], precioMin = null, pr
     }
   }
 
+  const precioFinal = `(p.precio * (1 + p.impuesto/100) * (1 - p.descuento/100))`;
+  
   if (precioMin !== null && !isNaN(precioMin)) {
-    condiciones.push(`p.precio >= ${precioMin}`);
+    condiciones.push(`${precioFinal} >= ${precioMin}`);
   }
 
   if (precioMax !== null && !isNaN(precioMax)) {
-    condiciones.push(`p.precio <= ${precioMax}`);
+    condiciones.push(`${precioFinal} <= ${precioMax}`);
   }
 
   return condiciones.length > 0 ? `WHERE ${condiciones.join(" AND ")}` : "";
@@ -42,11 +44,11 @@ store.obtenerStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], 
     const whereClause = construirWhereClause(categorias, marcas, precioMin, precioMax);
     
     const orderByClause = {
-        1: "ORDER BY p.fecha ASC",
+        1: "ORDER BY p.fecha_publicacion ASC",
         2: "ORDER BY p.precio ASC",     
         3: "ORDER BY p.precio DESC",
         4: "ORDER BY p.descuento DESC",
-    }[orden] || "ORDER BY p.fecha DESC";
+    }[orden] || "ORDER BY p.fecha_publicacion DESC";
     
     const query = `
     SELECT
@@ -55,7 +57,7 @@ store.obtenerStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], 
     p.precio,
     p.impuesto,
     p.descuento,
-    p.fecha,
+    p.fecha_publicacion,
     v.img AS imagen,
     c.categoria,
     v.stock,
@@ -98,7 +100,13 @@ store.totalProductos = async (categorias = [], marcas = [], precioMin, precioMax
 };
 
 store.obtenerRangoPrecios = async () => {
-  const query = `SELECT MIN(precio) AS minPrecio, MAX(precio) AS maxPrecio FROM productos`;
+  const query = `
+    SELECT 
+      MIN(p.precio * (1 + p.impuesto/100) * (1 - p.descuento/100)) AS minPrecio, 
+      MAX(p.precio * (1 + p.impuesto/100) * (1 - p.descuento/100)) AS maxPrecio 
+    FROM productos p
+    WHERE p.activo = 1`;
+  
   try {
     const [results] = await db.query(query);
     return results[0];

@@ -14,6 +14,7 @@ const modalTitle = document.getElementById("modalTitle");
 const productIdInput = document.getElementById("productId");
 const nombreInput = document.getElementById("productoNombre");
 const precioInput = document.getElementById("productoPrecio");
+const impuestoInput = document.getElementById("productoImpuesto");
 const descripcionInput = document.getElementById("productoDescripcion");
 const descuentoInput = document.getElementById("productoDescuento");
 const categoriaInput = document.getElementById("productoCategoria");
@@ -22,7 +23,10 @@ const fechaInput = document.getElementById("productoFecha");
 const ramSelect = document.getElementById("productoRam");
 const almSelect = document.getElementById("productoAlm");
 
-const productErrorFields = ["nombre", "descripcion", "precio", "descuento", "categoria", "marca", "ram", "almacenamiento", "fecha"];
+document.getElementById("AlmGroup").style.display = "none";
+document.getElementById("productoRam").parentElement.style.display = "none";
+
+const productErrorFields = ["nombre", "descripcion", "precio", "impuesto", "descuento", "categoria", "marca", "ram", "almacenamiento", "fecha_publicacion", "fecha"];
 
 function renderProducts() {
   productsTableBody.innerHTML = "";
@@ -40,11 +44,8 @@ function renderProducts() {
     row.innerHTML = `
       <td class="truncate-cell">${product.id || ''}</td>
       <td class="truncate-cell">${product.nombre || ''} ${product.especificaciones || ''}</td>
-      <td class="truncate-cell">${product.descripcion || ''}</td>
       <td>$${formatPrice(parseFloat(product.precio)) || 0}</td>
-      <td>$${(product.descuento != null ? parseFloat(product.descuento).toFixed(2) : '0.00')}</td>
       <td>${product.categoria || ''}</td>
-      <td>${product.marca || ''}</td>
       <td>${fechaFormateada || ''}</td>
       <td>
         <button class="estado-btn ${estadoClase}" onclick="itemEstado(${product.id})">
@@ -122,12 +123,13 @@ productForm.addEventListener("submit", async (e) => {
     nombre: nombreInput.value.trim(),
     descripcion: descripcionInput.value.trim(),
     precio: precioInput.value ? parseFloat(precioInput.value) : 0,
+    impuesto: impuestoInput.value ? parseFloat(impuestoInput.value): 0,
     descuento: descuentoInput.value ? parseFloat(descuentoInput.value) : 0,
     categoria: categoriaInput.value ? parseInt(categoriaInput.value) : null,
     almacenamiento: almSelect.value ? parseInt(almSelect.value) : null,
     ram: ramSelect.value ? parseInt(ramSelect.value) : null,
     marca: marcaInput.value ? parseInt(marcaInput.value) : null,
-    ...(id ? { fecha: fechaInput?.value || null } : {}),
+    ...(id ? { fecha_publicacion: fechaInput?.value || null } : {}),
   };
 
   try {
@@ -157,26 +159,49 @@ productForm.addEventListener("submit", async (e) => {
   }
 });
 
-window.editProduct = function  (id) {
+function toggleRamAlmFields(categoryId) {
+  const categoriasMoviles = [1, 5]; 
+  const show = categoriasMoviles.includes(parseInt(categoryId));
+
+  const almGroup = document.getElementById("AlmGroup");
+  const ramGroup = document.getElementById("productoRam").parentElement;
+
+  almGroup.style.display = show ? "block" : "none";
+  ramGroup.style.display = show ? "block" : "none";
+
+  if (!show) {
+    almSelect.value = "";
+    ramSelect.value = "";
+  }
+}
+
+window.editProduct = function(id) {
   const product = products.find((p) => p.id === id);
   if (product) {
     modalTitle.textContent = "Editar Producto";
     nombreInput.value = product.nombre;
-    precioInput.value = product.precio;
+    precioInput.value = product.precio != null ? parseFloat(product.precio).toFixed(2) : "0.00";
+    impuestoInput.value = product.impuesto != null ? parseFloat(product.impuesto).toFixed(2) : "0.00";
     descripcionInput.value = product.descripcion;
-    descuentoInput.value = product.descuento;
+    descuentoInput.value = product.descuento != null ? parseFloat(product.descuento).toFixed(2) : "0.00";
     categoriaInput.value = product.categoria_id;
     marcaInput.value = product.marca_id;
     almSelect.value = product.almacenamiento_id;
     ramSelect.value = product.ram_id;
 
     document.getElementById("fechaGroup").style.display = "block"; 
-    fechaInput.value = product.fecha?.slice(0, 16);
+    fechaInput.value = product.fecha_publicacion?.slice(0, 16);
+
+    toggleRamAlmFields(product.categoria_id);
 
     productIdInput.value = product.id;
     productModal.classList.add("visible");
   }
 }
+
+categoriaInput.addEventListener("change", () => {
+  toggleRamAlmFields(categoriaInput.value);
+});
 
 document.addEventListener("DOMContentLoaded", renderProducts);
 

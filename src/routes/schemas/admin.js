@@ -28,8 +28,12 @@ request.product = z.object({
     .number({ invalid_type_error: ERROR_ZOD.FIELD_REQUIRED })
     .nonnegative({ message: ERROR_ZOD.PRODUCT_PRICE_POSITIVE })
     .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
+  impuesto: z
+    .number({ invalid_type_error: ERROR_ZOD.PRODUCT_FIELD_NUMBER })
+    .nonnegative({ message: ERROR_ZOD.FIELD_NEGATIVE })
+    .optional(),
   descuento: z
-    .number({ invalid_type_error: ERROR_ZOD.PRODUCT_DISCOUNT_INVALID })
+    .number({ invalid_type_error: ERROR_ZOD.PRODUCT_FIELD_NUMBER })
     .nonnegative({ message: ERROR_ZOD.FIELD_NEGATIVE })
     .optional(),
   categoria: z
@@ -46,12 +50,12 @@ request.product = z.object({
     .nonnegative({ message: ERROR_ZOD.FIELD_NEGATIVE })
     .nullable()
     .optional(),
-  fecha: z
-  .string()
-  .refine(value => !value || !isNaN(Date.parse(value)), 
-  {message: ERROR_ZOD.PRODUCT_DATE_INVALID})
-  .optional(),
-}).strict();
+  fecha_publicacion: z
+    .string()
+    .refine(value => !value || !isNaN(Date.parse(value)), 
+    { message: ERROR_ZOD.PRODUCT_DATE_INVALID })
+    .optional(),
+  }).strict();
 
 const IMG_REGEX = /^\/uploads\/.+\.(png|jpg|jpeg)$/i;
 

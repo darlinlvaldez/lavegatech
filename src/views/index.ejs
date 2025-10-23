@@ -57,12 +57,8 @@ document.querySelector(".tablink").click();
                     <div class="products-tabs">
                         <div id="moviles" class="tabcontent active">
                             <div class="products-slick" data-nav="#slick-nav-1" id="product-list-moviles">
-                                <% const productosMoviles = productos.filter(p => p.categoria === 'moviles').filter(p => {
-                                    const fechaCreacion = new Date(p.fecha);
-                                    const hoy = new Date();
-                                    const diferenciaDias = (hoy - fechaCreacion) / (1000 * 60 * 60 * 24);
-                                    return diferenciaDias <= 30;
-                                }).slice(0); productosMoviles.forEach(producto => { %>
+                                <% const productosMoviles = productosRecientes.filter(p => p.categoria === 'moviles'); %>
+                                    <% productosMoviles.forEach(producto => { %>
                                 <div class="product" data-categoria="<%= producto.categoria %>">
                                     <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
                                         <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">
@@ -107,7 +103,6 @@ document.querySelector(".tablink").click();
                                                 <i class="fa-regular fa-heart"></i>  
                                                 <span class="tooltipp">Favoritos</span>
                                             </button>
-
                                                 <% if (producto.esMovil) { %>
                                                 <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
                                                 <span class="tooltipp">Comparar</span></button>
@@ -136,12 +131,8 @@ document.querySelector(".tablink").click();
                     
                         <div id="smarttv" class="tabcontent">
                             <div class="products-slick" data-nav="#slick-nav-2" id="product-list-smarttv">
-                                <% const productosSmarttv = productos.filter(p => p.categoria === 'smarttv').filter(p => {
-                                    const fechaCreacion = new Date(p.fecha);
-                                    const hoy = new Date();
-                                    const diferenciaDias = (hoy - fechaCreacion) / (1000 * 60 * 60 * 24);
-                                    return diferenciaDias <= 30;
-                                }).slice(0); productosSmarttv.forEach(producto => { %>
+                                <% const productosSmarttv = productosRecientes.filter(p => p.categoria === 'smarttv'); %>
+                                    <% productosSmarttv.forEach(producto => { %>
                                 <div class="product" data-categoria="<%= producto.categoria %>">
                                     <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
                                         <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">
@@ -214,12 +205,8 @@ document.querySelector(".tablink").click();
                         
                         <div id="laptops" class="tabcontent">
                             <div class="products-slick" data-nav="#slick-nav-3" id="product-list-laptops">
-                                <% const productosLaptops = productos.filter(p => p.categoria === 'laptops').filter(p => {
-                                    const fechaCreacion = new Date(p.fecha);
-                                    const hoy = new Date();
-                                    const diferenciaDias = (hoy - fechaCreacion) / (1000 * 60 * 60 * 24);
-                                    return diferenciaDias <= 30;
-                                }).slice(0); productosLaptops.forEach(producto => { %>
+                                <% const productosLaptops = productosRecientes.filter(p => p.categoria === 'laptops'); %>
+                                    <% productosLaptops.forEach(producto => { %>
                                 <div class="product" data-categoria="<%= producto.categoria %>"> 
                                     <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
                                         <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">
@@ -293,12 +280,8 @@ document.querySelector(".tablink").click();
 
                         <div id="consolas" class="tabcontent">
                             <div class="products-slick" data-nav="#slick-nav-4" id="product-list-consolas">
-								<% const productosConsolas = productos.filter(p => p.categoria === 'consolas').filter(p => {
-                                    const fechaCreacion = new Date(p.fecha);
-                                    const hoy = new Date();
-                                    const diferenciaDias = (hoy - fechaCreacion) / (1000 * 60 * 60 * 24);
-                                    return diferenciaDias <= 30;
-                                }).slice(0); productosConsolas.forEach(producto => { %>
+								<% const productosConsolas = productosRecientes.filter(p => p.categoria === 'consolas'); %>
+                                    <% productosConsolas.forEach(producto => { %>
                                 <div class="product" data-categoria="<%= producto.categoria %>">
                                     <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
                                         <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">
@@ -371,12 +354,8 @@ document.querySelector(".tablink").click();
 
                         <div id="tablets" class="tabcontent">
                             <div class="products-slick" data-nav="#slick-nav-5" id="product-list-tablets">
-								<% const productosTablets = productos.filter(p => p.categoria === 'tablets').filter(p => {
-                                    const fechaCreacion = new Date(p.fecha);
-                                    const hoy = new Date();
-                                    const diferenciaDias = (hoy - fechaCreacion) / (1000 * 60 * 60 * 24);
-                                    return diferenciaDias <= 30;
-                                }).slice(0); productosTablets.forEach(producto => { %>
+								<% const productosTablets = productosRecientes.filter(p => p.categoria === 'tablets'); %>
+                                    <% productosTablets.forEach(producto => { %>
                                 <div class="product" data-categoria="<%= producto.categoria %>">
                                     <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
                                         <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">                                    
@@ -533,14 +512,10 @@ document.querySelector(".tablink").click();
                                             <span class="sale">-<%= producto.descuento %>%</span>
                                         <% } %>
 
-                                        <% 
-                                        const fechaCreacion = new Date(producto.fecha); 
-                                        const hoy = new Date();
-                                        const diferenciaDias = (hoy - fechaCreacion) / (1000 * 60 * 60 * 24);
-                                        if (diferenciaDias <= 30) { 
-                                        %>
-                                            <span class="new">Nuevo</span>
+                                        <% if (producto.fecha_publicacion) { %>
+                                        <span class="new">Nuevo</span>
                                         <% } %>
+
                                     </div>
                             </div>
 

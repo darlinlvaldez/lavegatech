@@ -59,8 +59,8 @@ adminController.listarItems = async (req, res) => {
 
 adminController.crearItems = async (req, res) => {
   try {
-    const { nombre, precio, descuento, descripcion, categoria, marca, ram, almacenamiento} = req.body;
-    const insertId = await admin.agregarItems({ nombre, precio, descuento,
+    const { nombre, precio, descuento, impuesto, descripcion, categoria, marca, ram, almacenamiento} = req.body;
+    const insertId = await admin.agregarItems({ nombre, precio, descuento, impuesto,
       descripcion, categoria, marca, almacenamiento_id: almacenamiento, ram_id: ram});
 
     res.json({ success: true, id: insertId });
@@ -72,9 +72,11 @@ adminController.crearItems = async (req, res) => {
 adminController.editarItems = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, precio, descuento, descripcion, categoria, marca, ram, almacenamiento, fecha} = req.body;
-    const affectedRows = await admin.actualizarItems({ id, nombre, precio, descuento, 
-      descripcion, categoria, marca, almacenamiento_id: almacenamiento, ram_id: ram, fecha});
+    const { nombre, precio, impuesto, descuento, descripcion, categoria, 
+      marca, ram, almacenamiento, fecha_publicacion} = req.body;
+      
+      const affectedRows = await admin.actualizarItems({ id, nombre, precio, impuesto, descuento, 
+      descripcion, categoria, marca, almacenamiento_id: almacenamiento, ram_id: ram, fecha_publicacion});
 
     res.json({ success: affectedRows > 0 });
   } catch (err) {

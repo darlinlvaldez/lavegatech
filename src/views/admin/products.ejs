@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="/css/utils/error.css">
 <link rel="stylesheet" href="/css/utils/state.css">
 
-
     <div class="main-content">
         <header class="header">
             <h1>Gestión de Productos</h1>
@@ -33,14 +32,11 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
-                                <th>Descripción</th>
                                 <th>Precio</th>
-                                <th>Descuento</th>
                                 <th>Categoría</th>
-                                <th>Marca</th>
                                 <th>Fecha</th>
                                 <th>Estado</th>
-                                <th>Acciones</th>
+                                <th style="width: 5%;">Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="productsTableBody">
@@ -72,19 +68,14 @@
                     <div class="error-text" data-error-for="precio"></div>
                 </div>
                 <div class="form-group">
+                    <label for="productStock">Impuesto:</label>
+                    <input type="number" id="productoImpuesto" name="impuesto">
+                    <div class="error-text" data-error-for="impuesto"></div>
+                </div>
+                <div class="form-group">
                     <label for="productStock">Descuento:</label>
                     <input type="number" id="productoDescuento" name="descuento">
                     <div class="error-text" data-error-for="descuento"></div>
-                </div>
-                <div class="form-group">
-                    <label for="productRam">Ram:</label>
-                    <select id="productoRam" name="ram`">Ram</select>
-                    <div class="error-text" data-error-for="ram"></div>
-                </div>
-                <div class="form-group" id="AlmGroup">
-                    <label for="productoAlm">Almacenamiento:</label>
-                    <select id="productoAlm" name="almacenamiento">Almacenamiento</select>
-                    <div class="error-text" data-error-for="almacenamiento"></div>
                 </div>
                 <div class="form-group">
                     <label for="productName">Categoría:</label>
@@ -96,10 +87,20 @@
                     <select id="productoMarca" name="marca">Marca</select>
                     <div class="error-text" data-error-for="marca"></div>
                 </div>
+                <div class="form-group">
+                    <label for="productRam">Ram:</label>
+                    <select id="productoRam" name="ram">Ram</select>
+                    <div class="error-text" data-error-for="ram"></div>
+                </div>
+                <div class="form-group" id="AlmGroup">
+                    <label for="productoAlm">Almacenamiento:</label>
+                    <select id="productoAlm" name="almacenamiento">Almacenamiento</select>
+                    <div class="error-text" data-error-for="almacenamiento"></div>
+                </div>
                 <div class="form-group" id="fechaGroup" style="display: none;">
-                    <label for="productoFecha">Fecha:</label>
-                    <input type="datetime-local" id="productoFecha" name="fecha">
-                    <div class="error-text" data-error-for="fecha"></div>
+                    <label for="productoFecha">Fecha de Publicación:</label>
+                    <input type="datetime-local" id="productoFecha" name="fecha_publicacion">
+                    <div class="error-text" data-error-for="fecha_publicacion"></div>
                 </div>
                 <div class="modal-buttons">
                     <button type="button" id="cancelModalBtn" class="cancel-button">

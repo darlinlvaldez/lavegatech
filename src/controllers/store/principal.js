@@ -1,5 +1,6 @@
 import principal from '../../models/store/principal.js';
 import rating from "../../models/store/rating.js";
+import { filterRecentProducts } from '../../utils/filterRecent.js';
 
 principal.productosController = async (req, res) => {
   try {
@@ -8,6 +9,7 @@ principal.productosController = async (req, res) => {
     const productos = await principal.obtenerProductos(categoria);
     const categorias = await principal.obtenerCategorias();
     const recomendados = await principal.obtenerRecomendados();
+    const productosRecientes = filterRecentProducts(productos, 30);
     
     const listas = [productos, recomendados];
 
@@ -20,7 +22,7 @@ principal.productosController = async (req, res) => {
       }
     }
 
-    res.render("index", { productos, categorias, recomendados });
+    res.render("index", { productos, categorias, recomendados, productosRecientes });
   } catch (err) {
     console.error("Error al obtener datos", err);
     res.status(500).send("Error al cargar los datos.");
