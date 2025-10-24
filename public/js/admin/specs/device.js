@@ -217,16 +217,25 @@ searchMobileInput.addEventListener("input", async () => {
   }
 
   resultados.forEach(p => {
-    const div = document.createElement("div");
-    div.textContent = p.nombre;
-    div.addEventListener("click", () => {
-      productosSeleccionados.push({ id: p.id, nombre: p.nombre });
-      renderProductosSeleccionados();
-      searchMobileInput.value = "";
-      suggestionsMobile.innerHTML = "";
+  const div = document.createElement("div");
+  
+  div.textContent = `${p.nombre} ${p.especificaciones || ""}`;
+  
+  div.addEventListener("click", () => {
+    productosSeleccionados.push({
+      id: p.id,
+      nombre: p.nombre,
+      almacenamiento: d.almacenamiento,
+      ram: d.ram
     });
-    suggestionsMobile.appendChild(div);
+    renderProductosSeleccionados();
+    searchMobileInput.value = "";
+    suggestionsMobile.innerHTML = "";
   });
+  
+  suggestionsMobile.appendChild(div);
+});
+
 });
 
 function renderMobiles() {

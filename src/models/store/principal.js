@@ -1,82 +1,30 @@
 import db from "../../database/mobiles.js";
-import {impuestoDescuento} from "../../utils/applyRate.js";
+import productosBase from "../store/utils/getProduct.js";
 
 const principal = {};
 
 principal.buscarProductos = async (query) => {
-  let searchQuery = ` 
-  SELECT
-  p.id,
-  p.nombre,
-  p.precio,
-  p.impuesto,
-  p.descuento,
-  p.fecha_publicacion,
-  c.categoria,
-  v.id AS variante_id,
-  v.color AS colores, 
-  v.img AS imagenes,
-  r.capacidad AS ram,
-  a.capacidad AS almacenamiento,
-  CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
-  FROM productos p
-  JOIN categorias c ON p.categoria_id = c.id
-  LEFT JOIN p_variantes v ON p.id = v.producto_id 
-  LEFT JOIN ram r ON p.ram_id = r.id
-  LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
-  WHERE (p.nombre LIKE ? OR p.descripcion LIKE ?) AND p.activo = 1
-  GROUP BY p.id
-  LIMIT 10`;
-
+  const where = `(p.nombre LIKE ? OR p.descripcion LIKE ?)`;
   const params = [`%${query}%`, `%${query}%`];
+  const limit = "LIMIT 10";
 
-  try {
-    const [results] = await db.query(searchQuery, params);
-    return impuestoDescuento(results);
-  } catch (err) {
-    throw new Error("Error al buscar productos: " + err.message);
-  }
+  return productosBase.obtenerProductosBase({ where, limit, params });
 };
 
 principal.obtenerProductos = async (categoria) => {
-  const query = `
-  SELECT 
-  p.id,
-  p.nombre,
-  p.precio,
-  p.impuesto,
-  p.descuento,
-  p.fecha_publicacion,
-  c.categoria,
-  v.id AS variante_id,
-  v.color, 
-  v.stock,
-  v.img AS imagen,
-  r.capacidad AS ram,
-  a.capacidad AS almacenamiento,
-  CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
-  FROM productos p
-  JOIN categorias c ON p.categoria_id = c.id
-  LEFT JOIN p_variantes v ON p.id = v.producto_id
-  LEFT JOIN ram r ON p.ram_id = r.id
-  LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
-  WHERE p.activo = 1
-  ${categoria ? `WHERE c.categoria = ?` : ''}
-  GROUP BY p.id
-  `;
-  
-  try {
-    const params = categoria ? [categoria] : [];
-    const [results] = await db.query(query, params);
-    return impuestoDescuento(results);
-  } catch (err) {
-    throw new Error("Error al obtener los productos: " + err.message);
+  let where = "";
+  const params = [];
+
+  if (categoria) {
+    where = "c.categoria = ?";
+    params.push(categoria);
   }
+
+  return productosBase.obtenerProductosBase({ where, params });
 };
 
 principal.obtenerCategorias = async () => {
   const query = `SELECT * FROM categorias`;
-  
   try {
     const [results] = await db.query(query);
     return results;
@@ -86,40 +34,8 @@ principal.obtenerCategorias = async () => {
 };
 
 principal.obtenerRecomendados = async () => {
-  const query = `
-  SELECT 
-  p.id,
-  p.nombre,
-  p.precio,
-  p.impuesto,
-  p.descuento,
-  p.fecha_publicacion,
-  c.categoria,
-  v.color, 
-  v.stock,
-  v.img AS imagen,
-  v.id AS variante_id,
-  r.capacidad AS ram,
-  a.capacidad AS almacenamiento,
-  CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
-  FROM productos p
-  JOIN categorias c ON p.categoria_id = c.id
-  LEFT JOIN p_variantes v ON p.id = v.producto_id 
-  LEFT JOIN ram r ON p.ram_id = r.id
-  LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
-  WHERE p.activo = 1  
-  GROUP BY p.id 
-  LIMIT 20;`;
-  
-  try {
-    const [results] = await db.query(query);
-
-    return impuestoDescuento(results);
-    
-  } catch (err) {
-      console.error("Error al obtener productos recomendados:", err);
-      return [];
-  }
+  const limit = "LIMIT 20";
+  return productosBase.obtenerProductosBase({ limit });
 };
 
 export default principal;

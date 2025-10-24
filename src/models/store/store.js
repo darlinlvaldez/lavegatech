@@ -1,10 +1,10 @@
 import db from "../../database/mobiles.js";
-import {impuestoDescuento} from "../../utils/applyRate.js";
+import productosBase from "../store/utils/getProduct.js";
 
 const store = {};
 
 const construirWhereClause = (categorias = [], marcas = [], precioMin = null, precioMax = null) => {
-  const condiciones = ["p.activo = 1"];
+  const condiciones = [];
 
   const tieneCategorias = categorias.length > 0;
   const tieneMarcas = marcas.length > 0;
@@ -36,56 +36,34 @@ const construirWhereClause = (categorias = [], marcas = [], precioMin = null, pr
     condiciones.push(`${precioFinal} <= ${precioMax}`);
   }
 
-  return condiciones.length > 0 ? `WHERE ${condiciones.join(" AND ")}` : "";
+  return condiciones.length > 0 ? condiciones.join(" AND ") : "";
 };
 
 store.obtenerStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], marcas = [], precioMin, precioMax) => {
-    const offset = (pagina - 1) * limite;
-    const whereClause = construirWhereClause(categorias, marcas, precioMin, precioMax);
-    
-    const orderByClause = {
-        1: "ORDER BY p.fecha_publicacion ASC",
-        2: "ORDER BY p.precio ASC",     
-        3: "ORDER BY p.precio DESC",
-        4: "ORDER BY p.descuento DESC",
-    }[orden] || "ORDER BY p.fecha_publicacion DESC";
-    
-    const query = `
-    SELECT
-    p.id,
-    p.nombre,
-    p.precio,
-    p.impuesto,
-    p.descuento,
-    p.fecha_publicacion,
-    v.img AS imagen,
-    v.id AS variante_id,
-    c.categoria,
-    v.stock,
-    v.color,
-    REPLACE(REPLACE(r.capacidad, 'GB', ''), 'TB', '') AS ram,
-    a.capacidad AS almacenamiento,
-    CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
-    FROM productos p
-    JOIN categorias c ON p.categoria_id = c.id
-    LEFT JOIN p_variantes v ON p.id = v.producto_id 
-    LEFT JOIN ram r ON p.ram_id = r.id
-    LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
-    ${whereClause}
-    GROUP BY p.id
-    ${orderByClause}
-    LIMIT ? OFFSET ?`;
+  const offset = (pagina - 1) * limite;
 
-    try {
-        const [results] = await db.query(query, [limite, offset]);
-        return impuestoDescuento(results);
-    } catch (err) {
-        throw new Error("Error al obtener los productos: " + err.message);
-    }
+  const whereClause = construirWhereClause(categorias, marcas, precioMin, precioMax);
+
+  const orderByClause = {
+    1: "ORDER BY p.fecha_publicacion ASC",
+    2: "ORDER BY p.precio ASC",     
+    3: "ORDER BY p.precio DESC",
+    4: "ORDER BY p.descuento DESC",
+  }[orden] || "ORDER BY p.fecha_publicacion DESC";
+
+  const limitClause = `LIMIT ${limite} OFFSET ${offset}`;
+
+  return productosBase.obtenerProductosBase({
+    where: whereClause,
+    order: orderByClause,
+    limit: limitClause,
+    params: []
+  });
 };
 
 store.totalProductos = async (categorias = [], marcas = [], precioMin, precioMax) => {
-    const whereClause = construirWhereClause(categorias, marcas, precioMin, precioMax);
+    const whereConditions = construirWhereClause(categorias, marcas, precioMin, precioMax);
+    const whereClause = whereConditions ? `WHERE p.activo = 1 AND ${whereConditions}` : "WHERE p.activo = 1";
 
     const query = `
     SELECT COUNT(*) as total

@@ -24,12 +24,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     products.forEach(product => {
-      if (!product.imagenes || !product.colores) return; 
       const productElement = document.createElement('div');
       productElement.className = 'search-result-item';
       productElement.innerHTML = `
         <a href="/product/${product.id}${product.colores ? `?color=${encodeURIComponent(product.colores.split(',')[0])}` : ''}">
-          <img src="${product.imagenes?.split(',')[0]}" alt="${product.nombre}">
+          <img src="${product.imagen?.split(',')[0]}" alt="${product.nombre}">
           <div class="product-info">
             <h4>${product.nombre} ${product.ram} + ${product.almacenamiento}</h4>
             <p>${product.categoria === 'moviles' ? 'Móviles' : product.categoria.charAt(0).toUpperCase() + product.categoria.slice(1)}</p>
