@@ -102,15 +102,12 @@ function displaySearchResults(products) {
 }
   
 function addDeviceToComparison({ id, nombre, imagenes }) {
-  if (selectedDevices.some(d => d.id === id) || selectedDevices.length >= 3) {
-    if (selectedDevices.length >= 3) {
-      showToast("Solo puedes comparar hasta 3 dispositivos", "#e74c3c", "info");
-    }
+  if (selectedDevices.some(d => d.id === id)) {
+    showToast("Este dispositivo ya está en la lista de comparación", "#e74c3c", "info");
     return;
   }
 
   selectedDevices.push({ id, nombre, imagen: imagenes?.split(',')[0] });
-
   updateSelectedDevicesDisplay();
 }
 
@@ -196,13 +193,10 @@ function displayComparisonResults(devices) {
   const wrapper = document.createElement('div');
   wrapper.className = 'device-cards-wrapper-comparison';
   
-  const comparisonColors = ['blue-comparison', 'green-comparison', 'yellow-comparison'];
-  
   devices.forEach((device, index) => {
-    const colorClass = comparisonColors[index]; 
     const calc = calculateItem(device);
     const deviceCard = document.createElement('div');
-    deviceCard.className = `device-card ${colorClass}`;
+    deviceCard.className = 'device-card';
 
     deviceCard.innerHTML = `
       <h2 class="tittle2-comparison">${device.nombre}</h2>
@@ -210,85 +204,77 @@ function displayComparisonResults(devices) {
         <img class="img-comparison" src="${device.imagen}" alt="${device.nombre}">
       </div>
       
-        <div class="product-price">
+      <div class="product-price">
         $${formatPrice(calc.precioFinal)}
-          ${device.descuento > 0 ? `<del class="product-old-price">$${formatPrice(calc.precioAntesDescuento)}</del>` : ''}
+        ${device.descuento > 0 ? `<del class="product-old-price">$${formatPrice(calc.precioAntesDescuento)}</del>` : ''}
       </div>
-      </div><br>
-        
-        <div class="specs-grid">
-          <div class="spec-item spec-header">Pantalla:</div>
-          <div class="spec-item spec-value">
-            ${device.pantalla_tamaño}" ${device.pantalla_tipo}<br>
-            ${device.pantalla_resolucion}<br>
-            ${device.pantalla_frecuencia}Hz
-          </div>
-          
-          <div class="spec-item spec-header">Procesador:</div>
-          <div class="spec-item spec-value">
-            ${device.cpu_nombre}<br>
-            ${device.cpu_nucleos} núcleos<br>
-            ${device.cpu_velocidad}
-          </div>
-          
-          <div class="spec-item spec-header">GPU:</div>
-          <div class="spec-item spec-value">
-            ${device.gpu_modelo}<br>
-            ${device.gpu_nucleos} núcleos
-          </div>
-          
-          <div class="spec-item spec-header">RAM:</div>
-          <div class="spec-item spec-value">${device.ram_capacidades}</div>
-          
-          <div class="spec-item spec-header">Almacenamiento:</div>
-          <div class="spec-item spec-value">${device.almacenamiento_capacidades}</div>
-          
-          <div class="spec-item spec-header">Cámara:</div>
-          <div class="spec-item spec-value">
-            Principal: ${device.camara_principal}<br>
-            Selfie: ${device.camara_selfie}<br>
-            Video: ${device.camara_video}
-          </div>
-          
-          <div class="spec-item spec-header">Batería:</div>
-          <div class="spec-item spec-value">
-            ${device.bateria_capacidad} mAh<br>
-            ${device.bateria_tipo}<br>
-            ${device.bateria_carga_rapida ? 'Carga rápida: ' + device.bateria_carga_rapida : ''}
-            ${device.bateria_carga_inalambrica ? '<br>Carga inalámbrica' : ''}
-          </div>
-          
-          <div class="spec-item spec-header">Conectividad:</div>
-          <div class="spec-item spec-value">
-            ${device.conectividad_red}<br>
-            WiFi: ${device.conectividad_wifi}<br>
-            Bluetooth: ${device.conectividad_bluetooth}
-            ${device.conectividad_nfc ? '<br>NFC' : ''}
-          </div>
-          
-          <div class="spec-item spec-header">Dimensiones:</div>
-          <div class="spec-item spec-value">
-            ${device.dimensiones_altura} x ${device.dimensiones_anchura} x ${device.dimensiones_grosor} mm<br>
-            Peso: ${device.dimensiones_peso} 
-          </div>
+      
+      <div class="specs-grid">
+        <div class="spec-item spec-header">Pantalla:</div>
+        <div class="spec-item spec-value">
+          ${device.pantalla_tamaño}" ${device.pantalla_tipo}<br>
+          ${device.pantalla_resolucion}<br>
+          ${device.pantalla_frecuencia}Hz
         </div>
         
-        <button class="btn-comparison" onclick="window.location.href='/product/${device.id}'">
-          Ver Producto
-        </button>
-      `;
+        <div class="spec-item spec-header">Procesador:</div>
+        <div class="spec-item spec-value">
+          ${device.cpu_nombre}<br>
+          ${device.cpu_nucleos} núcleos<br>
+          ${device.cpu_velocidad}
+        </div>
+        
+        <div class="spec-item spec-header">GPU:</div>
+        <div class="spec-item spec-value">
+          ${device.gpu_modelo}<br>
+          ${device.gpu_nucleos} núcleos
+        </div>
+        
+        <div class="spec-item spec-header">RAM:</div>
+        <div class="spec-item spec-value">${device.ram_capacidades}</div>
+        
+        <div class="spec-item spec-header">Almacenamiento:</div>
+        <div class="spec-item spec-value">${device.almacenamiento_capacidades}</div>
+        
+        <div class="spec-item spec-header">Cámara:</div>
+        <div class="spec-item spec-value">
+          Principal: ${device.camara_principal}<br>
+          Selfie: ${device.camara_selfie}<br>
+          Video: ${device.camara_video}
+        </div>
+        
+        <div class="spec-item spec-header">Batería:</div>
+        <div class="spec-item spec-value">
+          ${device.bateria_capacidad} mAh<br>
+          ${device.bateria_tipo}<br>
+          ${device.bateria_carga_rapida ? 'Carga rápida: ' + device.bateria_carga_rapida : ''}
+          ${device.bateria_carga_inalambrica ? '<br>Carga inalámbrica' : ''}
+        </div>
+        
+        <div class="spec-item spec-header">Conectividad:</div>
+        <div class="spec-item spec-value">
+          ${device.conectividad_red}<br>
+          WiFi: ${device.conectividad_wifi}<br>
+          Bluetooth: ${device.conectividad_bluetooth}
+          ${device.conectividad_nfc ? '<br>NFC' : ''}
+        </div>
+        
+        <div class="spec-item spec-header">Dimensiones:</div>
+        <div class="spec-item spec-value">
+          ${device.dimensiones_altura} x ${device.dimensiones_anchura} x ${device.dimensiones_grosor} mm<br>
+          Peso: ${device.dimensiones_peso} 
+        </div>
+      </div>
       
-      wrapper.appendChild(deviceCard);
-      
-      if (index < devices.length - 1) {
-        const vsSeparator = document.createElement('div');
-        vsSeparator.className = 'vs-separator-large-comparison';
-        vsSeparator.innerHTML = '<span>VS</span>';
-        wrapper.appendChild(vsSeparator);
-      }
-    });
+      <button class="btn-comparison" onclick="window.location.href='/product/${device.id}'">
+        Ver Producto
+      </button>
+    `;
     
-    comparisonResults.appendChild(wrapper);
-  }
+    wrapper.appendChild(deviceCard);
+  });
+  
+  comparisonResults.appendChild(wrapper);
+}
   loadDevicesURL();
 });
