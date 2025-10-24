@@ -38,18 +38,20 @@ productoInput.addEventListener("input", () => {
     return;
   }
 
-  const resultados = productos.filter(p =>
+  const resultados = productos.filter((p) =>
     p.nombre.toLowerCase().includes(query)
   );
 
-  resultados.slice(0, 10).forEach(p => {
+  resultados.slice(0, 10).forEach((p) => {
     const div = document.createElement("div");
-    div.textContent = p.nombre;
+    div.textContent = `${p.nombre} ${p.especificaciones || ""}`;
+    
     div.addEventListener("click", () => {
-      productoInput.value = p.nombre;
+      productoInput.value = `${p.nombre} ${p.especificaciones || ""} `;
       productoIdSeleccionado = p.id;
       sugerenciasProducto.innerHTML = "";
     });
+
     sugerenciasProducto.appendChild(div);
   });
 });
@@ -79,7 +81,7 @@ function renderVariantes() {
 
     row.innerHTML = `
       <td>${vari.id}</td>
-      <td>${vari.producto}</td>
+      <td>${vari.producto} ${vari.especificaciones || ""}</td>
       <td>${vari.color}</td>
       <td>${vari.stock}</td>
       <td><img src="${vari.img || ''}" alt="Img" width="40" height="40"></td>
@@ -147,7 +149,6 @@ varianteForm.addEventListener("submit", async (e) => {
 
   let imgPath = varianteImgInput.value.trim();
 
-  // Subida de archivo
   if (varianteImgFileInput.files.length > 0) {
     const file = varianteImgFileInput.files[0];
     const formData = new FormData();
@@ -179,7 +180,6 @@ varianteForm.addEventListener("submit", async (e) => {
     return;
   }
 
-  // Guardar variante
   const body = JSON.stringify({ producto_id, color, stock, img: imgPath });
   const url = id ? `/api/admin/variantes/${id}` : "/api/admin/variantes";
   const method = id ? "PUT" : "POST";

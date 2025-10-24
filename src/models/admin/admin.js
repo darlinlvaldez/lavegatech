@@ -271,9 +271,14 @@ admin.obtenerVariantes = async () => {
       v.color,
       v.stock,
       v.img,
-      p.nombre AS producto
+      p.nombre AS producto,
+      r.capacidad AS ram,
+      a.capacidad AS almacenamiento,
+      CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
     FROM p_variantes v
     JOIN productos p ON v.producto_id = p.id
+    LEFT JOIN ram r ON p.ram_id = r.id
+    LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
     ORDER BY v.id DESC
   `;
   const [rows] = await db.query(query);
@@ -344,7 +349,16 @@ admin.obtenerPedidoId = async (id) => {
 };
 
 admin.productoPedido = async (orderId) => {
-  const [rows] = await db.query("SELECT * FROM detalles_pedido WHERE order_id = ?", [orderId]);
+  const [rows] = await db.query(`
+    SELECT dp.*,
+    CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
+    FROM detalles_pedido dp
+    LEFT JOIN productos p ON dp.producto_id = p.id
+    LEFT JOIN ram r ON p.ram_id = r.id
+    LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
+    WHERE dp.order_id = ?
+  `, [orderId]);
+
   return rows;
 };
 
