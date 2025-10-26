@@ -273,7 +273,7 @@ function displayComparisonResults(devices) {
     
     wrapper.appendChild(deviceCard);
   });
-  
+    
   comparisonResults.appendChild(wrapper);
 }
   loadDevicesURL();
