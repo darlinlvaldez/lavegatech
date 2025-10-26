@@ -89,12 +89,14 @@ import { checkFavorites } from "../../fav/fav.js";
     centerPadding: 0,
     vertical: true,
     asNavFor: "#product-main-img",
+    focusOnSelect: true, 
     responsive: [
       {
         breakpoint: 991,
         settings: {
           vertical: false,
           dots: false,
+          focusOnSelect: true
         },
       },
     ],
@@ -104,17 +106,15 @@ import { checkFavorites } from "../../fav/fav.js";
     $.extend(slickOptions, {
       arrows: false,
       centerMode: false,
-      focusOnSelect: false,
       infinite: false,
-      swipe: false,
-      touchMove: false,
+      swipe: true,
+      touchMove: true,
     });
     $productImgs.addClass("few-items");
   } else {
     $.extend(slickOptions, {
       arrows: true,
       centerMode: true,
-      focusOnSelect: true,
       infinite: true,
     });
     $productImgs.removeClass("few-items");
@@ -123,12 +123,6 @@ import { checkFavorites } from "../../fav/fav.js";
   $productImgs.slick(slickOptions);
 
   $productImgs.on("afterChange", handleColorChange);
-
-  // Product img zoom
-  // var zoomMainProduct = document.getElementById("product-main-img");
-  // if (zoomMainProduct) {
-  //   $("#product-main-img .product-preview").zoom();
-  // }
 
   /////////////////////////////////////////
 
