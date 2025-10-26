@@ -60,10 +60,11 @@
 			</div>
 			<div>
 				<h3 class="product-price">
-				$<%= (Number(producto.precio) * (1 - (producto.descuento /
-				100))).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %>
-				<% if (producto.descuento> 0) { %>
-				<del class="product-old-price">$<%=Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></del>
+				$<%= Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+				<% if (producto.descuento > 0) { %>
+					<del class="product-old-price">
+					$<%= Number(producto.precio / (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+					</del>
 				<% } %>
 				</h3>
 				<span class="product-available">

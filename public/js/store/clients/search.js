@@ -34,8 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
             <p>${product.categoria === 'moviles' ? 'Móviles' : product.categoria.charAt(0).toUpperCase() + product.categoria.slice(1)}</p>
           </div>
           <div class="product-price">
-            $${formatPrice(Number(product.precio) * (1 - (product.descuento / 100)))}
-            ${product.descuento > 0 ? `<del class="product-old-price">$${formatPrice(Number(product.precio))}</del>` : ''}
+            $${formatPrice(Number(product.precio))}
+            ${product.descuento > 0 ? `<del class="product-old-price">$${formatPrice(Number(product.precio) / (1 - product.descuento / 100))}</del>` : ''}
           </div>
         </a>
       `;
