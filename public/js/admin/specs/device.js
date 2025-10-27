@@ -179,7 +179,8 @@ function renderProductosSeleccionados() {
   
   productosSeleccionados.forEach(producto => {
     const li = document.createElement("li");
-    li.textContent = producto.nombre;
+
+    li.textContent = `${producto.nombre} ${producto.ram || ""} + ${producto.almacenamiento || ""}`;
     
     const removeBtn = document.createElement("button");
     removeBtn.textContent = "×";
@@ -194,6 +195,7 @@ function renderProductosSeleccionados() {
     lista.appendChild(li);
   });
 }
+
 
 searchMobileInput.addEventListener("input", async () => {
   const query = searchMobileInput.value.trim().toLowerCase();
@@ -225,8 +227,8 @@ searchMobileInput.addEventListener("input", async () => {
     productosSeleccionados.push({
       id: p.id,
       nombre: p.nombre,
-      almacenamiento: d.almacenamiento,
-      ram: d.ram
+      almacenamiento: p.almacenamiento,
+      ram: p.ram
     });
     renderProductosSeleccionados();
     searchMobileInput.value = "";

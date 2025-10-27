@@ -31,7 +31,8 @@
                             <%= order.nombre %> <%= order.apellido %><br>
                             <%= order.direccion %><br>
                             <%= order.ciudad %>, <%= order.distrito %><br>
-                            Teléfono: <%= order.telefono %>
+                            <strong>Teléfono:</strong> <%= order.telefono %> <br>
+                            <strong>Email:</strong> <%= order.email %>
                         </p>
                     </div>
                     <div class="col-md-6-details">
@@ -50,6 +51,9 @@
                                     order.estado_envio === 'pendiente' ? 'badge-pending-details' : '' %>">
                                     <%= order.estado_envio ? order.estado_envio.toUpperCase() : 'PENDIENTE' %>
                                 </span><br>
+                                <strong>Método de Pago:</strong> <%= order.metodo_pago %><br>
+                                <strong>ID PayPal:</strong> <%= order.paypal_order_id || '' %><br>
+                                <strong>Fecha de Pago:</strong> <%= new Date(order.fecha_pago).toLocaleString() %><br>
                                 <strong>Dirección personalizada:</strong>
                                 <span class="badge-details <%= order.envio_diferente === 1 ? 'badge-warning-details' : 'badge-success-details' %>">
                                 <%= order.envio_diferente === 1 ? 'Sí' : 'No' %>
@@ -69,34 +73,42 @@
                 <table class="table-details">
                     <thead>
                         <tr>
-                            <th>Producto</th>
-                            <th>Color</th>
-                            <th>Cantidad</th>
-                            <th>Precio</th>
-                            <th>Envío $</th>
-                            <th>Descuento%</th>
-                            <th>Subtotal</th>
-                        </tr>
+                        <th>Producto</th>
+                        <th>Color</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Impuesto</th>
+                        <th>Descuento%</th>
+                        <th>Subtotal</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <% order.items.forEach(item => { %>
-                            <tr>
-                                <td><%= item.nombre_producto %> <%= item.especificaciones || ""%></td>
-                                <td><%= item.colorSeleccionado.toUpperCase() %></td>
-                                <td><%= item.cantidad %></td>
-                                <td>$<%= Number(item.precio_unitario).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></td>
-                                <td>$<%= Number(order.costo_envio || 0).toFixed(2) %></td>
-                                <td>$<%= Number(item.descuento).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></td>
-                                <td>$<%= Number(item.subtotal).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></td>
-                            </tr>
-                        <% }) %>
-                    </tbody>
-                    <tfoot>
+                    <% order.items.forEach(item => { %>
                         <tr>
-                            <th colspan="6" style="text-align: right;">Total</th>
-                            <th>$<%= Number(order.total).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "," ) %></th>
+                            <td><%= item.nombre_producto %> <%= item.especificaciones %></td>
+                            <td><%= item.colorSeleccionado.toUpperCase() %></td>
+                            <td><%= item.cantidad %></td>
+                            <td>$<%= Number(item.precio_unitario).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></td>
+                            <td>$<%= (item.subtotal - (item.precio_unitario * item.cantidad * (1 - item.descuento / 100))).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></td>
+                            <td>$<%= Number(item.descuento).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></td>
+                            <td>$<%= Number(item.subtotal).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></td>
                         </tr>
-                    </tfoot>
+                    <% }); %>
+                </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="6" style="text-align: right; font-size: 1.2em;">Subtotal</th>
+                        <th style="font-size: 1.2em;">$<%= order.items.reduce((sum, item) => sum + Number(item.subtotal || 0), 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></th>
+                    </tr>
+                    <tr>
+                        <th colspan="6" style="text-align: right; font-size: 1.2em;">Envío</th>
+                        <th style="font-size: 1.2em;">$<%= Number(order.costo_envio || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></th>
+                    </tr>
+                    <tr>
+                        <th colspan="6" style="text-align: right; font-size: 1.2em;">Total</th>
+                        <th style="font-size: 1.2em;">$<%= Number(order.total).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></th>
+                    </tr>
+                </tfoot>
                 </table>
             </div>
           </div>

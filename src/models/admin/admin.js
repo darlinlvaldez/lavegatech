@@ -338,10 +338,12 @@ admin.obtenerPedidos = async () => {
 
 admin.obtenerPedidoId = async (id) => {
   const [rows] = await db.query(
-    `SELECT p.*, e.estado_envio, e.fecha_envio, e.fecha_entregado, e.fecha_cancelado, c.costo_envio 
+    `SELECT p.*, e.estado_envio, e.fecha_envio, e.fecha_entregado, e.fecha_cancelado, c.costo_envio,
+            pa.metodo_pago, pa.paypal_order_id, pa.fecha_pago
      FROM pedidos p
      LEFT JOIN envios e ON p.id = e.pedido_id
      LEFT JOIN ciudades_envio c ON p.ciudad_envio_id = c.id
+     LEFT JOIN pagos pa ON p.id = pa.order_id
      WHERE p.id = ?`,
     [id]
   );
