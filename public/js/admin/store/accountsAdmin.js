@@ -34,8 +34,8 @@ function renderAdmins() {
   sortedAdmins.forEach(admin => {
     const row = document.createElement("tr");
 
-    const estadoTexto = admin.is_active ? "Activo" : "Inactivo";
-    const estadoClase = admin.is_active ? "estado-activo" : "estado-inactivo";
+    const estadoTexto = admin.activo ? "Activo" : "Inactivo";
+    const estadoClase = admin.activo ? "estado-activo" : "estado-inactivo";
 
     const estadoBtn = admin.id !== currentAdminId ? `
       <button class="estado-btn ${estadoClase}" onclick="toggleEstado(${admin.id})">
@@ -54,7 +54,7 @@ function renderAdmins() {
       <td>${admin.id}</td>
       <td>${admin.username}</td>
       <td>${admin.rol}</td>
-      <td>${new Date(admin.created_at).toLocaleString()}</td>
+      <td>${new Date(admin.fecha_creacion).toLocaleString()}</td>
       <td>${estadoBtn}</td>
       <td>${botones}</td>
     `;
@@ -88,16 +88,16 @@ window.toggleEstado = async function (id) {
   const admin = admins.find(a => a.id === id);
   if (!admin) return;
 
-  const nuevoEstado = admin.is_active ? 0 : 1;
+  const nuevoEstado = admin.activo ? 0 : 1;
 
   const res = await fetch(`/api/adminAuth/usuarios/${id}/estado`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ is_active: nuevoEstado }),
+    body: JSON.stringify({ activo: nuevoEstado }),
   });
 
   if (res.ok) {
-    admin.is_active = nuevoEstado;
+    admin.activo = nuevoEstado;
     renderAdmins();
   } else {
     alert("Error al actualizar el estado");

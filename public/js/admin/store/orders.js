@@ -31,11 +31,11 @@ document.querySelectorAll(".order-link").forEach((link) => {
 
 document.querySelectorAll(".estado-envio-select").forEach((select) => {
   select.addEventListener("change", async function () {
-    const orderId = this.dataset.orderId;
+    const pedido_id = this.dataset.pedido_id;
     const nuevoEstado = this.value;
 
     try {
-      const res = await fetch(`/api/admin/orders/${orderId}/estado-envio`, {
+      const res = await fetch(`/api/admin/orders/${pedido_id}/estado-envio`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ estado_envio: nuevoEstado }),

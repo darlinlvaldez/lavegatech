@@ -30,7 +30,7 @@ adminAuth.login = async (req, res) => {
       });
     }
 
-    if (!foundAdmin.is_active) {
+    if (!foundAdmin.activo) {
       return renderError(res, 'admin/login', ERROR_MESSAGES.ACCOUNT_BLOCKED, {
         username, validationErrors: { username: ERROR_MESSAGES.ACCOUNT_BLOCKED }
       });
@@ -123,8 +123,8 @@ adminAuth.borrarAdmin = async (req, res) => {
 adminAuth.cambiarEstado = async (req, res) => {
   try {
     const { id } = req.params;
-    const { is_active } = req.body;
-    const success = await admin.estadoAdmin(id, is_active);
+    const { activo } = req.body;
+    const success = await admin.estadoAdmin(id, activo);
 
     res.json({ success });
   } catch (error) {

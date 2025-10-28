@@ -36,14 +36,14 @@ function renderUsers() {
   lista.forEach(user => {
     const row = document.createElement("tr");
 
-    const estadoTexto = user.is_active ? "Activo" : "Inactivo";
-    const estadoClase = user.is_active ? "estado-activo" : "estado-inactivo";
+    const estadoTexto = user.activo ? "Activo" : "Inactivo";
+    const estadoClase = user.activo ? "estado-activo" : "estado-inactivo";
 
     row.innerHTML = `
       <td>${user.id}</td>
       <td>${user.username}</td>
       <td>${user.email}</td>
-      <td>${new Date(user.created_at).toLocaleString()}</td>
+      <td>${new Date(user.fecha_creacion).toLocaleString()}</td>
       <td>
         <button class="estado-btn ${estadoClase}" onclick="toggleEstado(${user.id})">
           ${estadoTexto}
@@ -59,16 +59,16 @@ async function toggleEstado(id) {
   const user = users.find(u => u.id === id);
   if (!user) return;
 
-  const nuevoEstado = user.is_active ? 0 : 1;
+  const nuevoEstado = user.activo ? 0 : 1;
 
   const res = await fetch(`/api/admin/usuarios/${id}/estado`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ is_active: nuevoEstado }),
+    body: JSON.stringify({ activo: nuevoEstado }),
   });
 
   if (res.ok) {
-    user.is_active = nuevoEstado;
+    user.activo = nuevoEstado;
     renderUsers();
   } else {
     alert("Error al actualizar el estado");

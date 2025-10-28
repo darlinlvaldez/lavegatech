@@ -171,7 +171,7 @@ auth.login = async (req, res) => {
         email, validationErrors: {password: ERROR_MESSAGES.WRONG_PASSWORD} }); 
     }
 
-    if (!foundUser.is_active) {
+    if (!foundUser.activo) {
       return renderError(res, 'login/login', ERROR_MESSAGES.ACCOUNT_BLOCKED, { 
         email, validationErrors: { email: ERROR_MESSAGES.ACCOUNT_BLOCKED} });
     }

@@ -33,7 +33,7 @@
                             <h5 class="mb-1">Pedido #<%= order.id %>
                             </h5>
                             <div class="text-right-user">
-                                <select class="estado-envio-select" data-order-id="<%= order.id %>">
+                                <select class="estado-envio-select" data-pedido_id="<%= order.id %>">
                                     <option value="pendiente" <%=order.estado_envio==='pendiente' ? 'selected' : '' %>>Pendiente</option>
                                     <option value="enviado" <%=order.estado_envio==='enviado' ? 'selected' : '' %>>Enviado</option>
                                     <option value="entregado" <%=order.estado_envio==='entregado' ? 'selected' : '' %>>Entregado</option>

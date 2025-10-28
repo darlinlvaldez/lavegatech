@@ -81,7 +81,7 @@ admin.graficoVentas = async (rango, mes, fecha) => {
   return rows;
 };
 
-admin.actualizarEstadoEnvio = async (estado_envio, pedidoId) => {
+admin.actualizarEstadoEnvio = async (estado_envio, pedido_id) => {
   let campos = 'estado_envio = ?';
   let valores = [estado_envio];
 
@@ -101,7 +101,7 @@ admin.actualizarEstadoEnvio = async (estado_envio, pedidoId) => {
     campos += ', fecha_envio = NULL, fecha_entregado = NULL, fecha_cancelado = NOW()';
   }
 
-  valores.push(pedidoId);
+  valores.push(pedido_id);
 
   const sql = `UPDATE envios SET ${campos} WHERE pedido_id = ?`;
   return db.query(sql, valores);
@@ -310,16 +310,16 @@ admin.actualizarVariante = async ({ id, color, stock, img, producto_id }) => {
 
 admin.obtenerUsuarios = async () => {
   const query = `
-    SELECT id, username, email, is_active, created_at
+    SELECT id, username, email, activo, fecha_creacion
     FROM usuarios
-    ORDER BY created_at DESC
+    ORDER BY fecha_creacion DESC
   `;
   const [rows] = await db.query(query);
   return rows;
 };
 
-admin.estadoUsuario = async (id, isActive) => {
-  const [result] = await db.query("UPDATE usuarios SET is_active = ? WHERE id = ?", [isActive, id]);
+admin.estadoUsuario = async (id, activo) => {
+  const [result] = await db.query("UPDATE usuarios SET activo = ? WHERE id = ?", [activo, id]);
   return result.affectedRows > 0;
 };
 
@@ -343,14 +343,14 @@ admin.obtenerPedidoId = async (id) => {
      FROM pedidos p
      LEFT JOIN envios e ON p.id = e.pedido_id
      LEFT JOIN ciudades_envio c ON p.ciudad_envio_id = c.id
-     LEFT JOIN pagos pa ON p.id = pa.order_id
+     LEFT JOIN pagos pa ON p.id = pa.pedido_id
      WHERE p.id = ?`,
     [id]
   );
   return rows[0];
 };
 
-admin.productoPedido = async (orderId) => {
+admin.productoPedido = async (pedido_id) => {
   const [rows] = await db.query(`
     SELECT dp.*,
     CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
@@ -358,8 +358,8 @@ admin.productoPedido = async (orderId) => {
     LEFT JOIN productos p ON dp.producto_id = p.id
     LEFT JOIN ram r ON p.ram_id = r.id
     LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
-    WHERE dp.order_id = ?
-  `, [orderId]);
+    WHERE dp.pedido_id = ?
+  `, [pedido_id]);
 
   return rows;
 };

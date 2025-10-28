@@ -204,9 +204,10 @@ function displayComparisonResults(devices) {
         <img class="img-comparison" src="${device.imagen}" alt="${device.nombre}">
       </div>
       
-      <div class="product-price">
-        $${formatPrice(calc.precioFinal)}
-        ${device.descuento > 0 ? `<del class="product-old-price">$${formatPrice(calc.precioAntesDescuento)}</del>` : ''}
+      <div class="search-result-item">
+        <div class="product-price"> $${formatPrice(calc.precioFinal)}
+          ${device.descuento > 0 ? `<del class="product-old-price">$${formatPrice(calc.precioAntesDescuento)}</del>` : ''}
+        </div>
       </div>
       
       <div class="specs-grid">

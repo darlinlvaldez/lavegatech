@@ -9,7 +9,7 @@ admin.findByUsername = async (username) => {
 
 admin.obtenerAdmins = async () => {
   const [rows] = await db.query(
-    "SELECT id, username, created_at, is_active, rol FROM admin"
+    "SELECT id, username, fecha_creacion, activo, rol FROM admin"
   );
   return rows;
 };
@@ -41,10 +41,10 @@ admin.actualizarAdmin = async (id, { username, password, rol }) => {
   }
 };
 
-admin.estadoAdmin = async (id, is_active) => {
+admin.estadoAdmin = async (id, activo) => {
   const [result] = await db.query(
-    `UPDATE admin SET is_active = ? WHERE id = ?`,
-    [is_active, id]
+    `UPDATE admin SET activo = ? WHERE id = ?`,
+    [activo, id]
   );
   return result.affectedRows > 0;
 };

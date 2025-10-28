@@ -8,11 +8,11 @@ orders.createOrder = async (orderData, items, costoEnvio) => {
     await conn.beginTransaction();
 
       const [orderResult] = await conn.query(
-      `INSERT INTO pedidos (user_id, nombre, apellido, email, direccion, 
+      `INSERT INTO pedidos (usuario_id, nombre, apellido, email, direccion, 
         distrito, telefono, total, status, ciudad_envio_id, envio_diferente) 
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
-        orderData.user_id,
+        orderData.usuario_id,
         orderData.nombre,
         orderData.apellido,
         orderData.email,
@@ -26,16 +26,16 @@ orders.createOrder = async (orderData, items, costoEnvio) => {
       ]
     );
 
-    const orderId = orderResult.insertId;
+    const pedido_id = orderResult.insertId;
 
     for (const item of items) {
       await conn.query(
         `INSERT INTO detalles_pedido 
-          (order_id, producto_id, nombre_producto, ram, almacenamiento, 
+          (pedido_id, producto_id, nombre_producto, ram, almacenamiento, 
           colorSeleccionado, cantidad, precio_unitario, impuesto, descuento, subtotal) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
-          orderId,
+          pedido_id,
           item.producto_id,
           item.nombre_producto,
           item.ram,
@@ -50,13 +50,13 @@ orders.createOrder = async (orderData, items, costoEnvio) => {
       );
     }
 
-    await orders.createShipping(conn, orderId, {
+    await orders.createShipping(conn, pedido_id, {
       estado_envio: "pendiente",
       costo_envio: costoEnvio,
     });
 
     await conn.commit();
-    return orderId;
+    return pedido_id;
   } catch (error) {
     await conn.rollback();
     throw error;
@@ -92,7 +92,7 @@ orders.getLastOrderByUserId = async (userId) => {
   const [rows] = await db.query(
     `SELECT nombre, apellido, email, direccion, distrito, telefono, envio_diferente 
      FROM pedidos 
-     WHERE user_id = ? 
+     WHERE usuario_id = ? 
      ORDER BY fecha_creacion DESC 
      LIMIT 1`,
     [userId]
@@ -100,8 +100,8 @@ orders.getLastOrderByUserId = async (userId) => {
   return rows.length ? rows[0] : null;
 };
 
-orders.updateStock = async (orderId, userId) => {
-  const { items } = await orders.getOrderById(orderId, userId) || {};
+orders.updateStock = async (pedido_id, userId) => {
+  const { items } = await orders.getOrderById(pedido_id, userId) || {};
   if (!items) throw new Error(`Orden no encontrada`);
 
   await Promise.all(items.map(async ({ cantidad, producto_id, colorSeleccionado, nombre_producto }) => {
@@ -142,14 +142,14 @@ orders.checkStock = async (items) => {
   }
 };
 
-orders.getOrderById = async (orderId, userId) => {
+orders.getOrderById = async (pedido_id, userId) => {
   const [order] = await db.query(
     `SELECT p.*, c.nombre AS nombre_ciudad_envio, c.costo_envio, e.estado_envio 
     FROM pedidos p 
     LEFT JOIN ciudades_envio c ON p.ciudad_envio_id = c.id 
     LEFT JOIN envios e ON p.id = e.pedido_id
-    WHERE p.id = ? AND p.user_id = ?`,
-    [orderId, userId]
+    WHERE p.id = ? AND p.usuario_id = ?`,
+    [pedido_id, userId]
   );
 
   if (order.length === 0) return null;
@@ -158,8 +158,8 @@ orders.getOrderById = async (orderId, userId) => {
   `SELECT dp.*, 
   CONCAT(dp.ram, '+', dp.almacenamiento) AS especificaciones
   FROM detalles_pedido dp
-  WHERE order_id = ?`,
-  [orderId]
+  WHERE pedido_id = ?`,
+  [pedido_id]
 );
 
   return {
@@ -173,23 +173,23 @@ orders.getUserOrders = async (userId) => {
     `SELECT p.*, e.estado_envio 
      FROM pedidos p
      LEFT JOIN envios e ON p.id = e.pedido_id
-     WHERE p.user_id = ? 
+     WHERE p.usuario_id = ? 
      ORDER BY fecha_creacion DESC`,
     [userId]
   );
   return orders;
 };
 
-orders.createPayment = async (orderId, paymentData) => {
+orders.createPayment = async (pedido_id, paymentData) => {
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
 
     const [result] = await conn.query(
       `INSERT INTO pagos 
-      (order_id, metodo_pago, estado_pago, paypal_order_id) 
+      (pedido_id, metodo_pago, estado_pago, paypal_order_id) 
       VALUES (?, ?, ?, ?)`,
-      [orderId, paymentData.paymentMethod, "completado", paymentData.paymentId]
+      [pedido_id, paymentData.paymentMethod, "completado", paymentData.paymentId]
     );
 
     await conn.commit();

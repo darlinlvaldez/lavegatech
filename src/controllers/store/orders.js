@@ -49,7 +49,7 @@ orderController.createOrder = async (req, res) => {
     const totalEnDolares = (totalPesos * tasaCambio).toFixed(2);
 
     const orderData = {
-      user_id: userId,
+      usuario_id: userId,
       nombre,
       apellido,
       email,
@@ -135,25 +135,25 @@ orderController.processPayment = async (req, res) => {
 
     await orders.checkStock(cartItems);
 
-    const orderId = await orders.createOrder(
+    const pedido_id = await orders.createOrder(
       { ...orderData, status: 'pagado', total: totalPesos }, 
       orderItems, costoEnvio
     );
 
-    await orders.createPayment(orderId, {
+    await orders.createPayment(pedido_id, {
       paymentMethod: 'paypal',
       paymentId,
       payerId
     });
 
-    await orders.updateStock(orderId, userId);
+    await orders.updateStock(pedido_id, userId);
     await cart.clearCart(userId);
 
     res.json({
       success: true,
       message: 'Pago procesado correctamente',
-      orderId,
-      redirectUrl: `/api/order/orderDetails/${orderId}`
+      pedido_id,
+      redirectUrl: `/api/order/orderDetails/${pedido_id}`
     });
 
   } catch (error) {
@@ -219,7 +219,7 @@ orderController.showUserOrders = async (req, res) => {
 
 orderController.showOrderDetails = async (req, res) => {
   try {
-    const order = await orders.getOrderById(req.params.orderId, req.session.user.id);
+    const order = await orders.getOrderById(req.params.pedido_id, req.session.user.id);
 
     if (!order) {
       return res.status(404).render('error', { message: 'Pedido no encontrado' });

@@ -30,7 +30,7 @@ adminController.graficoVentas = async (req, res) => {
 };
 
 adminController.estadoEnvio = async (req, res) => {
-  const pedidoId = req.params.id;
+  const pedido_id = req.params.id;
   const { estado_envio } = req.body;
 
   if (!estado_envio || !['pendiente', 'enviado', 'entregado', 'cancelado'].includes(estado_envio)) {
@@ -38,7 +38,7 @@ adminController.estadoEnvio = async (req, res) => {
   }
 
   try {
-    await admin.actualizarEstadoEnvio(estado_envio, pedidoId);
+    await admin.actualizarEstadoEnvio(estado_envio, pedido_id);
     res.json({ mensaje: 'Estado actualizado correctamente' });
   } catch (error) {
     console.error('Error actualizando estado de envío:', error);
