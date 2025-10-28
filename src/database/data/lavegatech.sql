@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-10-2025 a las 07:11:42
+-- Tiempo de generación: 29-10-2025 a las 00:22:03
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -194,6 +194,13 @@ CREATE TABLE `carrito` (
   `fecha_agregado` timestamp NOT NULL DEFAULT current_timestamp(),
   `variante_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `carrito`
+--
+
+INSERT INTO `carrito` (`id`, `usuario_id`, `producto_id`, `cantidad`, `fecha_agregado`, `variante_id`) VALUES
+(214, 79, 5, 1, '2025-10-28 17:53:41', 391);
 
 -- --------------------------------------------------------
 
@@ -689,7 +696,7 @@ CREATE TABLE `pedidos` (
   `total` decimal(10,2) NOT NULL,
   `status` varchar(50) DEFAULT 'pendiente',
   `fecha_creacion` datetime DEFAULT current_timestamp(),
-  `ciudad_envio_id` int(11) DEFAULT NULL,
+  `ciudad_envio` varchar(50) DEFAULT NULL,
   `envio_diferente` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -697,11 +704,11 @@ CREATE TABLE `pedidos` (
 -- Volcado de datos para la tabla `pedidos`
 --
 
-INSERT INTO `pedidos` (`id`, `usuario_id`, `nombre`, `apellido`, `email`, `direccion`, `distrito`, `telefono`, `total`, `status`, `fecha_creacion`, `ciudad_envio_id`, `envio_diferente`) VALUES
-(212, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 15149.28, 'pagado', '2025-10-27 21:22:26', 1, 0),
-(213, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 27184.10, 'pagado', '2025-10-27 21:43:03', 1, 0),
-(214, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 27184.10, 'pagado', '2025-10-27 21:45:16', 1, 0),
-(215, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 13614.10, 'pagado', '2025-10-27 23:37:32', 1, 0);
+INSERT INTO `pedidos` (`id`, `usuario_id`, `nombre`, `apellido`, `email`, `direccion`, `distrito`, `telefono`, `total`, `status`, `fecha_creacion`, `ciudad_envio`, `envio_diferente`) VALUES
+(212, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 15149.28, 'pagado', '2025-10-27 21:22:26', '1', 0),
+(213, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 27184.10, 'pagado', '2025-10-27 21:43:03', '1', 0),
+(214, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 27184.10, 'pagado', '2025-10-27 21:45:16', '1', 0),
+(215, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 13614.10, 'pagado', '2025-10-27 23:37:32', '1', 0);
 
 -- --------------------------------------------------------
 
@@ -1016,10 +1023,6 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (432, 28, 'Rosado', 2, 'https://itpro.com.uy/wp-content/uploads/2025/03/wooc-881.jpeg'),
 (433, 29, 'Amarillo', 4, 'https://www.trippodo.com/872471-medium_default/apple-iphone-15-plus-17-cm-67-sim-doble-ios-17-5g-.jpg'),
 (434, 29, 'verde', 3, 'https://www.dealsmagnet.com/images/apple-iphone-15-plus-128-gb-o-196TMi7h.jpg'),
-(435, 30, 'verde', 4, 'https://i.ebayimg.com/images/g/RjsAAOSwJsRnN63p/s-l1600.webp'),
-(436, 30, 'negro', 4, 'https://i.ebayimg.com/images/g/NiQAAOSwUahnN63n/s-l1600.webp'),
-(437, 31, 'negro', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+15+Pro+Max/iPhone+15+Pro+Max+Black.jpg'),
-(438, 31, 'azul', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+15+Pro+Max/iPhone+15+Pro+Max+Blue.jpg'),
 (439, 32, 'Negro', 4, 'https://geeky.sfo2.cdn.digitaloceanspaces.com/geekydrop_production/thumbnail--LZEt1knyaA.webp'),
 (440, 32, 'blanco', 4, 'https://geeky.sfo2.cdn.digitaloceanspaces.com/geekydrop_production/thumbnail--jGZ9wYU4_x.webp'),
 (441, 33, 'Titanio azul', 4, '/uploads/1761355660754_Imagen-Apple-iPhone-15-Pro-Max-Azul-768x768-convertido-a-400x400.jpeg'),
@@ -1067,7 +1070,6 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (483, 63, 'Oro arenisca', 2, 'https://i.ebayimg.com/images/g/dV0AAeSwpxFn0ZAS/s-l400.jpg'),
 (484, 64, 'negro', 4, 'https://i.ebayimg.com/images/g/QwUAAOSwE~doRmVm/s-l1600.webp'),
 (485, 65, 'verde', 4, 'https://i.ebayimg.com/images/g/zKIAAOSwkOdoVDu2/s-l1600.webp'),
-(486, 66, 'negro', 4, 'https://i.ebayimg.com/images/g/lxMAAOSw~0VnD0FB/s-l1600.webp'),
 (487, 67, 'blanco', 4, 'https://i.ebayimg.com/images/g/JmYAAOSw7YZoN8ef/s-l1600.webp'),
 (488, 68, 'negro', 2, 'https://i.ebayimg.com/images/g/trcAAOSwvNJoSn1R/s-l1600.webp'),
 (489, 69, 'negro', 3, 'https://geeky.sfo2.cdn.digitaloceanspaces.com/geekydrop_production/thumbnail--1V-V3-7SKQ.webp'),
@@ -1088,14 +1090,12 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (504, 87, 'negro', 4, 'https://i.ebayimg.com/images/g/G~cAAOSwqy1nYE2d/s-l500.jpg'),
 (505, 88, 'negro', 4, '/uploads/1761352499202_1745940979-003.TBTCL141-1.jpg'),
 (506, 89, 'gris', 3, 'https://i.ebayimg.com/images/g/XX0AAOSwI0JmHwCc/s-l1600.webp'),
-(507, 90, 'gris', 4, 'https://i.ebayimg.com/images/g/s4MAAOSw3BVju4Q9/s-l400.jpg'),
 (508, 91, 'gris', 3, 'https://i.ebayimg.com/images/g/sikAAOSwlgtl63K6/s-l1600.webp'),
 (509, 92, 'gris', 4, 'https://cartlow.gumlet.io/prod/product/10946420001/96dcbea1-ee10-4967-a381-4108c6fef86a.jpg?width=400&height=0'),
 (510, 93, 'gris', 3, 'https://i.ebayimg.com/images/g/6ZQAAOSwmIhhFik4/s-l400.jpg'),
 (511, 94, 'Gris', 1, 'https://i.ebayimg.com/images/g/e1QAAeSwiNNowbjX/s-l400.jpg'),
 (514, 97, 'negro', 3, 'https://i.ebayimg.com/images/g/0UAAAOSwqXpmCh5A/s-l400.jpg'),
 (515, 98, 'negro', 3, 'https://i.ebayimg.com/images/g/vEwAAOSwN8xmzoR0/s-l400.jpg'),
-(516, 99, 'gris', 3, 'https://i.ebayimg.com/images/g/l-oAAOSwoIRnTibC/s-l1600.webp'),
 (517, 100, 'gris', 4, 'https://i.ebayimg.com/images/g/7~4AAOSw7-1mTMYP/s-l400.jpg'),
 (518, 108, 'gris', 2, 'https://http2.mlstatic.com/D_Q_NP_2X_966054-MRD92550029082_092025-N.webp'),
 (519, 109, 'gris', 4, 'https://tienda.composystem.com.uy/thumb/B193C2793F5D4D6CA6FF672253F677D7_400x400.jpg'),
@@ -1175,17 +1175,12 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (596, 202, 'negro', 4, 'https://pisces.bbystatic.com/image2/BestBuy_US/images/products/37316ee8-f080-4809-a447-98bd68af8441.png;maxHeight=828;maxWidth=400?format=webp'),
 (597, 203, 'negro', 4, 'https://www.asus.com/media/global/gallery/0osdprj9mpap1rub_setting_xxx_0_90_end_2000.png'),
 (598, 204, 'negro', 4, 'https://windigitalpc.com/wp-content/uploads/2025/05/Monitor-LG-UltraGear-Curvo-34-QHD-VA-160Hz1.png'),
-(599, 205, 'negro', 4, 'https://casacuesta.com/media/catalog/product/cache/afcac67a0d77755283578b677f040f2b/3/3/3352805-1__1747070732.jpg'),
 (600, 206, 'negro', 4, 'https://covercompany.com.uy/cdn/shop/files/19950_19951_3.jpg?v=1726589380&width=400'),
 (601, 207, 'negro', 3, 'https://casacuesta.com/media/catalog/product/cache/afcac67a0d77755283578b677f040f2b/3/3/3344468-1__1715126132.jpg'),
 (602, 131, 'Gris', 2, 'https://http2.mlstatic.com/D_Q_NP_2X_680852-MRD69531082702_052023-N.webp'),
 (603, 84, 'Gris', 4, 'https://mobilestoreonline.com/wp-content/uploads/2025/04/Andriod-13-400x400.png'),
-(604, 120, 'Gris', 5, 'https://i.ebayimg.com/images/g/oAwAAOSw--1lEYcs/s-l400.jpg'),
 (605, 121, 'Rosado', 2, 'https://i.ebayimg.com/images/g/gN0AAOSwy3Rl12Xi/s-l400.jpg'),
 (606, 122, 'Gris', 3, 'https://i.ebayimg.com/images/g/nUoAAeSwABJow0IF/s-l400.jpg'),
-(607, 123, 'Gris', 2, 'https://i.ebayimg.com/images/g/HdMAAOSwVVhl1aaH/s-l400.jpg'),
-(608, 124, 'Gris', 3, 'https://i.ebayimg.com/images/g/6ZQAAOSwmIhhFik4/s-l400.jpg'),
-(609, 125, 'Gris', 4, 'https://i.ebayimg.com/images/g/6ZsAAOSwUtJm9T0O/s-l400.jpg'),
 (610, 126, 'Gris', 1, 'https://i.ebayimg.com/images/g/sOcAAeSw8hNo4ffQ/s-l400.jpg'),
 (613, 96, 'Negro', 2, 'https://5.imimg.com/data5/ANDROID/Default/2025/2/487652080/GA/JV/TB/234503777/product-jpeg-500x500.jpg'),
 (614, 174, 'Negro', 2, 'https://hisense.com.pe/static/1fee299aec5f19ca4ecea543fbc6bb4f/cd18a/75Q6.jpg'),
@@ -1234,6 +1229,13 @@ CREATE TABLE `sessions` (
   `expires` int(11) UNSIGNED NOT NULL,
   `data` mediumtext DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `sessions`
+--
+
+INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
+('Oj89SExdvcUEMMIfMJZyxd4dLz9Ou2z8', 1761677646, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-28T18:53:23.277Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":79,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}');
 
 -- --------------------------------------------------------
 
@@ -1541,8 +1543,7 @@ ALTER TABLE `pantalla`
 --
 ALTER TABLE `pedidos`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_orders_usuario` (`usuario_id`),
-  ADD KEY `fk_ciudad_envio` (`ciudad_envio_id`);
+  ADD KEY `fk_orders_usuario` (`usuario_id`);
 
 --
 -- Indices de la tabla `productos`
@@ -1634,7 +1635,7 @@ ALTER TABLE `camara`
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=213;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=215;
 
 --
 -- AUTO_INCREMENT de la tabla `categorias`
@@ -1819,7 +1820,6 @@ ALTER TABLE `pagos`
 -- Filtros para la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  ADD CONSTRAINT `fk_ciudad_envio` FOREIGN KEY (`ciudad_envio_id`) REFERENCES `ciudades_envio` (`id`),
   ADD CONSTRAINT `fk_pedidos_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
 
 --
@@ -1831,6 +1831,12 @@ ALTER TABLE `productos`
   ADD CONSTRAINT `fk_producto_marca` FOREIGN KEY (`marca_id`) REFERENCES `p_marcas` (`id`),
   ADD CONSTRAINT `fk_producto_ram` FOREIGN KEY (`ram_id`) REFERENCES `ram` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `fk_productos_moviles` FOREIGN KEY (`movil_id`) REFERENCES `moviles` (`id`) ON DELETE SET NULL;
+
+--
+-- Filtros para la tabla `p_variantes`
+--
+ALTER TABLE `p_variantes`
+  ADD CONSTRAINT `fk_variante_producto` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `variantes_almacenamiento`
