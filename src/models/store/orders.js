@@ -9,7 +9,7 @@ orders.createOrder = async (orderData, items, costoEnvio) => {
 
       const [orderResult] = await conn.query(
       `INSERT INTO pedidos (usuario_id, nombre, apellido, email, direccion, 
-        distrito, telefono, total, status, ciudad_envio_id, envio_diferente) 
+        distrito, telefono, total, status, ciudad_envio, envio_diferente) 
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         orderData.usuario_id,
@@ -21,7 +21,7 @@ orders.createOrder = async (orderData, items, costoEnvio) => {
         orderData.telefono,
         orderData.total,
         orderData.status,
-        orderData.ciudad_envio_id,
+        orderData.ciudad_envio,
         orderData.envio_diferente || 0  
       ]
     );
@@ -144,23 +144,22 @@ orders.checkStock = async (items) => {
 
 orders.getOrderById = async (pedido_id, userId) => {
   const [order] = await db.query(
-    `SELECT p.*, c.nombre AS nombre_ciudad_envio, c.costo_envio, e.estado_envio 
-    FROM pedidos p 
-    LEFT JOIN ciudades_envio c ON p.ciudad_envio_id = c.id 
-    LEFT JOIN envios e ON p.id = e.pedido_id
-    WHERE p.id = ? AND p.usuario_id = ?`,
+    `SELECT p.*, e.estado_envio 
+     FROM pedidos p
+     LEFT JOIN envios e ON p.id = e.pedido_id
+     WHERE p.id = ? AND p.usuario_id = ?`,
     [pedido_id, userId]
   );
 
   if (order.length === 0) return null;
 
   const [items] = await db.query(
-  `SELECT dp.*, 
-  CONCAT(dp.ram, '+', dp.almacenamiento) AS especificaciones
-  FROM detalles_pedido dp
-  WHERE pedido_id = ?`,
-  [pedido_id]
-);
+    `SELECT dp.*, 
+            CONCAT(dp.ram, '+', dp.almacenamiento) AS especificaciones
+     FROM detalles_pedido dp
+     WHERE pedido_id = ?`,
+    [pedido_id]
+  );
 
   return {
     ...order[0],
