@@ -14,6 +14,11 @@ orderController.createOrder = async (req, res) => {
       return res.status(400).json({ success: false, message: 'El carrito está vacío' });
     }
 
+    const ciudadData = await orders.getCityId(ciudad_envio);
+    if (!ciudadData) {
+      return res.status(400).json({ success: false, message: 'Ciudad de envío no válida' });
+    }
+
     const costoEnvio = parseFloat(ciudadData.costo_envio);
 
     const orderItems = cartItems.map(item => {
@@ -131,9 +136,9 @@ orderController.processPayment = async (req, res) => {
     await orders.checkStock(cartItems);
 
     const pedido_id = await orders.createOrder(
-      { ...orderData, status: 'pagado', total: totalPesos }, 
-      orderItems, costoEnvio
-    );
+      {...orderData, status: "pagado", total: totalPesos,
+        ciudad_envio: ciudadData.nombre}, 
+        orderItems,costoEnvio);
 
     await orders.createPayment(pedido_id, {
       paymentMethod: 'paypal',

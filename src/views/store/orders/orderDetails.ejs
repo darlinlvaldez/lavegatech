@@ -64,6 +64,7 @@
                         <th>Precio</th>
                         <th>Impuesto</th>
                         <th>Descuento%</th>
+                        <th>Subtotal</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,6 +74,7 @@
                             <td><%= item.colorSeleccionado.toUpperCase() %></td>
                             <td><%= item.cantidad %></td>
                             <td>$<%= Number(item.precio_unitario).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></td>
+                            <td>$<%= (item.precio_unitario * item.cantidad * (item.impuesto / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></td>
                             <td>$<%= Number(item.descuento).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></td>
                             <td>$<%= Number(item.subtotal).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></td>
                         </tr>
@@ -80,15 +82,15 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="5" style="text-align: right; font-size: 1.2em;">Subtotal</th>
+                        <th colspan="6" style="text-align: right; font-size: 1.2em;">Subtotal</th>
                         <th style="font-size: 1.2em;">$<%= order.items.reduce((sum, item) => sum + Number(item.subtotal || 0), 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></th>
                     </tr>
                     <tr>
-                        <th colspan="5" style="text-align: right; font-size: 1.2em;">Envío</th>
+                        <th colspan="6" style="text-align: right; font-size: 1.2em;">Envío</th>
                         <th style="font-size: 1.2em;">$<%= Number(order.costo_envio || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></th>
                     </tr>
                     <tr>
-                        <th colspan="5" style="text-align: right; font-size: 1.2em;">Total</th>
+                        <th colspan="6" style="text-align: right; font-size: 1.2em;">Total</th>
                         <th style="font-size: 1.2em;">$<%= Number(order.total).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></th>
                     </tr>
                 </tfoot>

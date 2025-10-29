@@ -23,7 +23,7 @@ request.order = z.object({
   direccion: z
     .string()
     .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
-  ciudad_envio_id: z
+  ciudad_envio: z
   .string()
   .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
   distrito: z

@@ -144,7 +144,7 @@ orders.checkStock = async (items) => {
 
 orders.getOrderById = async (pedido_id, userId) => {
   const [order] = await db.query(
-    `SELECT p.*, e.estado_envio 
+    `SELECT p.*, e.estado_envio, e.costo_envio
      FROM pedidos p
      LEFT JOIN envios e ON p.id = e.pedido_id
      WHERE p.id = ? AND p.usuario_id = ?`,
@@ -155,7 +155,7 @@ orders.getOrderById = async (pedido_id, userId) => {
 
   const [items] = await db.query(
     `SELECT dp.*, 
-            CONCAT(dp.ram, '+', dp.almacenamiento) AS especificaciones
+     CONCAT(dp.ram, '+', dp.almacenamiento) AS especificaciones
      FROM detalles_pedido dp
      WHERE pedido_id = ?`,
     [pedido_id]
