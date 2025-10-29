@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-10-2025 a las 05:24:18
+-- Tiempo de generación: 29-10-2025 a las 20:00:18
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -194,6 +194,13 @@ CREATE TABLE `carrito` (
   `fecha_agregado` timestamp NOT NULL DEFAULT current_timestamp(),
   `variante_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `carrito`
+--
+
+INSERT INTO `carrito` (`id`, `usuario_id`, `producto_id`, `cantidad`, `fecha_agregado`, `variante_id`) VALUES
+(219, 79, 71, 1, '2025-10-29 17:59:09', 491);
 
 -- --------------------------------------------------------
 
@@ -387,7 +394,8 @@ INSERT INTO `detalles_pedido` (`id`, `pedido_id`, `producto_id`, `nombre_product
 (230, 216, 5, 'iPhone 12 Pro', 1, 23995.00, 18.00, 0.00, 28314.10, 'azul', '6GB', '256GB'),
 (231, 217, 12, 'iPhone 13 Pro', 1, 30995.00, 18.00, 0.00, 36574.10, 'gris', '6GB', '256GB'),
 (232, 218, 39, 'iPhone 16 Pro Max', 1, 84995.00, 18.00, 0.00, 100294.10, 'Blanco titanio', '8GB', '512GB'),
-(233, 218, 1, 'iPhone 12', 1, 15995.00, 18.00, 20.00, 15099.28, 'verde', '4GB', '64GB');
+(233, 218, 1, 'iPhone 12', 1, 15995.00, 18.00, 20.00, 15099.28, 'verde', '4GB', '64GB'),
+(234, 219, 82, 'XIAOMI REDMI PAD SE 8.7', 1, 8495.00, 18.00, 0.00, 10024.10, 'gris', '4GB', '128GB');
 
 -- --------------------------------------------------------
 
@@ -462,7 +470,8 @@ INSERT INTO `envios` (`id`, `pedido_id`, `estado_envio`, `costo_envio`, `fecha_e
 (51, 215, 'enviado', 50.00, '2025-10-28 00:31:45', NULL, NULL),
 (52, 216, 'cancelado', 50.00, NULL, NULL, '2025-10-28 23:33:17'),
 (53, 217, 'pendiente', 50.00, NULL, NULL, NULL),
-(54, 218, 'enviado', 50.00, '2025-10-28 21:37:04', NULL, NULL);
+(54, 218, 'enviado', 50.00, '2025-10-28 21:37:04', NULL, NULL),
+(55, 219, 'pendiente', 50.00, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -657,7 +666,8 @@ INSERT INTO `pagos` (`id`, `pedido_id`, `metodo_pago`, `estado_pago`, `paypal_or
 (128, 215, 'paypal', 'completado', '18L6783492055283E', '2025-10-27 23:37:32'),
 (129, 216, 'paypal', 'completado', '40M768518R348144U', '2025-10-28 19:43:08'),
 (130, 217, 'paypal', 'completado', '86B78056DM426294R', '2025-10-28 19:59:00'),
-(131, 218, 'paypal', 'completado', '4M862087SK681860B', '2025-10-28 21:12:27');
+(131, 218, 'paypal', 'completado', '4M862087SK681860B', '2025-10-28 21:12:27'),
+(132, 219, 'paypal', 'completado', '91C903741H301100K', '2025-10-29 13:58:50');
 
 -- --------------------------------------------------------
 
@@ -697,7 +707,7 @@ CREATE TABLE `pedidos` (
   `distrito` varchar(100) NOT NULL,
   `telefono` varchar(20) NOT NULL,
   `total` decimal(10,2) NOT NULL,
-  `status` varchar(50) DEFAULT 'pendiente',
+  `estado` varchar(50) DEFAULT 'pendiente',
   `fecha_creacion` datetime DEFAULT current_timestamp(),
   `ciudad_envio` varchar(50) DEFAULT NULL,
   `envio_diferente` tinyint(1) DEFAULT 0
@@ -707,14 +717,15 @@ CREATE TABLE `pedidos` (
 -- Volcado de datos para la tabla `pedidos`
 --
 
-INSERT INTO `pedidos` (`id`, `usuario_id`, `nombre`, `apellido`, `email`, `direccion`, `distrito`, `telefono`, `total`, `status`, `fecha_creacion`, `ciudad_envio`, `envio_diferente`) VALUES
+INSERT INTO `pedidos` (`id`, `usuario_id`, `nombre`, `apellido`, `email`, `direccion`, `distrito`, `telefono`, `total`, `estado`, `fecha_creacion`, `ciudad_envio`, `envio_diferente`) VALUES
 (212, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 15149.28, 'pagado', '2025-10-27 21:22:26', '1', 0),
 (213, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 27184.10, 'pagado', '2025-10-27 21:43:03', '1', 0),
 (214, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 27184.10, 'pagado', '2025-10-27 21:45:16', '1', 0),
 (215, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 13614.10, 'pagado', '2025-10-27 23:37:32', '1', 0),
 (216, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 28364.10, 'pagado', '2025-10-28 19:43:08', '1', 0),
 (217, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 36624.10, 'pagado', '2025-10-28 19:59:00', 'La Vega', 0),
-(218, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 115443.38, 'pagado', '2025-10-28 21:12:27', 'La Vega', 0);
+(218, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 115443.38, 'pagado', '2025-10-28 21:12:27', 'La Vega', 0),
+(219, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 10074.10, NULL, '2025-10-29 13:58:50', 'La Vega', 0);
 
 -- --------------------------------------------------------
 
@@ -1089,7 +1100,7 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (497, 79, 'negro', 4, 'https://bestmart.cl/cdn/shop/products/tablet-amazon-fire-hd-8-version-2022-32gb-negro-1214629_400x.jpg?v=1758551816'),
 (498, 80, 'Azul', 3, 'https://i.ebayimg.com/images/g/Fn8AAOSw4cFoLMzb/s-l400.jpg'),
 (499, 81, 'negro', 4, 'https://clickventasrd.com/cdn/shop/files/31hc5NtHrXL._SS400.jpg?v=1716643691'),
-(500, 82, 'gris', 3, 'https://mediamax.ba/wp-content/uploads/2024/10/pad-se-87inch-graz.jpg'),
+(500, 82, 'gris', 2, 'https://mediamax.ba/wp-content/uploads/2024/10/pad-se-87inch-graz.jpg'),
 (501, 83, 'azul', 4, 'https://i.ebayimg.com/images/g/IsUAAOSwf0tml-Vu/s-l1600.webp'),
 (502, 85, 'gris', 3, 'https://vivaelectronics.am/Api/FetchImgBinBySKU/11930/tablet-xmobile-x10max.png'),
 (503, 86, 'azul', 4, 'https://locosphone.com/wp-content/uploads/2023/11/TABLET-VORTEX.webp'),
@@ -1241,8 +1252,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('1urCOrQeEqGRlBcyM6zU3Uyeg_2wCOEk', 1761715304, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-29T05:21:32.647Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\",\"rol\":\"superadmin\"}}'),
-('LUd4kK2jTGWN50OcwpwsMXm0dYHu-9Ms', 1761712402, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-29T04:14:11.296Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\",\"rol\":\"superadmin\"}}');
+('7Jw7ZZl_mIXucjoMr3kdePdkTfZ1gWty', 1761767652, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-29T19:24:14.599Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":79,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}'),
+('sy9GygYEg5UyGoiD0eo6MnkG4qQU8qOw', 1761765054, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-29T18:12:17.594Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":79,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}');
 
 -- --------------------------------------------------------
 
@@ -1642,7 +1653,7 @@ ALTER TABLE `camara`
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=218;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=220;
 
 --
 -- AUTO_INCREMENT de la tabla `categorias`
@@ -1678,7 +1689,7 @@ ALTER TABLE `cpu`
 -- AUTO_INCREMENT de la tabla `detalles_pedido`
 --
 ALTER TABLE `detalles_pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=234;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=235;
 
 --
 -- AUTO_INCREMENT de la tabla `dimensionespeso`
@@ -1690,7 +1701,7 @@ ALTER TABLE `dimensionespeso`
 -- AUTO_INCREMENT de la tabla `envios`
 --
 ALTER TABLE `envios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT de la tabla `fav`
@@ -1714,7 +1725,7 @@ ALTER TABLE `moviles`
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
 
 --
 -- AUTO_INCREMENT de la tabla `pantalla`
@@ -1726,7 +1737,7 @@ ALTER TABLE `pantalla`
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=219;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=220;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
