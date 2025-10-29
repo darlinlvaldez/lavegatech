@@ -21,10 +21,12 @@
                     <div class="col-md-6-details">
                         <h5 class="tittle5">Dirección de Envío</h5>
                         <p class="Information-details">
-                            <%= order.nombre %> <%= order.apellido %><br>
-                            <%= order.direccion %><br>
-                            <%= order.nombre_ciudad_envio %>, <%= order.distrito %><br>
-                            Teléfono: <%= order.telefono %>
+                            <strong>Nombre:</strong> <%= order.nombre %> <%= order.apellido %><br>
+                            <strong>Direccion:</strong> <%= order.direccion %><br>
+                            <strong>Ciudad de envío:</strong> <%= order.ciudad_envio %><br>
+                            <strong>Distrito:</strong> <%= order.distrito %><br>
+                            <strong>Teléfono:</strong> <%= order.telefono %> <br>
+                            <strong>Email:</strong> <%= order.email %>
                         </p>
                     </div>
                     <div class="col-md-6-details">
@@ -33,8 +35,8 @@
                             <strong>Fecha:</strong>
                             <%= new Date(order.fecha_creacion).toLocaleString() %><br>
                                 <strong>Estado:</strong> <span
-                                    class="badge-details <%= order.status === 'pagado' ? 'badge-success-details' : '' %>">
-                                    <%= order.status %>
+                                    class="badge-details <%= order.estado === 'pagado' ? 'badge-success-details' : '' %>">
+                                    <%= order.estado %>
                                 </span><br>
                                 <strong>Estado de Envío:</strong>
                                 <span class="badge-details <%= order.estado_envio === 'enviado' ? 'badge-warning-details' : 

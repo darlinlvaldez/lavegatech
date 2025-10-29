@@ -11,7 +11,7 @@ admin.dashboard = async () => {
   const [ventasRows] = await db.query(`SELECT SUM(p.total) AS totalVentas
     FROM pedidos p
     JOIN envios e ON p.id = e.pedido_id
-    WHERE p.status = ? AND e.estado_envio != ?`,
+    WHERE p.estado = ? AND e.estado_envio != ?`,
     ['pagado', 'cancelado']);
 
 
@@ -44,7 +44,7 @@ admin.graficoVentas = async (rango, mes, fecha) => {
       SELECT DATE_FORMAT(p.fecha_creacion, '%Y-%m-%d') AS fecha, SUM(p.total) AS totalVentas
       FROM pedidos p
       JOIN envios e ON p.id = e.pedido_id
-      WHERE p.status = 'pagado' AND e.estado_envio != 'cancelado' AND DATE_FORMAT(p.fecha_creacion, '%Y-%m') = ?
+      WHERE p.estado = 'pagado' AND e.estado_envio != 'cancelado' AND DATE_FORMAT(p.fecha_creacion, '%Y-%m') = ?
       GROUP BY fecha ORDER BY fecha`;
       params = [mes];
 
@@ -52,7 +52,7 @@ admin.graficoVentas = async (rango, mes, fecha) => {
       query = `
         SELECT DATE_FORMAT(fecha_creacion, '%Y-%m') AS fecha, SUM(total) AS totalVentas
         FROM pedidos
-        WHERE status = 'pagado'
+        WHERE estado = 'pagado'
         GROUP BY fecha ORDER BY fecha
       `;
     }
@@ -61,7 +61,7 @@ admin.graficoVentas = async (rango, mes, fecha) => {
     query = `
       SELECT YEAR(fecha_creacion) AS fecha, SUM(total) AS totalVentas
       FROM pedidos
-      WHERE status = 'pagado'
+      WHERE estado = 'pagado'
       GROUP BY fecha ORDER BY fecha
     `;
 
@@ -69,7 +69,7 @@ admin.graficoVentas = async (rango, mes, fecha) => {
     query = `
       SELECT DATE_FORMAT(fecha_creacion, '%H:00') AS fecha, SUM(total) AS totalVentas
       FROM pedidos
-      WHERE status = 'pagado' AND DATE(fecha_creacion) = ?
+      WHERE estado = 'pagado' AND DATE(fecha_creacion) = ?
       GROUP BY HOUR(fecha_creacion) ORDER BY HOUR(fecha_creacion)
     `;
     params = [fecha];
@@ -78,7 +78,7 @@ admin.graficoVentas = async (rango, mes, fecha) => {
     query = `
       SELECT DATE(fecha_creacion) AS fecha, SUM(total) AS totalVentas
       FROM pedidos
-      WHERE status = 'pagado'
+      WHERE estado = 'pagado'
       GROUP BY fecha ORDER BY fecha
     `;
   }
@@ -333,7 +333,7 @@ admin.estadoUsuario = async (id, activo) => {
 
 admin.obtenerPedidos = async () => {
   const [rows] = await db.query(
-    `SELECT p.*, e.estado_envio, e.fecha_envio, e.fecha_entregado, e.fecha_cancelado, c.costo_envio
+    `SELECT p.*, e.estado_envio, e.fecha_envio, e.fecha_entregado, e.fecha_cancelado, e.costo_envio
      FROM pedidos p
      LEFT JOIN envios e ON p.id = e.pedido_id
      LEFT JOIN ciudades_envio c ON p.ciudad_envio = c.id
@@ -344,7 +344,7 @@ admin.obtenerPedidos = async () => {
 
 admin.obtenerPedidoId = async (id) => {
   const [rows] = await db.query(
-    `SELECT p.*, e.estado_envio, e.fecha_envio, e.fecha_entregado, e.fecha_cancelado, c.costo_envio,
+    `SELECT p.*, e.estado_envio, e.fecha_envio, e.fecha_entregado, e.fecha_cancelado, e.costo_envio,
     pa.metodo_pago, pa.paypal_order_id, pa.fecha_pago
     FROM pedidos p
     LEFT JOIN envios e ON p.id = e.pedido_id
