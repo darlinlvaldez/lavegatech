@@ -124,7 +124,8 @@ orderController.processPayment = async (req, res) => {
     const tasaCambio = orderData.tasaCambio || await getExchangeRate();
 
     const pagadoPesos = totalPesos; 
-    console.log("DEBUG pago =>", { subtotalProductos, costoEnvio, totalPesos, pagadoDolares, tasaCambio, pagadoPesos });
+    console.log("DEBUG pago =>", { subtotalProductos, costoEnvio, 
+      totalPesos, pagadoDolares, tasaCambio, pagadoPesos });
 
     if (Math.abs(pagadoPesos - totalPesos) > 50) { 
       return res.status(400).json({

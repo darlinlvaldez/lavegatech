@@ -8,7 +8,12 @@ admin.dashboard = async () => {
   const [productosRows] = await db.query('SELECT COUNT(*) AS total FROM productos');
   const [usuariosRows] = await db.query('SELECT COUNT(*) AS total FROM usuarios');
   const [pedidosRows] = await db.query('SELECT COUNT(*) AS total FROM pedidos');
-  const [ventasRows] = await db.query('SELECT SUM(total) AS totalVentas FROM pedidos');
+  const [ventasRows] = await db.query(`SELECT SUM(p.total) AS totalVentas
+    FROM pedidos p
+    JOIN envios e ON p.id = e.pedido_id
+    WHERE p.status = ? AND e.estado_envio != ?`,
+    ['pagado', 'cancelado']);
+
 
   const [[pendientes]] = await db.query(`SELECT COUNT(*) AS total FROM envios WHERE estado_envio = 'pendiente'`);
   const [[enviados]] = await db.query(`SELECT COUNT(*) AS total FROM envios WHERE estado_envio = 'enviado'`);
@@ -36,12 +41,13 @@ admin.graficoVentas = async (rango, mes, fecha) => {
   if (rango === 'mes') {
     if (mes) {
       query = `
-        SELECT DATE_FORMAT(fecha_creacion, '%Y-%m-%d') AS fecha, SUM(total) AS totalVentas
-        FROM pedidos
-        WHERE status = 'pagado' AND DATE_FORMAT(fecha_creacion, '%Y-%m') = ?
-        GROUP BY fecha ORDER BY fecha
-      `;
+      SELECT DATE_FORMAT(p.fecha_creacion, '%Y-%m-%d') AS fecha, SUM(p.total) AS totalVentas
+      FROM pedidos p
+      JOIN envios e ON p.id = e.pedido_id
+      WHERE p.status = 'pagado' AND e.estado_envio != 'cancelado' AND DATE_FORMAT(p.fecha_creacion, '%Y-%m') = ?
+      GROUP BY fecha ORDER BY fecha`;
       params = [mes];
+
     } else {
       query = `
         SELECT DATE_FORMAT(fecha_creacion, '%Y-%m') AS fecha, SUM(total) AS totalVentas
@@ -330,7 +336,7 @@ admin.obtenerPedidos = async () => {
     `SELECT p.*, e.estado_envio, e.fecha_envio, e.fecha_entregado, e.fecha_cancelado, c.costo_envio
      FROM pedidos p
      LEFT JOIN envios e ON p.id = e.pedido_id
-     LEFT JOIN ciudades_envio c ON p.ciudad_enviO = c.id
+     LEFT JOIN ciudades_envio c ON p.ciudad_envio = c.id
      ORDER BY p.fecha_creacion DESC`
   );
   return rows;
