@@ -52,6 +52,7 @@ specs.obtenerProductos = async () => {
     SELECT 
       p.id,
       p.nombre,
+      p.movil_id,
       r.capacidad AS ram,
       a.capacidad AS almacenamiento,
       CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones

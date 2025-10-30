@@ -180,7 +180,7 @@ function renderProductosSeleccionados() {
   productosSeleccionados.forEach(producto => {
     const li = document.createElement("li");
 
-    li.textContent = `${producto.nombre} ${producto.ram || ""} + ${producto.almacenamiento || ""}`;
+    li.textContent = `${producto.nombre} ${producto.especificaciones || ""}`;
     
     const removeBtn = document.createElement("button");
     removeBtn.textContent = "×";
@@ -195,7 +195,6 @@ function renderProductosSeleccionados() {
     lista.appendChild(li);
   });
 }
-
 
 searchMobileInput.addEventListener("input", async () => {
   const query = searchMobileInput.value.trim().toLowerCase();
@@ -227,8 +226,7 @@ searchMobileInput.addEventListener("input", async () => {
     productosSeleccionados.push({
       id: p.id,
       nombre: p.nombre,
-      almacenamiento: p.almacenamiento,
-      ram: p.ram
+      especificaciones: p.especificaciones
     });
     renderProductosSeleccionados();
     searchMobileInput.value = "";
@@ -293,44 +291,64 @@ cancelDeviceModalBtn.addEventListener("click", () => {
 });
 
 window.editDispositivo = async function (movilId) {
-  const dispositivo = dispositivos.find(d => d.id === movilId);
+  const dispositivo = dispositivos.find((d) => d.id === movilId);
   if (!dispositivo) return;
 
   deviceModalTitle.textContent = "Editar Dispositivo";
   deviceIdInput.value = dispositivo.id;
-  deviceIdInput.dataset.movilId = dispositivo.id; 
+  deviceIdInput.dataset.movilId = dispositivo.id;
 
   const res = await fetch("/api/specs/todos-productos");
   if (res.ok) {
     const todos = await res.json();
-    const productosAsociados = todos.filter(p => p.movil_id === dispositivo.id);
-    productosSeleccionados = productosAsociados.map(p => ({ id: p.id, nombre: p.nombre }));
+    const productosAsociados = todos.filter(
+      (p) => p.movil_id === dispositivo.id);     
+      productosSeleccionados = productosAsociados.map((p) => ({
+      id: p.id,
+      nombre: p.nombre,
+      especificaciones: p.especificaciones
+    }));
     renderProductosSeleccionados();
   }
 
-  const cpu = cpus.find(c => c.id === dispositivo.cpu_id);
+  const cpu = cpus.find((c) => c.id === dispositivo.cpu_id);
   deviceCpuInput.value = cpu ? cpu.nombre : "";
-  
-  const gpu = gpus.find(g => g.id === dispositivo.gpu_id);
+
+  const gpu = gpus.find((g) => g.id === dispositivo.gpu_id);
   deviceGpuInput.value = gpu ? gpu.modelo : "";
-  
-  const pantalla = pantallas.find(p => p.id === dispositivo.pantalla_id);
-  deviceScreenInput.value = pantalla ? `${pantalla.tamaño} ${pantalla.resolucion} ${pantalla.tipo}` : "";
-  
-  const camara = camaras.find(c => c.id === dispositivo.camara_id);
-  deviceCameraInput.value = camara ? `${camara.principal} / Selfie: ${camara.selfie}` : "";
-  
-  const bateria = baterias.find(b => b.id === dispositivo.bateria_id);
-  deviceBatteryInput.value = bateria ? 
-    `${bateria.capacidad} ${bateria.tipo} ${bateria.carga_rapida ? 'Carga rápida' : ''} ${bateria.carga_inalambrica ? 'Inalámbrica' : ''}`.trim() : "";
-  
-  const conectividad = conectividades.find(c => c.id === dispositivo.conectividad_id);
-  deviceConnectivityInput.value = conectividad ? 
-    `${conectividad.red} ${conectividad.wifi} ${conectividad.bluetooth} ${conectividad.nfc ? 'NFC' : ''}`.trim() : "";
-  
-  const dimensiones = dimensionespeso.find(d => d.id === dispositivo.dimensionespeso_id);
-  deviceSizeWeightInput.value = dimensiones ? 
-    `${dimensiones.altura}x${dimensiones.anchura}x${dimensiones.grosor} ${dimensiones.peso}g` : "";
+
+  const pantalla = pantallas.find((p) => p.id === dispositivo.pantalla_id);
+  deviceScreenInput.value = pantalla
+    ? `${pantalla.tamaño} ${pantalla.resolucion} ${pantalla.tipo}`
+    : "";
+
+  const camara = camaras.find((c) => c.id === dispositivo.camara_id);
+  deviceCameraInput.value = camara
+    ? `${camara.principal} / Selfie: ${camara.selfie}`
+    : "";
+
+  const bateria = baterias.find((b) => b.id === dispositivo.bateria_id);
+  deviceBatteryInput.value = bateria
+    ? `${bateria.capacidad} ${bateria.tipo} ${
+        bateria.carga_rapida ? "Carga rápida" : ""
+      } ${bateria.carga_inalambrica ? "Inalámbrica" : ""}`.trim()
+    : "";
+
+  const conectividad = conectividades.find(
+    (c) => c.id === dispositivo.conectividad_id
+  );
+  deviceConnectivityInput.value = conectividad
+    ? `${conectividad.red} ${conectividad.wifi} ${conectividad.bluetooth} ${
+        conectividad.nfc ? "NFC" : ""
+      }`.trim()
+    : "";
+
+  const dimensiones = dimensionespeso.find(
+    (d) => d.id === dispositivo.dimensionespeso_id
+  );
+  deviceSizeWeightInput.value = dimensiones
+    ? `${dimensiones.altura}x${dimensiones.anchura}x${dimensiones.grosor} ${dimensiones.peso}g`
+    : "";
 
   deviceModal.classList.add("visible");
 };

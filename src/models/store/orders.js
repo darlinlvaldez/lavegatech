@@ -124,7 +124,7 @@ orders.checkStock = async (items) => {
        WHERE producto_id = ? ${item.colorSeleccionado ? 'AND color = ?' : ''}`,
       [item.producto_id, ...(item.colorSeleccionado ? [item.colorSeleccionado] : [])]
     );
-    
+  
     if (stock.length === 0 || stock[0].stock < item.cantidad) {
       stockItems.push({id: item.producto_id,
         name: item.nombre,

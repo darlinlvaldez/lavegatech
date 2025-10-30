@@ -89,7 +89,7 @@ orderController.getCities = async function (req, res) {
 
 orderController.processPayment = async (req, res) => {
   try {
-    console.log("📦 BODY RECIBIDO EN /api/order/payment:", req.body);
+    console.log("BODY RECIBIDO EN /api/order/payment:", req.body);
     const { orderData, orderItems, paymentDetails, payerId, paymentId, pagadoDolares } = req.body;
 
     if (!req.session.user) {
@@ -137,7 +137,7 @@ orderController.processPayment = async (req, res) => {
     await orders.checkStock(cartItems);
 
     const pedido_id = await orders.createOrder(
-      {...orderData, status: "pagado", total: totalPesos,
+      {...orderData, estado: "pagado", total: totalPesos,
         ciudad_envio: ciudadData.nombre}, 
         orderItems,costoEnvio);
 

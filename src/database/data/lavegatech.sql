@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-10-2025 a las 20:00:18
+-- Tiempo de generación: 30-10-2025 a las 23:27:16
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -200,7 +200,7 @@ CREATE TABLE `carrito` (
 --
 
 INSERT INTO `carrito` (`id`, `usuario_id`, `producto_id`, `cantidad`, `fecha_agregado`, `variante_id`) VALUES
-(219, 79, 71, 1, '2025-10-29 17:59:09', 491);
+(222, 79, 1, 1, '2025-10-30 16:23:56', 382);
 
 -- --------------------------------------------------------
 
@@ -382,21 +382,6 @@ CREATE TABLE `detalles_pedido` (
   `almacenamiento` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `detalles_pedido`
---
-
-INSERT INTO `detalles_pedido` (`id`, `pedido_id`, `producto_id`, `nombre_producto`, `cantidad`, `precio_unitario`, `impuesto`, `descuento`, `subtotal`, `colorSeleccionado`, `ram`, `almacenamiento`) VALUES
-(226, 212, 1, 'iPhone 12', 1, 15995.00, 18.00, 20.00, 15099.28, 'blanco', '4GB', '64GB'),
-(227, 213, 207, 'Monitor Samsung G5 ODYSSEY 32 Pulgada 165HZ', 1, 22995.00, 18.00, 0.00, 27134.10, 'negro', NULL, NULL),
-(228, 214, 207, 'Monitor Samsung G5 ODYSSEY 32 Pulgada 165HZ', 1, 22995.00, 18.00, 0.00, 27134.10, 'negro', NULL, NULL),
-(229, 215, 108, 'SAMSUNG GALAXY TAB A9+', 1, 11495.00, 18.00, 0.00, 13564.10, 'gris', '4GB', '64GB'),
-(230, 216, 5, 'iPhone 12 Pro', 1, 23995.00, 18.00, 0.00, 28314.10, 'azul', '6GB', '256GB'),
-(231, 217, 12, 'iPhone 13 Pro', 1, 30995.00, 18.00, 0.00, 36574.10, 'gris', '6GB', '256GB'),
-(232, 218, 39, 'iPhone 16 Pro Max', 1, 84995.00, 18.00, 0.00, 100294.10, 'Blanco titanio', '8GB', '512GB'),
-(233, 218, 1, 'iPhone 12', 1, 15995.00, 18.00, 20.00, 15099.28, 'verde', '4GB', '64GB'),
-(234, 219, 82, 'XIAOMI REDMI PAD SE 8.7', 1, 8495.00, 18.00, 0.00, 10024.10, 'gris', '4GB', '128GB');
-
 -- --------------------------------------------------------
 
 --
@@ -458,20 +443,6 @@ CREATE TABLE `envios` (
   `fecha_entregado` datetime DEFAULT NULL,
   `fecha_cancelado` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `envios`
---
-
-INSERT INTO `envios` (`id`, `pedido_id`, `estado_envio`, `costo_envio`, `fecha_envio`, `fecha_entregado`, `fecha_cancelado`) VALUES
-(48, 212, 'pendiente', 50.00, NULL, NULL, NULL),
-(49, 213, 'pendiente', 50.00, NULL, NULL, NULL),
-(50, 214, 'entregado', 50.00, NULL, '2025-10-28 00:44:05', NULL),
-(51, 215, 'enviado', 50.00, '2025-10-28 00:31:45', NULL, NULL),
-(52, 216, 'cancelado', 50.00, NULL, NULL, '2025-10-28 23:33:17'),
-(53, 217, 'pendiente', 50.00, NULL, NULL, NULL),
-(54, 218, 'enviado', 50.00, '2025-10-28 21:37:04', NULL, NULL),
-(55, 219, 'pendiente', 50.00, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -637,7 +608,7 @@ INSERT INTO `moviles` (`id`, `cpu_id`, `camara_id`, `bateria_id`, `gpu_id`, `con
 (43, 16, 19, 22, 12, 4, 17, NULL),
 (44, 22, 18, 32, 14, 4, 16, NULL),
 (45, 17, NULL, NULL, 13, NULL, NULL, NULL),
-(83, 24, 20, 32, 16, 4, 26, NULL),
+(83, 24, 20, 32, 16, 4, 26, 41),
 (84, 23, 20, 31, 7, 4, 18, 1);
 
 -- --------------------------------------------------------
@@ -654,20 +625,6 @@ CREATE TABLE `pagos` (
   `paypal_order_id` varchar(100) DEFAULT NULL,
   `fecha_pago` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `pagos`
---
-
-INSERT INTO `pagos` (`id`, `pedido_id`, `metodo_pago`, `estado_pago`, `paypal_order_id`, `fecha_pago`) VALUES
-(125, 212, 'paypal', 'completado', '2GJ29594WW234741X', '2025-10-27 21:22:26'),
-(126, 213, 'paypal', 'completado', '81662119T1211683V', '2025-10-27 21:43:03'),
-(127, 214, 'paypal', 'completado', '7FV220010A4550834', '2025-10-27 21:45:16'),
-(128, 215, 'paypal', 'completado', '18L6783492055283E', '2025-10-27 23:37:32'),
-(129, 216, 'paypal', 'completado', '40M768518R348144U', '2025-10-28 19:43:08'),
-(130, 217, 'paypal', 'completado', '86B78056DM426294R', '2025-10-28 19:59:00'),
-(131, 218, 'paypal', 'completado', '4M862087SK681860B', '2025-10-28 21:12:27'),
-(132, 219, 'paypal', 'completado', '91C903741H301100K', '2025-10-29 13:58:50');
 
 -- --------------------------------------------------------
 
@@ -689,7 +646,34 @@ CREATE TABLE `pantalla` (
 --
 
 INSERT INTO `pantalla` (`id`, `tamaño`, `resolucion`, `tipo`, `frecuencia`, `proteccion`) VALUES
-(1, '6.1\"', '2532 x 1170 píxeles', 'OLED Super Retina XDR', '60 Hz', 'Ceramic Shield');
+(1, '6.1\"', '2532 x 1170 píxeles', 'OLED Super Retina XDR', '60 Hz', 'Ceramic Shield'),
+(3, '6.7 pulgadas', '2778 × 1284 píxeles (458 ppp)', 'Super Retina XDR OLED', '60 Hz', 'Ceramic Shield (frontal), vidrio trasero con acero inoxidable'),
+(6, '6,7 pulgadas ', '2778 × 1284 píxeles ', 'Super Retina XDR OLED con ProMotion ', '120 Hz adaptativa ', 'Ceramic Shield (igual protección frontal)'),
+(9, '6.1 pulgadas', '2556 × 1179 píxeles (~460 ppi) ', 'Super Retina XDR OLED con tecnología LTPO / ProMot', '120 Hz adaptativo ', 'Ceramic Shield (frontal)'),
+(17, '6,3 pulgadas ', '1206 × 2622 píxeles (~460 ppi) ', 'Super Retina XDR OLED con ProMotion (LTPO) ', '120 Hz adaptativo ', 'Igual frente con Ceramic Shield 2ª generación; bordes más finos '),
+(18, '6,9 pulgadas ', '1320 × 2868 píxeles ', 'Super Retina XDR OLED con ProMotion (LTPO) ', '120 Hz adaptativo ', 'Igual frente con Ceramic Shield 2ª generación; marco más estrecho '),
+(19, '6,4 pulgadas.', '3.040 × 1.440 píxeles', 'Dynamic AMOLED (también descrita como “Dynamic AMO', '60 Hz', 'Frente protegido con Corning Gorilla Glass 6.'),
+(20, '6,8″ (diagonal)', '3040 × 1440 píxeles', 'Dynamic AMOLED, con certificación HDR10+ y función', '60 Hz ', 'Frente con Corning Gorilla Glass 6'),
+(21, '6,9 pulgadas.', '3 088 × 1 440 píxeles (~496 ppi) ', 'Dynamic AMOLED 2X', '120 Hz ', 'Corning Gorilla Glass Victus.'),
+(22, '6,8 pulgadas.', '3200 × 1440 píxeles (~515 ppi)', 'Dynamic AMOLED 2X', '120 Hz ', 'Corning Gorilla Glass Victus.'),
+(23, '6,8 pulgadas.', '3 088 × 1 440 píxeles', 'Dynamic AMOLED 2X', '120 Hz', 'Corning Gorilla Glass Victus 2'),
+(24, '6,9', '3 120 × 1 440 píxeles (~498 ppi)', 'Dynamic LTPO AMOLED 2X', '120 Hz', 'Corning Gorilla Armor 2.'),
+(25, '6,7 pulgadas.', '720 × 1600 píxeles (HD+)', 'PLS LCD', '60 Hz', 'Gorilla Glass'),
+(26, '6,7 pulgadas', '720 × 1600 píxeles (HD+)', 'PLS LCD.', '60 Hz ', 'Gorilla Glass'),
+(27, '6,5 pulgadas', '1080 × 2340 píxeles', 'Super AMOLED', '90 Hz', 'Gorilla Glass'),
+(28, '6,5 pulgadas', '1080 × 2340 píxeles', 'Super AMOLED', '120 Hz ', 'Gorilla Glass 5'),
+(29, '6,67 pulgadas.', '2 400 × 1 080 píxeles', 'AMOLED / “FHD+ AMOLED”', '120 Hz ', 'Gorilla Glass 5'),
+(30, '6.67 pulgadas', '1 220 × 2 712 píxeles', 'AMOLED', '120 Hz', 'Corning Gorilla Glass 5'),
+(31, '6,88 pulgadas', '1 640 × 720 píxeles', 'IPS LCD / TFT LCD', '120 Hz', 'Corning Gorilla Glass 3'),
+(32, '6.67 pulgadas', '2400 × 1080 píxeles', 'AMOLED', '120 Hz', 'Corning Gorilla Glass 5'),
+(34, '6.7 pulgadas', '3 120 × 1 440 píxeles', 'LTPO AMOLED (“pOLED”)', '120 Hz', 'Gorilla Glass Victus'),
+(35, '6,6 pulgadas', '720 × 1 612 píxeles (HD+)', 'IPS LCD.', '90 Hz', 'Gorilla Glass'),
+(36, ' 6,75 pulgadas', '720 × 1 600 píxeles (HD+)', 'IPS LCD', '90 Hz', 'Gorilla Glass'),
+(37, '6,56 pulgadas', '720 × 1 612 píxeles', 'IPS LCD', '90 Hz', 'Gorilla Glass'),
+(38, '12,9', '2 732 × 2 048 píxeles', 'Liquid Retina XDR', '120 Hz', 'Pantalla laminada, con recubrimiento oleofóbico para huellas, recubrimiento antirreflejo.'),
+(39, '13 pulgadas', '2752 × 2064 píxeles', 'Ultra Retina XDR', '120 Hz', 'Vidrio laminado, recubrimiento oleofóbico, coating antirreflejo'),
+(40, '10,9 pulgadas', '2360 × 1640 píxeles', 'Liquid Retina', '60 Hz', NULL),
+(41, '8.0', '1280 × 800 pixels', 'IPS / HD LCD', '60 Hz', NULL);
 
 -- --------------------------------------------------------
 
@@ -712,20 +696,6 @@ CREATE TABLE `pedidos` (
   `ciudad_envio` varchar(50) DEFAULT NULL,
   `envio_diferente` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `pedidos`
---
-
-INSERT INTO `pedidos` (`id`, `usuario_id`, `nombre`, `apellido`, `email`, `direccion`, `distrito`, `telefono`, `total`, `estado`, `fecha_creacion`, `ciudad_envio`, `envio_diferente`) VALUES
-(212, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 15149.28, 'pagado', '2025-10-27 21:22:26', '1', 0),
-(213, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 27184.10, 'pagado', '2025-10-27 21:43:03', '1', 0),
-(214, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 27184.10, 'pagado', '2025-10-27 21:45:16', '1', 0),
-(215, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 13614.10, 'pagado', '2025-10-27 23:37:32', '1', 0),
-(216, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 28364.10, 'pagado', '2025-10-28 19:43:08', '1', 0),
-(217, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 36624.10, 'pagado', '2025-10-28 19:59:00', 'La Vega', 0),
-(218, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 115443.38, 'pagado', '2025-10-28 21:12:27', 'La Vega', 0),
-(219, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 10074.10, NULL, '2025-10-29 13:58:50', 'La Vega', 0);
 
 -- --------------------------------------------------------
 
@@ -1013,7 +983,7 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (403, 11, 'azul', 2, 'https://m.media-amazon.com/images/I/31ZMD4DfG9L.jpg'),
 (404, 12, 'gris', 3, 'https://i.ebayimg.com/images/g/eeYAAeSw4S9obXlU/s-l960.webp'),
 (405, 12, 'blanco', 4, 'https://i.ebayimg.com/images/g/FkcAAeSwvgNobXlS/s-l960.webp'),
-(406, 13, 'oro', 4, 'https://i.ebayimg.com/images/g/FkcAAeSwvgNobXlS/s-l960.webp'),
+(406, 13, 'oro', 3, 'https://i.ebayimg.com/images/g/FkcAAeSwvgNobXlS/s-l960.webp'),
 (409, 14, 'gris', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Grey.jpg'),
 (410, 14, 'oro', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Gold.jpg'),
 (411, 15, 'blanco', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Silver.jpg'),
@@ -1034,8 +1004,8 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (426, 22, 'negro', 4, 'https://i.ebayimg.com/images/g/o~UAAOSwVB1kXRSz/s-l140.webp'),
 (427, 26, 'Negro', 3, 'https://claroperupoc.vteximg.com.br/arquivos/ids/2540982/052283676.jpg'),
 (428, 26, 'Verde', 4, 'https://covercompany.com.uy/cdn/shop/files/17045_17258_0.jpg?v=1726762823&width=400'),
-(429, 27, 'blanco', 4, 'https://i.ebayimg.com/images/g/ytcAAOSwqyZnN63o/s-l1600.webp'),
-(430, 27, 'amarillo', 4, 'https://i.ebayimg.com/images/g/zM0AAOSwU2JnN63q/s-l1600.webp'),
+(429, 27, 'Azul', 4, 'https://covercompany.com.uy/cdn/shop/files/17045_17046_0.jpg?v=1726762823&width=400'),
+(430, 27, 'Amarillo', 2, 'https://celucambio.com/cdn/shop/files/15amarillo.webp?v=1740154478&width=480'),
 (431, 28, 'Negro', 4, 'https://itpro.com.uy/wp-content/uploads/2024/04/wooc-492.jpeg'),
 (432, 28, 'Rosado', 2, 'https://itpro.com.uy/wp-content/uploads/2025/03/wooc-881.jpeg'),
 (433, 29, 'Amarillo', 4, 'https://www.trippodo.com/872471-medium_default/apple-iphone-15-plus-17-cm-67-sim-doble-ios-17-5g-.jpg'),
@@ -1056,8 +1026,8 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (452, 38, 'Desierto titanio', 2, 'https://target.scene7.com/is/image/Target/GUEST_cb9ea8a2-a563-400a-8558-a0b682dc0dfc'),
 (453, 39, 'Desierto titanio', 1, 'https://www.att.com.mx/dw/image/v2/BJKW_PRD/on/demandware.static/-/Sites-att-master/default/dw36d5fef0/images/Devices/Apple/iphone16-pro-max/Desert_Titanium/iPhone_16_Pro_Max_Desert_Titanium_PDP_Image_Position_1__GENS.jpg?sw=400&sh=400&sm=fit'),
 (454, 39, 'Blanco titanio', 5, 'https://target.scene7.com/is/image/Target/GUEST_c7ba2917-3af0-46b3-afc1-8283206fdd4d'),
-(455, 40, 'negro', 4, 'https://i.ebayimg.com/images/g/t34AAOSwoRRg2h05/s-l1600.webp'),
-(456, 40, 'azul', 4, 'https://i.ebayimg.com/images/g/1x4AAOSwEGJivIgI/s-l1600.webp'),
+(455, 40, 'negro', 4, '/uploads/1761843123664_Adobe Express - file.jpg'),
+(456, 40, 'azul', 4, '/uploads/1761843187330_Adobe Express - file (1).jpg'),
 (457, 41, 'Negro', 4, 'https://i.ebayimg.com/images/g/XqYAAOSwSSVnyAr~/s-l400.jpg'),
 (458, 42, 'negro', 3, 'https://m.media-amazon.com/images/I/31hpK7xCN2L._SS400_.jpg'),
 (459, 42, 'Purpura', 3, 'https://p16-oec-va.ibyteimg.com/tos-maliva-i-o3syd03w52-us/7f216f7abd304505ae3131388a554fd7~tplv-dx0w9n1ysr-crop-webp:400:400.webp?dr=10517&t=555f072d&ps=933b5bde&shp=57fff0e0&shcp=0d52deaf&idc=useast5&from=1476391136'),
@@ -1091,7 +1061,7 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (488, 68, 'negro', 2, 'https://i.ebayimg.com/images/g/trcAAOSwvNJoSn1R/s-l1600.webp'),
 (489, 69, 'negro', 3, 'https://geeky.sfo2.cdn.digitaloceanspaces.com/geekydrop_production/thumbnail--1V-V3-7SKQ.webp'),
 (490, 70, 'Verde', 4, 'https://www.lacuracao.pe/media/catalog/product/o/r/orig_images2fproducts2fjzmtzopo0-motog04verde_515201.jpg?quality=80&bg-color=255,255,255&fit=bounds&height=400&width=400&canvas=400:400'),
-(491, 71, 'Rosado', 3, 'https://i.ebayimg.com/images/g/ybcAAeSwsqto-AFl/s-l400.jpg'),
+(491, 71, 'Rosado', 2, 'https://i.ebayimg.com/images/g/ybcAAeSwsqto-AFl/s-l400.jpg'),
 (492, 72, 'blanco', 4, 'https://i.ebayimg.com/images/g/-H4AAeSwMRhob-jD/s-l1600.webp'),
 (493, 73, 'blanco', 3, 'https://i.ebayimg.com/images/g/9hAAAeSw~GBof9Dw/s-l960.webp'),
 (494, 74, 'negro', 4, 'https://http2.mlstatic.com/D_Q_NP_2X_646175-MLA83298052986_042025-AB.webp'),
@@ -1252,8 +1222,9 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('7Jw7ZZl_mIXucjoMr3kdePdkTfZ1gWty', 1761767652, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-29T19:24:14.599Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":79,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}'),
-('sy9GygYEg5UyGoiD0eo6MnkG4qQU8qOw', 1761765054, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-29T18:12:17.594Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":79,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}');
+('0Won2gbrfERar28BO5nLy031Xg2ljhju', 1761848939, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-30T17:29:16.236Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\",\"rol\":\"superadmin\"}}'),
+('4gCStkvl1Mqjo7zU3yhATMNLo5ujtwvJ', 1761848025, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-30T17:14:33.516Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":79,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}'),
+('NiO7KgltXT94CT54SzlUiNtIt--NIWbA', 1761849905, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-10-30T18:29:31.918Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\",\"rol\":\"superadmin\"}}');
 
 -- --------------------------------------------------------
 
@@ -1653,7 +1624,7 @@ ALTER TABLE `camara`
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=220;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=223;
 
 --
 -- AUTO_INCREMENT de la tabla `categorias`
@@ -1689,7 +1660,7 @@ ALTER TABLE `cpu`
 -- AUTO_INCREMENT de la tabla `detalles_pedido`
 --
 ALTER TABLE `detalles_pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=235;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=237;
 
 --
 -- AUTO_INCREMENT de la tabla `dimensionespeso`
@@ -1701,7 +1672,7 @@ ALTER TABLE `dimensionespeso`
 -- AUTO_INCREMENT de la tabla `envios`
 --
 ALTER TABLE `envios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT de la tabla `fav`
@@ -1725,19 +1696,19 @@ ALTER TABLE `moviles`
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=135;
 
 --
 -- AUTO_INCREMENT de la tabla `pantalla`
 --
 ALTER TABLE `pantalla`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=220;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=222;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
