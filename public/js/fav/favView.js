@@ -106,7 +106,7 @@ function generateFavItemHTML(item) {
             <i class="fa fa-shopping-cart"></i> Añadir al carrito
         </button>
         </div>
-          <i class="bi bi-trash remove-btn" onclick="removeFromFav('${data.productId}', '${data.varianteId}')"></i>
+          <i class="bi bi-trash remove-btn" onclick="removeFromFav('${data.productId}', '${data.color}', '${data.varianteId}')"></i>
       </div>`;
     }
 
