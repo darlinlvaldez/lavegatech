@@ -123,7 +123,7 @@ request.userAdmin = z.object({
     .optional(),
   rol: z.string({
     required_error: ERROR_ZOD.FIELD_REQUIRED
-  }).refine(val => ['superadmin', 'admin', 'editor', 'soporte', 'editor', 'ventas', 'transportista'].includes(val), {
+  }).refine(val => ['superadmin', 'admin', 'editor', 'soporte', 'ventas', 'transportista'].includes(val), {
     message: ERROR_ZOD.FIELD_REQUIRED
   })
 }).strict();
