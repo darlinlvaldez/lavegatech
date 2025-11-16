@@ -8,7 +8,7 @@ export const getExchangeRate = async () => {
     const data = res.data;
 
     if (!data || data.result !== "success" || !data.conversion_rates.USD) {
-      throw new Error("La API no devolvió la tasa de cambio DOP→USD.");
+      throw new Error("La API no devolvió la tasa de cambio.");
     }
 
     return parseFloat(data.conversion_rates.USD);
