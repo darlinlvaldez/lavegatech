@@ -124,12 +124,25 @@ adminAuth.cambiarEstado = async (req, res) => {
   try {
     const { id } = req.params;
     const { activo } = req.body;
-    const success = await admin.estadoAdmin(id, activo);
 
-    res.json({ success });
+    if (req.session.admin.id == id) {
+      return res.status(403).json({ error: "No puedes desactivar tu propia cuenta" });
+    }
+
+    if (req.session.admin.rol !== "superadmin") {
+      return res.status(403).json({ error: "No tienes permiso para modificar este usuario" });
+    }
+
+    const updated = await admin.estadoAdmin(id, activo);
+    if (!updated) {
+      return res.status(400).json({ error: "No se pudo actualizar el estado" });
+    }
+
+    return res.json({ success: true });
+
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error al actualizar estado del administrador' });
+    return res.status(500).json({ error: "Error al actualizar el estado del usuario" });
   }
 };
 

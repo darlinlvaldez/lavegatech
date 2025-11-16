@@ -128,4 +128,13 @@ request.userAdmin = z.object({
   })
 }).strict();
 
+request.cambiarEstado = z.object({
+  activo: z
+    .number()
+    .int()
+    .refine(v => v === 0 || v === 1, {
+      message: "El estado debe ser 0 o 1",
+    })
+}).strict();
+
 export default request;

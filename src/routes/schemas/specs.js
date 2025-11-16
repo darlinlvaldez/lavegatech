@@ -34,7 +34,8 @@ frecuencia: z
 proteccion: z
     .string()
     .trim()
-    .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
+    .optional()
+    .default(""),
 }).strict(),
 
 request.camara = z.object({

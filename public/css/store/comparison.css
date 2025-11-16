@@ -51,7 +51,7 @@
     border-radius: 9999px;
     overflow: hidden;
     border: 4px solid #e5e7eb; 
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05), 0 0 8px rgba(17, 17, 26, 0.1);
 }
 
 .device-image .img-comparison {
@@ -103,11 +103,6 @@
 .btn-comparison:hover {
     transform: scale(1.05);
     background-color: #111827;
-}
-
-.search-result-item .product-price {
-  font-weight: bold;
-  color: #D10024;
 }
 
 .product-old-price{
