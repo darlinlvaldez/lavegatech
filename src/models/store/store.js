@@ -5,44 +5,60 @@ const store = {};
 
 const construirWhereClause = (categorias = [], marcas = [], precioMin = null, precioMax = null) => {
   const condiciones = [];
+  const params = [];
 
   const tieneCategorias = categorias.length > 0;
   const tieneMarcas = marcas.length > 0;
 
   if (tieneCategorias) {
-    condiciones.push(`p.categoria_id IN (${categorias.join(",")})`);
+    const placeholders = categorias.map(() => '?').join(',');
+    condiciones.push(`p.categoria_id IN (${placeholders})`);
+    params.push(...categorias);
   }
 
   if (tieneMarcas) {
+    const placeholders = marcas.map(() => '?').join(',');
+
     if (tieneCategorias) {
       condiciones.push(`(
-        p.marca_id IN (${marcas.join(",")})
+        p.marca_id IN (${placeholders})
         OR p.categoria_id NOT IN (
-        SELECT DISTINCT mc.categoria_id
-        FROM marca_categoria mc 
-        WHERE mc.marca_id IN (${marcas.join(",")})))`);
+          SELECT DISTINCT mc.categoria_id
+          FROM marca_categoria mc 
+          WHERE mc.marca_id IN (${placeholders})
+        )
+      )`);
+      
+      params.push(...marcas, ...marcas);
+
     } else {
-      condiciones.push(`p.marca_id IN (${marcas.join(",")})`);
+      condiciones.push(`p.marca_id IN (${placeholders})`);
+      params.push(...marcas);
     }
   }
 
   const precioFinal = `(p.precio * (1 + p.impuesto/100) * (1 - p.descuento/100))`;
-  
+
   if (precioMin !== null && !isNaN(precioMin)) {
-    condiciones.push(`${precioFinal} >= ${precioMin}`);
+    condiciones.push(`${precioFinal} >= ?`);
+    params.push(precioMin);
   }
 
   if (precioMax !== null && !isNaN(precioMax)) {
-    condiciones.push(`${precioFinal} <= ${precioMax}`);
+    condiciones.push(`${precioFinal} <= ?`);
+    params.push(precioMax);
   }
 
-  return condiciones.length > 0 ? condiciones.join(" AND ") : "";
+  return {
+    where: condiciones.length > 0 ? condiciones.join(" AND ") : "",
+    params
+  };
 };
 
 store.obtenerStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], marcas = [], precioMin, precioMax) => {
   const offset = (pagina - 1) * limite;
 
-  const whereClause = construirWhereClause(categorias, marcas, precioMin, precioMax);
+  const { where, params } = construirWhereClause(categorias, marcas, precioMin, precioMax);
 
   const orderByClause = {
     1: "ORDER BY p.fecha_publicacion ASC",
@@ -54,28 +70,32 @@ store.obtenerStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], 
   const limitClause = `LIMIT ${limite} OFFSET ${offset}`;
 
   return productosBase.obtenerProductosBase({
-    where: whereClause,
+    where,
     order: orderByClause,
     limit: limitClause,
-    params: []
+    params
   });
 };
 
 store.totalProductos = async (categorias = [], marcas = [], precioMin, precioMax) => {
-    const whereConditions = construirWhereClause(categorias, marcas, precioMin, precioMax);
-    const whereClause = whereConditions ? `WHERE p.activo = 1 AND ${whereConditions}` : "WHERE p.activo = 1";
+  const { where, params } = construirWhereClause(categorias, marcas, precioMin, precioMax);
 
-    const query = `
-    SELECT COUNT(*) as total
+  const whereClause = where
+    ? `WHERE p.activo = 1 AND ${where}`
+    : `WHERE p.activo = 1`;
+
+  const query = `
+    SELECT COUNT(*) AS total
     FROM productos p
-    ${whereClause}`;
+    ${whereClause}
+  `;
 
-    try {
-        const [results] = await db.query(query);
-        return results[0].total;
-    } catch (err) {
-        throw new Error("Error al obtener el total de productos: " + err.message);
-    }
+  try {
+    const [results] = await db.query(query, params);
+    return results[0].total;
+  } catch (err) {
+    throw new Error("Error al obtener el total de productos: " + err.message);
+  }
 };
 
 store.obtenerRangoPrecios = async () => {
@@ -113,28 +133,36 @@ store.cantidadCategoria = async () => {
 };
 
 store.cantidadMarcas = async (categorias = []) => {
-    const whereClause = categorias.length > 0 ? `WHERE mc.categoria_id IN (${categorias.join(",")})`: '';
-    
-    const query = 
-    `SELECT
-    m.id AS marca_id,
-    m.nombre AS marca,
-    COUNT(DISTINCT CASE WHEN p.activo = 1 THEN p.id END) AS cantidad
+  let where = "";
+  let params = [];
+
+  if (categorias.length > 0) {
+    const placeholders = categorias.map(() => '?').join(',');
+    where = `WHERE mc.categoria_id IN (${placeholders})`;
+    params.push(...categorias);
+  }
+
+  const query = `
+    SELECT
+      m.id AS marca_id,
+      m.nombre AS marca,
+      COUNT(DISTINCT CASE WHEN p.activo = 1 THEN p.id END) AS cantidad
     FROM p_marcas m
     INNER JOIN marca_categoria mc ON m.id = mc.marca_id
     LEFT JOIN productos p ON p.marca_id = m.id 
     ${categorias.length > 0 ? 'AND p.categoria_id = mc.categoria_id' : ''}
-    ${whereClause}
+    ${where}
     GROUP BY m.id, m.nombre
     HAVING cantidad > 0
-    ORDER BY m.nombre`;
-    
-    try {
-        const [results] = await db.query(query);
-        return results;
-    } catch (err) { 
-        throw new Error("Error al obtener las marcas y cantidad de productos: " + err.message);
-    }
+    ORDER BY m.nombre
+  `;
+
+  try {
+    const [results] = await db.query(query, params);
+    return results;
+  } catch (err) {
+    throw new Error("Error al obtener las marcas y cantidad de productos: " + err.message);
+  }
 };
-  
+
 export default store;
