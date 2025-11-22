@@ -4,8 +4,8 @@ import productosBase from "../store/utils/getProduct.js";
 const principal = {};
 
 principal.buscarProductos = async (query) => {
-  const where = `(p.nombre LIKE ? OR p.descripcion LIKE ?)`;
-  const params = [`%${query}%`, `%${query}%`];
+  const where = `p.nombre LIKE ?`;
+  const params = [`%${query}%`];
   const limit = "LIMIT 10";
 
   return productosBase.obtenerProductosBase({ where, limit, params });

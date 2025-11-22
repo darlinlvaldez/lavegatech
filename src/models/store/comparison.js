@@ -6,31 +6,27 @@ const comparison = {};
 comparison.searchDevice = async (query, excludeMovilIds = []) => {
   let searchQuery = `
     SELECT 
-    p.id,
-    p.movil_id,
-    p.nombre,
-    p.precio,
-    p.impuesto,
-    p.descuento,
-    p.fecha,
-    v.color AS colores,
-    v.img AS imagenes
+      p.id,
+      p.movil_id,
+      p.nombre,
+      p.precio,
+      p.impuesto,
+      p.descuento,
+      p.fecha,
+      v.color AS colores,
+      v.img AS imagenes
     FROM productos p
-    LEFT JOIN (SELECT * FROM p_variantes WHERE id IN 
-    (SELECT MIN(id) FROM p_variantes GROUP BY producto_id)) v ON p.id = v.producto_id
-    INNER JOIN (SELECT movil_id, MIN(id) AS min_id
-    FROM productos 
-    WHERE movil_id IS NOT NULL GROUP BY movil_id) AS sub ON p.movil_id = sub.movil_id AND p.id = sub.min_id
-    WHERE p.categoria_id = (SELECT id FROM categorias WHERE categoria = 'moviles') AND p.activo = 1
-    AND (p.nombre LIKE ? OR p.descripcion LIKE ?)
-    ${excludeMovilIds.length > 0 ? 'AND p.movil_id NOT IN (' + excludeMovilIds.map(() => '?').join(',') + ')' : ''}
+    LEFT JOIN p_variantes v ON p.id = v.producto_id
+    WHERE p.categoria_id = (SELECT id FROM categorias WHERE categoria = 'moviles')
+      AND p.activo = 1
+      AND p.nombre LIKE ?
+      ${excludeMovilIds.length > 0 ? "AND p.movil_id NOT IN (" + excludeMovilIds.map(() => "?").join(",") + ")" : ""}
+    GROUP BY p.movil_id
     LIMIT 10
   `;
 
-  const params = [`%${query}%`, `%${query}%`];
-  if (excludeMovilIds.length > 0) {
-    params.push(...excludeMovilIds);
-  }
+  const params = [`%${query}%`];
+  if (excludeMovilIds.length > 0) params.push(...excludeMovilIds);
 
   try {
     const [results] = await db.query(searchQuery, params);

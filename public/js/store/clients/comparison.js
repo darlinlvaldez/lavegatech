@@ -187,6 +187,10 @@ comparisonForm.addEventListener('submit', async function(e) {
   }
 });
 
+function safe(value) {
+  return value ?? ''; 
+}
+
 function displayComparisonResults(devices) {
   comparisonResults.innerHTML = '';
   
@@ -199,9 +203,9 @@ function displayComparisonResults(devices) {
     deviceCard.className = 'device-card';
 
     deviceCard.innerHTML = `
-      <h2 class="tittle2-comparison">${device.nombre}</h2>
+      <h2 class="tittle2-comparison">${safe(device.nombre)}</h2>
       <div class="device-image">
-        <img class="img-comparison" src="${device.imagen}" alt="${device.nombre}">
+        <img class="img-comparison" src="${safe(device.imagen)}" alt="${safe(device.nombre)}">
       </div>
       
       <div class="search-result-item">
@@ -213,57 +217,57 @@ function displayComparisonResults(devices) {
       <div class="specs-grid">
         <div class="spec-item spec-header">Pantalla:</div>
         <div class="spec-item spec-value">
-          ${device.pantalla_tamaño}" ${device.pantalla_tipo}<br>
-          ${device.pantalla_resolucion}<br>
-          ${device.pantalla_frecuencia}Hz
+          ${safe(device.pantalla_tamaño)}" ${safe(device.pantalla_tipo)}<br>
+          ${safe(device.pantalla_resolucion)}<br>
+          ${safe(device.pantalla_frecuencia)}Hz
         </div>
         
         <div class="spec-item spec-header">Procesador:</div>
         <div class="spec-item spec-value">
-          ${device.cpu_nombre}<br>
-          ${device.cpu_nucleos} núcleos<br>
-          ${device.cpu_velocidad}
+          ${safe(device.cpu_nombre)}<br>
+          ${safe(device.cpu_nucleos)} núcleos<br>
+          ${safe(device.cpu_velocidad)}
         </div>
         
         <div class="spec-item spec-header">GPU:</div>
         <div class="spec-item spec-value">
-          ${device.gpu_modelo}<br>
-          ${device.gpu_nucleos} núcleos
+          ${safe(device.gpu_modelo)}<br>
+          ${safe(device.gpu_nucleos)} núcleos
         </div>
         
         <div class="spec-item spec-header">RAM:</div>
-        <div class="spec-item spec-value">${device.ram_capacidades}</div>
+        <div class="spec-item spec-value">${safe(device.ram_capacidades)}</div>
         
         <div class="spec-item spec-header">Almacenamiento:</div>
-        <div class="spec-item spec-value">${device.almacenamiento_capacidades}</div>
+        <div class="spec-item spec-value">${safe(device.almacenamiento_capacidades)}</div>
         
         <div class="spec-item spec-header">Cámara:</div>
         <div class="spec-item spec-value">
-          Principal: ${device.camara_principal}<br>
-          Selfie: ${device.camara_selfie}<br>
-          Video: ${device.camara_video}
+          Principal: ${safe(device.camara_principal)}<br>
+          Selfie: ${safe(device.camara_selfie)}<br>
+          Video: ${safe(device.camara_video)}
         </div>
         
         <div class="spec-item spec-header">Batería:</div>
         <div class="spec-item spec-value">
-          ${device.bateria_capacidad} mAh<br>
-          ${device.bateria_tipo}<br>
-          ${device.bateria_carga_rapida ? 'Carga rápida: ' + device.bateria_carga_rapida : ''}
+          ${safe(device.bateria_capacidad)} mAh<br>
+          ${safe(device.bateria_tipo)}<br>
+          ${device.bateria_carga_rapida ? 'Carga rápida: ' + safe(device.bateria_carga_rapida) : ''}
           ${device.bateria_carga_inalambrica ? '<br>Carga inalámbrica' : ''}
         </div>
         
         <div class="spec-item spec-header">Conectividad:</div>
         <div class="spec-item spec-value">
-          ${device.conectividad_red}<br>
-          WiFi: ${device.conectividad_wifi}<br>
-          Bluetooth: ${device.conectividad_bluetooth}
+          ${safe(device.conectividad_red)}<br>
+          WiFi: ${safe(device.conectividad_wifi)}<br>
+          Bluetooth: ${safe(device.conectividad_bluetooth)}
           ${device.conectividad_nfc ? '<br>NFC' : ''}
         </div>
         
         <div class="spec-item spec-header">Dimensiones:</div>
         <div class="spec-item spec-value">
-          ${device.dimensiones_altura} x ${device.dimensiones_anchura} x ${device.dimensiones_grosor} mm<br>
-          Peso: ${device.dimensiones_peso} 
+          ${safe(device.dimensiones_altura)} x ${safe(device.dimensiones_anchura)} x ${safe(device.dimensiones_grosor)} mm<br>
+          Peso: ${safe(device.dimensiones_peso)} 
         </div>
       </div>
       
@@ -271,7 +275,7 @@ function displayComparisonResults(devices) {
         Ver Producto
       </button>
     `;
-    
+
     wrapper.appendChild(deviceCard);
   });
     
