@@ -12,8 +12,6 @@ comparison.searchDevice = async (query, excludeMovilIds = []) => {
       p.precio,
       p.impuesto,
       p.descuento,
-      p.fecha,
-      v.color AS colores,
       v.img AS imagenes
     FROM productos p
     LEFT JOIN p_variantes v ON p.id = v.producto_id
