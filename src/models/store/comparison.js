@@ -12,10 +12,12 @@ comparison.searchDevice = async (query, excludeMovilIds = []) => {
       p.precio,
       p.impuesto,
       p.descuento,
+      c.categoria,
       v.img AS imagenes
     FROM productos p
-    LEFT JOIN p_variantes v ON p.id = v.producto_id
-    WHERE p.categoria_id = 1
+    INNER JOIN p_variantes v ON p.id = v.producto_id
+    INNER JOIN categorias c ON p.categoria_id = c.id
+    WHERE c.categoria = 'moviles'
       AND p.activo = 1
       AND p.nombre LIKE ?
       ${excludeMovilIds.length > 0 ? "AND p.movil_id NOT IN (" + excludeMovilIds.map(() => "?").join(",") + ")" : ""}
