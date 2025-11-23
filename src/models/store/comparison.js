@@ -17,7 +17,7 @@ comparison.searchDevice = async (query, excludeMovilIds = []) => {
       v.img AS imagenes
     FROM productos p
     LEFT JOIN p_variantes v ON p.id = v.producto_id
-    WHERE p.categoria_id = (SELECT id FROM categorias WHERE categoria = 'moviles')
+    WHERE p.categoria_id = 1
       AND p.activo = 1
       AND p.nombre LIKE ?
       ${excludeMovilIds.length > 0 ? "AND p.movil_id NOT IN (" + excludeMovilIds.map(() => "?").join(",") + ")" : ""}
@@ -26,7 +26,8 @@ comparison.searchDevice = async (query, excludeMovilIds = []) => {
   `;
 
   const params = [`%${query}%`];
-  if (excludeMovilIds.length > 0) params.push(...excludeMovilIds);
+  if (excludeMovilIds.length > 0) 
+    params.push(...excludeMovilIds);
 
   try {
     const [results] = await db.query(searchQuery, params);
