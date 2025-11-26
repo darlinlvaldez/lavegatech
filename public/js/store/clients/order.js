@@ -1,4 +1,3 @@
-import { getRealStock } from '../../utils/utils.js';
 import { showToast } from "../../utils/toastify.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -9,12 +8,30 @@ document.addEventListener("DOMContentLoaded", async function () {
     const cartRes = await fetch("/cart/items", { credentials: "include" });
     const cartData = await cartRes.json();
 
-    const validItems = await Promise.all(cartData.items.map(async item => {
-      const stock = await getRealStock(item.producto_id, item.colorSeleccionado);
-      return stock > 0 ? item : null;
-    })).then(items => items.filter(Boolean));
+    if (!cartData.success || !cartData.items || cartData.items.length === 0) {
+      orderProducts.innerHTML = "<p>No hay productos disponibles en tu orden.</p>";
+      orderTotal.textContent = "$0.00";
+      return;
+    }
 
-    if (!cartData.success || !cartData.items || cartData.items.length === 0 || validItems.length === 0) {
+    const stockRes = await fetch("/cart/stock?bulk=true", { credentials: "include" });
+    const stockData = await stockRes.json();
+
+    if (!stockData.success || !stockData.stocks) {
+      orderProducts.innerHTML = "<p>Error al validar el stock.</p>";
+      orderTotal.textContent = "$0.00";
+      return;
+    }
+
+    const stockInfo = stockData.stocks;
+
+    const validItems = cartData.items.filter(item => {
+      const key = `${item.producto_id}_${item.colorSeleccionado}`;
+      const stock = stockInfo[key] ?? 0;
+      return stock > 0;
+    });
+
+    if (validItems.length === 0) {
       orderProducts.innerHTML = "<p>No hay productos disponibles en tu orden.</p>";
       orderTotal.textContent = "$0.00";
       return;
@@ -27,11 +44,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       const subtotal = item.precio * item.cantidad;
       total += subtotal;
 
-      orderProducts.innerHTML += ` 
+      orderProducts.innerHTML += `
         <div class="order-col">
           <div>${item.cantidad}x ${item.nombre} ${item.especificaciones || ""} ${item.colorSeleccionado.toUpperCase()}</div>
           <div>$${formatPrice(subtotal)}</div>
-        </div>`; 
+        </div>`;
     });
 
     orderTotal.textContent = `$${formatPrice(total)}`;
