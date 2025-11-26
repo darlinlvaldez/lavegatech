@@ -282,7 +282,7 @@ auth.formEmail = async (req, res) => {
   const { nombre, email, asunto, mensaje } = req.body;
 
   if (req.validationError) {
-    return renderError(res, 'store/contact', null, {
+    return renderError(res, 'store/clients/contact', null, {
       nombre, email, asunto, mensaje, success: false,
       validationErrors: req.validationError.fields
     });
@@ -290,11 +290,11 @@ auth.formEmail = async (req, res) => {
 
   try {
     await emailService.sendEmail(config.EMAIL_SENDER, asunto, `Mensaje de ${nombre} <${email}>:\n\n${mensaje}`);
-      res.render('store/contact', {nombre: '', email: '', asunto: '', mensaje: '', 
+      res.render('store/clients/contact', {nombre: '', email: '', asunto: '', mensaje: '', 
         success: true , error: null, validationErrors: {} });
   } catch (error) {
     console.error('Error al enviar correo:', error);
-    return renderError(res, 'store/contact', ERROR_MESSAGES.EMAIL_SEND_ERROR, {
+    return renderError(res, 'store/clients/contact', ERROR_MESSAGES.EMAIL_SEND_ERROR, {
       nombre, email, asunto, mensaje, validationErrors: {} });
   }
 };
