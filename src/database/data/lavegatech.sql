@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-11-2025 a las 05:32:58
+-- Tiempo de generación: 28-11-2025 a las 19:57:54
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -380,7 +380,14 @@ CREATE TABLE `detalles_pedido` (
 --
 
 INSERT INTO `detalles_pedido` (`id`, `pedido_id`, `producto_id`, `nombre_producto`, `cantidad`, `precio_unitario`, `impuesto`, `descuento`, `subtotal`, `colorSeleccionado`, `ram`, `almacenamiento`) VALUES
-(237, 222, 11, 'iPhone 13 Pro', 1, 28495.00, 18.00, 0.00, 33624.10, 'Verde alpino', '6GB', '128GB');
+(237, 222, 11, 'iPhone 13 Pro', 1, 28495.00, 18.00, 0.00, 33624.10, 'Verde alpino', '6GB', '128GB'),
+(238, 223, 1, 'iPhone 12', 1, 15995.00, 18.00, 20.00, 15099.28, 'negro', '4GB', '64GB'),
+(239, 223, 2, 'iPhone 12', 1, 17995.00, 18.00, 10.00, 19110.69, 'verde', '4GB', '128GB'),
+(240, 223, 1, 'iPhone 12', 1, 15995.00, 18.00, 20.00, 15099.28, 'blanco', '4GB', '64GB'),
+(241, 224, 7, 'iPhone 12 Pro Max', 1, 28995.00, 18.00, 0.00, 34214.10, 'azul', '6GB', '256GB'),
+(242, 225, 13, 'iPhone 13 Pro Max', 1, 32995.00, 18.00, 0.00, 38934.10, 'oro', '6GB', '128GB'),
+(243, 225, 20, 'iPhone 14 Pro ', 2, 34495.00, 18.00, 0.00, 81408.20, 'blanco', '6GB', '128GB'),
+(244, 225, 20, 'iPhone 14 Pro ', 2, 34495.00, 18.00, 0.00, 81408.20, 'negro', '6GB', '128GB');
 
 -- --------------------------------------------------------
 
@@ -449,7 +456,10 @@ CREATE TABLE `envios` (
 --
 
 INSERT INTO `envios` (`id`, `pedido_id`, `estado_envio`, `costo_envio`, `fecha_envio`, `fecha_entregado`, `fecha_cancelado`) VALUES
-(58, 222, 'pendiente', 50.00, NULL, NULL, NULL);
+(58, 222, 'pendiente', 50.00, NULL, NULL, NULL),
+(59, 223, 'pendiente', 50.00, NULL, NULL, NULL),
+(60, 224, 'pendiente', 50.00, NULL, NULL, NULL),
+(61, 225, 'pendiente', 50.00, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -638,7 +648,10 @@ CREATE TABLE `pagos` (
 --
 
 INSERT INTO `pagos` (`id`, `pedido_id`, `metodo_pago`, `estado_pago`, `paypal_order_id`, `fecha_pago`) VALUES
-(135, 222, 'paypal', 'completado', '2XM531155Y331435A', '2025-10-30 21:00:49');
+(135, 222, 'paypal', 'completado', '2XM531155Y331435A', '2025-10-30 21:00:49'),
+(136, 223, 'paypal', 'completado', '3Y05494142713750G', '2025-11-26 10:12:48'),
+(137, 224, 'paypal', 'completado', '1E6897860A496141U', '2025-11-26 13:39:52'),
+(138, 225, 'paypal', 'completado', '1R040625YR6244506', '2025-11-26 13:56:02');
 
 -- --------------------------------------------------------
 
@@ -716,7 +729,10 @@ CREATE TABLE `pedidos` (
 --
 
 INSERT INTO `pedidos` (`id`, `usuario_id`, `nombre`, `apellido`, `email`, `direccion`, `distrito`, `telefono`, `total`, `estado`, `fecha_creacion`, `ciudad_envio`, `envio_diferente`) VALUES
-(222, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', '8295542244', 33674.10, 'pagado', '2025-10-30 21:00:49', 'La Vega', 0);
+(222, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', '8295542244', 33674.10, 'pagado', '2025-10-30 21:00:49', 'La Vega', 0),
+(223, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', '8295542244', 49359.25, 'pagado', '2025-11-26 10:12:48', 'La Vega', 0),
+(224, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', '8295542244', 34264.10, 'pagado', '2025-11-26 13:39:52', 'La Vega', 0),
+(225, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', '8295542244', 201800.50, 'pagado', '2025-11-26 13:56:02', 'La Vega', 0);
 
 -- --------------------------------------------------------
 
@@ -982,10 +998,10 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (375, 24, 'purpura', 3, 'https://i.ebayimg.com/images/g/Yu0AAOSwG0hkW5uL/s-l1600.webp'),
 (376, 24, 'blanco', 4, 'https://i.ebayimg.com/images/g/b~YAAOSwNzNkW5tc/s-l1600.webp'),
 (377, 25, 'dorado', 4, 'https://i.ebayimg.com/images/g/0MgAAOSwWIpkW5u-/s-l1600.webp'),
-(382, 1, 'blanco', 3, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg'),
-(383, 1, 'negro', 4, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/a75941f0-0032-4680-bda0-ba070e5f9982.jpg'),
+(382, 1, 'blanco', 2, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg'),
+(383, 1, 'negro', 3, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/a75941f0-0032-4680-bda0-ba070e5f9982.jpg'),
 (384, 1, 'verde', 2, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg'),
-(385, 2, 'verde', 2, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg'),
+(385, 2, 'verde', 1, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg'),
 (386, 2, 'pupura', 2, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/b01801bc-4c3c-411e-9ff0-dac6b4e34a87.jpg'),
 (387, 3, 'blanco', 3, 'https://i.ebayimg.com/images/g/PfsAAOSwAuBlaMk9/s-l400.jpg'),
 (388, 3, 'rojo', 3, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/859d07b9-f8a1-43bc-b8c3-ff09652e2c26.jpg'),
@@ -996,7 +1012,7 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (393, 6, 'gris', 4, 'https://i.ebayimg.com/images/g/QVEAAOSwbWdhQfcN/s-l1600.webp'),
 (394, 6, 'oro', 4, 'https://i.ebayimg.com/images/g/l8AAAOSwrQlhQfcU/s-l1600.webp'),
 (395, 7, 'blanco', 2, 'https://i.ebayimg.com/images/g/Yj4AAOSwmb5hQfca/s-l1600.webp'),
-(396, 7, 'azul', 4, 'https://i.ebayimg.com/images/g/YZsAAOSwntxhQfch/s-l1600.webp'),
+(396, 7, 'azul', 3, 'https://i.ebayimg.com/images/g/YZsAAOSwntxhQfch/s-l1600.webp'),
 (397, 8, 'Azul pacifico', 2, 'https://www.lacuracao.pe/media/catalog/product/o/r/orig_celr055azul-512gb__56549.jpg?quality=80&bg-color=255,255,255&fit=bounds&height=400&width=400&canvas=400:400'),
 (398, 9, 'Verde', 1, 'https://itpro.com.uy/wp-content/uploads/2024/04/wooc-454.jpeg'),
 (399, 9, 'Azul', 4, 'https://covercompany.com.uy/cdn/shop/files/2-2513_7996_1.jpg?v=1734027637&width=400'),
@@ -1006,7 +1022,7 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (403, 11, 'azul', 2, 'https://m.media-amazon.com/images/I/31ZMD4DfG9L.jpg'),
 (404, 12, 'gris', 3, 'https://i.ebayimg.com/images/g/eeYAAeSw4S9obXlU/s-l960.webp'),
 (405, 12, 'blanco', 4, 'https://i.ebayimg.com/images/g/FkcAAeSwvgNobXlS/s-l960.webp'),
-(406, 13, 'oro', 3, 'https://i.ebayimg.com/images/g/FkcAAeSwvgNobXlS/s-l960.webp'),
+(406, 13, 'oro', 2, 'https://i.ebayimg.com/images/g/FkcAAeSwvgNobXlS/s-l960.webp'),
 (409, 14, 'gris', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Grey.jpg'),
 (410, 14, 'oro', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Gold.jpg'),
 (411, 15, 'blanco', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Silver.jpg'),
@@ -1019,8 +1035,8 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (418, 18, 'Prupura', 2, 'https://i.ebayimg.com/images/g/hZAAAOSwbu5mxjdc/s-l400.jpg'),
 (419, 19, 'Purpura', 6, 'https://d3c745jesl5pj3.cloudfront.net/model-image/iphone-14-plus.png'),
 (420, 19, 'Rojo', 4, 'https://itpro.com.uy/wp-content/uploads/2024/11/wooc-155.jpeg'),
-(421, 20, 'negro', 4, 'https://i.ebayimg.com/images/g/o~UAAOSwVB1kXRSz/s-l1600.webp'),
-(422, 20, 'blanco', 4, 'https://i.ebayimg.com/images/g/sI4AAOSwi5lkXRTg/s-l1600.webp'),
+(421, 20, 'negro', 2, 'https://i.ebayimg.com/images/g/o~UAAOSwVB1kXRSz/s-l1600.webp'),
+(422, 20, 'blanco', 2, 'https://i.ebayimg.com/images/g/sI4AAOSwi5lkXRTg/s-l1600.webp'),
 (423, 21, 'oro', 4, 'https://i.ebayimg.com/images/g/-FYAAOSw8UNkXRT4/s-l1600.webp'),
 (424, 21, 'blanco', 4, 'https://i.ebayimg.com/images/g/sI4AAOSwi5lkXRTg/s-l1600.webp'),
 (425, 22, 'gris', 4, 'https://i.ebayimg.com/images/g/ml4AAOSwQJZkXRUR/s-l1600.webp'),
@@ -1245,7 +1261,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('cCOEToFF7vVi1X5xrXX6imc7hzCQjd1s', 1763357524, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-11-17T05:29:51.014Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":1,\"username\":\"darlin\",\"rol\":\"superadmin\"}}');
+('xgbEBsKEL9cy1gbJnBBxtY6b2kGbTjA4', 1764183922, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-11-26T18:54:33.083Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":79,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}');
 
 -- --------------------------------------------------------
 
@@ -1645,7 +1661,7 @@ ALTER TABLE `camara`
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=227;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=240;
 
 --
 -- AUTO_INCREMENT de la tabla `categorias`
@@ -1681,7 +1697,7 @@ ALTER TABLE `cpu`
 -- AUTO_INCREMENT de la tabla `detalles_pedido`
 --
 ALTER TABLE `detalles_pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=238;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=245;
 
 --
 -- AUTO_INCREMENT de la tabla `dimensionespeso`
@@ -1693,13 +1709,13 @@ ALTER TABLE `dimensionespeso`
 -- AUTO_INCREMENT de la tabla `envios`
 --
 ALTER TABLE `envios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT de la tabla `fav`
 --
 ALTER TABLE `fav`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=804;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=814;
 
 --
 -- AUTO_INCREMENT de la tabla `gpu`
@@ -1717,7 +1733,7 @@ ALTER TABLE `moviles`
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=136;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
 
 --
 -- AUTO_INCREMENT de la tabla `pantalla`
@@ -1729,7 +1745,7 @@ ALTER TABLE `pantalla`
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=223;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=226;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
