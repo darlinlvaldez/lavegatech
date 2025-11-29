@@ -60,7 +60,7 @@ adminAuth.logout = (req, res) => {
 
 adminAuth.listarAdmins = async (req, res) => {
   try {
-    const admins = await admin.obtenerAdmins();
+    const admins = await admin.getAdmins();
 
     res.json(admins);
   } catch (err) {
@@ -73,7 +73,7 @@ adminAuth.crearAdmin = async (req, res) => {
   try {
     const { username, password, rol } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newAdmin = await admin.agregarAdmin({ username, password: hashedPassword, rol });
+    const newAdmin = await admin.createAdmin({ username, password: hashedPassword, rol });
 
     res.status(201).json(newAdmin);
   } catch (error) {
@@ -92,7 +92,7 @@ adminAuth.editarAdmin = async (req, res) => {
       hashedPassword = await bcrypt.hash(password, 10);
     }
 
-    await admin.actualizarAdmin(id, { username, password: hashedPassword, rol });
+    await admin.updateAdmin(id, { username, password: hashedPassword, rol });
     res.json({ success: true });
   } catch (error) {
     console.error(error);
@@ -108,7 +108,7 @@ adminAuth.borrarAdmin = async (req, res) => {
       return res.status(400).json({ error: "No puedes eliminar tu propia cuenta." });
     }
 
-    const [result] = await admin.eliminarAdmin(id);
+    const [result] = await admin.deleteAdmin(id);
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: "Administrador no encontrado" });
     }
@@ -133,7 +133,7 @@ adminAuth.cambiarEstado = async (req, res) => {
       return res.status(403).json({ error: "No tienes permiso para modificar este usuario" });
     }
 
-    const updated = await admin.estadoAdmin(id, activo);
+    const updated = await admin.setAdminState(id, activo);
     if (!updated) {
       return res.status(400).json({ error: "No se pudo actualizar el estado" });
     }

@@ -16,7 +16,7 @@ user.userExists = async (email) => {
 
 user.insertUser = async ({ username, email, password }) => {
   await db.query(
-    "INSERT INTO usuarios (username, email, password, activo) VALUES (?, ?, ?, 1)",
+    "INSERT INTO usuarios (username, email, password, rol, activo) VALUES (?, ?, ?, 'cliente', 1)",
     [username, email, password]);
 
   const [rows] = await db.query("SELECT * FROM usuarios WHERE email = ?", [email]);

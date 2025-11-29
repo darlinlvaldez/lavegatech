@@ -3,54 +3,53 @@ import db from "../../database/mobiles.js";
 const admin = {};
 
 admin.findByUsername = async (username) => {
-  const [rows] = await db.query("SELECT * FROM admin WHERE username = ?", [username]);
-  return rows[0]; 
+  const [rows] = await db.query(
+    "SELECT * FROM usuarios WHERE username = ? AND rol != 'cliente'",
+    [username]
+  );
+  return rows[0];
 };
 
-admin.obtenerAdmins = async () => {
+admin.getAdmins = async () => {
   const [rows] = await db.query(
-    "SELECT id, username, fecha_creacion, activo, rol FROM admin"
+    "SELECT id, username, email, rol, activo, fecha_creacion FROM usuarios WHERE rol != 'cliente'"
   );
   return rows;
 };
 
-admin.agregarAdmin = async ({ username, password, rol }) => {
-  await db.query(`
-    INSERT INTO admin (username, password, rol)
-    VALUES (?, ?, ?)`,
-    [username, password, rol]
-  );
+admin.createAdmin = async ({ username, password, rol }) => {
+  const [result] = await db.query(`
+    INSERT INTO usuarios (username, email, password, rol, activo)
+    VALUES (?, NULL, ?, ?, 1)
+  `, [username, password, rol]);
 
-  const [rows] = await db.query("SELECT * FROM admin WHERE username = ?", [username]);
-  return rows[0];
+  return { id: result.insertId };
 };
 
-admin.actualizarAdmin = async (id, { username, password, rol }) => {
+admin.updateAdmin = async (id, { username, password, rol }) => {
   if (password) {
     await db.query(`
-      UPDATE admin SET username = ?, password = ?, rol = ?
-      WHERE id = ?`,
-      [username, password, rol, id]
-    );
+      UPDATE usuarios SET username = ?, password = ?, rol = ?
+      WHERE id = ?
+    `, [username, password, rol, id]);
   } else {
     await db.query(`
-      UPDATE admin SET username = ?, rol = ?
-      WHERE id = ?`,
-      [username, rol, id]
-    );
+      UPDATE usuarios SET username = ?, rol = ?
+      WHERE id = ?
+    `, [username, rol, id]);
   }
 };
 
-admin.estadoAdmin = async (id, activo) => {
+admin.deleteAdmin = async (id) => {
+  return await db.query("DELETE FROM usuarios WHERE id = ?", [id]);
+};
+
+admin.setAdminState = async (id, activo) => {
   const [result] = await db.query(
-    `UPDATE admin SET activo = ? WHERE id = ?`,
+    "UPDATE usuarios SET activo = ? WHERE id = ?",
     [activo, id]
   );
   return result.affectedRows > 0;
-};
-
-admin.eliminarAdmin = async (id) => {
-  return await db.query(`DELETE FROM admin WHERE id = ?`, [id]);
 };
 
 export default admin;

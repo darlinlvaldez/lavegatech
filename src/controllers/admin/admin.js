@@ -364,11 +364,13 @@ adminController.listarUsuarios = async (req, res) => {
 adminController.actualizarEstado = async (req, res) => {
   try {
     const { id } = req.params;
-    const { is_active } = req.body;
-    const success = await admin.estadoUsuario(id, is_active);
+    const { activo } = req.body;
+
+    const success = await admin.estadoUsuario(id, activo);
+
     res.json({ success });
   } catch (error) {
-    res.status(500).json({ error: 'Error al actualizar estado del usuario' });
+    res.status(500).json({ error: "Error al actualizar estado del usuario" });
   }
 };
 

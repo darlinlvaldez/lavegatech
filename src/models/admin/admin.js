@@ -318,6 +318,7 @@ admin.obtenerUsuarios = async () => {
   const query = `
     SELECT id, username, email, activo, fecha_creacion
     FROM usuarios
+    WHERE rol = 'cliente'
     ORDER BY fecha_creacion DESC
   `;
   const [rows] = await db.query(query);
