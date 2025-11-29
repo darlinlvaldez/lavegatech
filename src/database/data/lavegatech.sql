@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-11-2025 a las 19:57:54
+-- Tiempo de generación: 29-11-2025 a las 16:14:54
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,29 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `lavegatech`
 --
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `admin`
---
-
-CREATE TABLE `admin` (
-  `id` int(11) NOT NULL,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `fecha_creacion` timestamp NULL DEFAULT current_timestamp(),
-  `activo` tinyint(1) NOT NULL,
-  `rol` varchar(20) DEFAULT 'editor'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `admin`
---
-
-INSERT INTO `admin` (`id`, `username`, `password`, `fecha_creacion`, `activo`, `rol`) VALUES
-(1, 'darlin', '$2b$10$Ok1XvBwTGA.u.fapoo2L0ekADvsCq.a8Pkka6Pf3b.iFETqF.1Ia6', '2025-07-13 16:39:48', 1, 'superadmin'),
-(19, 'nilrad', '$2b$10$t2hS.VSRXa1UqBwFWoh3t.8EPXRTvpNgokAU0QnFzvJwGW7jsbuou', '2025-11-16 02:10:25', 1, 'admin');
 
 -- --------------------------------------------------------
 
@@ -282,6 +259,13 @@ CREATE TABLE `clasificacion` (
   `fecha_actualizacion` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `clasificacion`
+--
+
+INSERT INTO `clasificacion` (`id`, `producto_id`, `usuario_id`, `calificacion`, `comentario`, `fecha_creacion`, `fecha_actualizacion`) VALUES
+(46, 152, 80, 3, 'Buenisimo', '2025-11-26 19:18:39', '2025-11-26 19:18:39');
+
 -- --------------------------------------------------------
 
 --
@@ -380,14 +364,7 @@ CREATE TABLE `detalles_pedido` (
 --
 
 INSERT INTO `detalles_pedido` (`id`, `pedido_id`, `producto_id`, `nombre_producto`, `cantidad`, `precio_unitario`, `impuesto`, `descuento`, `subtotal`, `colorSeleccionado`, `ram`, `almacenamiento`) VALUES
-(237, 222, 11, 'iPhone 13 Pro', 1, 28495.00, 18.00, 0.00, 33624.10, 'Verde alpino', '6GB', '128GB'),
-(238, 223, 1, 'iPhone 12', 1, 15995.00, 18.00, 20.00, 15099.28, 'negro', '4GB', '64GB'),
-(239, 223, 2, 'iPhone 12', 1, 17995.00, 18.00, 10.00, 19110.69, 'verde', '4GB', '128GB'),
-(240, 223, 1, 'iPhone 12', 1, 15995.00, 18.00, 20.00, 15099.28, 'blanco', '4GB', '64GB'),
-(241, 224, 7, 'iPhone 12 Pro Max', 1, 28995.00, 18.00, 0.00, 34214.10, 'azul', '6GB', '256GB'),
-(242, 225, 13, 'iPhone 13 Pro Max', 1, 32995.00, 18.00, 0.00, 38934.10, 'oro', '6GB', '128GB'),
-(243, 225, 20, 'iPhone 14 Pro ', 2, 34495.00, 18.00, 0.00, 81408.20, 'blanco', '6GB', '128GB'),
-(244, 225, 20, 'iPhone 14 Pro ', 2, 34495.00, 18.00, 0.00, 81408.20, 'negro', '6GB', '128GB');
+(240, 226, 20, 'iPhone 14 Pro ', 1, 34495.00, 18.00, 0.00, 40704.10, 'negro', '6GB', '128GB');
 
 -- --------------------------------------------------------
 
@@ -456,10 +433,7 @@ CREATE TABLE `envios` (
 --
 
 INSERT INTO `envios` (`id`, `pedido_id`, `estado_envio`, `costo_envio`, `fecha_envio`, `fecha_entregado`, `fecha_cancelado`) VALUES
-(58, 222, 'pendiente', 50.00, NULL, NULL, NULL),
-(59, 223, 'pendiente', 50.00, NULL, NULL, NULL),
-(60, 224, 'pendiente', 50.00, NULL, NULL, NULL),
-(61, 225, 'pendiente', 50.00, NULL, NULL, NULL);
+(60, 226, 'pendiente', 50.00, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -648,10 +622,7 @@ CREATE TABLE `pagos` (
 --
 
 INSERT INTO `pagos` (`id`, `pedido_id`, `metodo_pago`, `estado_pago`, `paypal_order_id`, `fecha_pago`) VALUES
-(135, 222, 'paypal', 'completado', '2XM531155Y331435A', '2025-10-30 21:00:49'),
-(136, 223, 'paypal', 'completado', '3Y05494142713750G', '2025-11-26 10:12:48'),
-(137, 224, 'paypal', 'completado', '1E6897860A496141U', '2025-11-26 13:39:52'),
-(138, 225, 'paypal', 'completado', '1R040625YR6244506', '2025-11-26 13:56:02');
+(137, 226, 'paypal', 'completado', '2C464737D0988161N', '2025-11-29 00:20:59');
 
 -- --------------------------------------------------------
 
@@ -720,19 +691,16 @@ CREATE TABLE `pedidos` (
   `total` decimal(10,2) NOT NULL,
   `estado` varchar(50) DEFAULT 'pendiente',
   `fecha_creacion` datetime DEFAULT current_timestamp(),
-  `ciudad_envio` varchar(50) DEFAULT NULL,
-  `envio_diferente` tinyint(1) DEFAULT 0
+  `envio_diferente` tinyint(1) DEFAULT 0,
+  `ciudad_envio_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `pedidos`
 --
 
-INSERT INTO `pedidos` (`id`, `usuario_id`, `nombre`, `apellido`, `email`, `direccion`, `distrito`, `telefono`, `total`, `estado`, `fecha_creacion`, `ciudad_envio`, `envio_diferente`) VALUES
-(222, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', '8295542244', 33674.10, 'pagado', '2025-10-30 21:00:49', 'La Vega', 0),
-(223, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', '8295542244', 49359.25, 'pagado', '2025-11-26 10:12:48', 'La Vega', 0),
-(224, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', '8295542244', 34264.10, 'pagado', '2025-11-26 13:39:52', 'La Vega', 0),
-(225, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'PRESIDENTE ESPAILLAT #10', 'LA VEGA', '8295542244', 201800.50, 'pagado', '2025-11-26 13:56:02', 'La Vega', 0);
+INSERT INTO `pedidos` (`id`, `usuario_id`, `nombre`, `apellido`, `email`, `direccion`, `distrito`, `telefono`, `total`, `estado`, `fecha_creacion`, `envio_diferente`, `ciudad_envio_id`) VALUES
+(226, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295524400', 40754.10, 'pagado', '2025-11-29 00:20:59', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -932,10 +900,11 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (200, NULL, 'SONY SRS-XG500', 'Este altavoz party Sony SRS-XG500 se encuentra en condición \"Doble A (AA)\", presentando un estado físico excepcional. El sonido Extra Bass ofrece graves profundos y potencia ideal para fiestas. Las luces multicolor y el efecto strobe funcionan correctamente, creando ambiente. La batería de larga duración y la resistencia al agua permiten uso en exteriores. Es un altavoz party premium, potente y en excelente estado, diseñado para eventos y reuniones sociales.', 22495.00, 6, 0.00, '2023-01-01 08:00:00', NULL, 15, NULL, NULL, 1, 18.00),
 (201, NULL, 'ANIKER SOUNDCORE', 'Este altavoz Bluetooth Anker Soundcore se encuentra en condición \"Doble A (AA)\", mostrando un estado físico muy bien cuidado. El sonido ofrece buen balance y claridad para su categoría de precio. La conectividad Bluetooth funciona establemente y la batería conserva autonomía adecuada. El diseño compacto y robusto se mantiene sin marcas relevantes. Es un altavoz económico, confiable y en excelente estado, perfecto para uso casual y portátil.', 2995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, NULL, 1, 18.00),
 (202, NULL, 'SOUNDCORE BOOM 2 PLUS', 'Este altavoz Soundcore Boom 2 Plus se encuentra en condición \"Doble A (AA)\", presentando un estado físico impecable. El sonido ofrece potencia y claridad mejoradas con tecnología BassUp para graves intensos. La resistencia IPX7 al agua permite uso en piscina o playa. La batería de larga duración y la conectividad Bluetooth funcionan perfectamente. Es un altavoz potente, resistente y en excelente estado, ideal para quienes buscan audio de calidad en exteriores.', 14995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, NULL, 1, 18.00),
-(203, NULL, 'Monitor Asus VG1B 27 Pulgada 165HZ', 'Este monitor gaming Asus VG1B de 27 pulgadas 165Hz se encuentra en condición \"Doble A (AA)\", mostrando un estado físico muy bien cuidado. La pantalla IPS ofrece colores vibrantes y ángulos de visión amplios, sin píxeles muertos ni retroiluminación irregular. La tasa de refresco de 165Hz garantiza fluidez en gaming y contenido dinámico. Todos los puertos DisplayPort y HDMI funcionan correctamente. El soporte ajustable mantiene su funcionalidad completa. Es un monitor gaming de alto rendimiento, con excelente relación calidad-precio y en estado impecable.', 14995.00, 2, 0.00, '2023-01-01 08:00:00', NULL, 9, NULL, NULL, 1, 18.00),
+(203, NULL, 'Monitor Asus VG1B 27 Pulgada 165HZ', 'Este monitor gaming Asus VG1B de 27 pulgadas 165Hz se encuentra en condición \"Doble A (AA)\", mostrando un estado físico muy bien cuidado. La pantalla IPS ofrece colores vibrantes y ángulos de visión amplios, sin píxeles muertos ni retroiluminación irregular. La tasa de refresco de 165Hz garantiza fluidez en gaming y contenido dinámico. Todos los puertos DisplayPort y HDMI funcionan correctamente. El soporte ajustable mantiene su funcionalidad completa. Es un monitor gaming de alto rendimiento, con excelente relación calidad-precio y en estado impecable.', 14995.00, 2, 0.00, '2023-01-01 08:00:00', '2025-11-26 09:16:00', 9, NULL, NULL, 1, 18.00),
 (204, NULL, 'Monitor LG Ultragear 34 Pulgada 160HZ', 'Este monitor ultrawide LG Ultragear de 34 pulgadas 160Hz se encuentra en condición \"Doble A (AA)\", presentando un estado físico excepcional. La pantalla curva IPS ofrece una experiencia gaming inmersiva con colores precisos y alto contraste. La tasa de refresco de 160Hz y tecnología AMD FreeSync garantizan gameplay suave sin tearing. La relación de aspecto 21:9 proporciona espacio adicional para multitarea. Todos los puertos y controles OSD funcionan perfectamente. Es un monitor premium, versátil y en excelente estado, ideal gaming y productividad.', 24995.00, 2, 0.00, '2023-01-01 12:00:00', '2025-04-30 04:17:00', 2, NULL, NULL, 1, 18.00),
 (206, NULL, 'Monitor Samsung G4 ODYSSEEY 27 Pulgada 240HZ', 'Este monitor gaming Samsung G4 Odyssey de 27 pulgadas 240Hz se encuentra en condición \"Doble A (AA)\", mostrando un estado físico impecable. La pantalla ofrece colores vibrantes y una tasa de refresco ultra rápida de 240Hz, perfecta para gaming competitivo. La tecnología AMD FreeSync Premium elimina tearing y stuttering. El diseño gaming con base sólida se mantiene sin marcas. Todos los puertos y funciones operan correctamente. Es un monitor de alto rendimiento, rápido y en excelente estado, diseñado para gamers exigentes.', 19995.00, 2, 0.00, '2023-01-01 12:00:00', NULL, 2, NULL, NULL, 1, 18.00),
-(207, NULL, 'Monitor Samsung G5 ODYSSEY 32 Pulgada 165HZ', 'Este monitor gaming Samsung G5 Odyssey de 32 pulgadas 165Hz se encuentra en condición \"Doble A (AA)\", presentando un estado físico excepcional. La pantalla curva VA de 1000R ofrece una experiencia visual envolvente con alto contraste y colores profundos. La tasa de refresco de 165Hz con AMD FreeSync Premium garantiza gameplay fluido. La resolución QHD proporciona mayor claridad y espacio de trabajo. Todos los puertos, incluido DisplayPort y HDMI, funcionan perfectamente. Es un monitor gaming premium, inmersivo y en estado impecable, ideal para quienes buscan tamaño y rendimiento.', 22995.00, 2, 0.00, '2025-12-10 20:00:00', '2025-10-23 01:05:00', 2, NULL, NULL, 1, 18.00);
+(207, NULL, 'Monitor Samsung G5 ODYSSEY 32 Pulgada 165HZ', 'Este monitor gaming Samsung G5 Odyssey de 32 pulgadas 165Hz se encuentra en condición \"Doble A (AA)\", presentando un estado físico excepcional. La pantalla curva VA de 1000R ofrece una experiencia visual envolvente con alto contraste y colores profundos. La tasa de refresco de 165Hz con AMD FreeSync Premium garantiza gameplay fluido. La resolución QHD proporciona mayor claridad y espacio de trabajo. Todos los puertos, incluido DisplayPort y HDMI, funcionan perfectamente. Es un monitor gaming premium, inmersivo y en estado impecable, ideal para quienes buscan tamaño y rendimiento.', 22995.00, 2, 0.00, '2025-12-10 20:00:00', '2025-11-23 05:05:00', 2, NULL, NULL, 1, 18.00),
+(228, NULL, 'hola', 'hola comoestas', 12345.00, 6, 0.00, '2025-11-26 23:34:12', '2025-11-26 23:32:00', 4, NULL, NULL, 0, 18.00);
 
 -- --------------------------------------------------------
 
@@ -998,10 +967,10 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (375, 24, 'purpura', 3, 'https://i.ebayimg.com/images/g/Yu0AAOSwG0hkW5uL/s-l1600.webp'),
 (376, 24, 'blanco', 4, 'https://i.ebayimg.com/images/g/b~YAAOSwNzNkW5tc/s-l1600.webp'),
 (377, 25, 'dorado', 4, 'https://i.ebayimg.com/images/g/0MgAAOSwWIpkW5u-/s-l1600.webp'),
-(382, 1, 'blanco', 2, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg'),
-(383, 1, 'negro', 3, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/a75941f0-0032-4680-bda0-ba070e5f9982.jpg'),
+(382, 1, 'blanco', 1, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg'),
+(383, 1, 'negro', 4, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/a75941f0-0032-4680-bda0-ba070e5f9982.jpg'),
 (384, 1, 'verde', 2, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg'),
-(385, 2, 'verde', 1, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg'),
+(385, 2, 'verde', 2, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg'),
 (386, 2, 'pupura', 2, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/b01801bc-4c3c-411e-9ff0-dac6b4e34a87.jpg'),
 (387, 3, 'blanco', 3, 'https://i.ebayimg.com/images/g/PfsAAOSwAuBlaMk9/s-l400.jpg'),
 (388, 3, 'rojo', 3, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/859d07b9-f8a1-43bc-b8c3-ff09652e2c26.jpg'),
@@ -1012,7 +981,7 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (393, 6, 'gris', 4, 'https://i.ebayimg.com/images/g/QVEAAOSwbWdhQfcN/s-l1600.webp'),
 (394, 6, 'oro', 4, 'https://i.ebayimg.com/images/g/l8AAAOSwrQlhQfcU/s-l1600.webp'),
 (395, 7, 'blanco', 2, 'https://i.ebayimg.com/images/g/Yj4AAOSwmb5hQfca/s-l1600.webp'),
-(396, 7, 'azul', 3, 'https://i.ebayimg.com/images/g/YZsAAOSwntxhQfch/s-l1600.webp'),
+(396, 7, 'azul', 4, 'https://i.ebayimg.com/images/g/YZsAAOSwntxhQfch/s-l1600.webp'),
 (397, 8, 'Azul pacifico', 2, 'https://www.lacuracao.pe/media/catalog/product/o/r/orig_celr055azul-512gb__56549.jpg?quality=80&bg-color=255,255,255&fit=bounds&height=400&width=400&canvas=400:400'),
 (398, 9, 'Verde', 1, 'https://itpro.com.uy/wp-content/uploads/2024/04/wooc-454.jpeg'),
 (399, 9, 'Azul', 4, 'https://covercompany.com.uy/cdn/shop/files/2-2513_7996_1.jpg?v=1734027637&width=400'),
@@ -1022,7 +991,7 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (403, 11, 'azul', 2, 'https://m.media-amazon.com/images/I/31ZMD4DfG9L.jpg'),
 (404, 12, 'gris', 3, 'https://i.ebayimg.com/images/g/eeYAAeSw4S9obXlU/s-l960.webp'),
 (405, 12, 'blanco', 4, 'https://i.ebayimg.com/images/g/FkcAAeSwvgNobXlS/s-l960.webp'),
-(406, 13, 'oro', 2, 'https://i.ebayimg.com/images/g/FkcAAeSwvgNobXlS/s-l960.webp'),
+(406, 13, 'oro', 3, 'https://i.ebayimg.com/images/g/FkcAAeSwvgNobXlS/s-l960.webp'),
 (409, 14, 'gris', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Grey.jpg'),
 (410, 14, 'oro', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Gold.jpg'),
 (411, 15, 'blanco', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Silver.jpg'),
@@ -1035,8 +1004,8 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (418, 18, 'Prupura', 2, 'https://i.ebayimg.com/images/g/hZAAAOSwbu5mxjdc/s-l400.jpg'),
 (419, 19, 'Purpura', 6, 'https://d3c745jesl5pj3.cloudfront.net/model-image/iphone-14-plus.png'),
 (420, 19, 'Rojo', 4, 'https://itpro.com.uy/wp-content/uploads/2024/11/wooc-155.jpeg'),
-(421, 20, 'negro', 2, 'https://i.ebayimg.com/images/g/o~UAAOSwVB1kXRSz/s-l1600.webp'),
-(422, 20, 'blanco', 2, 'https://i.ebayimg.com/images/g/sI4AAOSwi5lkXRTg/s-l1600.webp'),
+(421, 20, 'negro', 3, 'https://i.ebayimg.com/images/g/o~UAAOSwVB1kXRSz/s-l1600.webp'),
+(422, 20, 'blanco', 4, 'https://i.ebayimg.com/images/g/sI4AAOSwi5lkXRTg/s-l1600.webp'),
 (423, 21, 'oro', 4, 'https://i.ebayimg.com/images/g/-FYAAOSw8UNkXRT4/s-l1600.webp'),
 (424, 21, 'blanco', 4, 'https://i.ebayimg.com/images/g/sI4AAOSwi5lkXRTg/s-l1600.webp'),
 (425, 22, 'gris', 4, 'https://i.ebayimg.com/images/g/ml4AAOSwQJZkXRUR/s-l1600.webp'),
@@ -1199,7 +1168,7 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`) VALUES
 (594, 200, 'negro', 4, '/uploads/1761354978109_PROD-71.jpg'),
 (595, 201, 'negro', 4, 'https://m.media-amazon.com/images/I/51QReosscPL._UF894,1000_QL80_.jpg'),
 (596, 202, 'negro', 4, 'https://pisces.bbystatic.com/image2/BestBuy_US/images/products/37316ee8-f080-4809-a447-98bd68af8441.png;maxHeight=828;maxWidth=400?format=webp'),
-(597, 203, 'negro', 4, 'https://www.asus.com/media/global/gallery/0osdprj9mpap1rub_setting_xxx_0_90_end_2000.png'),
+(597, 203, 'negro', 3, 'https://www.asus.com/media/global/gallery/0osdprj9mpap1rub_setting_xxx_0_90_end_2000.png'),
 (598, 204, 'negro', 4, 'https://windigitalpc.com/wp-content/uploads/2025/05/Monitor-LG-UltraGear-Curvo-34-QHD-VA-160Hz1.png'),
 (600, 206, 'negro', 4, 'https://covercompany.com.uy/cdn/shop/files/19950_19951_3.jpg?v=1726589380&width=400'),
 (601, 207, 'negro', 3, 'https://casacuesta.com/media/catalog/product/cache/afcac67a0d77755283578b677f040f2b/3/3/3344468-1__1715126132.jpg'),
@@ -1261,7 +1230,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('xgbEBsKEL9cy1gbJnBBxtY6b2kGbTjA4', 1764183922, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-11-26T18:54:33.083Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":79,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}');
+('hkFWTVKmmjAnklGa7pRdtQURb36laKUC', 1764395385, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-11-29T05:28:11.743Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":79,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}'),
+('u032RzazU5aIwRtannoxT1YxG2MF4oym', 1764393866, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-11-29T04:26:46.697Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":79,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}');
 
 -- --------------------------------------------------------
 
@@ -1274,6 +1244,7 @@ CREATE TABLE `usuarios` (
   `username` varchar(100) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `rol` varchar(20) NOT NULL DEFAULT 'cliente',
   `activo` tinyint(1) DEFAULT 0,
   `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1282,8 +1253,9 @@ CREATE TABLE `usuarios` (
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `username`, `email`, `password`, `activo`, `fecha_creacion`) VALUES
-(79, 'darlin', 'darlinlvaldez@gmail.com', '$2b$10$H1yfTCPuSSNEJZrRr0l7S.ZrzWvU3VVmpyEoFPgBnJ01uGhKMuUqO', 1, '2025-10-28 01:12:38');
+INSERT INTO `usuarios` (`id`, `username`, `email`, `password`, `rol`, `activo`, `fecha_creacion`) VALUES
+(79, 'darlin', 'darlinlvaldez@gmail.com', '$2b$10$H1yfTCPuSSNEJZrRr0l7S.ZrzWvU3VVmpyEoFPgBnJ01uGhKMuUqO', 'cliente', 1, '2025-10-28 01:12:38'),
+(80, 'willian', 'williamjorge623@gmail.com', '$2b$10$32KkrkkYZ2dOBSsEZMW26Olq8aIJm1FS5q8JSSXDidwNZyky6bqeC', 'cliente', 1, '2025-11-26 23:13:12');
 
 -- --------------------------------------------------------
 
@@ -1429,13 +1401,6 @@ INSERT INTO `variantes_ram` (`movil_id`, `ram_id`) VALUES
 --
 
 --
--- Indices de la tabla `admin`
---
-ALTER TABLE `admin`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`);
-
---
 -- Indices de la tabla `almacenamiento`
 --
 ALTER TABLE `almacenamiento`
@@ -1569,7 +1534,8 @@ ALTER TABLE `pantalla`
 --
 ALTER TABLE `pedidos`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_orders_usuario` (`usuario_id`);
+  ADD KEY `fk_orders_usuario` (`usuario_id`),
+  ADD KEY `fk_pedidos_ciudad_envio` (`ciudad_envio_id`);
 
 --
 -- Indices de la tabla `productos`
@@ -1634,12 +1600,6 @@ ALTER TABLE `variantes_ram`
 --
 
 --
--- AUTO_INCREMENT de la tabla `admin`
---
-ALTER TABLE `admin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
-
---
 -- AUTO_INCREMENT de la tabla `almacenamiento`
 --
 ALTER TABLE `almacenamiento`
@@ -1661,13 +1621,13 @@ ALTER TABLE `camara`
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=240;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=235;
 
 --
 -- AUTO_INCREMENT de la tabla `categorias`
 --
 ALTER TABLE `categorias`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT de la tabla `ciudades_envio`
@@ -1679,7 +1639,7 @@ ALTER TABLE `ciudades_envio`
 -- AUTO_INCREMENT de la tabla `clasificacion`
 --
 ALTER TABLE `clasificacion`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT de la tabla `conectividad`
@@ -1697,7 +1657,7 @@ ALTER TABLE `cpu`
 -- AUTO_INCREMENT de la tabla `detalles_pedido`
 --
 ALTER TABLE `detalles_pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=245;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=241;
 
 --
 -- AUTO_INCREMENT de la tabla `dimensionespeso`
@@ -1709,13 +1669,13 @@ ALTER TABLE `dimensionespeso`
 -- AUTO_INCREMENT de la tabla `envios`
 --
 ALTER TABLE `envios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT de la tabla `fav`
 --
 ALTER TABLE `fav`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=814;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=805;
 
 --
 -- AUTO_INCREMENT de la tabla `gpu`
@@ -1733,7 +1693,7 @@ ALTER TABLE `moviles`
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
 
 --
 -- AUTO_INCREMENT de la tabla `pantalla`
@@ -1745,13 +1705,13 @@ ALTER TABLE `pantalla`
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=226;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=227;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=228;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=229;
 
 --
 -- AUTO_INCREMENT de la tabla `p_marcas`
@@ -1775,7 +1735,7 @@ ALTER TABLE `ram`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- Restricciones para tablas volcadas
@@ -1846,6 +1806,7 @@ ALTER TABLE `pagos`
 -- Filtros para la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
+  ADD CONSTRAINT `fk_pedidos_ciudad_envio` FOREIGN KEY (`ciudad_envio_id`) REFERENCES `ciudades_envio` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_pedidos_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
 
 --
