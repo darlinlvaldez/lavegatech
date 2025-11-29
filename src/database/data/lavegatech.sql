@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-11-2025 a las 16:14:54
+-- Tiempo de generación: 29-11-2025 a las 19:43:40
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -258,13 +258,6 @@ CREATE TABLE `clasificacion` (
   `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
   `fecha_actualizacion` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `clasificacion`
---
-
-INSERT INTO `clasificacion` (`id`, `producto_id`, `usuario_id`, `calificacion`, `comentario`, `fecha_creacion`, `fecha_actualizacion`) VALUES
-(46, 152, 80, 3, 'Buenisimo', '2025-11-26 19:18:39', '2025-11-26 19:18:39');
 
 -- --------------------------------------------------------
 
@@ -903,8 +896,7 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (203, NULL, 'Monitor Asus VG1B 27 Pulgada 165HZ', 'Este monitor gaming Asus VG1B de 27 pulgadas 165Hz se encuentra en condición \"Doble A (AA)\", mostrando un estado físico muy bien cuidado. La pantalla IPS ofrece colores vibrantes y ángulos de visión amplios, sin píxeles muertos ni retroiluminación irregular. La tasa de refresco de 165Hz garantiza fluidez en gaming y contenido dinámico. Todos los puertos DisplayPort y HDMI funcionan correctamente. El soporte ajustable mantiene su funcionalidad completa. Es un monitor gaming de alto rendimiento, con excelente relación calidad-precio y en estado impecable.', 14995.00, 2, 0.00, '2023-01-01 08:00:00', '2025-11-26 09:16:00', 9, NULL, NULL, 1, 18.00),
 (204, NULL, 'Monitor LG Ultragear 34 Pulgada 160HZ', 'Este monitor ultrawide LG Ultragear de 34 pulgadas 160Hz se encuentra en condición \"Doble A (AA)\", presentando un estado físico excepcional. La pantalla curva IPS ofrece una experiencia gaming inmersiva con colores precisos y alto contraste. La tasa de refresco de 160Hz y tecnología AMD FreeSync garantizan gameplay suave sin tearing. La relación de aspecto 21:9 proporciona espacio adicional para multitarea. Todos los puertos y controles OSD funcionan perfectamente. Es un monitor premium, versátil y en excelente estado, ideal gaming y productividad.', 24995.00, 2, 0.00, '2023-01-01 12:00:00', '2025-04-30 04:17:00', 2, NULL, NULL, 1, 18.00),
 (206, NULL, 'Monitor Samsung G4 ODYSSEEY 27 Pulgada 240HZ', 'Este monitor gaming Samsung G4 Odyssey de 27 pulgadas 240Hz se encuentra en condición \"Doble A (AA)\", mostrando un estado físico impecable. La pantalla ofrece colores vibrantes y una tasa de refresco ultra rápida de 240Hz, perfecta para gaming competitivo. La tecnología AMD FreeSync Premium elimina tearing y stuttering. El diseño gaming con base sólida se mantiene sin marcas. Todos los puertos y funciones operan correctamente. Es un monitor de alto rendimiento, rápido y en excelente estado, diseñado para gamers exigentes.', 19995.00, 2, 0.00, '2023-01-01 12:00:00', NULL, 2, NULL, NULL, 1, 18.00),
-(207, NULL, 'Monitor Samsung G5 ODYSSEY 32 Pulgada 165HZ', 'Este monitor gaming Samsung G5 Odyssey de 32 pulgadas 165Hz se encuentra en condición \"Doble A (AA)\", presentando un estado físico excepcional. La pantalla curva VA de 1000R ofrece una experiencia visual envolvente con alto contraste y colores profundos. La tasa de refresco de 165Hz con AMD FreeSync Premium garantiza gameplay fluido. La resolución QHD proporciona mayor claridad y espacio de trabajo. Todos los puertos, incluido DisplayPort y HDMI, funcionan perfectamente. Es un monitor gaming premium, inmersivo y en estado impecable, ideal para quienes buscan tamaño y rendimiento.', 22995.00, 2, 0.00, '2025-12-10 20:00:00', '2025-11-23 05:05:00', 2, NULL, NULL, 1, 18.00),
-(228, NULL, 'hola', 'hola comoestas', 12345.00, 6, 0.00, '2025-11-26 23:34:12', '2025-11-26 23:32:00', 4, NULL, NULL, 0, 18.00);
+(207, NULL, 'Monitor Samsung G5 ODYSSEY 32 Pulgada 165HZ', 'Este monitor gaming Samsung G5 Odyssey de 32 pulgadas 165Hz se encuentra en condición \"Doble A (AA)\", presentando un estado físico excepcional. La pantalla curva VA de 1000R ofrece una experiencia visual envolvente con alto contraste y colores profundos. La tasa de refresco de 165Hz con AMD FreeSync Premium garantiza gameplay fluido. La resolución QHD proporciona mayor claridad y espacio de trabajo. Todos los puertos, incluido DisplayPort y HDMI, funcionan perfectamente. Es un monitor gaming premium, inmersivo y en estado impecable, ideal para quienes buscan tamaño y rendimiento.', 22995.00, 2, 0.00, '2025-12-10 20:00:00', '2025-11-23 05:05:00', 2, NULL, NULL, 1, 18.00);
 
 -- --------------------------------------------------------
 
@@ -1230,8 +1222,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('hkFWTVKmmjAnklGa7pRdtQURb36laKUC', 1764395385, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-11-29T05:28:11.743Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":79,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}'),
-('u032RzazU5aIwRtannoxT1YxG2MF4oym', 1764393866, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-11-29T04:26:46.697Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":79,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}');
+('X6DzyXAdXOdVZDUM9wRVXV5gevqyKqDT', 1764444776, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-11-29T19:03:53.329Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":81,\"username\":\"darlin\",\"rol\":\"superadmin\"}}');
 
 -- --------------------------------------------------------
 
@@ -1242,9 +1233,9 @@ INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
 CREATE TABLE `usuarios` (
   `id` int(11) NOT NULL,
   `username` varchar(100) NOT NULL,
-  `email` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
-  `rol` varchar(20) NOT NULL DEFAULT 'cliente',
+  `rol` enum('cliente','superadmin','admin','ventas','transportista','soporte','editor') DEFAULT current_timestamp(),
   `activo` tinyint(1) DEFAULT 0,
   `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1254,8 +1245,9 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `username`, `email`, `password`, `rol`, `activo`, `fecha_creacion`) VALUES
-(79, 'darlin', 'darlinlvaldez@gmail.com', '$2b$10$H1yfTCPuSSNEJZrRr0l7S.ZrzWvU3VVmpyEoFPgBnJ01uGhKMuUqO', 'cliente', 1, '2025-10-28 01:12:38'),
-(80, 'willian', 'williamjorge623@gmail.com', '$2b$10$32KkrkkYZ2dOBSsEZMW26Olq8aIJm1FS5q8JSSXDidwNZyky6bqeC', 'cliente', 1, '2025-11-26 23:13:12');
+(79, 'darlin', 'nilradlvaldez@gmail.com', '$2b$10$H1yfTCPuSSNEJZrRr0l7S.ZrzWvU3VVmpyEoFPgBnJ01uGhKMuUqO', 'cliente', 1, '2025-10-28 01:12:38'),
+(81, 'darlin', NULL, '$2b$10$lmcVwVAdk3yIZIleXMx9y.kUDuHzIHY2g/yvuwZGQdQGyQVYt0w5S', 'superadmin', 1, '2025-11-29 17:25:16'),
+(90, 'nilrad', NULL, '$2b$10$SNb9XcPSDkXyZzTkLz6ak.YDjIMrRbmrMYmDRyGFXvbp1Ho9OA7BG', 'admin', 1, '2025-11-29 18:02:05');
 
 -- --------------------------------------------------------
 
@@ -1735,7 +1727,7 @@ ALTER TABLE `ram`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- Restricciones para tablas volcadas
