@@ -336,7 +336,7 @@ admin.obtenerPedidos = async () => {
     `SELECT p.*, e.estado_envio, e.fecha_envio, e.fecha_entregado, e.fecha_cancelado, e.costo_envio
      FROM pedidos p
      LEFT JOIN envios e ON p.id = e.pedido_id
-     LEFT JOIN ciudades_envio c ON p.ciudad_envio = c.id
+     LEFT JOIN ciudades_envio c ON p.ciudad_envio_id = c.id
      ORDER BY p.fecha_creacion DESC`
   );
   return rows;
@@ -348,7 +348,7 @@ admin.obtenerPedidoId = async (id) => {
     pa.metodo_pago, pa.paypal_order_id, pa.fecha_pago
     FROM pedidos p
     LEFT JOIN envios e ON p.id = e.pedido_id
-    LEFT JOIN ciudades_envio c ON p.ciudad_envio = c.id
+    LEFT JOIN ciudades_envio c ON p.ciudad_envio_id = c.id
     LEFT JOIN pagos pa ON p.id = pa.pedido_id
     WHERE p.id = ?`,
     [id]

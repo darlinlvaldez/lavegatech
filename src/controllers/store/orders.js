@@ -7,14 +7,14 @@ const orderController = {};
 orderController.createOrder = async (req, res) => {
   try {
     const userId = req.session.user.id;
-    const { nombre, apellido, email, direccion, distrito, telefono, ciudad_envio, envio_diferente } = req.body;
+    const { nombre, apellido, email, direccion, distrito, telefono, ciudad_envio_id, envio_diferente } = req.body;
 
     const cartItems = await cart.getCartToPay(userId);
     if (cartItems.length === 0) {
       return res.status(400).json({ success: false, message: 'El carrito está vacío' });
     }
 
-    const ciudadData = await orders.getCityId(ciudad_envio);
+    const ciudadData = await orders.getCityId(ciudad_envio_id);
     if (!ciudadData) {
       return res.status(400).json({ success: false, message: 'Ciudad de envío no válida' });
     }
@@ -58,7 +58,7 @@ orderController.createOrder = async (req, res) => {
       distrito,
       telefono,
       total: totalPesos,
-      ciudad_envio,
+      ciudad_envio_id,
       envio_diferente,
     };
 
@@ -103,7 +103,7 @@ orderController.processPayment = async (req, res) => {
       return res.status(400).json({ success: false, message: 'El carrito está vacío' });
     }
 
-    const ciudadData = await orders.getCityId(orderData.ciudad_envio);
+    const ciudadData = await orders.getCityId(orderData.ciudad_envio_id);
     if (!ciudadData) {
       return res.status(400).json({ success: false, message: 'Ciudad de envío no válida' });
     }
@@ -138,7 +138,7 @@ orderController.processPayment = async (req, res) => {
 
     const pedido_id = await orders.createOrder(
       {...orderData, estado: "pagado", total: totalPesos,
-        ciudad_envio: ciudadData.nombre}, 
+        ciudad_envio_id: ciudadData.id}, 
         orderItems,costoEnvio);
 
     await orders.createPayment(pedido_id, {

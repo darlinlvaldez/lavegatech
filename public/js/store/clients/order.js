@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     apellido: getValue("last-name", alt),
     email: getValue("email", alt),
     direccion: getValue("address", alt),
-    ciudad_envio: getCiudad(alt),
+    ciudad_envio_id: getCiudad(alt),
     distrito: getValue("district", alt),
     telefono: getTel(alt),
     envio_diferente: usarOtraDireccion ? 1 : 0
@@ -130,8 +130,8 @@ const clearErrors = () => {
 
 const setupInputErrorClearing = () => {
   const inputNames = [
-    "first-name", "last-name", "email", "address", "district", "tel", "ciudad_envio",
-    "alt-first-name", "alt-last-name", "alt-email", "alt-address", "alt-district", "alt-tel", "alt-ciudad_envio"
+    "first-name", "last-name", "email", "address", "district", "tel", "ciudad_envio_id",
+    "alt-first-name", "alt-last-name", "alt-email", "alt-address", "alt-district", "alt-tel", "alt-ciudad_envio_id"
   ];
 
   inputNames.forEach(name => {
@@ -200,7 +200,7 @@ altTelInput?.addEventListener("input", (e) => {
     apellido: "last-name",
     email: "email",
     direccion: "address",
-    ciudad_envio: "ciudad_envio",
+    ciudad_envio_id: "ciudad_envio_id",
     distrito: "district",
     telefono: "tel",
   };
@@ -439,7 +439,7 @@ async function lastOrder() {
 
       const citySelect = document.getElementById("city-select");
       if (citySelect) {
-        citySelect.value = lastOrder.ciudad_envio || "";
+        citySelect.value = lastOrder.ciudad_envio_id || "";
         citySelect.dispatchEvent(new Event("change"));
       }
     }
