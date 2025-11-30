@@ -6,7 +6,7 @@ const admin = {};
 
 admin.dashboard = async () => {
   const [productosRows] = await db.query('SELECT COUNT(*) AS total FROM productos');
-  const [usuariosRows] = await db.query('SELECT COUNT(*) AS total FROM usuarios');
+  const [usuariosRows] = await db.query('SELECT COUNT(*) AS total FROM usuarios WHERE rol = "cliente"');
   const [pedidosRows] = await db.query('SELECT COUNT(*) AS total FROM pedidos');
   const [ventasRows] = await db.query(`SELECT SUM(p.total) AS totalVentas
     FROM pedidos p

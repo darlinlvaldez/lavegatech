@@ -72,6 +72,12 @@ adminAuth.listarAdmins = async (req, res) => {
 adminAuth.crearAdmin = async (req, res) => {
   try {
     const { username, password, rol } = req.body;
+
+    const existing = await admin.findByUsername(username);
+    if (existing) {
+      return res.status(400).json({ error: "Nombre de usuario en uso" });
+    }
+      
     const hashedPassword = await bcrypt.hash(password, 10);
     const newAdmin = await admin.createAdmin({ username, password: hashedPassword, rol });
 
@@ -86,6 +92,11 @@ adminAuth.editarAdmin = async (req, res) => {
   try {
     const { id } = req.params;
     const { username, password, rol } = req.body;
+
+    const existing = await admin.findByUsername(username);
+    if (existing && existing.id !== Number(id)) {
+      return res.status(400).json({ error: "Nombre de usuario en uso" });
+    }
 
     let hashedPassword = null;
     if (password) {
