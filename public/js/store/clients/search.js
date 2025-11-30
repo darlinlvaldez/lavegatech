@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <a href="/product/${product.id}${product.colores ? `?color=${encodeURIComponent(product.colores.split(',')[0])}` : ''}">
           <img src="${product.imagen?.split(',')[0]}" alt="${product.nombre}">
           <div class="product-info">
-            <h4>${product.nombre} ${product.ram} + ${product.almacenamiento}</h4>
+            <h4>${product.nombre} ${product.especificaciones || ""}</h4>
             <p>${product.categoria === 'moviles' ? 'Móviles' : product.categoria.charAt(0).toUpperCase() + product.categoria.slice(1)}</p>
           </div>
           <div class="product-price">

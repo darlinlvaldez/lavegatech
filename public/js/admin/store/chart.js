@@ -7,6 +7,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const labelFechaSelect = document.getElementById('labelFechaSelect');
     const ctx = document.getElementById('ventasChart').getContext('2d');
     let ventasChart = null;
+    let tipoFiltro = 'fecha';
+
+    document.getElementById('btnFecha').addEventListener('click', () => {
+        tipoFiltro = 'fecha';
+        document.getElementById('btnFecha').classList.add('active');
+        document.getElementById('btnProductos').classList.remove('active');
+        loadData();
+    });
+
+    document.getElementById('btnProductos').addEventListener('click', () => {
+        tipoFiltro = 'productos';
+        document.getElementById('btnProductos').classList.add('active');
+        document.getElementById('btnFecha').classList.remove('active');
+        loadData();
+    });
 
     function toggleInputs() {
         const rango = rangoSelect.value;
@@ -26,28 +41,39 @@ document.addEventListener('DOMContentLoaded', () => {
         const mes = mesSelect.value;
         const fecha = fechaSelect.value;
 
-        let url = `/api/admin/ventas-por-fecha?rango=${rango}`;
-        if (mes && rango === 'mes') url += `&mes=${mes}`;
-        if (fecha && rango === 'fecha-especifica') url += `&fecha=${fecha}`;
+        let url = '';
+        if(tipoFiltro === 'fecha'){
+            url = `/api/admin/ventas-por-fecha?rango=${rango}`;
+            if(mes && rango === 'mes') url += `&mes=${mes}`;
+            if(fecha && rango === 'fecha-especifica') url += `&fecha=${fecha}`;
+        } else {
+            url = `/api/admin/top-productos`;
+        }
 
         const res = await fetch(url);
         const data = await res.json();
 
-        const etiquetas = data.map(item => {
-            if (rango === 'fecha-especifica') {
-                return item.fecha;
-            } else if (rango === 'mes') {
-                const [year, month] = item.fecha.split('-');
-                return `${month}/${year}`;
-            } else if (rango === 'año') {
-                return item.fecha;
-            } else {
+        let etiquetas = [];
+        let valores = [];
+        let precios = [];
+
+        if(tipoFiltro === 'fecha'){
+            etiquetas = data.map(item => {
+                if (rango === 'fecha-especifica') return item.fecha;
+                if (rango === 'mes') {
+                    const [year, month] = item.fecha.split('-');
+                    return `${month}/${year}`;
+                }
+                if (rango === 'año') return item.fecha;
                 const date = new Date(item.fecha);
                 return date.toLocaleDateString('es-DO');
-            }
-        });
-
-        const ventas = data.map(item => Number(item.totalVentas));
+            });
+            valores = data.map(item => Number(item.totalVentas));
+        } else {
+            etiquetas = data.map(item => item.nombre_producto);
+            valores = data.map(item => Number(item.totalVendido));
+            precios = data.map(item => Number(item.totalPrecio));
+        }
 
         if (ventasChart) ventasChart.destroy();
 
@@ -56,8 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
             data: {
                 labels: etiquetas,
                 datasets: [{
-                    label: `Ventas (${rango})`,
-                    data: ventas,
+                    label: tipoFiltro === 'fecha' ? `Ventas (${rango})` : 'Top productos (cantidad)',
+                    data: valores,
                     backgroundColor: tipoGrafico === 'bar'
                         ? [
                             'rgba(255, 99, 132, 0.6)',
@@ -88,9 +114,23 @@ document.addEventListener('DOMContentLoaded', () => {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                if(tipoFiltro === 'productos'){
+                                    const index = context.dataIndex;
+                                    return `${context.dataset.label}: ${context.parsed.y} unidades - $${precios[index]}`;
+                                } else {
+                                    return `${context.dataset.label}: $${context.parsed.y}`;
+                                }
+                            }
+                        }
+                    }
+                },
                 scales: {
-                    x: { title: { display: true, text: 'Fecha' } },
-                    y: { title: { display: true, text: 'Ventas ($)' }, beginAtZero: true }
+                    x: { title: { display: true, text: tipoFiltro === 'fecha' ? 'Fecha' : 'Producto' } },
+                    y: { title: { display: true, text: tipoFiltro === 'fecha' ? 'Ventas ($)' : 'Cantidad vendida' }, beginAtZero: true }
                 }
             }
         });

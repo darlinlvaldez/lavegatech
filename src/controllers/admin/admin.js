@@ -29,6 +29,16 @@ adminController.graficoVentas = async (req, res) => {
   }
 };
 
+adminController.topProductos = async (req, res) => {
+    try {
+        const top = await admin.getTopProductos();
+        res.json(top);
+    } catch (error) {
+        console.error('Error al obtener top productos:', error);
+        res.status(500).json({ error: 'Error al obtener top productos' });
+    }
+};
+
 adminController.estadoEnvio = async (req, res) => {
   const pedido_id = req.params.id;
   const { estado_envio } = req.body;

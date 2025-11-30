@@ -11,6 +11,7 @@ router.use(isAdmin());
 // Panel Admin 
 router.get('/panel',  requireRole('superadmin', 'admin', 'editor', 'ventas', 'transportista'), admin.adminDashboard);
 router.get('/ventas-por-fecha',  requireRole('superadmin', 'admin', 'ventas'), admin.graficoVentas);
+router.get('/top-productos', requireRole('superadmin', 'admin', 'ventas'), admin.topProductos);
 router.post('/orders/:id/estado-envio',  requireRole('superadmin', 'admin', 'transportista'), admin.estadoEnvio);
 
 // Productos

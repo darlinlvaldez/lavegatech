@@ -1,19 +1,17 @@
 .grafico-contenedor {
-  max-width: 12000px;
+  max-width: 2200px; 
   margin: auto;
   width: 100%;
-  padding: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  overflow: visible; 
 }
 
 #ventasChart {
   width: 100% !important;
-  height: 800px !important; 
-}
-
-@media (max-width: 600px) {
-  #ventasChart {
-    height: 400px !important;
-  }
+  height: 730px !important;
 }
 
 select, input[type="month"], input[type="date"] {
@@ -29,4 +27,38 @@ select, input[type="month"], input[type="date"] {
 
 select:hover, input[type="month"]:hover, input[type="date"]:hover {
   border-color: #2980b9;
+}
+
+.filtro-tipo {
+  margin: 15px 0;
+}
+
+.filtro-tipo button {
+  padding: 8px 20px;
+  font-size: 16px;
+  border: 2px solid #3498db;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #3498db;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: all 0.3s ease;
+}
+
+.filtro-tipo button:hover {
+  background-color: #3498db;
+  color: #fff;
+}
+
+.filtro-tipo button.active {
+  background-color: #3498db;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+@media (max-width: 600px) {
+  #ventasChart {
+    height: 400px !important;
+  }
 }

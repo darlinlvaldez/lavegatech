@@ -87,6 +87,23 @@ admin.graficoVentas = async (rango, mes, fecha) => {
   return rows;
 };
 
+admin.getTopProductos = async () => {
+    const query = `
+        SELECT dp.producto_id, dp.nombre_producto, 
+               SUM(dp.cantidad) AS totalVendido,
+               SUM(dp.subtotal) AS totalPrecio
+        FROM detalles_pedido dp
+        JOIN pedidos p ON dp.pedido_id = p.id
+        WHERE p.estado = 'pagado'
+        GROUP BY dp.producto_id, dp.nombre_producto
+        ORDER BY totalVendido DESC
+        LIMIT 10
+    `;
+    const [rows] = await db.query(query);
+    return rows;
+};
+
+
 admin.actualizarEstadoEnvio = async (estado_envio, pedido_id) => {
   let campos = 'estado_envio = ?';
   let valores = [estado_envio];
