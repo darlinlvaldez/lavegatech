@@ -418,13 +418,16 @@ adminController.editarCiudad = async (req, res) => {
   }
 };
 
-adminController.borrarCiudad = async (req, res) => {
+adminController.estadoCiudad = async (req, res) => {
   try {
     const { id } = req.params;
-    const affectedRows = await admin.eliminarCiudad(id);
+    const { activo } = req.body;
+
+    const affectedRows = await admin.estadoCiudad(id, activo);
+
     res.json({ success: affectedRows > 0 });
   } catch (err) {
-    res.status(500).json({ error: 'Error al eliminar ciudad de envío' });
+    res.status(500).json({ error: 'Error al cambiar estado de la ciudad' });
   }
 };
 

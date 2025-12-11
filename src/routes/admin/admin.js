@@ -44,7 +44,7 @@ router.delete('/categorias/:id',  requireRole('superadmin', 'admin'), admin.borr
 router.get('/ciudades',  requireRole('superadmin', 'admin', 'ventas', 'transportista'), admin.listarCiudades);
 router.post('/ciudades',  requireRole('superadmin', 'admin', 'ventas'), validate(request.shipping), admin.crearCiudad);
 router.put('/ciudades/:id',  requireRole('superadmin', 'admin', 'ventas'), validate(request.shipping), admin.editarCiudad);
-router.delete('/ciudades/:id',  requireRole('superadmin', 'admin', 'ventas'), admin.borrarCiudad);
+router.patch('/ciudades/:id/ciudadEstado', requireRole('superadmin', 'admin', 'ventas'), admin.estadoCiudad);
 
 // RAM y Almacenamiento 
 router.get('/ram',  requireRole('superadmin', 'admin', 'editor'), admin.listarRAM);

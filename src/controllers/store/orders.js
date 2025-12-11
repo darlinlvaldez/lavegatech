@@ -54,11 +54,12 @@ orderController.createOrder = async (req, res) => {
       apellido,
       email,
       direccion,
-      ciudad: ciudadData.nombre,
       distrito,
       telefono,
       total: totalPesos,
       ciudad_envio_id,
+      ciudad_envio_nombre: ciudadData.nombre,
+      ciudad_envio_costo: costoEnvio,
       envio_diferente,
     };
 

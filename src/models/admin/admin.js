@@ -88,21 +88,21 @@ admin.graficoVentas = async (rango, mes, fecha) => {
 };
 
 admin.getTopProductos = async () => {
-    const query = `
-        SELECT dp.producto_id, dp.nombre_producto, 
-               SUM(dp.cantidad) AS totalVendido,
-               SUM(dp.subtotal) AS totalPrecio
-        FROM detalles_pedido dp
-        JOIN pedidos p ON dp.pedido_id = p.id
-        WHERE p.estado = 'pagado'
-        GROUP BY dp.producto_id, dp.nombre_producto
-        ORDER BY totalVendido DESC
-        LIMIT 10
-    `;
-    const [rows] = await db.query(query);
-    return rows;
+  const query = `
+  SELECT dp.producto_id, dp.nombre_producto, 
+  SUM(dp.cantidad) AS totalVendido,
+  SUM(dp.subtotal) AS totalPrecio
+  FROM detalles_pedido dp
+  JOIN pedidos p ON dp.pedido_id = p.id
+  WHERE p.estado = 'pagado'
+  GROUP BY dp.producto_id, dp.nombre_producto
+  ORDER BY totalVendido DESC
+  LIMIT 10
+  `;
+  
+  const [rows] = await db.query(query);
+  return rows;
 };
-
 
 admin.actualizarEstadoEnvio = async (estado_envio, pedido_id) => {
   let campos = 'estado_envio = ?';
@@ -351,26 +351,27 @@ admin.estadoUsuario = async (id, activo) => {
 
 admin.obtenerPedidos = async () => {
   const [rows] = await db.query(
-    `SELECT p.*, e.estado_envio, e.fecha_envio, e.fecha_entregado, e.fecha_cancelado, e.costo_envio
-     FROM pedidos p
-     LEFT JOIN envios e ON p.id = e.pedido_id
-     LEFT JOIN ciudades_envio c ON p.ciudad_envio_id = c.id
-     ORDER BY p.fecha_creacion DESC`
+    `SELECT p.*, e.estado_envio, e.fecha_envio, e.fecha_entregado, e.fecha_cancelado, e.costo_envio,
+    p.ciudad_envio_nombre
+    FROM pedidos p
+    LEFT JOIN envios e ON p.id = e.pedido_id
+    ORDER BY p.fecha_creacion DESC`
   );
+
   return rows;
 };
 
 admin.obtenerPedidoId = async (id) => {
   const [rows] = await db.query(
     `SELECT p.*, e.estado_envio, e.fecha_envio, e.fecha_entregado, e.fecha_cancelado, e.costo_envio,
-    pa.metodo_pago, pa.paypal_order_id, pa.fecha_pago
+    p.ciudad_envio_nombre, p.ciudad_envio_costo, pa.metodo_pago, pa.paypal_order_id, pa.fecha_pago
     FROM pedidos p
     LEFT JOIN envios e ON p.id = e.pedido_id
-    LEFT JOIN ciudades_envio c ON p.ciudad_envio_id = c.id
     LEFT JOIN pagos pa ON p.id = pa.pedido_id
     WHERE p.id = ?`,
     [id]
   );
+
   return rows[0];
 };
 
@@ -392,7 +393,7 @@ admin.productoPedido = async (pedido_id) => {
 
 admin.obtenerCiudades = async () => {
   const [rows] = await db.query(
-    `SELECT * FROM ciudades_envio ORDER BY id DESC`
+    `SELECT * FROM ciudades_envio ORDER BY activo DESC, nombre ASC`
   );
   return rows;
 };
@@ -407,7 +408,8 @@ admin.obtenerCiudadId = async (id) => {
 
 admin.agregarCiudad = async ({ nombre, costo_envio }) => {
   const [result] = await db.query(
-    `INSERT INTO ciudades_envio (nombre, costo_envio) VALUES (?, ?)`,
+    `INSERT INTO ciudades_envio (nombre, costo_envio, activo)
+     VALUES (?, ?, 1)`,
     [nombre, costo_envio]
   );
   return result.insertId;
@@ -421,10 +423,10 @@ admin.actualizarCiudad = async ({ id, nombre, costo_envio }) => {
   return result.affectedRows;
 };
 
-admin.eliminarCiudad = async (id) => {
+admin.estadoCiudad = async (id, activo) => {
   const [result] = await db.query(
-    `DELETE FROM ciudades_envio WHERE id = ?`,
-    [id]
+    `UPDATE ciudades_envio SET activo = ? WHERE id = ?`,
+    [activo, id]
   );
   return result.affectedRows;
 };

@@ -22,20 +22,26 @@ function renderCities() {
 
   (filteredCities.length ? filteredCities : cities).forEach((city) => {
     const row = document.createElement("tr");
+
+    const estadoTexto = city.activo ? "Activo" : "Inactivo";
+    const estadoClase = city.activo ? "estado-activo" : "estado-inactivo";
     
     row.innerHTML = `
       <td class="truncate-cell">${city.id || ''}</td>
       <td class="truncate-cell">${city.nombre || ''}</td>
       <td>$${formatPrice(parseFloat(city.costo_envio)) || 0}</td>
       <td>
+        <button class="estado-btn ${estadoClase}" onclick="ciudadEstado(${city.id}, 
+        ${city.activo})"> ${estadoTexto}
+        </button>
+      </td>
+      <td>
         <button onclick="editCity(${city.id})" class="edit-button">
           Editar
         </button>
-        <button onclick="deleteCity(${city.id})" class="delete-button">
-          Eliminar
-        </button>
       </td>
     `;
+
     citiesTableBody.appendChild(row);
   });
 }
@@ -106,6 +112,30 @@ cityForm.addEventListener("submit", async (e) => {
   }
 });
 
+window.ciudadEstado = async function(id, estadoActual) {
+  try {
+    const nuevoEstado = estadoActual ? 0 : 1;
+
+    const res = await fetch(`/api/admin/ciudades/${id}/ciudadEstado`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ activo: nuevoEstado })
+    });
+
+    if (!res.ok) throw new Error("Error al cambiar el estado");
+
+    const data = await res.json();
+    if (!data.success) throw new Error("No se actualizó");
+
+    const index = cities.findIndex(c => c.id === id);
+    if (index !== -1) cities[index].activo = nuevoEstado;
+
+    renderCities();
+  } catch (err) {
+    showToast("No se pudo cambiar el estado de la ciudad.", "#e74c3c", "alert-circle");
+  }
+};  
+
 window.editCity = function(id) {
   const city = cities.find((c) => c.id === id);
   if (city) {
@@ -125,27 +155,6 @@ async function fetchCities() {
   cities = data;
   filteredCities = [];
   renderCities();
-}
-
-window.deleteCity = async function(id) {
-  const confirmed = await sweetAlert({
-    title: "¿Eliminar Ciudad?",
-    text: "Esta acción no se puede deshacer.",
-    confirmButtonText: "Aceptar",
-  });
-
-  if (!confirmed) return;
-
-  try {
-    const res = await fetch(`/api/admin/ciudades/${id}`, { method: "DELETE" });
-    if (!res.ok) throw new Error();
-    
-    await fetchCities();
-    showToast("Ciudad eliminada con éxito.", "#27ae60", "check-circle");
-
-  } catch (err) {
-    showToast("Error al eliminar la ciudad.", "#e74c3c", "alert-circle");
-  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {

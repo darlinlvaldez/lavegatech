@@ -9,8 +9,9 @@ orders.createOrder = async (orderData, items, costoEnvio) => {
 
       const [orderResult] = await conn.query(
       `INSERT INTO pedidos (usuario_id, nombre, apellido, email, direccion, 
-        distrito, telefono, total, estado, ciudad_envio_id, envio_diferente) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        distrito, telefono, total, estado, ciudad_envio_id, ciudad_envio_nombre, 
+        ciudad_envio_costo, envio_diferente) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         orderData.usuario_id,
         orderData.nombre,
@@ -22,6 +23,8 @@ orders.createOrder = async (orderData, items, costoEnvio) => {
         orderData.total,
         orderData.estado,
         orderData.ciudad_envio_id,
+        orderData.ciudad_envio_nombre,
+        orderData.ciudad_envio_costo,
         orderData.envio_diferente || 0  
       ]
     );
@@ -74,7 +77,7 @@ orders.getCityId = async (ciudad_envio_id) => {
 };
 
 orders.listCities = async function () {
-  const [ciudades] = await db.query("SELECT id, nombre, costo_envio FROM ciudades_envio");
+  const [ciudades] = await db.query("SELECT id, nombre, costo_envio FROM ciudades_envio WHERE activo = 1;");
   return ciudades;
 }
 
@@ -144,14 +147,13 @@ orders.checkStock = async (items) => {
 
 orders.getOrderById = async (pedido_id, userId) => {
   const [order] = await db.query(
-    `SELECT p.*, c.nombre AS nombre_ciudad_envio, c.costo_envio, e.estado_envio 
-    FROM pedidos p 
-    LEFT JOIN ciudades_envio c ON p.ciudad_envio_id = c.id 
-    LEFT JOIN envios e ON p.id = e.pedido_id
-    WHERE p.id = ? AND p.usuario_id = ?`,
+    `SELECT p.*, p.ciudad_envio_nombre, p.ciudad_envio_costo, e.estado_envio
+     FROM pedidos p
+     LEFT JOIN envios e ON p.id = e.pedido_id
+     WHERE p.id = ? AND p.usuario_id = ?`,
     [pedido_id, userId]
   );
-  
+
   if (order.length === 0) return null;
 
   const [items] = await db.query(
@@ -170,12 +172,11 @@ orders.getOrderById = async (pedido_id, userId) => {
 
 orders.getUserOrders = async (userId) => {
   const [orders] = await db.query(
-    `SELECT p.*, e.estado_envio, ce.nombre AS nombre_ciudad
+    `SELECT p.*, p.ciudad_envio_nombre, e.estado_envio
      FROM pedidos p
      LEFT JOIN envios e ON p.id = e.pedido_id
-     LEFT JOIN ciudades_envio ce ON p.ciudad_envio_id = ce.id
-     WHERE p.usuario_id = ? 
-     ORDER BY fecha_creacion DESC`,
+     WHERE p.usuario_id = ?
+     ORDER BY p.fecha_creacion DESC`,
     [userId]
   );
   return orders;
