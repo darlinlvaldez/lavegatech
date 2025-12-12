@@ -106,19 +106,30 @@ admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
   return rows;
 };
 
-admin.getTopProductos = async () => {
-  const query = `
-  SELECT dp.producto_id, dp.nombre_producto, 
-  SUM(dp.cantidad) AS totalVendido,
-  SUM(dp.subtotal) AS totalPrecio
-  FROM detalles_pedido dp
-  JOIN pedidos p ON dp.pedido_id = p.id
-  WHERE p.estado = 'pagado'
-  GROUP BY dp.producto_id, dp.nombre_producto
-  ORDER BY totalVendido DESC
-  LIMIT 10
+admin.getTopProductos = async (limit = null) => {
+  let query = `
+    SELECT 
+      dp.producto_id, 
+      dp.nombre_producto, 
+      SUM(dp.cantidad) AS totalVendido,
+      SUM(dp.subtotal) AS totalPrecio,
+      p.almacenamiento_id,
+      p.ram_id,
+      CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
+    FROM detalles_pedido dp
+    JOIN productos p ON dp.producto_id = p.id
+    LEFT JOIN ram r ON p.ram_id = r.id
+    LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
+    JOIN pedidos ped ON dp.pedido_id = ped.id
+    WHERE ped.estado = 'pagado'
+    GROUP BY dp.producto_id, dp.nombre_producto
+    ORDER BY totalVendido DESC
   `;
-  
+
+  if (limit) {
+    query += ` LIMIT ${Number(limit)}`;
+  }
+
   const [rows] = await db.query(query);
   return rows;
 };
@@ -162,9 +173,9 @@ admin.obtenerItems = async () => {
       p.descuento, 
       p.categoria_id AS categoria_id,
       p.marca_id AS marca_id,
+      p.activo,
       p.almacenamiento_id,
       p.ram_id,
-      p.activo,
       CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones,
       c.categoria AS categoria,
       m.nombre AS marca,

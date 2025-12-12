@@ -144,6 +144,10 @@ app.get('/admin/sales', isAdmin(), (req, res) => {
   res.render('admin/sales');  
 });
 
+app.get('/admin/allProducts', isAdmin(), (req, res) => {
+  res.render('admin/allProducts');
+});
+
 app.get('/admin/products', isAdmin(), (req, res) => {
   res.render('admin/products');  
 });

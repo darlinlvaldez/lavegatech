@@ -34,6 +34,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function toggleFiltroFecha() {
+    const btnVerTodos = document.getElementById("btnVerTodos");
+    if (btnVerTodos) {
+      btnVerTodos.remove();
+    }
+
     if (tipoFiltro === "productos") {
       contenedorFiltrosFecha.style.display = "none";
     } else {
@@ -43,26 +48,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function toggleInputs() {
-  const rango = rangoSelect.value;
+    const rango = rangoSelect.value;
 
-  const showMes = rango === "mes";
-  mesSelect.style.display = showMes ? "inline-block" : "none";
-  labelMesSelect.style.display = showMes ? "inline-block" : "none";
+    const showMes = rango === "mes";
+    mesSelect.style.display = showMes ? "inline-block" : "none";
+    labelMesSelect.style.display = showMes ? "inline-block" : "none";
 
-  const showFecha = rango === "fecha-especifica";
-  fechaSelect.style.display = showFecha ? "inline-block" : "none";
-  labelFechaSelect.style.display = showFecha ? "inline-block" : "none";
+    const showFecha = rango === "fecha-especifica";
+    fechaSelect.style.display = showFecha ? "inline-block" : "none";
+    labelFechaSelect.style.display = showFecha ? "inline-block" : "none";
 
-  const showAnio = rango === "año";
-  anioInput.style.display = showAnio ? "inline-block" : "none";
-  labelAnioInput.style.display = showAnio ? "inline-block" : "none";
+    const showAnio = rango === "año";
+    anioInput.style.display = showAnio ? "inline-block" : "none";
+    labelAnioInput.style.display = showAnio ? "inline-block" : "none";
 
-  const showPersonalizado = rango === "personalizado";
-  fechaDesde.style.display = showPersonalizado ? "inline-block" : "none";
-  fechaHasta.style.display = showPersonalizado ? "inline-block" : "none";
-  labelFechaDesde.style.display = showPersonalizado ? "inline-block" : "none";
-  labelFechaHasta.style.display = showPersonalizado ? "inline-block" : "none";
-}
+    const showPersonalizado = rango === "personalizado";
+    fechaDesde.style.display = showPersonalizado ? "inline-block" : "none";
+    fechaHasta.style.display = showPersonalizado ? "inline-block" : "none";
+    labelFechaDesde.style.display = showPersonalizado ? "inline-block" : "none";
+    labelFechaHasta.style.display = showPersonalizado ? "inline-block" : "none";
+  }
 
   async function loadData() {
     const rango = rangoSelect.value;
@@ -298,73 +303,85 @@ function escapeHtml(str) {
 }
 
 function renderTabla(data, tipo) {
-  const thead = document.querySelector('#reporteTable thead');
-  const tbody = document.querySelector('#reporteTable tbody');
-  const tfoot = document.querySelector('#reporteTable tfoot');
-  const titulo = document.getElementById('tablaTitulo');
+  const thead = document.querySelector("#reporteTable thead");
+  const tbody = document.querySelector("#reporteTable tbody");
+  const tfoot = document.querySelector("#reporteTable tfoot");
+  const titulo = document.getElementById("tablaTitulo");
 
-  thead.innerHTML = '';
-  tbody.innerHTML = '';
-  tfoot.innerHTML = '';
+  thead.innerHTML = "";
+  tbody.innerHTML = "";
+  tfoot.innerHTML = "";
 
   if (!Array.isArray(data) || data.length === 0) {
-    titulo.textContent = 'Reporte (sin datos)';
-    thead.innerHTML = '<tr><th>No hay datos</th></tr>';
+    titulo.textContent = "Reporte (sin datos)";
+    thead.innerHTML = "<tr><th>No hay datos</th></tr>";
     return;
   }
 
-  if (tipo === 'fecha') {
-    titulo.textContent = 'Ventas por periodo';
+  if (tipo === "fecha") {
+    titulo.textContent = "Ventas por periodo";
     thead.innerHTML = `<tr><th>Fecha</th><th style="text-align:right">Ventas</th></tr>`;
-
     let totalVendido = 0;
-    data.forEach(item => {
-      const fecha = item.fecha || '';
+    data.forEach((item) => {
+      const fecha = item.fecha || "";
       const ventas = Number(item.totalVentas || 0);
       totalVendido += ventas;
-      tbody.insertAdjacentHTML('beforeend', `
-        <tr>
-          <td>${formatDate(fecha)}</td>
-          <td style="text-align:right">$${formatPrice(ventas)}</td>
-        </tr>
-      `);
+      tbody.insertAdjacentHTML(
+        "beforeend",
+        `<tr><td>${formatDate(
+          fecha
+        )}</td><td style="text-align:right">$${formatPrice(ventas)}</td></tr>`
+      );
     });
-
-    tfoot.innerHTML = `
-      <tr>
-        <td style="text-align:right">Total vendido</td>
-        <td style="text-align:right">$${formatPrice(totalVendido)}</td>
-      </tr>
-    `;
-  } else {
-    titulo.textContent = 'Top productos';
-    thead.innerHTML = `<tr><th>Producto</th><th style="text-align:right">Cantidad</th><th style="text-align:right">Ingresos</th></tr>`;
+    tfoot.innerHTML = `<tr><td style="text-align:right">Total vendido</td>
+    <td style="text-align:right">$${formatPrice(totalVendido)}</td></tr>`;
+  } else if (tipo === "productos") {
+    titulo.textContent = "Top productos";
+    thead.innerHTML = `<tr><th>Producto</th><th style="text-align:right">
+    Cantidad</th><th style="text-align:right">Ingresos</th></tr>`;
 
     let totalCantidad = 0;
     let totalIngresos = 0;
-    data.forEach(item => {
-      const nombre = item.nombre_producto || item.producto_nombre || 'Producto';
+    data.forEach((item) => {
+      const nombre = item.nombre_producto || "Producto";
+      const especificaciones = item.especificaciones || "";
       const cantidad = Number(item.totalVendido || item.cantidad || 0);
       const ingresos = Number(item.totalPrecio || item.totalIngresos || 0);
 
       totalCantidad += cantidad;
       totalIngresos += ingresos;
 
-      tbody.insertAdjacentHTML('beforeend', `
-        <tr>
-          <td>${escapeHtml(nombre)}</td>
-          <td style="text-align:right">${cantidad}</td>
-          <td style="text-align:right">$${formatPrice(ingresos)}</td>
-        </tr>
-      `);
+      tbody.insertAdjacentHTML(
+        "beforeend",
+        `<tr><td>${escapeHtml(nombre)} ${escapeHtml(
+          especificaciones
+        )}</td><td style="text-align:right">
+        ${cantidad}</td><td style="text-align:right">$${formatPrice(
+          ingresos
+        )}</td></tr>`
+      );
     });
 
-    tfoot.innerHTML = `
-      <tr>
-        <td style="text-align:right">Totales</td>
-        <td style="text-align:right">${totalCantidad}</td>
-        <td style="text-align:right">$${formatPrice(totalIngresos)}</td>
-      </tr>
-    `;
+    tfoot.innerHTML = `<tr><td style="text-align:right">Totales</td><td style="text-align:right">
+    ${totalCantidad}</td><td style="text-align:right">$${formatPrice(
+      totalIngresos
+    )}</td></tr>`;
+
+    const tablaContenedor = document.getElementById("tablaReporte");
+
+    if (tablaContenedor && !document.getElementById("btnVerTodos")) {
+      tablaContenedor.insertAdjacentHTML(
+        "afterend",
+        `
+    <div class="filtro-tipo" style="margin-top: 10px;">
+      <button id="btnVerTodos" class="active">Ver todos</button>
+    </div>
+    `
+      );
+
+      document.getElementById("btnVerTodos").addEventListener("click", () => {
+        window.location.href = "/admin/allProducts";
+      });
+    }
   }
 }
