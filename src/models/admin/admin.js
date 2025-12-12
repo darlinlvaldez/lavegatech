@@ -14,7 +14,6 @@ admin.dashboard = async () => {
     WHERE p.estado = ? AND e.estado_envio != ?`,
     ['pagado', 'cancelado']);
 
-
   const [[pendientes]] = await db.query(`SELECT COUNT(*) AS total FROM envios WHERE estado_envio = 'pendiente'`);
   const [[enviados]] = await db.query(`SELECT COUNT(*) AS total FROM envios WHERE estado_envio = 'enviado'`);
   const [[entregados]] = await db.query(`SELECT COUNT(*) AS total FROM envios WHERE estado_envio = 'entregado'`);
@@ -34,21 +33,24 @@ admin.dashboard = async () => {
   };
 };
 
-admin.graficoVentas = async (rango, mes, fecha) => {
+admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
   let query = '';
   let params = [];
 
   if (rango === 'mes') {
     if (mes) {
       query = `
-      SELECT DATE_FORMAT(p.fecha_creacion, '%Y-%m-%d') AS fecha, SUM(p.total) AS totalVentas
-      FROM pedidos p
-      JOIN envios e ON p.id = e.pedido_id
-      WHERE p.estado = 'pagado' AND e.estado_envio != 'cancelado' AND DATE_FORMAT(p.fecha_creacion, '%Y-%m') = ?
-      GROUP BY fecha ORDER BY fecha`;
+        SELECT DATE_FORMAT(p.fecha_creacion, '%Y-%m-%d') AS fecha, SUM(p.total) AS totalVentas
+        FROM pedidos p
+        JOIN envios e ON p.id = e.pedido_id
+        WHERE p.estado = 'pagado'
+          AND e.estado_envio != 'cancelado'
+          AND DATE_FORMAT(p.fecha_creacion, '%Y-%m') = ?
+        GROUP BY fecha ORDER BY fecha
+      `;
       params = [mes];
-
-    } else {
+    }
+    else {
       query = `
         SELECT DATE_FORMAT(fecha_creacion, '%Y-%m') AS fecha, SUM(total) AS totalVentas
         FROM pedidos
@@ -56,25 +58,42 @@ admin.graficoVentas = async (rango, mes, fecha) => {
         GROUP BY fecha ORDER BY fecha
       `;
     }
+  }
 
-  } else if (rango === 'año') {
+  else if (rango === 'año' && anio) {
     query = `
-      SELECT YEAR(fecha_creacion) AS fecha, SUM(total) AS totalVentas
+      SELECT DATE(fecha_creacion) AS fecha, SUM(total) AS totalVentas
       FROM pedidos
       WHERE estado = 'pagado'
+        AND YEAR(fecha_creacion) = ?
       GROUP BY fecha ORDER BY fecha
     `;
+    params = [anio];
+  }
 
-  } else if (rango === 'fecha-especifica' && fecha) {
+  else if (rango === 'fecha-especifica' && fecha) {
     query = `
       SELECT DATE_FORMAT(fecha_creacion, '%H:00') AS fecha, SUM(total) AS totalVentas
       FROM pedidos
-      WHERE estado = 'pagado' AND DATE(fecha_creacion) = ?
+      WHERE estado = 'pagado'
+        AND DATE(fecha_creacion) = ?
       GROUP BY HOUR(fecha_creacion) ORDER BY HOUR(fecha_creacion)
     `;
     params = [fecha];
+  }
 
-  } else {
+  else if (rango === 'personalizado' && desde && hasta) {
+    query = `
+      SELECT DATE(fecha_creacion) AS fecha, SUM(total) AS totalVentas
+      FROM pedidos
+      WHERE estado = 'pagado'
+        AND DATE(fecha_creacion) BETWEEN ? AND ?
+      GROUP BY fecha ORDER BY fecha
+    `;
+    params = [desde, hasta];
+  }
+
+  else {
     query = `
       SELECT DATE(fecha_creacion) AS fecha, SUM(total) AS totalVentas
       FROM pedidos

@@ -6,7 +6,8 @@
   box-sizing: border-box;
   background-color: #f9f9f9;
   border-radius: 10px;
-  overflow: visible; 
+  max-height: 100vh;    
+  overflow-y: auto;    
 }
 
 #ventasChart {
@@ -14,7 +15,7 @@
   height: 730px !important;
 }
 
-select, input[type="month"], input[type="date"] {
+select, input[type="month"], input[type="date"], input[type="number"] {
   padding: 6px 12px;
   font-size: 16px;
   border: 2px solid #3498db;
@@ -55,6 +56,56 @@ select:hover, input[type="month"]:hover, input[type="date"]:hover {
   color: #fff;
   font-weight: bold;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.resumen-ventas {
+  margin: 15px 0;
+  padding: 12px 18px;
+  background: #f5f5f5;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+  .table-container {
+  background: white;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.table-responsive { width: 100%; overflow-x: auto; }
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.report-table thead th {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 2px solid #eee;
+  background: #fafafa;
+  font-weight: 600;
+}
+
+.report-table tbody td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.report-table tfoot td {
+  padding: 10px;
+  font-weight: 700;
+  border-top: 2px solid #ddd;
+}
+
+@media (max-width: 600px) {
+  .report-table thead th, .report-table tbody td { padding: 6px 8px; font-size: 13px; }
 }
 
 @media (max-width: 600px) {

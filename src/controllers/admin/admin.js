@@ -18,10 +18,10 @@ adminController.adminDashboard = async (req, res) => {
 };
 
 adminController.graficoVentas = async (req, res) => {
-  const { rango, mes, fecha } = req.query;
+  const { rango, mes, fecha, anio, desde, hasta } = req.query;
 
   try {
-    const ventas = await admin.graficoVentas(rango, mes, fecha);
+    const ventas = await admin.graficoVentas(rango, mes, fecha, anio, desde, hasta);
     res.json(ventas);
   } catch (error) {
     console.error('Error al obtener ventas por fecha:', error);
