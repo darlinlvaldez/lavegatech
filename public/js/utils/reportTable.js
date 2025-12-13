@@ -4,8 +4,9 @@ export function renderTablaVentasBase({
   tituloId,
   tipo,
   rango,
+  tituloExtra,
   fechaBase,
-  mostrarTituloFecha
+  mostrarTituloFecha, 
 }) {
   const table = document.getElementById(tableId);
   const thead = table.querySelector("thead");
@@ -22,8 +23,13 @@ export function renderTablaVentasBase({
     return;
   }
 
-  // 🔹 VENTAS POR FECHA
   if (tipo === "fecha") {
+
+  titulo.textContent =
+    rango === "fecha-especifica"
+      ? `Ventas por hora (${tituloExtra})`
+      : "Ventas";
+
     thead.innerHTML = `
       <tr>
         <th>${rango === "fecha-especifica" ? "Hora" : "Fecha"}</th>
@@ -38,7 +44,7 @@ export function renderTablaVentasBase({
         "beforeend",
         `<tr>
           <td>${formatDate(item.fecha, rango)}</td>
-          <td style="text-align:right">$${item.totalVentas}</td>
+          <td style="text-align:right">$${formatPrice(item.totalVentas)}</td>
         </tr>`
       );
     });
@@ -46,12 +52,11 @@ export function renderTablaVentasBase({
     tfoot.innerHTML = `
       <tr>
         <td style="text-align:right">Total</td>
-        <td style="text-align:right">$${total}</td>
+        <td style="text-align:right">$${formatPrice(total)}</td>
       </tr>
     `;
   }
 
-  // 🔹 TOP PRODUCTOS
   if (tipo === "productos") {
     titulo.textContent = "Top productos";
 
@@ -75,7 +80,8 @@ export function renderTablaVentasBase({
         `<tr>
           <td>${item.nombre_producto}</td>
           <td style="text-align:right">${item.totalVendido}</td>
-          <td style="text-align:right">$${item.totalPrecio}</td>
+          <td style="text-align:right">$${formatPrice(item.totalPrecio)}</td>
+
         </tr>`
       );
     });
@@ -84,12 +90,36 @@ export function renderTablaVentasBase({
       <tr>
         <td style="text-align:right">Totales</td>
         <td style="text-align:right">${totalCantidad}</td>
-        <td style="text-align:right">$${totalIngresos}</td>
+        <td style="text-align:right">$${formatPrice(totalIngresos)}</td>
       </tr>
     `;
   }
 }
 
+export function updateBotonVerTodos(tipo) {
+  let btn = document.getElementById("btnVerTodos");
+
+  if (!btn) {
+    const contenedor = document.getElementById("tablaReporte");
+    contenedor.insertAdjacentHTML(
+      "afterend",
+      `
+      <div class="filtro-tipo" style="margin-top:10px;">
+        <button id="btnVerTodos" class="active"></button>
+      </div>
+      `
+    );
+    btn = document.getElementById("btnVerTodos");
+  }
+
+  if (tipo === "fecha") {
+    btn.textContent = "Ver más";
+    btn.onclick = () => (window.location.href = "/admin/allSales");
+  } else {
+    btn.textContent = "Ver más";
+    btn.onclick = () => (window.location.href = "/admin/allProducts");
+  }
+}
 
 function formatHora12(hora) {
   const [h] = hora.split(":");

@@ -1,4 +1,5 @@
-import { renderTablaVentasBase, formatDate } from "../../utils/reportTable.js";
+import { renderTablaVentasBase, formatDate, updateBotonVerTodos } from "../../utils/reportTable.js";
+import { initDateFilters, buildDateQuery, dateTitle } from "../../utils/dateFilter.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const rangoSelect = document.getElementById("rangoSelect");
@@ -14,133 +15,66 @@ document.addEventListener("DOMContentLoaded", () => {
   const fechaHasta = document.getElementById("fechaHasta");
   const labelFechaDesde = document.getElementById("labelFechaDesde");
   const labelFechaHasta = document.getElementById("labelFechaHasta");
-  const btn = document.getElementById("btnVerTodos");
 
   const ctx = document.getElementById("ventasChart").getContext("2d");
   let ventasChart = null;
   let tipoFiltro = "fecha";
 
-  document.getElementById("btnFecha").addEventListener("click", () => {
-    tipoFiltro = "fecha";
-    document.getElementById("btnFecha").classList.add("active");
-    document.getElementById("btnProductos").classList.remove("active");
-    loadData();
-    toggleFiltroFecha();
-  });
+  const barBackgroundColors = [
+    "rgba(255, 99, 132, 0.6)",
+    "rgba(54, 162, 235, 0.6)",
+    "rgba(255, 206, 86, 0.6)",
+    "rgba(75, 192, 192, 0.6)",
+    "rgba(153, 102, 255, 0.6)",
+    "rgba(255, 159, 64, 0.6)",
+    "rgba(199, 199, 199, 0.6)"
+  ];
 
-  document.getElementById("btnProductos").addEventListener("click", () => {
-    tipoFiltro = "productos";
-    document.getElementById("btnProductos").classList.add("active");
-    document.getElementById("btnFecha").classList.remove("active");
-    loadData();
-    toggleFiltroFecha();
-  });
+  const barBorderColors = [
+    "rgba(255, 99, 132, 1)",
+    "rgba(54, 162, 235, 1)",
+    "rgba(255, 206, 86, 1)",
+    "rgba(75, 192, 192, 1)",
+    "rgba(153, 102, 255, 1)",
+    "rgba(255, 159, 64, 1)",
+    "rgba(199, 199, 199, 1)"
+  ];
 
   function toggleFiltroFecha() {
-    if (tipoFiltro === "productos") {
-      contenedorFiltrosFecha.style.display = "none";
-    } else {
-      contenedorFiltrosFecha.style.display = "block";
-      toggleInputs();
-    }
-  }
-
-  function toggleInputs() {
-    const rango = rangoSelect.value;
-
-    const showMes = rango === "mes";
-    mesSelect.style.display = showMes ? "inline-block" : "none";
-    labelMesSelect.style.display = showMes ? "inline-block" : "none";
-
-    const showFecha = rango === "fecha-especifica";
-    fechaSelect.style.display = showFecha ? "inline-block" : "none";
-    labelFechaSelect.style.display = showFecha ? "inline-block" : "none";
-
-    const showAnio = rango === "año";
-    anioInput.style.display = showAnio ? "inline-block" : "none";
-    labelAnioInput.style.display = showAnio ? "inline-block" : "none";
-
-    const showPersonalizado = rango === "personalizado";
-    fechaDesde.style.display = showPersonalizado ? "inline-block" : "none";
-    fechaHasta.style.display = showPersonalizado ? "inline-block" : "none";
-    labelFechaDesde.style.display = showPersonalizado ? "inline-block" : "none";
-    labelFechaHasta.style.display = showPersonalizado ? "inline-block" : "none";
+    contenedorFiltrosFecha.style.display = tipoFiltro === "productos" ? "none" : "block";
   }
 
   async function loadData() {
-    const rango = rangoSelect.value;
-    const tipoGrafico =
-      tipoFiltro === "productos" ? "bar" : tipoGraficoSelect.value;
-    const mes = mesSelect.value;
-    const fecha = fechaSelect.value;
-
-    const anio = anioInput.value;
-    const fechaDesdeValor = fechaDesde.value;
-    const fechaHastaValor = fechaHasta.value;
-
-    let tituloExtra = "";
-
-    let url = "";
-
-    if (rango === "año" && anio) {
-      url += `&anio=${anio}`;
-    }
-
-    if (rango === "personalizado" && fechaDesdeValor && fechaHastaValor) {
-      url += `&desde=${fechaDesdeValor}&hasta=${fechaHastaValor}`;
-    }
-
-    if (tipoFiltro === "fecha") {
-      url = `/api/admin/ventas-por-fecha?rango=${rango}`;
-
-      if (rango === "mes" && mes) url += `&mes=${mes}`;
-      if (rango === "fecha-especifica" && fecha) url += `&fecha=${fecha}`;
-      if (rango === "año" && anio) url += `&anio=${anio}`;
-      if (rango === "personalizado" && fechaDesdeValor && fechaHastaValor)
-        url += `&desde=${fechaDesdeValor}&hasta=${fechaHastaValor}`;
-    } else {
-      url = `/api/admin/top-productos`;
-    }
-
-    if (rango === "fecha-especifica" && fecha) {
-      const d = new Date(fecha);
-      tituloExtra = d.toLocaleDateString("es-DO", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-    }
-
-    if (btn) btn.remove();
-
-    if (tipoFiltro === "fecha") {
-      renderBotonVerTodos({
-        tableContainerId: "tablaReporte",
-        texto: "Ver todas",
-        url: "/admin/allSales",
-      });
-    } else {
-      renderBotonVerTodos({
-        tableContainerId: "tablaReporte",
-        texto: "Ver todos",
-        url: "/admin/allProducts",
-      });
-    }
+    let url =
+      tipoFiltro === "fecha"
+        ? `/api/admin/ventas-por-fecha${buildDateQuery({
+            rangoSelect,
+            mesSelect,
+            fechaSelect,
+            anioInput,
+            fechaDesde,
+            fechaHasta,
+          })}`
+        : `/api/admin/top-productos`;
 
     const res = await fetch(url);
     const data = await res.json();
-    
-   renderTablaVentasBase({
-  data,
-  tableId: "tablaReporte",
-  tituloId: "tablaTitulo",
-  tipo: tipoFiltro, // 👈 CLAVE
-  rango,
-  fechaBase: fecha,
-  mostrarTituloFecha: true,
-});
 
+    const tituloExtra = dateTitle({
+      rango: rangoSelect.value,
+      fecha: fechaSelect.value,
+    });
+
+    renderTablaVentasBase({
+      data,
+      tableId: "tablaReporte",
+      tituloId: "tablaTitulo",
+      tipo: tipoFiltro,
+      tituloExtra,
+      rango: rangoSelect.value,
+      fechaBase: fechaSelect.value,
+      mostrarTituloFecha: true,
+    });
 
     if (tipoFiltro === "fecha") {
       const totalVendido = data.reduce(
@@ -151,106 +85,97 @@ document.addEventListener("DOMContentLoaded", () => {
       const ticketPromedio = totalPedidos > 0 ? totalVendido / totalPedidos : 0;
 
       document.getElementById("resumenVentas").innerHTML = `
-    Total vendido: <strong>$${totalVendido.toFixed(2)}</strong><br>
-    Total de pedidos: <strong>${totalPedidos}</strong><br>
-    Ticket promedio: <strong>$${ticketPromedio.toFixed(2)}</strong>`;
+        Total vendido: <strong>$${formatPrice(totalVendido)}</strong><br>
+        Total de pedidos: <strong>${totalPedidos}</strong><br>
+        Ticket promedio: <strong>$${formatPrice(ticketPromedio)}</strong>`;
     } else {
       document.getElementById("resumenVentas").innerHTML = "";
     }
 
-    let etiquetas = [];
-    let valores = [];
-    let precios = [];
+    const etiquetas =
+      tipoFiltro === "fecha"
+        ? data.map((item) => formatDate(item.fecha, rangoSelect.value))
+        : data.map((item) => item.nombre_producto);
 
-    if (tipoFiltro === "fecha") {
-      etiquetas = data.map((item) => formatDate(item.fecha, rango));
+    const valores =
+      tipoFiltro === "fecha"
+        ? data.map((item) => Number(item.totalVentas))
+        : data.map((item) => Number(item.totalVendido));
 
-      valores = data.map((item) => Number(item.totalVentas));
-    } else {
-      etiquetas = data.map((item) => item.nombre_producto);
-      valores = data.map((item) => Number(item.totalVendido));
-      precios = data.map((item) => Number(item.totalPrecio));
-    }
+    const precios =
+      tipoFiltro === "productos"
+        ? data.map((item) => Number(item.totalPrecio))
+        : [];
+
+        tipoGraficoSelect.addEventListener("change", () => {
+          if (tipoFiltro === "fecha") {
+            loadData();
+          }
+        });
 
     if (ventasChart) ventasChart.destroy();
 
     Chart.register(ChartDataLabels);
 
+    const tipoGraficoActual =
+      tipoFiltro === "productos" ? "bar" : tipoGraficoSelect.value;
+
     ventasChart = new Chart(ctx, {
-      type: tipoGrafico,
+      type: tipoGraficoActual,
       data: {
         labels: etiquetas,
         datasets: [
-          {
-            label:
-              tipoFiltro === "fecha"
-                ? `Ventas (${rango})`
-                : "Top productos (cantidad)",
-            data: valores,
-            backgroundColor:
-              tipoGrafico === "bar"
-                ? [
-                    "rgba(255, 99, 132, 0.6)",
-                    "rgba(54, 162, 235, 0.6)",
-                    "rgba(255, 206, 86, 0.6)",
-                    "rgba(75, 192, 192, 0.6)",
-                    "rgba(153, 102, 255, 0.6)",
-                    "rgba(255, 159, 64, 0.6)",
-                    "rgba(199, 199, 199, 0.6)",
-                  ]
-                : "transparent",
-            borderColor:
-              tipoGrafico === "bar"
-                ? [
-                    "rgba(255, 99, 132, 1)",
-                    "rgba(54, 162, 235, 1)",
-                    "rgba(255, 206, 86, 1)",
-                    "rgba(75, 192, 192, 1)",
-                    "rgba(153, 102, 255, 1)",
-                    "rgba(255, 159, 64, 1)",
-                    "rgba(199, 199, 199, 1)",
-                  ]
-                : "rgba(54, 162, 235, 1)",
-            borderWidth: 2,
-            fill: tipoGrafico === "line",
-            tension: 0.1,
-          },
+          tipoGraficoActual === "line"
+            ? {
+                label: `Ventas (${rangoSelect.value})`,
+                data: valores,
+                borderColor: "rgba(54, 162, 235, 1)",
+                backgroundColor: "rgba(54, 162, 235, 0.15)",
+                borderWidth: 2,
+                fill: false,
+                tension: 0.3,
+                pointRadius: 4,
+                pointBackgroundColor: "rgba(54, 162, 235, 1)",
+                pointBorderColor: "#fff",
+              }
+            : {
+                label:
+                  tipoFiltro === "fecha"
+                    ? `Ventas (${rangoSelect.value})`
+                    : "Top productos (cantidad)",
+                data: valores,
+                backgroundColor: barBackgroundColors,
+                borderColor: barBorderColors,
+                borderWidth: 2,
+              },
         ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: {
-            position: "bottom",
-          },
+          legend: { position: "bottom" },
           title: {
             display: true,
             text:
-              rango === "fecha-especifica"
+              rangoSelect.value === "fecha-especifica"
                 ? [`Ventas por hora`, tituloExtra]
                 : tipoFiltro === "fecha"
-                ? `Ventas (${rango})`
+                ? `Ventas (${rangoSelect.value})`
                 : "Top productos vendidos",
-            font: {
-              size: 18,
-              weight: "bold",
-            },
-            padding: {
-              top: 12,
-              bottom: 30,
-            },
+            font: { size: 18, weight: "bold" },
+            padding: { top: 12, bottom: 30 },
           },
           tooltip: {
             callbacks: {
-              label: function (context) {
-                if (tipoFiltro === "productos") {
-                  const index = context.dataIndex;
-                  return `${context.dataset.label}: ${context.parsed.y} unidades - $${precios[index]}`;
-                } else {
-                  return `${context.dataset.label}: $${context.parsed.y}`;
-                }
-              },
+              label: (context) =>
+                tipoFiltro === "productos"
+                  ? `${context.dataset.label}: ${
+                      context.parsed.y
+                    } unidades - $${formatPrice(precios[context.dataIndex])}`
+                  : `${context.dataset.label}: $${formatPrice(
+                      context.parsed.y
+                    )}`,
             },
           },
           datalabels:
@@ -259,10 +184,8 @@ document.addEventListener("DOMContentLoaded", () => {
                   anchor: "end",
                   align: "top",
                   offset: -5,
-                  formatter: function (value, ctx) {
-                    const index = ctx.dataIndex;
-                    return `$${precios[index]}`;
-                  },
+                  formatter: (value, ctx) =>
+                    `$${formatPrice(precios[ctx.dataIndex])}`,
                   font: { weight: "bold", size: 12 },
                 }
               : false,
@@ -271,12 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
           x: {
             title: {
               display: true,
-              text:
-                tipoFiltro === "fecha"
-                  ? rango === "fecha-especifica"
-                    ? "Hora"
-                    : "Fecha"
-                  : "Producto",
+              text: tipoFiltro === "fecha" ? "Fecha" : "Producto",
             },
           },
           y: {
@@ -289,45 +207,41 @@ document.addEventListener("DOMContentLoaded", () => {
         },
       },
     });
+
+    updateBotonVerTodos(tipoFiltro);
   }
 
-  rangoSelect.addEventListener("change", () => {
-    toggleInputs();
+  document.getElementById("btnFecha").addEventListener("click", () => {
+    tipoFiltro = "fecha";
+    document.getElementById("btnFecha").classList.add("active");
+    document.getElementById("btnProductos").classList.remove("active");
+    toggleFiltroFecha();
     loadData();
   });
 
-  tipoGraficoSelect.addEventListener("change", loadData);
-  mesSelect.addEventListener("change", loadData);
-  fechaSelect.addEventListener("change", loadData);
-  anioInput.addEventListener("input", loadData);
-  fechaDesde.addEventListener("change", loadData);
-  fechaHasta.addEventListener("change", loadData);
+  document.getElementById("btnProductos").addEventListener("click", () => {
+    tipoFiltro = "productos";
+    document.getElementById("btnProductos").classList.add("active");
+    document.getElementById("btnFecha").classList.remove("active");
+    toggleFiltroFecha();
+    loadData();
+  });
 
-  toggleInputs();
+  initDateFilters({
+    rangoSelect,
+    mesSelect,
+    fechaSelect,
+    anioInput,
+    fechaDesde,
+    fechaHasta,
+    labelMesSelect,
+    labelFechaSelect,
+    labelAnioInput,
+    labelFechaDesde,
+    labelFechaHasta,
+    onChange: loadData
+  });
+
   loadData();
   toggleFiltroFecha();
-});
-
-function renderBotonVerTodos({ tableContainerId, texto, url }) {
-  const contenedor = document.getElementById(tableContainerId);
-  if (!contenedor || document.getElementById("btnVerTodos")) return;
-
-  contenedor.insertAdjacentHTML(
-    "afterend",
-    `
-    <div class="filtro-tipo" style="margin-top:10px;">
-      <button id="btnVerTodos" class="active">${texto}</button>
-    </div>
-    `
-  );
-
-  document.getElementById("btnVerTodos").onclick = () => {
-    window.location.href = url;
-  };
-}
-
-renderBotonVerTodos({
-  tableContainerId: "reporteTable",
-  texto: "Ver todas",
-  url: "/admin/allSales"
 });
