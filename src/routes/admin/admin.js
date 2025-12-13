@@ -13,6 +13,7 @@ router.get('/panel',  requireRole('superadmin', 'admin', 'editor', 'ventas', 'tr
 router.get('/ventas-por-fecha',  requireRole('superadmin', 'admin', 'ventas'), admin.graficoVentas);
 router.get('/top-productos', requireRole('superadmin', 'admin', 'ventas'), admin.topProductos);
 router.get('/allProducts', requireRole('superadmin', 'admin', 'ventas'), admin.productsInOrders);
+router.get('/allSales', requireRole('superadmin', 'admin', 'ventas'), admin.graficoVentas);
 router.post('/orders/:id/estado-envio',  requireRole('superadmin', 'admin', 'transportista'), admin.estadoEnvio);
 
 // Productos

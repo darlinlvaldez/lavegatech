@@ -1,5 +1,4 @@
 import { showToast } from '../../utils/toastify.js';
-import { sweetAlert } from '../../utils/sweetAlert2.js';
 import { showValidation, clearError } from '../../utils/showValidation.js';
 
 let cities = [];

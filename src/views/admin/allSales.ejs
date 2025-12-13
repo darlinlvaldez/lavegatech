@@ -1,0 +1,84 @@
+<%- include('../admin/dashboard.ejs') %>
+
+<link rel="stylesheet" href="/css/admin/table.css">
+
+<div class="main-content">
+    <header class="header">
+        <h1>Todas las Ventas</h1>
+        <button id="btnVolver" class="add-button" style="margin-top:10px;">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:16px;height:16px;margin-right:5px;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Volver
+        </button>
+    </header>
+
+    <main class="main-content-area">
+         <div class="card">
+            <div class="card-header">
+                <h3>Lista de Ventas</h3>
+            </div>
+
+        <div id="contenedorFiltrosFecha">
+            <label for="rangoSelect">Selecciona rango:</label>
+            <select id="rangoSelect">
+                <option value="dia">Día</option>
+                <option value="mes">Mes</option>
+                <option value="año">Año</option>
+                <option value="fecha-especifica">Fecha específica</option>
+                <option value="personalizado">Rango personalizado</option>
+            </select>
+
+            <label for="anioInput" id="labelAnioInput" style="display:none;">Año:</label>
+            <input type="number" id="anioInput" min="2000" max="2099" style="display:none; width:120px;">
+
+            <label for="fechaDesde" id="labelFechaDesde" style="display:none;">Desde:</label>
+            <input type="date" id="fechaDesde" style="display:none;">
+
+            <label for="fechaHasta" id="labelFechaHasta" style="display:none;">Hasta:</label>
+            <input type="date" id="fechaHasta" style="display:none;">
+
+            <label for="mesSelect" id="labelMesSelect" style="display:none;">Selecciona mes:</label>
+            <input type="month" id="mesSelect" style="display:none;" />
+
+            <label for="fechaSelect" id="labelFechaSelect" style="display:none;">Selecciona fecha:</label>
+            <input type="date" id="fechaSelect" style="display:none;" />
+        </div>
+
+        <h3 id="tituloTablaVentas"></h3>
+
+        <div class="table-container table-responsive" style="margin-top:20px;">
+            <table class="product-table" id="reporteTable">
+                <thead></thead>
+                <tbody></tbody>
+                <tfoot></tfoot>
+            </table>
+        </div>
+    </main>
+</div>
+
+<style>
+select, input[type="month"], input[type="date"], input[type="number"] {
+  padding: 6px 12px;
+  font-size: 16px;
+  border: 2px solid #3498db;
+  border-radius: 6px;
+  color: #333;
+  margin-right: 10px;
+  vertical-align: middle;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+select:hover, input[type="month"]:hover, input[type="date"]:hover {
+  border-color: #2980b9;
+}
+</style>
+
+<script type="module" src="/js/admin/store/allSales.js"></script>
+<script src="/js/utils/formatPrice.js"></script>
+
+<script>
+document.getElementById('btnVolver').addEventListener('click', () => {
+    window.history.back(); 
+});
+</script>
