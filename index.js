@@ -75,30 +75,24 @@ app.use('/comparison', comparison);
 
 app.use('/', store);
 
-app.post('/mant', async (req, res) => {
-  const file = req.files.foto;
-  await file.mv(file.name);
-  res.status(200).send('ok');
-});
-
 app.get('/account', isAuth(), (req, res) => {
-  res.render('store/profile/account', { user: req.session.user, error: null, email: null });
+  res.render('store/account', { user: req.session.user, error: null, email: null });
 });
 
 app.get('/login', isAuth({ redirect: true }), (req, res) => {
-  res.render('login/login', {error: null, email: null, validationErrors: {}});
+  res.render('store/login/login', {error: null, email: null, validationErrors: {}});
 });
 
 app.get('/register', isAuth({ redirect: true }), (req, res) => {
-  res.render('login/register', {error: null, email: '', username: '', validationErrors: {}});
+  res.render('store/login/register', {error: null, email: '', username: '', validationErrors: {}});
 });
 
 app.get('/email', (req, res) => {
-  res.render('login/forgotPass/email', { error: null, email: null, validationErrors: {}});
+  res.render('store/login/forgotPass/email', { error: null, email: null, validationErrors: {}});
 });
 
 app.get('/newpass', (req, res) => {
-  res.render('login/forgotPass/newpass', { error: null, email: null, validationErrors: {}});
+  res.render('store/login/forgotPass/newpass', { error: null, email: null, validationErrors: {}});
 });
 
 app.get('/verify', (req, res) => {
@@ -106,22 +100,17 @@ app.get('/verify', (req, res) => {
 
   if (!email || !type) return res.redirect('/login');
 
-  res.render('login/verify', {email, type, error: error || null,
+  res.render('login/store/verify', {email, type, error: error || null,
     validationErrors: {}, cooldown: 0});
 });
 
-app.get('/mant', (req, res) => {
-  const data = { nombre: "iphone"}
-  res.render('store/mant', data);
-});
-
 app.get('/contact', (req, res) => {
-  res.render('store/clients/contact', {nombre: '', email: '', mensaje: '', asunto: '', 
+  res.render('store/information/contact', {nombre: '', email: '', mensaje: '', asunto: '', 
     error: [], success: false, validationErrors: {}, query: req.query});
 });
 
 app.get('/about', (req, res) => {
-  res.render('store/clients/about');  
+  res.render('store/information/about');  
 });
 
 app.get('/order', isAuth(), (req, res) => {
@@ -129,7 +118,7 @@ app.get('/order', isAuth(), (req, res) => {
 });
 
 app.get('/comparison', (req, res) => {
-  res.render('store/clients/comparison');  
+  res.render('store/comparison');  
 });
 
 app.get('/conditions', (req, res) => {

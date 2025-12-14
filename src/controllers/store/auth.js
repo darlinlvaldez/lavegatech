@@ -13,19 +13,19 @@ auth.register = async (req, res) => {
     const { username, email, password, confirmPassword } = req.body;
 
     if (req.validationError) {
-      return renderError(res, 'login/register', null, { 
+      return renderError(res, 'store/login/register', null, { 
         email, username, validationErrors: req.validationError.fields});
     }
     
     if (password !== confirmPassword) {
-      return renderError(res, 'login/register', ERROR_MESSAGES.PASSWORDS_DONT_MATCH, {
+      return renderError(res, 'store/login/register', ERROR_MESSAGES.PASSWORDS_DONT_MATCH, {
         email, username, validationErrors: {password: ERROR_MESSAGES.PASSWORDS_DONT_MATCH, 
           confirmPassword: ERROR_MESSAGES.PASSWORDS_DONT_MATCH}
       });
     }
 
     if (await user.userExists(email)) {
-      return renderError(res, 'login/register', ERROR_MESSAGES.EMAIL_ALREADY_EXISTS, {
+      return renderError(res, 'store/login/register', ERROR_MESSAGES.EMAIL_ALREADY_EXISTS, {
         email, username, validationErrors: { email: ERROR_MESSAGES.EMAIL_ALREADY_EXISTS }
       });
     }
@@ -40,12 +40,12 @@ auth.register = async (req, res) => {
 
     const cooldown = Math.ceil(RESEND_COOLDOWN / 1000);
     
-    return res.render('login/verify', {email, type: 'verify', error: null, 
+    return res.render('store/login/verify', {email, type: 'verify', error: null, 
       validationErrors: {}, cooldown});
 
   } catch (error) {
     console.error(error);
-    return renderError(res, 'login/register', ERROR_MESSAGES.REGISTRATION_ERROR, {
+    return renderError(res, 'store/login/register', ERROR_MESSAGES.REGISTRATION_ERROR, {
       email: req.body.email, username: req.body.username, validationErrors: {} 
     });
   }
@@ -57,18 +57,18 @@ auth.verifyCode = async (req, res) => {
     const store = type === 'reset' ? code.resetPending : code.pendingUsers;
 
     if (req.validationError) {
-      return renderError(res, 'login/verify', null, {
+      return renderError(res, 'store/login/verify', null, {
         email, type, validationErrors: req.validationError.fields});
     }
 
     const result = code.validateCode(store, email, userCode);
     if (!result.success) {
-      return renderError(res, 'login/verify', ERROR_MESSAGES.INVALID_CODE, {
+      return renderError(res, 'store/login/verify', ERROR_MESSAGES.INVALID_CODE, {
         email, type, validationErrors: {code: ERROR_MESSAGES.INVALID_CODE} });
     }
 
     if (type === 'reset') {
-      return res.render('login/forgotPass/newpass', {
+      return res.render('store/login/forgotPass/newpass', {
         email, error: null, validationErrors: {} });
     }
 
@@ -82,7 +82,7 @@ auth.verifyCode = async (req, res) => {
 
   } catch (error) {
     console.error(error);
-    return renderError(res, 'login/verify', ERROR_MESSAGES.VERIFICATION_ERROR, {
+    return renderError(res, 'store/login/verify', ERROR_MESSAGES.VERIFICATION_ERROR, {
       email: req.body.email, type: req.body.type, validationErrors: {}
     });
   }
@@ -100,7 +100,7 @@ auth.resendCode = async (req, res) => {
       if (req.xhr || req.headers.accept.indexOf('json') > -1) {
         return res.status(400).json({ error: 'Error de validación', validationErrors: req.validationError.fields });
       }
-      return renderError(res, 'login/verify', null, {
+      return renderError(res, 'store/login/verify', null, {
         email, type, validationErrors: req.validationError.fields
       });
     }
@@ -113,7 +113,7 @@ auth.resendCode = async (req, res) => {
         return res.status(429).json({ error: msg, cooldown: remaining });
       }
       
-      return renderError(res, 'login/verify', msg, {
+      return renderError(res, 'store/login/verify', msg, {
         email, type, validationErrors: {}, cooldown: remaining
       });
     }
@@ -132,7 +132,7 @@ auth.resendCode = async (req, res) => {
       return res.json({ success: true, cooldown });
     }
 
-    return res.render('login/verify', {
+    return res.render('store/login/verify', {
       email, type, error: null, validationErrors: {}, 
       info: isReset ? null : 'reenviado', cooldown
     });
@@ -142,7 +142,7 @@ auth.resendCode = async (req, res) => {
     if (req.xhr || req.headers.accept.indexOf('json') > -1) {
       return res.status(500).json({ error: ERROR_MESSAGES.RESEND_ERROR });
     }
-    return renderError(res, 'login/verify', ERROR_MESSAGES.RESEND_ERROR, {
+    return renderError(res, 'store/login/verify', ERROR_MESSAGES.RESEND_ERROR, {
       email: req.body.email, type: req.body.type, validationErrors: {}
     });
   }
@@ -151,7 +151,7 @@ auth.resendCode = async (req, res) => {
 auth.login = async (req, res) => {
   try {
     if (req.validationError) {
-      return renderError(res, 'login/login', null, {
+      return renderError(res, 'store/login/login', null, {
         email: req.body.email, validationErrors: req.validationError.fields
       });
     }
@@ -160,19 +160,19 @@ auth.login = async (req, res) => {
 
     const foundUser = await user.findByEmail(email);
     if (!foundUser) {
-      return renderError(res, 'login/login', ERROR_MESSAGES.EMAIL_NOT_FOUND, { 
+      return renderError(res, 'store/login/login', ERROR_MESSAGES.EMAIL_NOT_FOUND, { 
         email,validationErrors: {email: ERROR_MESSAGES.EMAIL_NOT_FOUND} });
     }
 
     const isMatch = await bcrypt.compare(password, foundUser.password);
 
     if (!isMatch) {
-      return renderError(res, 'login/login', ERROR_MESSAGES.WRONG_PASSWORD, { 
+      return renderError(res, 'store/login/login', ERROR_MESSAGES.WRONG_PASSWORD, { 
         email, validationErrors: {password: ERROR_MESSAGES.WRONG_PASSWORD} }); 
     }
 
     if (!foundUser.activo) {
-      return renderError(res, 'login/login', ERROR_MESSAGES.ACCOUNT_BLOCKED, { 
+      return renderError(res, 'store/login/login', ERROR_MESSAGES.ACCOUNT_BLOCKED, { 
         email, validationErrors: { email: ERROR_MESSAGES.ACCOUNT_BLOCKED} });
     }
       
@@ -180,7 +180,7 @@ auth.login = async (req, res) => {
       
   res.redirect('/');
 } catch (error) {console.error(error);
-  return renderError(res, 'login/login', ERROR_MESSAGES.LOGIN_ERROR, {
+  return renderError(res, 'store/login/login', ERROR_MESSAGES.LOGIN_ERROR, {
     email: req.body.email, validationErrors: {} });
   }
 };
@@ -190,13 +190,13 @@ auth.email = async (req, res) => {
     const { email } = req.body;
 
     if (req.validationError) {
-      return renderError(res, 'login/forgotPass/email', null, { 
+      return renderError(res, 'store/login/forgotPass/email', null, { 
         email, validationErrors: req.validationError.fields 
       });
     }
 
     if (!await user.findByEmail(email)) {
-      return renderError(res, 'login/forgotPass/email', ERROR_MESSAGES.EMAIL_NOT_FOUND, { 
+      return renderError(res, 'store/login/forgotPass/email', ERROR_MESSAGES.EMAIL_NOT_FOUND, { 
         email, validationErrors: { email: ERROR_MESSAGES.EMAIL_NOT_FOUND }
       });
     }
@@ -208,7 +208,7 @@ auth.email = async (req, res) => {
       const remaining = Math.ceil((RESEND_COOLDOWN - (now - existing.lastSent)) / 1000);
       const msg = ERROR_MESSAGES.RESEND_COOLDOWN.replace('{seconds}', remaining);
 
-      return res.render('login/verify', {email, type: 'reset', 
+      return res.render('store/login/verify', {email, type: 'reset', 
         error: msg, validationErrors: {}, cooldown: remaining});
     }
 
@@ -226,7 +226,7 @@ auth.email = async (req, res) => {
 
     const cooldown = Math.ceil(RESEND_COOLDOWN / 1000);
 
-    return res.render('login/verify', {email, type: 'reset',
+    return res.render('store/login/verify', {email, type: 'reset',
       error: null, validationErrors: {}, cooldown});
 
   } catch (error) {
@@ -242,18 +242,18 @@ auth.forgotPassword = async (req, res) => {
     const { email, password, confirm } = req.body;
 
     if (req.validationError) {
-      return renderError(res, 'login/forgotPass/newpass', null, { 
+      return renderError(res, 'store/login/forgotPass/newpass', null, { 
         email, validationErrors: req.validationError.fields});
     }
 
     if (password !== confirm) {
-      return renderError(res, 'login/forgotPass/newpass', ERROR_MESSAGES.PASSWORDS_DONT_MATCH, { 
+      return renderError(res, 'store/login/forgotPass/newpass', ERROR_MESSAGES.PASSWORDS_DONT_MATCH, { 
         email, validationErrors: {password: ERROR_MESSAGES.PASSWORDS_DONT_MATCH,
           confirm: ERROR_MESSAGES.PASSWORDS_DONT_MATCH} });
       }
 
     if (!code.resetPending.get(email)) {
-      return renderError(res, 'login/forgotPass/newpass', ERROR_MESSAGES.NO_RESET_REQUEST, { 
+      return renderError(res, 'store/login/forgotPass/newpass', ERROR_MESSAGES.NO_RESET_REQUEST, { 
         email, validationErrors: {email: ERROR_MESSAGES.NO_RESET_REQUEST} });
      }
 
@@ -263,7 +263,7 @@ auth.forgotPassword = async (req, res) => {
     
     res.redirect('/login');
   } catch (error) {console.error(error);
-    return renderError(res, 'login/forgotPass/newpass', ERROR_MESSAGES.PASSWORD_RESET_ERROR, { 
+    return renderError(res, 'store/login/forgotPass/newpass', ERROR_MESSAGES.PASSWORD_RESET_ERROR, { 
       email: req.body.email, validationErrors: {} });
   }
 };

@@ -34,7 +34,7 @@ store.storeController = async (req, res) => {
       producto.esMovil = producto.categoria?.toLowerCase() === "moviles";
     }
 
-    res.render("store/clients/store", {productos, totalProduct, limite, pagina, orden, categorias,
+    res.render("store/store", {productos, totalProduct, limite, pagina, orden, categorias,
       marcas: marcasFiltradas, marcasFiltradas, cantCategoria, cantMarcas, precioMin,
       precioMax, defaultMin, defaultMax, req
     });

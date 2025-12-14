@@ -41,7 +41,7 @@ product.detallesController = async (req, res) => {
 
     const dispositivos = await comparison.getDevice([id]);
 
-    res.render("store/clients/product", {
+    res.render("store/product", {
       producto: {
         ...producto,
         categorias,
