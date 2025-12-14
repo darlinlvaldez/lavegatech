@@ -28,7 +28,7 @@ async function loadAllProductos() {
         <tr>
           <td>${nombre} ${especificaciones}</td>
           <td style="text-align:right">${cantidad}</td>
-          <td style="text-align:right">$${ingresos.toFixed(2)}</td>
+          <td style="text-align:right">$${formatPrice(ingresos)}</td>
         </tr>
       `);
     });
@@ -37,7 +37,7 @@ async function loadAllProductos() {
       <tr>
         <td style="text-align:right">Totales</td>
         <td style="text-align:right">${totalCantidad}</td>
-        <td style="text-align:right">$${totalIngresos.toFixed(2)}</td>
+        <td style="text-align:right">$${formatPrice(totalIngresos)}</td>
       </tr>
     `;
   }

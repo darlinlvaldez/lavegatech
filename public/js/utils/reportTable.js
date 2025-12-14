@@ -51,7 +51,7 @@ export function renderTablaVentasBase({
 
     tfoot.innerHTML = `
       <tr>
-        <td style="text-align:right">Total</td>
+        <td style="text-align:left;">Total</td>
         <td style="text-align:right">$${formatPrice(total)}</td>
       </tr>
     `;
@@ -88,7 +88,7 @@ export function renderTablaVentasBase({
 
     tfoot.innerHTML = `
       <tr>
-        <td style="text-align:right">Totales</td>
+        <td style="text-align:left">Totales</td>
         <td style="text-align:right">${totalCantidad}</td>
         <td style="text-align:right">$${formatPrice(totalIngresos)}</td>
       </tr>

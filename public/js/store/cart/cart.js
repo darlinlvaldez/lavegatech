@@ -1,7 +1,7 @@
-import { checkAuth } from "../utils/utils.js";
+import { checkAuth } from "../../utils/utils.js";
 import { loadCartPage } from "./cartView.js";
 import { loadCartPreview } from "./cartPreview.js";
-import { showToast } from "../utils/toastify.js";
+import { showToast } from "../../utils/toastify.js";
 
 window.deleteProduct = deleteProduct;
 

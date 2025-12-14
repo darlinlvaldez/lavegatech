@@ -1,9 +1,9 @@
-import { checkAuth, getRealStock } from '../utils/utils.js';
+import { checkAuth, getRealStock } from '../../utils/utils.js';
 import { loadCartPreview } from './loadCartPreview.js';
-import { fetchCartItems } from '../utils/apis.js';
-import { calculateItem } from '../utils/calculateItem.js'; 
-import { showToast } from '../utils/toastify.js';
-import { sweetAlert } from '../utils/sweetAlert2.js';
+import { fetchCartItems } from '../../utils/apis.js';
+import { calculateItem } from '../../utils/calculateItem.js'; 
+import { showToast } from '../../utils/toastify.js';
+import { sweetAlert } from '../../utils/sweetAlert2.js';
 
 window.updateQuantity = async function(element, change, productId, color) {
   try {

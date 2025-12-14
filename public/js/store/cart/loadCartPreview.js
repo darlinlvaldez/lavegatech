@@ -1,4 +1,4 @@
-import { fetchCartItems } from '../utils/apis.js';
+import { fetchCartItems } from '../../utils/apis.js';
 
 async function loadCartPreview() {
     const carrito = await fetchCartItems();

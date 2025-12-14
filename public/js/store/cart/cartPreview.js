@@ -1,5 +1,5 @@
 import { loadCartPreview } from '../cart/loadCartPreview.js';
-import { calculateItem } from '../utils/calculateItem.js'; 
+import { calculateItem } from '../../utils/calculateItem.js'; 
 
 window.renderCart = renderCart;
 
