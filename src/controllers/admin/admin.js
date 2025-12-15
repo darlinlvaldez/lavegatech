@@ -32,21 +32,13 @@ adminController.graficoVentas = async (req, res) => {
 adminController.topProductos = async (req, res) => {
     try {
         const top = await admin.getTopProductos(10);
-        res.json(top);
+        const productos = await admin.getTopProductos();
+
+        res.json({top10: top, todos: productos});
     } catch (error) {
         console.error('Error al obtener top productos:', error);
         res.status(500).json({ error: 'Error al obtener top productos' });
     }
-};
-
-adminController.productsInOrders = async (req, res) => {
-  try {
-    const productos = await admin.getTopProductos();
-    res.json(productos);
-  } catch (error) {
-    console.error('Error al obtener todos los productos:', error);
-    res.status(500).json({ error: 'Error al obtener todos los productos' });
-  }
 };
 
 adminController.estadoEnvio = async (req, res) => {

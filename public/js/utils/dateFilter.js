@@ -66,16 +66,39 @@ export function buildDateQuery({
   return query;
 }
 
-export function dateTitle({ rango, fecha }) {
-  if (rango !== "fecha-especifica" || !fecha) return "";
+export function dateTitle({
+  rango,
+  fecha,
+  mes,
+  anio,
+  desde,
+  hasta,
+}) {
+  if (rango === "fecha-especifica" && fecha) {
+    const [y, m, d] = fecha.split("-").map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString("es-DO", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
 
-  const [year, month, day] = fecha.split("-").map(Number);
-  const d = new Date(year, month - 1, day); 
+  if (rango === "mes" && mes) {
+    const [y, m] = mes.split("-");
+    return new Date(y, m - 1).toLocaleDateString("es-DO", {
+      month: "long",
+      year: "numeric",
+    });
+  }
 
-  return d.toLocaleDateString("es-DO", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  if (rango === "año" && anio) {
+    return `Año ${anio}`;
+  }
+
+  if (rango === "personalizado" && desde && hasta) {
+    return `${desde} → ${hasta}`;
+  }
+
+  return "";
 }

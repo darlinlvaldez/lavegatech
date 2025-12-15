@@ -22,6 +22,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const tituloExtra = dateTitle({
       rango: rangoSelect.value,
       fecha: fechaSelect.value,
+      mes: mesSelect.value,
+      anio: anioInput.value,
+      desde: fechaDesde.value,
+      hasta: fechaHasta.value,
     });
 
     renderTablaVentasBase({

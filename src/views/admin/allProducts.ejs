@@ -26,6 +26,7 @@
                 <table class="product-table" id="tablaTodosProductos">
                     <thead>
                         <tr>
+                            <th>#</th>
                             <th>Producto</th>
                             <th style="text-align:right">Cantidad</th>
                             <th style="text-align:right">Ingresos</th>
@@ -44,6 +45,12 @@ document.getElementById('btnVolver').addEventListener('click', () => {
     window.history.back(); 
 });
 </script>
+
+  <style>
+    .report-table td:first-child {
+  color: #3498db;
+}
+  </style>
 
 <script src="/js/admin/charts/topProducts.js"></script>
 <script src="/js/utils/formatPrice.js"></script>

@@ -1,12 +1,14 @@
 async function loadAllProductos() {
-  const res = await fetch('/api/admin/allProducts');
-  const data = await res.json();
+  const res = await fetch("/api/admin/allProducts");
+  const response = await res.json();
+  const productosData = response.todos;
 
   const searchInput = document.getElementById("searchTopProductos");
   const tbody = document.querySelector('#tablaTodosProductos tbody');
   const tfoot = document.querySelector('#tablaTodosProductos tfoot');
 
-  let productos = data; 
+  let productos = productosData.map((item, index) => ({
+    ...item, rankGlobal: index + 1}));
 
   function render(filteredData) {
     tbody.innerHTML = '';
@@ -15,7 +17,7 @@ async function loadAllProductos() {
     let totalCantidad = 0;
     let totalIngresos = 0;
 
-    filteredData.forEach(item => {
+    filteredData.forEach((item) => {
       const nombre = item.nombre_producto || 'Producto';
       const especificaciones = item.especificaciones || '';
       const cantidad = Number(item.totalVendido || 0);
@@ -26,6 +28,7 @@ async function loadAllProductos() {
 
       tbody.insertAdjacentHTML('beforeend', `
         <tr>
+          <td style="text-align:left; font-weight:bold">${item.rankGlobal}</td>
           <td>${nombre} ${especificaciones}</td>
           <td style="text-align:right">${cantidad}</td>
           <td style="text-align:right">$${formatPrice(ingresos)}</td>
@@ -35,9 +38,9 @@ async function loadAllProductos() {
 
     tfoot.innerHTML = `
       <tr>
-        <td style="text-align:right">Totales</td>
-        <td style="text-align:right">${totalCantidad}</td>
-        <td style="text-align:right">$${formatPrice(totalIngresos)}</td>
+        <td colspan="2" style="text-align:left; font-weight:bold">Totales</td>
+        <td style="text-align:right; font-weight:bold">${totalCantidad}</td>
+        <td style="text-align:right; font-weight:bold">$${formatPrice(totalIngresos)}</td>
       </tr>
     `;
   }

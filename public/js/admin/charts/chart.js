@@ -1,5 +1,5 @@
 import { renderTablaVentasBase, formatDate, updateBotonVerTodos } from "../../utils/reportTable.js";
-import { initDateFilters, buildDateQuery, dateTitle } from "../../utils/dateFilter.js";
+import { initDateFilters, buildDateQuery, dateTitle   } from "../../utils/dateFilter.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const rangoSelect = document.getElementById("rangoSelect");
@@ -58,11 +58,16 @@ document.addEventListener("DOMContentLoaded", () => {
         : `/api/admin/top-productos`;
 
     const res = await fetch(url);
-    const data = await res.json();
+const responseData = await res.json();
+const data = tipoFiltro === "productos" ? responseData.top10 : responseData; // o responseData.todos según lo que necesites
 
-    const tituloExtra = dateTitle({
+    const tituloExtra = dateTitle ({
       rango: rangoSelect.value,
       fecha: fechaSelect.value,
+      mes: mesSelect.value,
+      anio: anioInput.value,
+      desde: fechaDesde.value,
+      hasta: fechaHasta.value,
     });
 
     renderTablaVentasBase({
@@ -96,6 +101,11 @@ document.addEventListener("DOMContentLoaded", () => {
       tipoFiltro === "fecha"
         ? data.map((item) => formatDate(item.fecha, rangoSelect.value))
         : data.map((item) => item.nombre_producto);
+
+    const especificaciones =
+      tipoFiltro === "productos"
+        ? data.map((item) => item.especificaciones || "")
+        : [];
 
     const valores =
       tipoFiltro === "fecha"
@@ -158,24 +168,28 @@ document.addEventListener("DOMContentLoaded", () => {
           title: {
             display: true,
             text:
-              rangoSelect.value === "fecha-especifica"
-                ? [`Ventas por hora`, tituloExtra]
-                : tipoFiltro === "fecha"
-                ? `Ventas (${rangoSelect.value})`
-                : "Top productos vendidos",
+              tipoFiltro === "productos"
+                ? "Top productos vendidos"
+                : tituloExtra
+                ? ["Ventas", tituloExtra]
+                : "Ventas",
             font: { size: 18, weight: "bold" },
             padding: { top: 12, bottom: 30 },
           },
           tooltip: {
             callbacks: {
+              title: (tooltipItems) => {
+                const i = tooltipItems[0].dataIndex;
+                return tipoFiltro === "productos"
+                  ? `${tooltipItems[0].label} ${especificaciones[i]}`
+                  : tooltipItems[0].label;
+              },
               label: (context) =>
                 tipoFiltro === "productos"
-                  ? `${context.dataset.label}: ${
-                      context.parsed.y
-                    } unidades - $${formatPrice(precios[context.dataIndex])}`
-                  : `${context.dataset.label}: $${formatPrice(
-                      context.parsed.y
-                    )}`,
+                  ? `${context.parsed.y} unidades - $${formatPrice(
+                      precios[context.dataIndex]
+                    )}`
+                  : `$${formatPrice(context.parsed.y)}`,
             },
           },
           datalabels:

@@ -13,6 +13,7 @@ export function renderTablaVentasBase({
   const tbody = table.querySelector("tbody");
   const tfoot = table.querySelector("tfoot");
   const titulo = document.getElementById(tituloId);
+  const extra = tituloExtra ? `(${tituloExtra})` : "";
 
   thead.innerHTML = "";
   tbody.innerHTML = "";
@@ -27,8 +28,8 @@ export function renderTablaVentasBase({
 
   titulo.textContent =
     rango === "fecha-especifica"
-      ? `Ventas por hora (${tituloExtra})`
-      : "Ventas";
+      ? `Ventas por hora ${extra}`
+      : `Ventas ${extra}`;
 
     thead.innerHTML = `
       <tr>
@@ -51,8 +52,8 @@ export function renderTablaVentasBase({
 
     tfoot.innerHTML = `
       <tr>
-        <td style="text-align:left;">Total</td>
-        <td style="text-align:right">$${formatPrice(total)}</td>
+        <td style="text-align:left; font-weight:bold">Total</td>
+        <td style="text-align:right; font-weight:bold">$${formatPrice(total)}</td>
       </tr>
     `;
   }
@@ -62,6 +63,7 @@ export function renderTablaVentasBase({
 
     thead.innerHTML = `
       <tr>
+        <th>#</th>
         <th>Producto</th>
         <th style="text-align:right">Cantidad</th>
         <th style="text-align:right">Ingresos</th>
@@ -71,24 +73,26 @@ export function renderTablaVentasBase({
     let totalCantidad = 0;
     let totalIngresos = 0;
 
-    data.forEach(item => {
+    data.forEach((item, index) => {
+      const rank = index + 1;
+
       totalCantidad += Number(item.totalVendido);
       totalIngresos += Number(item.totalPrecio);
 
       tbody.insertAdjacentHTML(
         "beforeend",
         `<tr>
-          <td>${item.nombre_producto}</td>
+          <td style="text-align:left; font-weight:bold">${rank}</td>
+          <td>${item.nombre_producto} ${item.especificaciones || ""}</td>
           <td style="text-align:right">${item.totalVendido}</td>
           <td style="text-align:right">$${formatPrice(item.totalPrecio)}</td>
-
         </tr>`
       );
     });
 
     tfoot.innerHTML = `
       <tr>
-        <td style="text-align:left">Totales</td>
+        <td colspan="2" style="text-align:left">Totales</td>
         <td style="text-align:right">${totalCantidad}</td>
         <td style="text-align:right">$${formatPrice(totalIngresos)}</td>
       </tr>

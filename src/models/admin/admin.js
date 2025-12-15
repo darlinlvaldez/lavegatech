@@ -43,7 +43,7 @@ admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
         SELECT DATE_FORMAT(p.fecha_creacion, '%Y-%m-%d') AS fecha, SUM(p.total) AS totalVentas
         FROM pedidos p
         JOIN envios e ON p.id = e.pedido_id
-        WHERE p.estado = 'pagado'
+        WHERE p.estado = 'pagado' 
           AND e.estado_envio != 'cancelado'
           AND DATE_FORMAT(p.fecha_creacion, '%Y-%m') = ?
         GROUP BY fecha ORDER BY fecha
@@ -53,8 +53,9 @@ admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
     else {
       query = `
         SELECT DATE_FORMAT(fecha_creacion, '%Y-%m') AS fecha, SUM(total) AS totalVentas
-        FROM pedidos
-        WHERE estado = 'pagado'
+        FROM pedidos p
+        JOIN envios e ON p.id = e.pedido_id
+        WHERE estado = 'pagado' AND e.estado_envio != 'cancelado'
         GROUP BY fecha ORDER BY fecha
       `;
     }
@@ -63,8 +64,9 @@ admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
   else if (rango === 'año' && anio) {
     query = `
       SELECT DATE(fecha_creacion) AS fecha, SUM(total) AS totalVentas
-      FROM pedidos
-      WHERE estado = 'pagado'
+      FROM pedidos p
+      JOIN envios e ON p.id = e.pedido_id
+      WHERE estado = 'pagado' AND e.estado_envio != 'cancelado'
         AND YEAR(fecha_creacion) = ?
       GROUP BY fecha ORDER BY fecha
     `;
@@ -74,8 +76,9 @@ admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
   else if (rango === 'fecha-especifica' && fecha) {
     query = `
       SELECT DATE_FORMAT(fecha_creacion, '%H:00') AS fecha, SUM(total) AS totalVentas
-      FROM pedidos
-      WHERE estado = 'pagado'
+      FROM pedidos p
+      JOIN envios e ON p.id = e.pedido_id
+      WHERE estado = 'pagado' AND e.estado_envio != 'cancelado'
         AND DATE(fecha_creacion) = ?
       GROUP BY HOUR(fecha_creacion) ORDER BY HOUR(fecha_creacion)
     `;
@@ -85,8 +88,9 @@ admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
   else if (rango === 'personalizado' && desde && hasta) {
     query = `
       SELECT DATE(fecha_creacion) AS fecha, SUM(total) AS totalVentas
-      FROM pedidos
-      WHERE estado = 'pagado'
+      FROM pedidos p 
+      JOIN envios e ON p.id = e.pedido_id
+      WHERE estado = 'pagado' AND e.estado_envio != 'cancelado'
         AND DATE(fecha_creacion) BETWEEN ? AND ?
       GROUP BY fecha ORDER BY fecha
     `;
@@ -96,8 +100,9 @@ admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
   else {
     query = `
       SELECT DATE(fecha_creacion) AS fecha, SUM(total) AS totalVentas
-      FROM pedidos
-      WHERE estado = 'pagado'
+      FROM pedidos p 
+      JOIN envios e ON p.id = e.pedido_id
+      WHERE estado = 'pagado' AND e.estado_envio != 'cancelado'
       GROUP BY fecha ORDER BY fecha
     `;
   }
@@ -108,28 +113,29 @@ admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
 
 admin.getTopProductos = async (limit = null) => {
   let query = `
-    SELECT 
-      dp.producto_id, 
-      dp.nombre_producto, 
-      SUM(dp.cantidad) AS totalVendido,
-      SUM(dp.subtotal) AS totalPrecio,
-      p.almacenamiento_id,
-      p.ram_id,
-      CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
-    FROM detalles_pedido dp
-    JOIN productos p ON dp.producto_id = p.id
-    LEFT JOIN ram r ON p.ram_id = r.id
-    LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
-    JOIN pedidos ped ON dp.pedido_id = ped.id
-    WHERE ped.estado = 'pagado'
-    GROUP BY dp.producto_id, dp.nombre_producto
-    ORDER BY totalVendido DESC
+  SELECT 
+  dp.producto_id,
+  dp.nombre_producto,
+  SUM(dp.cantidad) AS totalVendido,
+  SUM(dp.subtotal) AS totalPrecio, -- subtotal por producto
+  p.almacenamiento_id,
+  p.ram_id,
+  CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
+  FROM detalles_pedido dp
+  JOIN pedidos ped ON dp.pedido_id = ped.id
+  JOIN envios e ON ped.id = e.pedido_id
+  JOIN productos p ON dp.producto_id = p.id
+  LEFT JOIN ram r ON p.ram_id = r.id
+  LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
+  WHERE ped.estado = 'pagado' AND e.estado_envio != 'cancelado'
+  GROUP BY dp.producto_id, dp.nombre_producto
+  ORDER BY totalVendido DESC
   `;
-
+    
   if (limit) {
     query += ` LIMIT ${Number(limit)}`;
   }
-
+  
   const [rows] = await db.query(query);
   return rows;
 };
