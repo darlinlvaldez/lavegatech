@@ -108,7 +108,7 @@ export function updateBotonVerTodos(tipo) {
     contenedor.insertAdjacentHTML(
       "afterend",
       `
-      <div class="filtro-tipo" style="margin-top:10px;">
+      <div class="filtro-tipo no-in-pdf" style="margin-top:10px;">
         <button id="btnVerTodos" class="active"></button>
       </div>
       `

@@ -7,11 +7,18 @@ function generatePDF() {
     el.style.display = "none";
   });
 
-  const element = document.querySelector(".container-details");
+  const element =
+    document.querySelector(".container-report-pdf") ||
+    document.querySelector(".container-details");
+
+  if (!element) {
+    console.error("No se encontró el contenedor para el PDF");
+    return;
+  }
 
   const opt = {
     margin: 0.2,
-    filename: "LaVegaTech-Pedido.pdf",
+    filename: "Reporte-Ventas.pdf",
     image: { type: "jpeg", quality: 0.98 },
     html2canvas: { scale: 2 },
     jsPDF: { unit: "in", format: "letter", orientation: "portrait" },

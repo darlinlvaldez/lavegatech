@@ -58,8 +58,8 @@ document.addEventListener("DOMContentLoaded", () => {
         : `/api/admin/top-productos`;
 
     const res = await fetch(url);
-const responseData = await res.json();
-const data = tipoFiltro === "productos" ? responseData.top10 : responseData; // o responseData.todos según lo que necesites
+    const responseData = await res.json();
+    const data = tipoFiltro === "productos" ? responseData.top10 : responseData; 
 
     const tituloExtra = dateTitle ({
       rango: rangoSelect.value,
@@ -117,13 +117,9 @@ const data = tipoFiltro === "productos" ? responseData.top10 : responseData; // 
         ? data.map((item) => Number(item.totalPrecio))
         : [];
 
-        tipoGraficoSelect.addEventListener("change", () => {
-          if (tipoFiltro === "fecha") {
-            loadData();
-          }
-        });
-
     if (ventasChart) ventasChart.destroy();
+
+    window.chartReadyForPDF = false;
 
     Chart.register(ChartDataLabels);
 
@@ -161,6 +157,12 @@ const data = tipoFiltro === "productos" ? responseData.top10 : responseData; // 
         ],
       },
       options: {
+        animation: {
+          onComplete: () => {
+            window.chartReadyForPDF = true;
+            document.getElementById("btnDescargarPDF")?.removeAttribute("disabled");
+          },
+        },
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
@@ -225,21 +227,52 @@ const data = tipoFiltro === "productos" ? responseData.top10 : responseData; // 
     updateBotonVerTodos(tipoFiltro);
   }
 
-  document.getElementById("btnFecha").addEventListener("click", () => {
-    tipoFiltro = "fecha";
-    document.getElementById("btnFecha").classList.add("active");
-    document.getElementById("btnProductos").classList.remove("active");
-    toggleFiltroFecha();
-    loadData();
-  });
+    if (tipoFiltro === "productos") {
+      const btnPDF = document.getElementById("btnDescargarPDF");
+      btnPDF?.removeAttribute("disabled");
+      window.chartReadyForPDF = true;
+    }
 
-  document.getElementById("btnProductos").addEventListener("click", () => {
-    tipoFiltro = "productos";
-    document.getElementById("btnProductos").classList.add("active");
-    document.getElementById("btnFecha").classList.remove("active");
-    toggleFiltroFecha();
-    loadData();
-  });
+    document.getElementById("btnFecha").addEventListener("click", () => {
+      tipoFiltro = "fecha";
+      document.getElementById("btnFecha").classList.add("active");
+      document.getElementById("btnProductos").classList.remove("active");
+      toggleFiltroFecha();
+      loadData();
+    });
+
+    document.getElementById("btnProductos").addEventListener("click", () => {
+      tipoFiltro = "productos";
+      document.getElementById("btnProductos").classList.add("active");
+      document.getElementById("btnFecha").classList.remove("active");
+      toggleFiltroFecha();
+      loadData();
+    });
+
+    const btnPDF = document.getElementById("btnDescargarPDF");
+
+    btnPDF?.addEventListener("click", () => {
+      if (!window.chartReadyForPDF) return;
+
+      generatePDF({
+        container: ".container-report-pdf",
+        filename:
+          tipoFiltro === "productos"
+            ? "LaVegaTech-Top-Productos.pdf"
+            : "LaVegaTech-Reporte-Ventas.pdf",
+        orientation: "landscape",
+        useCORS: true,
+        pagebreak: {
+          mode: ["css", "legacy"],
+        },
+      });
+    });
+
+    tipoGraficoSelect.addEventListener("change", () => {
+      if (tipoFiltro === "fecha") {
+        loadData();
+      }
+    });
 
   initDateFilters({
     rangoSelect,
