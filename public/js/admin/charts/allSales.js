@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const labelAnioInput = document.getElementById("labelAnioInput");
   const labelFechaDesde = document.getElementById("labelFechaDesde");
   const labelFechaHasta = document.getElementById("labelFechaHasta");
+  const btnPDF = document.getElementById("btnDescargarPDF");
 
   async function loadData() {
     const url = `/api/admin/ventas-por-fecha${buildDateQuery({ rangoSelect, mesSelect, fechaSelect, anioInput, fechaDesde, fechaHasta })}`;
@@ -54,6 +55,18 @@ document.addEventListener("DOMContentLoaded", () => {
     labelFechaHasta,
     onChange: loadData
   });
+
+  btnPDF?.addEventListener("click", () => {
+      generatePDF({
+        container: ".container-report-pdf",
+        filename: "LaVegaTech-Ventas.pdf",
+        orientation: "landscape",
+        useCORS: true,
+        pagebreak: { mode: ["css", "legacy"] },
+      });
+    });
+
+    btnPDF?.removeAttribute("disabled");
 
   loadData();
 });

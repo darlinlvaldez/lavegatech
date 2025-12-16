@@ -14,6 +14,7 @@ router.get('/ventas-por-fecha',  requireRole('superadmin', 'admin', 'ventas'), a
 router.get('/top-productos', requireRole('superadmin', 'admin', 'ventas'), admin.topProductos);
 router.get('/allProducts', requireRole('superadmin', 'admin', 'ventas'), admin.topProductos);
 router.get('/allSales', requireRole('superadmin', 'admin', 'ventas'), admin.graficoVentas);
+router.get('/export-excel', requireRole('superadmin', 'admin', 'ventas'), admin.exportExcel);
 router.post('/orders/:id/estado-envio',  requireRole('superadmin', 'admin', 'transportista'), admin.estadoEnvio);
 
 // Productos

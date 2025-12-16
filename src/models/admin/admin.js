@@ -52,7 +52,7 @@ admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
     }
     else {
       query = `
-        SELECT DATE_FORMAT(fecha_creacion, '%Y-%m') AS fecha, SUM(total) AS totalVentas
+        SELECT DATE_FORMAT(fecha_creacion, '%Y-%m-%d') AS fecha, SUM(total) AS totalVentas
         FROM pedidos p
         JOIN envios e ON p.id = e.pedido_id
         WHERE estado = 'pagado' AND e.estado_envio != 'cancelado'

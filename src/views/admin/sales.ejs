@@ -44,11 +44,17 @@
       Descargar PDF
     </button>
 
+    <button id="btnExcel" class="no-in-pdf">
+      Exportar Excel
+    </button>
+
     <div class="container-report-pdf">
 
       <div id="resumenVentas" class="resumen-ventas"></div>
 
-      <canvas id="ventasChart"></canvas>
+        <div class="chart-wrapper">
+          <canvas id="ventasChart"></canvas>
+        </div>
 
       <div id="tablaReporte" class="table-container" style="margin-top:18px;">
         <div class="table-header">
@@ -70,6 +76,7 @@
   <script type="module" src="/js/admin/charts/chart.js"></script>
   <script src="/js/utils/formatPrice.js"></script>
   <script src="/js/utils/PDF.js"></script>
+  <script src="/js/utils/excel.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>

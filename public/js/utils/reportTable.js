@@ -147,8 +147,8 @@ export function formatDate(fecha, rango) {
   fecha = cleanDate(fecha);
 
   if (rango === "mes") {
-    const [year, month] = fecha.split("-");
-    return `${month}/${year}`;
+    const [year, month, day] = fecha.split("-");
+    return `${day}/${month}/${year}`;
   }
 
   if (rango === "año" || rango === "personalizado") {

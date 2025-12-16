@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 : tituloExtra
                 ? ["Ventas", tituloExtra]
                 : "Ventas",
-            font: { size: 18, weight: "bold" },
+            font: { size: 20, weight: "bold" },
             padding: { top: 12, bottom: 30 },
           },
           tooltip: {
@@ -199,10 +199,10 @@ document.addEventListener("DOMContentLoaded", () => {
               ? {
                   anchor: "end",
                   align: "top",
-                  offset: -5,
+                  offset: 0,
                   formatter: (value, ctx) =>
                     `$${formatPrice(precios[ctx.dataIndex])}`,
-                  font: { weight: "bold", size: 12 },
+                  font: { weight: "bold", size: 14 },
                 }
               : false,
         },
@@ -288,6 +288,20 @@ document.addEventListener("DOMContentLoaded", () => {
     labelFechaHasta,
     onChange: loadData
   });
+
+      document.getElementById("btnExcel").addEventListener("click", () => {
+      const params = new URLSearchParams({
+        tipo: tipoFiltro,
+        rango: rangoSelect.value,
+        mes: mesSelect.value,
+        fecha: fechaSelect.value,
+        anio: anioInput.value,
+        desde: fechaDesde.value,
+        hasta: fechaHasta.value,
+      });
+
+      window.location.href = `/api/admin/export-excel?${params}`;
+    });
 
   loadData();
   toggleFiltroFecha();

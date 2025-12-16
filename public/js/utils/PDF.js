@@ -1,4 +1,9 @@
-function generatePDF() {
+function generatePDF({
+  container = ".container-report-pdf",
+  filename = "Reporte.pdf",
+  orientation = "portrait",
+  margin = 0.2
+} = {}) {
   const elementsToHide = document.querySelectorAll(".no-in-pdf");
   const originalDisplays = [];
 
@@ -17,16 +22,20 @@ function generatePDF() {
   }
 
   const opt = {
-    margin: 0.2,
-    filename: "Reporte-Ventas.pdf",
+    margin,
+    filename,
     image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: "in", format: "letter", orientation }
   };
 
-  html2pdf().set(opt).from(element).save().then(() => {
-    elementsToHide.forEach((el, i) => {
-      el.style.display = originalDisplays[i];
+  html2pdf()
+    .set(opt)
+    .from(element)
+    .save()
+    .then(() => {
+      elementsToHide.forEach((el, i) => {
+        el.style.display = originalDisplays[i];
+      });
     });
-  });
 }

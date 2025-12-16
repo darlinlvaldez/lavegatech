@@ -1,5 +1,5 @@
 .grafico-contenedor {
-  max-width: 2200px; 
+  max-width: 100%; 
   margin: auto;
   width: 100%;
   padding: 20px;
@@ -10,9 +10,16 @@
   overflow-y: auto;    
 }
 
+.chart-wrapper {
+  max-width: 100%;  
+  width: 100%;
+  margin: 0 auto;   
+  height: 100%;    
+}
+
 #ventasChart {
   width: 100% !important;
-  height: 730px !important;
+  height: 100% !important;
 }
 
 select, input[type="month"], input[type="date"], input[type="number"] {
@@ -66,6 +73,10 @@ select:hover, input[type="month"]:hover, input[type="date"]:hover {
   font-size: 15px;
   font-weight: bold;
   line-height: 1.4;
+}
+
+.resumen-ventas:empty {
+  display: none;
 }
 
 .table-container {

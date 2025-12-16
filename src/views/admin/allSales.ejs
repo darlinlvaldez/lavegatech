@@ -44,17 +44,29 @@
             <input type="date" id="fechaSelect" style="display:none;" />
         </div>
 
-        <h3 id="tituloTablaVentas"></h3>
+        <button id="btnDescargarPDF" class="no-in-pdf" disabled>
+            Descargar PDF
+        </button>
 
-        <div class="table-container table-responsive" style="margin-top:20px;">
-            <table class="product-table" id="reporteTable">
-                <thead></thead>
-                <tbody></tbody>
-                <tfoot></tfoot>
-            </table>
+        <button id="btnExcel" class="no-in-pdf">
+            Exportar Excel
+        </button>
+        
+        <div class="container-report-pdf">
+        
+            <h3 id="tituloTablaVentas"></h3>
+        
+            <div class="table-container table-responsive" style="margin-top:20px;">
+                <table class="product-table" id="reporteTable">
+                    <thead></thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+            </main>
         </div>
-    </main>
-</div>
+
+
 
 <style>
 select, input[type="month"], input[type="date"], input[type="number"] {
@@ -81,3 +93,5 @@ document.getElementById('btnVolver').addEventListener('click', () => {
 
 <script type="module" src="/js/admin/charts/allSales.js"></script>
 <script src="/js/utils/formatPrice.js"></script>
+<script src="/js/utils/PDF.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>

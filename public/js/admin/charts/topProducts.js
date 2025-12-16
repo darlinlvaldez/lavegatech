@@ -6,6 +6,7 @@ async function loadAllProductos() {
   const searchInput = document.getElementById("searchTopProductos");
   const tbody = document.querySelector('#tablaTodosProductos tbody');
   const tfoot = document.querySelector('#tablaTodosProductos tfoot');
+  const btnPDF = document.getElementById("btnDescargarPDF");
 
   let productos = productosData.map((item, index) => ({
     ...item, rankGlobal: index + 1}));
@@ -44,6 +45,18 @@ async function loadAllProductos() {
       </tr>
     `;
   }
+
+    btnPDF?.addEventListener("click", () => {
+      generatePDF({
+        container: ".container-report-pdf",
+        filename: "LaVegaTech-Top-Productos.pdf",
+        orientation: "landscape",
+        useCORS: true,
+        pagebreak: { mode: ["css", "legacy"] },
+      });
+    });
+
+    btnPDF?.removeAttribute("disabled");
 
   render(productos);
 

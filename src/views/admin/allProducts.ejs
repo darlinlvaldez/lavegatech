@@ -16,12 +16,19 @@
     <main class="main-content-area">
         <div class="card">
             <div class="card-header">
-                <h3>Lista de Productos</h3>
                 <div class="search-container">
-                    <input type="text" id="searchTopProductos" placeholder="Buscar productos..." class="input-search" />
+                    <input type="text" id="searchTopProductos" placeholder="Buscar productos..." class="input-search"/>
                     <i class="fa fa-search search-icon"></i>
                 </div>
             </div>
+
+            <button id="btnDescargarPDF" class="no-in-pdf" disabled>
+                Descargar PDF
+            </button>
+
+            <div class="container-report-pdf">
+                <h3>Top Productos</h3>
+
             <div class="table-container table-responsive">
                 <table class="product-table" id="tablaTodosProductos">
                     <thead>
@@ -46,11 +53,7 @@ document.getElementById('btnVolver').addEventListener('click', () => {
 });
 </script>
 
-  <style>
-    .report-table td:first-child {
-  color: #3498db;
-}
-  </style>
-
 <script src="/js/admin/charts/topProducts.js"></script>
 <script src="/js/utils/formatPrice.js"></script>
+<script src="/js/utils/PDF.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
