@@ -41,6 +41,22 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  const btnExcel = document.getElementById("btnExcel");
+
+  btnExcel?.addEventListener("click", () => {
+    const params = new URLSearchParams({
+      tipo: "fecha",
+      rango: rangoSelect.value,
+      mes: mesSelect.value,
+      fecha: fechaSelect.value,
+      anio: anioInput.value,
+      desde: fechaDesde.value,
+      hasta: fechaHasta.value,
+    });
+
+    window.location.href = `/api/admin/export-excel?${params}`;
+  });
+
   initDateFilters({
     rangoSelect,
     mesSelect,

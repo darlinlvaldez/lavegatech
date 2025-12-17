@@ -4,8 +4,9 @@ import sharp from "sharp";
 import ExcelJS from "exceljs";
 import axios from "axios";
 import admin from '../../models/admin/admin.js';
-import {generarTituloExcel } from '../../utils/excelTitle.js';
-import {styleTitleCell, styleHeaderRow, styleDataRow, styleTotalRow} from '../../utils/excelStyles.js';
+import styles from '../../utils/excelReport/styles.js';
+import {generarTituloExcel} from '../../utils/excelReport/filterTitle.js';
+import {formatDateForExcel} from '../../utils/excelReport/formatDate.js';
 
 const adminController = {};
 
@@ -50,115 +51,83 @@ adminController.exportExcel = async (req, res) => {
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet('Reporte');
 
-  const titulo = generarTituloExcel({tipo, rango, mes, fecha, 
-    anio, desde, hasta});
-
+  const titulo = generarTituloExcel({ tipo, rango, mes, fecha, anio, desde, hasta });
   const titleRow = sheet.addRow([titulo]);
   sheet.mergeCells('A1:B1');
-  styleTitleCell(titleRow.getCell(1));
-
+  styles.styleTitleCell(titleRow.getCell(1));
   sheet.addRow([]);
 
-  let data = [];
-  let top10 = [];
+  const agregarFilasVentas = (data) => {
+    const isHora = rango === 'fecha-especifica';
+    sheet.addRow([isHora ? "Hora" : "Fecha", "Ventas"]);
 
-  if (tipo === 'fecha') {
-    data = await admin.graficoVentas(rango, mes, fecha, anio, desde, hasta);
+    data.forEach(r => {
+      const valorFecha = isHora
+        ? new Date(1970, 0, 1, r.hora).toLocaleTimeString("es-DO", 
+          { hour: "numeric", minute: "2-digit", hour12: true })
+        : formatDateForExcel(r.fecha);
 
-    sheet.addRow(["Fecha", "Ventas"]);
-    data.forEach((r) => {
-    const hora12h = new Date(1970, 0, 1, r.hora)
-    .toLocaleTimeString("es-DO", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
-
-      sheet.addRow([hora12h, Number(r.totalVentas)]);
+      sheet.addRow([valorFecha, Number(r.totalVentas)]);
     });
 
     sheet.addRow([]);
-    const totalRow = sheet.addRow([
-      'TOTAL',
-      data.reduce((sum, r) => sum + Number(r.totalVentas), 0),
-    ]);
-
+    const totalRow = sheet.addRow(['TOTAL', data.reduce((sum, r) => sum + Number(r.totalVentas), 0)]);
     sheet.getColumn(2).numFmt = '"$"#,##0.00';
-    styleTotalRow(totalRow);
-  }
-
-  if (tipo === "productos") {
-    top10 = await admin.getTopProductos();
-
+    styles.styleTotalRow(totalRow);
+  };
+  
+  const agregarFilasProductos = async (limit = null) => {
+    const productos = await admin.getTopProductos(limit); // si limit es null, trae todos
     sheet.addRow(["#", "Producto", "Cantidad", "Ingresos"]);
 
-    top10.forEach((p, i) => {
-      sheet.addRow([
-        i + 1,
-        `${p.nombre_producto} ${p.especificaciones || ""}`,
-        Number(p.totalVendido),
-        Number(p.totalPrecio),
-      ]);
+    productos.forEach((p, i) => {
+      sheet.addRow([i + 1, `${p.nombre_producto} ${p.especificaciones || ""}`, 
+        Number(p.totalVendido), Number(p.totalPrecio)]);
     });
 
     sheet.addRow([]);
-
-    const totalCantidad = top10.reduce(
-      (sum, p) => sum + Number(p.totalVendido),
-      0
-    );
-
-    const totalIngresos = top10.reduce(
-      (sum, p) => sum + Number(p.totalPrecio),
-      0
-    );
-
+    const totalCantidad = productos.reduce((sum, p) => sum + Number(p.totalVendido), 0);
+    const totalIngresos = productos.reduce((sum, p) => sum + Number(p.totalPrecio), 0);
     const totalRow = sheet.addRow(["TOTAL", "", totalCantidad, totalIngresos]);
-
     sheet.getColumn(4).numFmt = '"$"#,##0.00';
-    styleTotalRow(totalRow);
-  }
+    styles.styleTotalRow(totalRow);
 
-  const headerRow = sheet.getRow(3);
-  styleHeaderRow(headerRow);
-
-  const rowsCount = tipo === 'fecha' ? data.length : top10.length;
-  for (let i = 0; i < rowsCount; i++) {
-    const row = sheet.getRow(4 + i);
-    styleDataRow(row, (4 + i) % 2 === 0);
-  }
-
-  sheet.autoFilter = {
-    from: 'A3',
-    to: `${String.fromCharCode(64 + sheet.columnCount)}3`,
+    return productos.length;
   };
 
+  let filasCount = 0;
+
+  if (tipo === 'fecha') {
+    const data = await admin.graficoVentas(rango, mes, fecha, anio, desde, hasta);
+    agregarFilasVentas(data);
+    filasCount = data.length;
+  }
+
+ if (tipo === "productos") {
+   const limit = req.query.limit ? Number(req.query.limit) : null;
+   filasCount = await agregarFilasProductos(limit);
+ }
+
+  const headerRow = sheet.getRow(3);
+  styles.styleHeaderRow(headerRow);
+
+  for (let i = 0; i < filasCount; i++) {
+    const row = sheet.getRow(4 + i);
+    styles.styleDataRow(row, (4 + i) % 2 === 0);
+  }
+
+  sheet.autoFilter = { from: 'A3', to: `${String.fromCharCode(64 + sheet.columnCount)}3` };
   sheet.columns.forEach(col => {
     let max = 10;
-    col.eachCell({ includeEmpty: true }, cell => {
-      max = Math.max(max, (cell.value || '').toString().length);
-    });
+    col.eachCell({ includeEmpty: true }, cell => max = Math.max(max, (cell.value || '').toString().length));
     col.width = max + 2;
   });
 
   const hoy = new Date();
-  const fechaActual = hoy
-    .toLocaleDateString("es-DO", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    })
-    .replace(/\//g, "-");
+  const fechaActual = hoy.toLocaleDateString("es-DO", { year: "numeric", month: "2-digit", day: "2-digit" }).replace(/\//g, "-");
 
-  res.setHeader(
-    "Content-Disposition",
-    `attachment; filename=Reporte_${fechaActual}.xlsx`
-  );
-
-  res.setHeader(
-    'Content-Type',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-  );
+  res.setHeader("Content-Disposition", `attachment; filename=Reporte_${fechaActual}.xlsx`);
+  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
   await workbook.xlsx.write(res);
   res.end();

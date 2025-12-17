@@ -1,4 +1,6 @@
-export function styleTitleCell(cell) {
+const styles = {}
+
+styles.styleTitleCell = function (cell) {
   cell.font = {
     name: 'Calibri',
     size: 14,
@@ -8,7 +10,7 @@ export function styleTitleCell(cell) {
   cell.alignment = { vertical: 'middle', horizontal: 'center' };
 }
 
-export function styleHeaderRow(row) {
+styles.styleHeaderRow = function (row) {
   row.height = 22;
   row.eachCell(cell => {
     cell.font = {
@@ -32,7 +34,7 @@ export function styleHeaderRow(row) {
   });
 }
 
-export function styleDataRow(row, isEven) {
+styles.styleDataRow = function (row, isEven) {
   row.eachCell(cell => {
     cell.font = {
       name: 'Calibri',
@@ -54,7 +56,7 @@ export function styleDataRow(row, isEven) {
   }
 }
 
-export function styleTotalRow(row) {
+styles.styleTotalRow = function (row) {
   row.eachCell(cell => {
     cell.font = { bold: true };
     cell.fill = {
@@ -64,3 +66,5 @@ export function styleTotalRow(row) {
     };
   });
 }
+
+export default styles;

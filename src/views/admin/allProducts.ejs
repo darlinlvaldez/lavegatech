@@ -1,59 +1,74 @@
 <%- include('../admin/dashboard.ejs') %>
 
-<link rel="stylesheet" href="/css/admin/table.css">
+    <link rel="stylesheet" href="/css/admin/table.css">
+    <link rel="stylesheet" href="/css/utils/documentStyles.css">
 
-<div class="main-content">
-    <header class="header">
-        <h1>Top Productos Más Vendidos</h1>
-        <button id="btnVolver" class="add-button" style="margin-top:10px;">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:16px;height:16px;margin-right:5px;">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-            </svg>
-            Volver
-        </button>
-    </header>
 
-    <main class="main-content-area">
-        <div class="card">
-            <div class="card-header">
-                <div class="search-container">
-                    <input type="text" id="searchTopProductos" placeholder="Buscar productos..." class="input-search"/>
-                    <i class="fa fa-search search-icon"></i>
-                </div>
-            </div>
-
-            <button id="btnDescargarPDF" class="no-in-pdf" disabled>
-                Descargar PDF
+    <div class="main-content">
+        <header class="header">
+            <h1>Top Productos Más Vendidos</h1>
+            <button id="btnVolver" class="add-button" style="margin-top:10px;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                    style="width:16px;height:16px;margin-right:5px;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+                Volver
             </button>
+        </header>
 
-            <div class="container-report-pdf">
-                <h3>Top Productos</h3>
+        <main class="main-content-area">
+            <div class="card">
+                <div class="card-header">
+                    <div class="search-container">
+                        <input type="text" id="searchTopProductos" placeholder="Buscar productos..."
+                            class="input-search" />
+                        <i class="fa fa-search search-icon"></i>
+                    </div>
+                </div>
 
-            <div class="table-container table-responsive">
-                <table class="product-table" id="tablaTodosProductos">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Producto</th>
-                            <th style="text-align:right">Cantidad</th>
-                            <th style="text-align:right">Ingresos</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                    <tfoot></tfoot>
-                </table>
-            </div>
-        </div>
-    </main>
-</div>
+                <div class="container-report-pdf">
+                    <div class="filtros-y-botones">
+                        <div id="contenedorFiltrosFecha">
+                            <h3>Top Productos</h3>
+                        </div>
+                        <div class="botones-reporte">
+                            <button id="btnExcel" class="reporte-tipo no-in-pdf">
+                                <i class="fas fa-file-excel"></i> Exportar Excel
+                            </button>
 
-<script>
-document.getElementById('btnVolver').addEventListener('click', () => {
-    window.history.back(); 
-});
-</script>
+                            <button id="btnDescargarPDF" class="reporte-tipo no-in-pdf" disabled>
+                                <i class="fas fa-file-pdf"></i> Descargar PDF
+                            </button>
+                        </div>
+                    </div>
 
-<script src="/js/admin/charts/topProducts.js"></script>
-<script src="/js/utils/formatPrice.js"></script>
-<script src="/js/utils/PDF.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+                    <div class="container-report-pdf">
+
+                        <div class="table-container table-responsive">
+                            <table class="product-table" id="tablaTodosProductos">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Producto</th>
+                                        <th style="text-align:right">Cantidad</th>
+                                        <th style="text-align:right">Ingresos</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                                <tfoot></tfoot>
+                            </table>
+                        </div>
+                    </div>
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('btnVolver').addEventListener('click', () => {
+            window.history.back();
+        });
+    </script>
+
+    <script src="/js/admin/charts/topProducts.js"></script>
+    <script src="/js/utils/formatPrice.js"></script>
+    <script src="/js/utils/PDF.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>

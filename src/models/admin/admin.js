@@ -63,26 +63,26 @@ admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
 
   else if (rango === 'año' && anio) {
     query = `
-      SELECT DATE(fecha_creacion) AS fecha, SUM(total) AS totalVentas
+      SELECT DATE_FORMAT(fecha_creacion, '%Y-%m-%d') AS fecha, SUM(total) AS totalVentas
       FROM pedidos p
       JOIN envios e ON p.id = e.pedido_id
       WHERE estado = 'pagado' AND e.estado_envio != 'cancelado'
         AND YEAR(fecha_creacion) = ?
-      GROUP BY fecha ORDER BY fecha
+      GROUP BY DATE(fecha_creacion) ORDER BY fecha
     `;
     params = [anio];
   }
 
   else if (rango === 'fecha-especifica' && fecha) {
     query = `
-        SELECT 
-      HOUR(fecha_creacion) AS hora,
-      SUM(total) AS totalVentas
+      SELECT 
+        HOUR(fecha_creacion) AS hora,
+        SUM(total) AS totalVentas
       FROM pedidos p
       JOIN envios e ON p.id = e.pedido_id
       WHERE p.estado = 'pagado'
-      AND e.estado_envio != 'cancelado'
-      AND DATE(fecha_creacion) = ?
+        AND e.estado_envio != 'cancelado'
+        AND DATE(fecha_creacion) = ?
       GROUP BY hora
       ORDER BY hora
     `;
@@ -91,23 +91,23 @@ admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
 
   else if (rango === 'personalizado' && desde && hasta) {
     query = `
-      SELECT DATE(fecha_creacion) AS fecha, SUM(total) AS totalVentas
+      SELECT DATE_FORMAT(fecha_creacion, '%Y-%m-%d') AS fecha, SUM(total) AS totalVentas
       FROM pedidos p 
       JOIN envios e ON p.id = e.pedido_id
       WHERE estado = 'pagado' AND e.estado_envio != 'cancelado'
         AND DATE(fecha_creacion) BETWEEN ? AND ?
-      GROUP BY fecha ORDER BY fecha
+      GROUP BY DATE(fecha_creacion) ORDER BY fecha
     `;
     params = [desde, hasta];
   }
 
   else {
     query = `
-      SELECT DATE(fecha_creacion) AS fecha, SUM(total) AS totalVentas
+      SELECT DATE_FORMAT(fecha_creacion, '%Y-%m-%d') AS fecha, SUM(total) AS totalVentas
       FROM pedidos p 
       JOIN envios e ON p.id = e.pedido_id
       WHERE estado = 'pagado' AND e.estado_envio != 'cancelado'
-      GROUP BY fecha ORDER BY fecha
+      GROUP BY DATE(fecha_creacion) ORDER BY fecha
     `;
   }
 

@@ -67,6 +67,16 @@ async function loadAllProductos() {
     );
     render(filtered);
   });
+
+  const btnExcel = document.getElementById("btnExcel");
+
+  btnExcel?.addEventListener("click", () => {
+    const params = new URLSearchParams({
+      tipo: "productos", 
+    });
+
+    window.location.href = `/api/admin/export-excel?${params}`;
+  });
 }
 
 loadAllProductos();

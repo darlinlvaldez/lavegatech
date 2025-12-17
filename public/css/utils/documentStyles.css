@@ -1,0 +1,36 @@
+.filtros-y-botones {
+  display: flex;
+  align-items: center;       
+  justify-content: space-between; 
+  margin-bottom: 15px;
+}
+
+.botones-reporte {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+}
+
+.botones-reporte button {
+  margin-left: 10px;
+}
+
+.reporte-tipo#btnDescargarPDF {
+  background-color: #e74c3c; 
+  border-color: #c0392b;
+}
+
+.reporte-tipo#btnExcel {
+  background-color: #2ecc71;
+  border-color: #27ae60;
+}
+
+.reporte-tipo:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.reporte-tipo:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

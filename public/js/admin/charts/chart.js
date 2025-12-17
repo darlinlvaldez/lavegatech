@@ -8,7 +8,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const fechaSelect = document.getElementById("fechaSelect");
   const labelMesSelect = document.getElementById("labelMesSelect");
   const labelFechaSelect = document.getElementById("labelFechaSelect");
-  const contenedorFiltrosFecha = document.getElementById("contenedorFiltrosFecha");
+  const contenedorFiltrosFecha = document.getElementById(
+    "contenedorFiltrosFecha"
+  );
   const anioInput = document.getElementById("anioInput");
   const labelAnioInput = document.getElementById("labelAnioInput");
   const fechaDesde = document.getElementById("fechaDesde");
@@ -19,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const ctx = document.getElementById("ventasChart").getContext("2d");
   let ventasChart = null;
   let tipoFiltro = "fecha";
-  
+
   const barBackgroundColors = [
     "rgba(255, 99, 132, 0.6)",
     "rgba(54, 162, 235, 0.6)",
@@ -27,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "rgba(75, 192, 192, 0.6)",
     "rgba(153, 102, 255, 0.6)",
     "rgba(255, 159, 64, 0.6)",
-    "rgba(199, 199, 199, 0.6)"
+    "rgba(199, 199, 199, 0.6)",
   ];
 
   const barBorderColors = [
@@ -37,11 +39,12 @@ document.addEventListener("DOMContentLoaded", () => {
     "rgba(75, 192, 192, 1)",
     "rgba(153, 102, 255, 1)",
     "rgba(255, 159, 64, 1)",
-    "rgba(199, 199, 199, 1)"
+    "rgba(199, 199, 199, 1)",
   ];
 
   function toggleFiltroFecha() {
-    contenedorFiltrosFecha.style.display = tipoFiltro === "productos" ? "none" : "block";
+    contenedorFiltrosFecha.style.display =
+      tipoFiltro === "productos" ? "none" : "block";
   }
 
   async function loadData() {
@@ -59,9 +62,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const res = await fetch(url);
     const responseData = await res.json();
-    const data = tipoFiltro === "productos" ? responseData.top10 : responseData; 
+    const data = tipoFiltro === "productos" ? responseData.top10 : responseData;
 
-    const tituloExtra = dateTitle ({
+    const tituloExtra = dateTitle({
       rango: rangoSelect.value,
       fecha: fechaSelect.value,
       mes: mesSelect.value,
@@ -160,7 +163,9 @@ document.addEventListener("DOMContentLoaded", () => {
         animation: {
           onComplete: () => {
             window.chartReadyForPDF = true;
-            document.getElementById("btnDescargarPDF")?.removeAttribute("disabled");
+            document
+              .getElementById("btnDescargarPDF")
+              ?.removeAttribute("disabled");
           },
         },
         responsive: true,
@@ -210,7 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
           x: {
             title: {
               display: true,
-              text: tipoFiltro === "fecha" ? "Fecha" : "Producto",
+              text: tipoFiltro === "fecha" ? "Fecha" : "Producto(s)",
             },
           },
           y: {
@@ -227,52 +232,52 @@ document.addEventListener("DOMContentLoaded", () => {
     updateBotonVerTodos(tipoFiltro);
   }
 
-    if (tipoFiltro === "productos") {
-      const btnPDF = document.getElementById("btnDescargarPDF");
-      btnPDF?.removeAttribute("disabled");
-      window.chartReadyForPDF = true;
-    }
-
-    document.getElementById("btnFecha").addEventListener("click", () => {
-      tipoFiltro = "fecha";
-      document.getElementById("btnFecha").classList.add("active");
-      document.getElementById("btnProductos").classList.remove("active");
-      toggleFiltroFecha();
-      loadData();
-    });
-
-    document.getElementById("btnProductos").addEventListener("click", () => {
-      tipoFiltro = "productos";
-      document.getElementById("btnProductos").classList.add("active");
-      document.getElementById("btnFecha").classList.remove("active");
-      toggleFiltroFecha();
-      loadData();
-    });
-
+  if (tipoFiltro === "productos") {
     const btnPDF = document.getElementById("btnDescargarPDF");
+    btnPDF?.removeAttribute("disabled");
+    window.chartReadyForPDF = true;
+  }
 
-    btnPDF?.addEventListener("click", () => {
-      if (!window.chartReadyForPDF) return;
+  document.getElementById("btnFecha").addEventListener("click", () => {
+    tipoFiltro = "fecha";
+    document.getElementById("btnFecha").classList.add("active");
+    document.getElementById("btnProductos").classList.remove("active");
+    toggleFiltroFecha();
+    loadData();
+  });
 
-      generatePDF({
-        container: ".container-report-pdf",
-        filename:
-          tipoFiltro === "productos"
-            ? "LaVegaTech-Top-Productos.pdf"
-            : "LaVegaTech-Reporte-Ventas.pdf",
-        orientation: "landscape",
-        useCORS: true,
-        pagebreak: {
-          mode: ["css", "legacy"],
-        },
-      });
+  document.getElementById("btnProductos").addEventListener("click", () => {
+    tipoFiltro = "productos";
+    document.getElementById("btnProductos").classList.add("active");
+    document.getElementById("btnFecha").classList.remove("active");
+    toggleFiltroFecha();
+    loadData();
+  });
+
+  const btnPDF = document.getElementById("btnDescargarPDF");
+
+  btnPDF?.addEventListener("click", () => {
+    if (!window.chartReadyForPDF) return;
+
+    generatePDF({
+      container: ".container-report-pdf",
+      filename:
+        tipoFiltro === "productos"
+          ? "LaVegaTech-Top-Productos.pdf"
+          : "LaVegaTech-Reporte-Ventas.pdf",
+      orientation: "landscape",
+      useCORS: true,
+      pagebreak: {
+        mode: ["css", "legacy"],
+      },
     });
+  });
 
-    tipoGraficoSelect.addEventListener("change", () => {
-      if (tipoFiltro === "fecha") {
-        loadData();
-      }
-    });
+  tipoGraficoSelect.addEventListener("change", () => {
+    if (tipoFiltro === "fecha") {
+      loadData();
+    }
+  });
 
   initDateFilters({
     rangoSelect,
@@ -286,22 +291,23 @@ document.addEventListener("DOMContentLoaded", () => {
     labelAnioInput,
     labelFechaDesde,
     labelFechaHasta,
-    onChange: loadData
+    onChange: loadData,
   });
 
-      document.getElementById("btnExcel").addEventListener("click", () => {
-      const params = new URLSearchParams({
-        tipo: tipoFiltro,
-        rango: rangoSelect.value,
-        mes: mesSelect.value,
-        fecha: fechaSelect.value,
-        anio: anioInput.value,
-        desde: fechaDesde.value,
-        hasta: fechaHasta.value,
-      });
-
-      window.location.href = `/api/admin/export-excel?${params}`;
+  document.getElementById("btnExcel").addEventListener("click", () => {
+    const params = new URLSearchParams({
+      tipo: tipoFiltro,
+      rango: rangoSelect.value,
+      mes: mesSelect.value,
+      fecha: fechaSelect.value,
+      anio: anioInput.value,
+      desde: fechaDesde.value,
+      hasta: fechaHasta.value,
+      limit: tipoFiltro === "productos" ? 10 : null,
     });
+
+    window.location.href = `/api/admin/export-excel?${params}`;
+  });
 
   loadData();
   toggleFiltroFecha();
