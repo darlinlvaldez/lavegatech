@@ -75,12 +75,16 @@ admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
 
   else if (rango === 'fecha-especifica' && fecha) {
     query = `
-      SELECT DATE_FORMAT(fecha_creacion, '%H:00') AS fecha, SUM(total) AS totalVentas
+        SELECT 
+      HOUR(fecha_creacion) AS hora,
+      SUM(total) AS totalVentas
       FROM pedidos p
       JOIN envios e ON p.id = e.pedido_id
-      WHERE estado = 'pagado' AND e.estado_envio != 'cancelado'
-        AND DATE(fecha_creacion) = ?
-      GROUP BY HOUR(fecha_creacion) ORDER BY HOUR(fecha_creacion)
+      WHERE p.estado = 'pagado'
+      AND e.estado_envio != 'cancelado'
+      AND DATE(fecha_creacion) = ?
+      GROUP BY hora
+      ORDER BY hora
     `;
     params = [fecha];
   }
@@ -117,7 +121,7 @@ admin.getTopProductos = async (limit = null) => {
   dp.producto_id,
   dp.nombre_producto,
   SUM(dp.cantidad) AS totalVendido,
-  SUM(dp.subtotal) AS totalPrecio, -- subtotal por producto
+  SUM(dp.subtotal) AS totalPrecio,
   p.almacenamiento_id,
   p.ram_id,
   CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones

@@ -7,9 +7,9 @@
     <div id="contenedorFiltrosFecha">
       <label for="rangoSelect">Selecciona rango:</label>
       <select id="rangoSelect">
-        <option value="fecha-especifica">Fecha específica</option>
         <option value="mes">Mes</option>
         <option value="año">Año</option>
+        <option value="fecha-especifica">Fecha específica</option>
         <option value="personalizado">Rango personalizado</option>
       </select>
 
@@ -32,8 +32,8 @@
       <input type="month" id="mesSelect" style="display:none;" />
 
       <label for="fechaSelect" id="labelFechaSelect" style="display:none;">Selecciona fecha:</label>
-      <input type="date" id="fechaSelect" style="display:none;" />
-    </div>
+      <input type="date" id="fechaSelect" style="display:none;" value="<%= new Date().toISOString().split('T')[0] %>" />
+      </div>
 
     <div class="filtro-tipo">
       <button id="btnFecha" class="active">Ventas por fecha</button>

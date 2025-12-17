@@ -40,15 +40,18 @@ export function renderTablaVentasBase({
 
     let total = 0;
     data.forEach(item => {
-      total += Number(item.totalVentas || 0);
-      tbody.insertAdjacentHTML(
-        "beforeend",
-        `<tr>
-          <td>${formatDate(item.fecha, rango)}</td>
-          <td style="text-align:right">$${formatPrice(item.totalVentas)}</td>
-        </tr>`
-      );
-    });
+  total += Number(item.totalVentas || 0);
+  tbody.insertAdjacentHTML(
+    "beforeend",
+    `<tr>
+      <td>${rango === "fecha-especifica" && item.hora !== undefined
+      ? formatDate(item.hora, rango)
+      : formatDate(item.fecha, rango)}</td>
+      <td style="text-align:right">$${formatPrice(item.totalVentas)}</td>
+    </tr>`
+  );
+});
+
 
     tfoot.innerHTML = `
       <tr>
@@ -125,9 +128,7 @@ export function updateBotonVerTodos(tipo) {
   }
 }
 
-function formatHora12(hora) {
-  const [h] = hora.split(":");
-  const hour = parseInt(h, 10);
+function formatHora12(hour) {
   const ampm = hour >= 12 ? "PM" : "AM";
   const hour12 = hour % 12 || 12;
   return `${hour12}:00 ${ampm}`;
@@ -141,7 +142,7 @@ export function formatDate(fecha, rango) {
   if (!fecha) return "";
 
   if (rango === "fecha-especifica") {
-    return formatHora12(fecha);
+    return formatHora12(Number(fecha));
   }
 
   fecha = cleanDate(fecha);
