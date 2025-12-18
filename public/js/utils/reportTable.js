@@ -124,7 +124,7 @@ export function updateBotonVerTodos(tipo) {
     btn.onclick = () => (window.location.href = "/admin/allSales");
   } else {
     btn.textContent = "Ver más";
-    btn.onclick = () => (window.location.href = "/admin/allProducts");
+    btn.onclick = () => (window.location.href = "/api/admin/allProducts");
   }
 }
 

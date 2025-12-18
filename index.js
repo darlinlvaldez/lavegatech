@@ -137,10 +137,6 @@ app.get('/admin/allSales', isAdmin(), (req, res) => {
   res.render('admin/allSales');
 });
 
-app.get('/admin/allProducts', isAdmin(), (req, res) => {
-  res.render('admin/allProducts');
-});
-
 app.get('/admin/products', isAdmin(), (req, res) => {
   res.render('admin/products');  
 });

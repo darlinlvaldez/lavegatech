@@ -22,6 +22,8 @@ adminController.adminDashboard = async (req, res) => {
   }
 };
 
+// Charts
+
 adminController.graficoVentas = async (req, res) => {
   const { rango, mes, fecha, anio, desde, hasta } = req.query;
 
@@ -36,36 +38,19 @@ adminController.graficoVentas = async (req, res) => {
 
 adminController.topProductos = async (req, res) => {
   try {
-    const {
-      limite,
-      categoria,
-      marca
-    } = req.query;
+    const {limite, categoria, marca} = req.query;
 
     const categorias = categoria ? categoria.split(',') : [];
     const marcas = marca ? marca.split(',') : [];
 
     const productos = await admin.getTopProductos({
-      limit: limite || null,
-      categorias,
-      marcas
-    });
+      limit: limite || null, categorias, marcas});
 
-    res.json({ todos: productos });
+    res.json({ top10: productos.slice(0, 10), todos: productos });
 
   } catch (error) {
     console.error('Error al obtener top productos:', error);
     res.status(500).json({ error: 'Error al obtener top productos' });
-  }
-};
-
-adminController.allProductsData = async (req, res) => {
-  try {
-    const productos = await admin.getTopProductos({});
-    res.json({ todos: productos });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error cargando productos' });
   }
 };
 
@@ -86,14 +71,18 @@ adminController.allProductsView = async (req, res) => {
 };
 
 adminController.marcaCategoria = async (req, res) => {
-  const categorias = req.query.categoria?.split(',').map(Number) || [];
+  try {
+    const categorias = req.query.categoria
+      ? req.query.categoria.split(',').map(Number) : [];
 
-  const [marcas, categoriasData] = await Promise.all([
-    store.cantidadMarcas(categorias),
-    store.cantidadCategoria()
-  ]);
+    const marcas = await store.cantidadMarcas(categorias);
 
-  res.json({ marcas, categorias: categoriasData });
+    res.json({ marcas });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error cargando marcas' });
+  }
 };
 
 adminController.exportExcel = async (req, res) => {
@@ -128,7 +117,7 @@ adminController.exportExcel = async (req, res) => {
   };
   
   const agregarFilasProductos = async (limit = null) => {
-    const productos = await admin.getTopProductos(limit); // si limit es null, trae todos
+    const productos = await admin.getTopProductos({ limit });
     sheet.addRow(["#", "Producto", "Cantidad", "Ingresos"]);
 
     productos.forEach((p, i) => {

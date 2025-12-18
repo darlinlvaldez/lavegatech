@@ -1,128 +1,179 @@
+const TopProductos = {
+  productos: [],
+  tbody: null,
+  tfoot: null,
+  marcasSelect: null,
 
-let productos = [];
-let tbody = null;
-let tfoot = null;
+  async init() {
+    this.productos = [];
+    this.tbody = document.querySelector("#tablaTodosProductos tbody");
+    this.tfoot = document.querySelector("#tablaTodosProductos tfoot");
+    this.marcasSelect = new Choices(document.getElementById("selectMarcas"), {
+      removeItemButton: true,
+      searchEnabled: true,
+      placeholderValue: "Seleccionar marcas",
+      shouldSort: false,
+    });
 
-function render(data) {
-  tbody.innerHTML = '';
-  tfoot.innerHTML = '';
+    document.querySelectorAll('input[name="categoria"]').forEach((c) => {
+      c.addEventListener("change", () => {
+        this.actualizarMarcasPorCategoria();
+        this.actualizarTopProductos();
+        this.updateTitle();
+      });
+    });
 
-  let totalCantidad = 0;
-  let totalIngresos = 0;
+    document
+      .getElementById("limite-select")
+      ?.addEventListener("change", () => this.actualizarTopProductos());
+    document
+      .getElementById("selectMarcas")
+      ?.addEventListener("change", () => this.actualizarTopProductos());
+    document
+      .getElementById("btnVolver")
+      ?.addEventListener("click", () => window.history.back());
 
-  data.forEach((item, index) => {
-    const nombre = item.nombre_producto || 'Producto';
-    const especificaciones = item.especificaciones || '';
-    const cantidad = Number(item.totalVendido || 0);
-    const ingresos = Number(item.totalPrecio || 0);
+    await this.loadAllProductos();
+  },
 
-    totalCantidad += cantidad;
-    totalIngresos += ingresos;
+  render(data) {
+    this.tbody.innerHTML = "";
+    this.tfoot.innerHTML = "";
 
-    tbody.insertAdjacentHTML('beforeend', `
+    let totalCantidad = 0;
+    let totalIngresos = 0;
+
+    data.forEach((item, index) => {
+      const nombre = item.nombre_producto || "Producto";
+      const especificaciones = item.especificaciones || "";
+      const cantidad = Number(item.totalVendido || 0);
+      const ingresos = Number(item.totalPrecio || 0);
+
+      totalCantidad += cantidad;
+      totalIngresos += ingresos;
+
+      this.tbody.insertAdjacentHTML(
+        "beforeend",
+        `
+        <tr>
+          <td style="text-align:left; font-weight:bold">${index + 1}</td>
+          <td>${nombre} ${especificaciones}</td>
+          <td style="text-align:right">${cantidad}</td>
+          <td style="text-align:right">$${formatPrice(ingresos)}</td>
+        </tr>
+      `
+      );
+    });
+
+    this.tfoot.innerHTML = `
       <tr>
-        <td style="text-align:left; font-weight:bold">${index + 1}</td>
-        <td>${nombre} ${especificaciones}</td>
-        <td style="text-align:right">${cantidad}</td>
-        <td style="text-align:right">$${formatPrice(ingresos)}</td>
+        <td colspan="2" style="text-align:left; font-weight:bold">Totales</td>
+        <td style="text-align:right; font-weight:bold">${totalCantidad}</td>
+        <td style="text-align:right; font-weight:bold">$${formatPrice(
+          totalIngresos
+        )}</td>
       </tr>
-    `);
-  });
+    `;
+  },
 
-  tfoot.innerHTML = `
-    <tr>
-      <td colspan="2" style="text-align:left; font-weight:bold">Totales</td>
-      <td style="text-align:right; font-weight:bold">${totalCantidad}</td>
-      <td style="text-align:right; font-weight:bold">$${formatPrice(totalIngresos)}</td>
-    </tr>
-  `;
-}
+  async loadAllProductos() {
+    const res = await fetch("/api/admin/top-productos");
+    const response = await res.json();
+    this.productos = response.todos || [];
 
-async function loadAllProductos() {
-  const res = await fetch("/api/admin/allProducts-data");
+    const searchInput = document.getElementById("searchTopProductos");
+    const btnPDF = document.getElementById("btnDescargarPDF");
+    const btnExcel = document.getElementById("btnExcel");
 
-  const response = await res.json();
+    this.render(this.productos);
 
-  productos = response.todos || [];
+    searchInput?.addEventListener("input", () => {
+      const searchTerm = searchInput.value.toLowerCase();
+      const filtered = this.productos.filter((p) =>
+        (p.nombre_producto || "").toLowerCase().includes(searchTerm)
+      );
+      this.render(filtered);
+    });
 
-  tbody = document.querySelector('#tablaTodosProductos tbody');
-  tfoot = document.querySelector('#tablaTodosProductos tfoot');
+    btnPDF?.addEventListener("click", () => {
+      generatePDF({
+        container: ".container-report-pdf",
+        filename: "LaVegaTech-Top-Productos.pdf",
+        orientation: "landscape",
+        useCORS: true,
+        pagebreak: { mode: ["css", "legacy"] },
+      });
+    });
+    btnPDF?.removeAttribute("disabled");
 
-  const searchInput = document.getElementById("searchTopProductos");
-  const btnPDF = document.getElementById("btnDescargarPDF");
-  const btnExcel = document.getElementById("btnExcel");
+    btnExcel?.addEventListener("click", () => {
+      const params = new URLSearchParams({ tipo: "productos" });
+      window.location.href = `/api/admin/export-excel?${params}`;
+    });
+  },
 
-  render(productos);
+  async actualizarTopProductos() {
+    const limite = document.getElementById("limite-select")?.value || "";
+    const categorias = [
+      ...document.querySelectorAll('input[name="categoria"]:checked'),
+    ]
+      .map((c) => c.value)
+      .join(",");
+    const marcas = this.marcasSelect.getValue(true).join(",");
 
+    try {
+      const res = await fetch(
+        `/api/admin/top-productos?limite=${limite}&categoria=${categorias}&marca=${marcas}`
+      );
+      const data = await res.json();
+      this.productos = data.todos || [];
+      this.render(this.productos);
+    } catch (err) {
+      console.error("Error filtrando productos:", err);
+    }
+  },
 
-  searchInput?.addEventListener('input', () => {
-    const searchTerm = searchInput.value.toLowerCase();
-    const filtered = productos.filter(p =>
-      (p.nombre_producto || '').toLowerCase().includes(searchTerm)
+  async actualizarMarcasPorCategoria() {
+    const categorias = [
+      ...document.querySelectorAll('input[name="categoria"]:checked'),
+    ].map((c) => c.value);
+    if (!categorias.length) return;
+
+    const res = await fetch(
+      `/api/admin/marcaCategoria?categoria=${categorias.join(",")}`
     );
-    render(filtered);
-  });
+    const data = await res.json();
 
-  btnPDF?.addEventListener("click", () => {
-    generatePDF({
-      container: ".container-report-pdf",
-      filename: "LaVegaTech-Top-Productos.pdf",
-      orientation: "landscape",
-      useCORS: true,
-      pagebreak: { mode: ["css", "legacy"] },
-    });
-  });
+    this.marcasSelect.clearChoices();
+    this.marcasSelect.setChoices(
+      data.marcas.map((m) => ({
+        value: m.marca_id,
+        label: `${m.marca} (${m.cantidad})`,
+      })),
+      "value",
+      "label",
+      true
+    );
+  },
 
-  btnPDF?.removeAttribute("disabled");
+  updateTitle() {
+    const categorias = [
+      ...document.querySelectorAll('input[name="categoria"]:checked'),
+    ].map((c) => c.dataset.name || c.nextSibling.textContent.trim());
 
-  btnExcel?.addEventListener("click", () => {
-    const params = new URLSearchParams({
-      tipo: "productos",
-    });
-    window.location.href = `/api/admin/export-excel?${params}`;
-  });
-}
+    let title = "Top productos";
 
-function actualizarTopProductos() {
-  const limite = document.getElementById('limite-select')?.value || '';
+    if (categorias.length === 1) {
+      title += ` (${categorias[0]})`;
+    } else if (categorias.length > 1) {
+      const mostrar = categorias.slice(0, 3).join(", ");
+      title += ` (${mostrar}${
+        categorias.length > 3 ? ` +${categorias.length - 3} más` : ""
+      })`;
+    }
 
-  const categorias = [...document.querySelectorAll('input[name="categoria"]:checked')]
-    .map(c => c.value).join(',');
+    document.querySelector("#tituloTopProductos").textContent = title;
+  },
+};
 
-  const marcas = [...document.querySelectorAll('input[name="marca"]:checked')]
-    .map(m => m.value).join(',');
-
-  fetch(`/api/admin/top-productos?limite=${limite}&categoria=${categorias}&marca=${marcas}`)
-    .then(res => res.json())
-    .then(data => {
-      productos = data.todos || [];
-      render(productos);
-    })
-    .catch(err => console.error('Error filtrando productos:', err));
-}
-
-async function actualizarMarcasPorCategoria() {
-  const categorias = [...document.querySelectorAll('input[name="categoria"]:checked')]
-    .map(c => c.value)
-    .join(',');
-
-  const res = await fetch(`/api/admin/marcaCategoria?categoria=${categorias}`);
-  const data = await res.json();
-
-  const contenedor = document.querySelector('.filter-group.marcas');
-  contenedor.innerHTML = '';
-
-  data.marcas.forEach(m => {
-    contenedor.insertAdjacentHTML('beforeend', `
-      <label>
-        <input type="checkbox" name="marca" value="${m.marca_id}"
-               onchange="actualizarTopProductos()">
-        ${m.marca} (${m.cantidad})
-      </label>
-    `);
-  });
-}
-
-window.actualizarMarcasPorCategoria = actualizarMarcasPorCategoria;
-
-loadAllProductos();
+TopProductos.init();

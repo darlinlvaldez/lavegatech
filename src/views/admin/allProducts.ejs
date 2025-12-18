@@ -1,8 +1,8 @@
 <%- include('../admin/dashboard.ejs') %>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
     <link rel="stylesheet" href="/css/admin/table.css">
     <link rel="stylesheet" href="/css/utils/documentStyles.css">
-
 
     <div class="main-content">
         <header class="header">
@@ -21,61 +21,47 @@
                 <div class="card-header">
                     <div class="search-container">
                         <input type="text" id="searchTopProductos" placeholder="Buscar productos..."
-                            class="input-search" />
+                            class="input-search"/>
                         <i class="fa fa-search search-icon"></i>
                     </div>
                 </div>
 
                 <div class="admin-filters">
+                    <label>
+                        <span style="font-weight: bold; font-size: 20px;">Top</span>:
+                        <select id="limite-select">
+                            <option value="">Todos</option>
+                            <option value="5">Top 5</option>
+                            <option value="10">Top 10</option>
+                            <option value="20">Top 20</option>
+                            <option value="30">Top 30</option>
+                            <option value="40">Top 40</option>
+                            <option value="50">Top 50</option>
+                        </select>
+                    </label>
 
-  <!-- LIMITE -->
-  <label>
-    Top:
-    <select id="limite-select" onchange="actualizarTopProductos()">
-      <option value="">Todos</option>
-      <option value="10">Top 10</option>
-      <option value="20">Top 20</option>
-      <option value="30">Top 30</option>
-      <option value="50">Top 50</option>
-    </select>
-  </label>
-
-<div class="filter-group">
-  <h4>Categorías</h4>
-  <% cantCategoria.forEach(c => { %>
-    <label>
-      <input type="checkbox"
-             name="categoria"
-             value="<%= c.categoria_id %>"
-             onchange="actualizarMarcasPorCategoria(); actualizarTopProductos()">
-      <%= c.categoria %>
-    </label>
-  <% }) %>
-</div>
+                    <div class="filter-group">
+                        <h4>Categorías</h4>
+                        <% cantCategoria.forEach(c=> { %>
+                            <label>
+                                <input type="checkbox" name="categoria" value="<%= c.categoria_id %>">
+                                <%= c.categoria %>
+                            </label>
+                            <% }) %>
+                    </div>
 
 
-<!-- MARCAS -->
-<div class="filter-group marcas">
-  <h4>Marcas</h4>
-  <% cantMarcas.forEach(m => { %>
-    <label>
-      <input type="checkbox"
-             name="marca"
-             value="<%= m.marca_id %>"
-             onchange="actualizarTopProductos()">
-      <%= m.marca %>
-    </label>
-  <% }) %>
-</div>
+                    <div class="filter-group marcas">
+                        <h4>Marcas</h4>
+                        <select id="selectMarcas" multiple></select>
+                    </div>
 
-
-</div>
-
+                </div>
 
                 <div class="container-report-pdf">
                     <div class="filtros-y-botones">
                         <div id="contenedorFiltrosFecha">
-                            <h3>Top Productos</h3>
+                            <h3 id="tituloTopProductos">Top productos</h3>
                         </div>
                         <div class="botones-reporte">
                             <button id="btnExcel" class="reporte-tipo no-in-pdf">
@@ -107,12 +93,36 @@
                     </div>
         </main>
     </div>
+    
+    <style>
+        select,
+        input[type="month"],
+        input[type="date"],
+        input[type="number"] {
+            padding: 6px 12px;
+            font-size: 16px;
+            border: 2px solid #3498db;
+            border-radius: 6px;
+            color: #333;
+            margin-right: 10px;
+            vertical-align: middle;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+
+        select:hover,
+        input[type="month"]:hover,
+        input[type="date"]:hover {
+            border-color: #2980b9;
+        }
+    </style>
 
     <script>
         document.getElementById('btnVolver').addEventListener('click', () => {
             window.history.back();
         });
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
     <script src="/js/admin/charts/topProducts.js"></script>
     <script src="/js/utils/formatPrice.js"></script>
