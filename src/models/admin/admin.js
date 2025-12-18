@@ -1,4 +1,5 @@
 import db from "../../database/mobiles.js";
+import { buildProductFilters } from '../../utils/filterProducts.js';
 
 const admin = {};
 
@@ -115,32 +116,39 @@ admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
   return rows;
 };
 
-admin.getTopProductos = async (limit = null) => {
+admin.getTopProductos = async ({
+  limit = null,
+  categorias = [],
+  marcas = [],
+} = {}) => {
+  
+  const { where, params } = buildProductFilters({ categorias, marcas });
+
   let query = `
-  SELECT 
-  dp.producto_id,
-  dp.nombre_producto,
-  SUM(dp.cantidad) AS totalVendido,
-  SUM(dp.subtotal) AS totalPrecio,
-  p.almacenamiento_id,
-  p.ram_id,
-  CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
-  FROM detalles_pedido dp
-  JOIN pedidos ped ON dp.pedido_id = ped.id
-  JOIN envios e ON ped.id = e.pedido_id
-  JOIN productos p ON dp.producto_id = p.id
-  LEFT JOIN ram r ON p.ram_id = r.id
-  LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
-  WHERE ped.estado = 'pagado' AND e.estado_envio != 'cancelado'
-  GROUP BY dp.producto_id, dp.nombre_producto
-  ORDER BY totalVendido DESC
+    SELECT 
+      dp.producto_id,
+      dp.nombre_producto,
+      SUM(dp.cantidad) AS totalVendido,
+      SUM(dp.subtotal) AS totalPrecio,
+      CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
+    FROM detalles_pedido dp
+    JOIN pedidos ped ON dp.pedido_id = ped.id
+    JOIN envios e ON ped.id = e.pedido_id
+    JOIN productos p ON dp.producto_id = p.id
+    LEFT JOIN ram r ON p.ram_id = r.id
+    LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
+    WHERE ped.estado = 'pagado'
+      AND e.estado_envio != 'cancelado'
+      ${where ? `AND ${where}` : ""}
+    GROUP BY dp.producto_id, dp.nombre_producto
+    ORDER BY totalVendido DESC
   `;
-    
+
   if (limit) {
     query += ` LIMIT ${Number(limit)}`;
   }
-  
-  const [rows] = await db.query(query);
+
+  const [rows] = await db.query(query, params);
   return rows;
 };
 

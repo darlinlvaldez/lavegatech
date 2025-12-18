@@ -4,6 +4,7 @@ import sharp from "sharp";
 import ExcelJS from "exceljs";
 import axios from "axios";
 import admin from '../../models/admin/admin.js';
+import store from '../../models/store/store.js';
 import styles from '../../utils/excelReport/styles.js';
 import {generarTituloExcel} from '../../utils/excelReport/filterTitle.js';
 import {formatDateForExcel} from '../../utils/excelReport/formatDate.js';
@@ -34,15 +35,65 @@ adminController.graficoVentas = async (req, res) => {
 };
 
 adminController.topProductos = async (req, res) => {
-    try {
-        const top = await admin.getTopProductos(10);
-        const productos = await admin.getTopProductos();
+  try {
+    const {
+      limite,
+      categoria,
+      marca
+    } = req.query;
 
-        res.json({top10: top, todos: productos});
-    } catch (error) {
-        console.error('Error al obtener top productos:', error);
-        res.status(500).json({ error: 'Error al obtener top productos' });
-    }
+    const categorias = categoria ? categoria.split(',') : [];
+    const marcas = marca ? marca.split(',') : [];
+
+    const productos = await admin.getTopProductos({
+      limit: limite || null,
+      categorias,
+      marcas
+    });
+
+    res.json({ todos: productos });
+
+  } catch (error) {
+    console.error('Error al obtener top productos:', error);
+    res.status(500).json({ error: 'Error al obtener top productos' });
+  }
+};
+
+adminController.allProductsData = async (req, res) => {
+  try {
+    const productos = await admin.getTopProductos({});
+    res.json({ todos: productos });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error cargando productos' });
+  }
+};
+
+adminController.allProductsView = async (req, res) => {
+  try {
+    const cantCategoria = await store.cantidadCategoria();
+    const cantMarcas = await store.cantidadMarcas();
+
+    res.render('admin/allProducts', {
+      cantCategoria,
+      cantMarcas
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error cargando filtros');
+  }
+};
+
+adminController.marcaCategoria = async (req, res) => {
+  const categorias = req.query.categoria?.split(',').map(Number) || [];
+
+  const [marcas, categoriasData] = await Promise.all([
+    store.cantidadMarcas(categorias),
+    store.cantidadCategoria()
+  ]);
+
+  res.json({ marcas, categorias: categoriasData });
 };
 
 adminController.exportExcel = async (req, res) => {

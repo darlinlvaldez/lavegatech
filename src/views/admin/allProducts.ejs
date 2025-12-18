@@ -26,6 +26,52 @@
                     </div>
                 </div>
 
+                <div class="admin-filters">
+
+  <!-- LIMITE -->
+  <label>
+    Top:
+    <select id="limite-select" onchange="actualizarTopProductos()">
+      <option value="">Todos</option>
+      <option value="10">Top 10</option>
+      <option value="20">Top 20</option>
+      <option value="30">Top 30</option>
+      <option value="50">Top 50</option>
+    </select>
+  </label>
+
+<div class="filter-group">
+  <h4>Categorías</h4>
+  <% cantCategoria.forEach(c => { %>
+    <label>
+      <input type="checkbox"
+             name="categoria"
+             value="<%= c.categoria_id %>"
+             onchange="actualizarMarcasPorCategoria(); actualizarTopProductos()">
+      <%= c.categoria %>
+    </label>
+  <% }) %>
+</div>
+
+
+<!-- MARCAS -->
+<div class="filter-group marcas">
+  <h4>Marcas</h4>
+  <% cantMarcas.forEach(m => { %>
+    <label>
+      <input type="checkbox"
+             name="marca"
+             value="<%= m.marca_id %>"
+             onchange="actualizarTopProductos()">
+      <%= m.marca %>
+    </label>
+  <% }) %>
+</div>
+
+
+</div>
+
+
                 <div class="container-report-pdf">
                     <div class="filtros-y-botones">
                         <div id="contenedorFiltrosFecha">

@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const res = await fetch(url);
     const responseData = await res.json();
-    const data = tipoFiltro === "productos" ? responseData.top10 : responseData;
+    const data = tipoFiltro === "productos" ? responseData.todos : responseData;
 
     const tituloExtra = dateTitle({
       rango: rangoSelect.value,
