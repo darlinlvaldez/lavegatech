@@ -74,6 +74,8 @@ const TopProductos = {
         )}</td>
       </tr>
     `;
+
+    this.updateTitle(data.length);
   },
 
   async loadAllProductos() {
@@ -107,8 +109,23 @@ const TopProductos = {
     btnPDF?.removeAttribute("disabled");
 
     btnExcel?.addEventListener("click", () => {
-      const params = new URLSearchParams({ tipo: "productos" });
-      window.location.href = `/api/admin/export-excel?${params}`;
+      const limite = document.getElementById("limite-select")?.value || "";
+      const categorias = [
+        ...document.querySelectorAll('input[name="categoria"]:checked'),
+      ]
+        .map((c) => c.value)
+        .join(",");
+
+      const marcas = this.marcasSelect.getValue(true).join(",");
+
+      const params = new URLSearchParams({
+        tipo: "productos",
+        limit: limite,
+        categoria: categorias,
+        marca: marcas,
+      });
+
+      window.location.href = `/api/admin/export-top-productos-excel?${params.toString()}`;
     });
   },
 
@@ -169,12 +186,16 @@ const TopProductos = {
     });
   },
 
-  updateTitle() {
+  updateTitle(cantidad = null) {
     const categorias = [
       ...document.querySelectorAll('input[name="categoria"]:checked'),
     ].map((c) => c.dataset.name || c.nextSibling.textContent.trim());
 
     let title = "Top productos";
+
+    if (cantidad !== null) {
+      title = `Top ${cantidad} productos`;
+    }
 
     if (categorias.length === 1) {
       title += ` (${categorias[0]})`;

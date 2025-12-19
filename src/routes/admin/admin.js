@@ -9,14 +9,21 @@ const router = express.Router();
 router.use(isAdmin());
 
 // Panel Admin 
-router.get('/panel',  requireRole('superadmin', 'admin', 'editor', 'ventas', 'transportista'), admin.adminDashboard);
-router.get('/ventas-por-fecha',  requireRole('superadmin', 'admin', 'ventas'), admin.graficoVentas);
+router.get('/panel', requireRole('superadmin', 'admin', 'editor', 'ventas', 'transportista'), admin.adminDashboard);
+
+// Ventas
+router.get('/ventas-por-fecha', requireRole('superadmin', 'admin', 'ventas'), admin.graficoVentas);
+router.get('/allSales', requireRole('superadmin', 'admin', 'ventas'), admin.graficoVentas);
+router.get('/export-ventas-excel', requireRole('superadmin', 'admin', 'ventas'), admin.exportSalesExcel);
+
+// Productos
 router.get('/top-productos', requireRole('superadmin', 'admin', 'ventas'), admin.topProductos);
+router.get('/export-top-productos-excel', requireRole('superadmin', 'admin', 'ventas'), admin.exportTopProductsExcel);
 router.get('/allProducts', requireRole('superadmin', 'admin', 'ventas'), admin.allProductsView);
 router.get('/marcaCategoria', requireRole('superadmin', 'admin', 'ventas'), admin.marcaCategoria);
-router.get('/allSales', requireRole('superadmin', 'admin', 'ventas'), admin.graficoVentas);
-router.get('/export-excel', requireRole('superadmin', 'admin', 'ventas'), admin.exportExcel);
-router.post('/orders/:id/estado-envio',  requireRole('superadmin', 'admin', 'transportista'), admin.estadoEnvio);
+
+// Pedidos
+router.post('/orders/:id/estado-envio', requireRole('superadmin', 'admin', 'transportista'), admin.estadoEnvio);
 
 // Productos
 router.get('/productos',  requireRole('superadmin', 'admin', 'editor'), admin.listarItems);

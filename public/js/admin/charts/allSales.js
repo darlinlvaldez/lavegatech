@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
       hasta: fechaHasta.value,
     });
 
-    window.location.href = `/api/admin/export-excel?${params}`;
+    window.location.href = `/api/admin//export-ventas-excel?${params}`;
   });
 
   initDateFilters({

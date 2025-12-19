@@ -1,6 +1,15 @@
-export function generarTituloExcel({ tipo, rango, mes, fecha, anio, desde, hasta }) {
+export function salesTitle({ tipo, rango, mes, fecha, anio, desde, hasta, limit, categorias, totalProductos }) {
   if (tipo === 'productos') {
-    return 'Top Productos Vendidos';
+    let titulo = 'Top ';
+
+    const numero = limit ? Number(limit) : (totalProductos || 0);
+    titulo += numero ? `${numero} ` : '';
+    titulo += 'productos';
+
+    if (categorias && categorias.length) {
+      titulo += ` (${categorias.join(', ')})`;
+    }
+    return titulo;
   }
 
   if (tipo === 'fecha') {
