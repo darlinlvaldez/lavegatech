@@ -137,23 +137,36 @@ const TopProductos = {
     const categorias = [
       ...document.querySelectorAll('input[name="categoria"]:checked'),
     ].map((c) => c.value);
-    if (!categorias.length) return;
+
+    if (!categorias.length) {
+      this.marcasSelect.removeActiveItems();
+      this.marcasSelect.clearChoices();
+      return;
+    }
+
+    const marcasSeleccionadas = this.marcasSelect.getValue(true).map(String);
 
     const res = await fetch(
       `/api/admin/marcaCategoria?categoria=${categorias.join(",")}`
     );
     const data = await res.json();
 
+    this.marcasSelect.removeActiveItems();
     this.marcasSelect.clearChoices();
+
     this.marcasSelect.setChoices(
       data.marcas.map((m) => ({
-        value: m.marca_id,
+        value: String(m.marca_id),
         label: `${m.marca} (${m.cantidad})`,
       })),
       "value",
       "label",
       true
     );
+
+    marcasSeleccionadas.forEach((id) => {
+      this.marcasSelect.setChoiceByValue(id);
+    });
   },
 
   updateTitle() {

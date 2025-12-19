@@ -152,6 +152,58 @@ admin.getTopProductos = async ({
   return rows;
 };
 
+admin.cantidadCategoriaVendida = async () => {
+  const query = `
+    SELECT
+      c.id AS categoria_id,
+      c.categoria,
+      COALESCE(SUM(dp.cantidad), 0) AS cantidad
+    FROM categorias c
+    LEFT JOIN productos p ON p.categoria_id = c.id
+    LEFT JOIN detalles_pedido dp ON dp.producto_id = p.id
+    LEFT JOIN pedidos ped ON dp.pedido_id = ped.id
+    LEFT JOIN envios e ON ped.id = e.pedido_id
+    WHERE ped.estado = 'pagado'
+      AND e.estado_envio != 'cancelado'
+    GROUP BY c.id
+  `;
+
+  const [rows] = await db.query(query);
+  return rows;
+};
+
+admin.cantidadMarcasVendidas = async (categorias = []) => {
+  let where = "";
+  let params = [];
+
+  if (categorias.length) {
+    const placeholders = categorias.map(() => "?").join(",");
+    where = `AND p.categoria_id IN (${placeholders})`;
+    params.push(...categorias);
+  }
+
+  const query = `
+    SELECT
+      m.id AS marca_id,
+      m.nombre AS marca,
+      COALESCE(SUM(dp.cantidad), 0) AS cantidad
+    FROM p_marcas m
+    JOIN productos p ON p.marca_id = m.id
+    JOIN detalles_pedido dp ON dp.producto_id = p.id
+    JOIN pedidos ped ON dp.pedido_id = ped.id
+    JOIN envios e ON ped.id = e.pedido_id
+    WHERE ped.estado = 'pagado'
+      AND e.estado_envio != 'cancelado'
+      ${where}
+    GROUP BY m.id
+    HAVING cantidad > 0
+    ORDER BY m.nombre
+  `;
+
+  const [rows] = await db.query(query, params);
+  return rows;
+};
+
 admin.actualizarEstadoEnvio = async (estado_envio, pedido_id) => {
   let campos = 'estado_envio = ?';
   let valores = [estado_envio];

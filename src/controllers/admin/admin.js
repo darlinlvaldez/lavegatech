@@ -75,13 +75,12 @@ adminController.marcaCategoria = async (req, res) => {
     const categorias = req.query.categoria
       ? req.query.categoria.split(',').map(Number) : [];
 
-    const marcas = await store.cantidadMarcas(categorias);
-
+    const marcas = await admin.cantidadMarcasVendidas(categorias);
     res.json({ marcas });
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error cargando marcas' });
+    res.status(500).json({ error: "Error cargando marcas" });
   }
 };
 
