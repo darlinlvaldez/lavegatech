@@ -172,15 +172,6 @@ admin.cantidadCategoriaVendida = async () => {
   return rows;
 };
 
-admin.getCategoryNames = async (ids = []) => {
-  if (!ids.length) return [];
-
-  const placeholders = ids.map(() => "?").join(",");
-  const query = `SELECT categoria FROM categorias WHERE id IN (${placeholders})`;
-  const [rows] = await db.query(query, ids);
-  return rows.map(r => r.categoria); // solo los nombres
-};
-
 admin.cantidadMarcasVendidas = async (categorias = []) => {
   let where = "";
   let params = [];
@@ -211,6 +202,15 @@ admin.cantidadMarcasVendidas = async (categorias = []) => {
 
   const [rows] = await db.query(query, params);
   return rows;
+};
+
+admin.getCategoryNames = async (ids = []) => {
+  if (!ids.length) return [];
+
+  const placeholders = ids.map(() => "?").join(",");
+  const query = `SELECT categoria FROM categorias WHERE id IN (${placeholders})`;
+  const [rows] = await db.query(query, ids);
+  return rows.map(r => r.categoria); 
 };
 
 admin.actualizarEstadoEnvio = async (estado_envio, pedido_id) => {
