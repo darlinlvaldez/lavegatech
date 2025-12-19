@@ -4,17 +4,17 @@ const searchInput = document.getElementById("searchPedidosInput");
 const pedidos = document.querySelectorAll(".list-group-product");
 
 searchInput.addEventListener("input", () => {
-  const valor = searchInput.value.toLowerCase();
+  const valor = searchInput.value.toLowerCase().trim();
 
   pedidos.forEach((pedido) => {
-    const texto = pedido.textContent.toLowerCase();
-    const status = pedido.dataset.status || "";
-    const envio = pedido.dataset.envio || "";
-    
-    const visible = 
-      texto.includes(valor) || 
-      status.includes(valor) || 
-      envio.includes(valor);
+    const envio = (pedido.dataset.envio || "").toLowerCase();
+    const id = pedido.dataset.orderId || "";
+    const direccion = pedido.querySelector(".text-muted-user")?.textContent.toLowerCase() || "";
+
+    const visible =
+      envio.includes(valor) ||
+      id.includes(valor) ||
+      direccion.includes(valor);
 
     pedido.style.display = visible ? "block" : "none";
   });
@@ -41,12 +41,13 @@ document.querySelectorAll(".estado-envio-select").forEach((select) => {
         body: JSON.stringify({ estado_envio: nuevoEstado }),
       });
 
-      if (!res.ok) throw new Error("Error al actualizar el estado");
+      if (!res.ok) throw new Error();
+
+      this.closest(".list-group-product").dataset.envio = nuevoEstado;
 
       showToast("Estado actualizado.", "#27ae60", "check-circle");
     } catch (err) {
       showToast("Error al actualizar el estado.", "#e74c3c", "alert-circle");
-      console.error(err);
     }
   });
 });

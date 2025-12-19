@@ -28,7 +28,7 @@
         <% } else { %>
             <div class="list-group-user">
                 <% orders.forEach(order => { %>
-                    <a href="/api/admin/orders/<%= order.id %>" class="list-group-product order-link" data-order-id="<%= order.id %>">
+                    <a href="/api/admin/orders/<%= order.id %>" class="list-group-product order-link" data-order-id="<%= order.id %>" data-envio="<%= order.estado_envio %>">
                         <div class="d-flex-user w-100-user justify-content-user">
                             <h5 class="mb-1">Pedido #<%= order.id %>
                             </h5>
