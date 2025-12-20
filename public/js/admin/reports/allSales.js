@@ -18,7 +18,9 @@ document.addEventListener("DOMContentLoaded", () => {
   async function loadData() {
     const url = `/api/admin/ventas-por-fecha${buildDateQuery({ rangoSelect, mesSelect, fechaSelect, anioInput, fechaDesde, fechaHasta })}`;
     const res = await fetch(url);
-    const data = await res.json();
+    const responseData = await res.json();
+
+    const rows = responseData.rows; 
 
     const tituloExtra = dateTitle({
       rango: rangoSelect.value,
@@ -30,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     renderTablaVentasBase({
-      data,
+      data: rows,
       tableId: "reporteTable",
       tituloId: "tituloTablaVentas",
       tipo: "fecha",
@@ -54,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
       hasta: fechaHasta.value,
     });
 
-    window.location.href = `/api/admin//export-ventas-excel?${params}`;
+    window.location.href = `/api/admin/export-ventas-excel?${params}`;
   });
 
   initDateFilters({

@@ -22,6 +22,12 @@
   height: 100% !important;
 }
 
+.chart-wrapper.pie {
+  max-width: 50%;
+  height: 50%;
+  margin: 0 auto;
+}
+
 select, input[type="month"], input[type="date"], input[type="number"] {
   padding: 6px 12px;
   font-size: 16px;

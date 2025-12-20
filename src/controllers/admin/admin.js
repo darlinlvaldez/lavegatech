@@ -7,6 +7,7 @@ import admin from '../../models/admin/admin.js';
 import styles from '../../utils/excelReport/styles.js';
 import {salesTitle} from '../../utils/excelReport/filterTitle.js';
 import {formatDateForExcel} from '../../utils/excelReport/formatDate.js';
+import { salesSummary } from "../../services/salesSummary.js";
 
 const adminController = {};
 
@@ -27,11 +28,16 @@ adminController.graficoVentas = async (req, res) => {
   const { rango, mes, fecha, anio, desde, hasta } = req.query;
 
   try {
-    const ventas = await admin.graficoVentas(rango, mes, fecha, anio, desde, hasta);
-    res.json(ventas);
+    const rows = await admin.graficoVentas(
+      rango, mes, fecha, anio, desde, hasta
+    );
+
+    const resumen = salesSummary(rows);
+
+    res.json({ rows, resumen });
   } catch (error) {
-    console.error('Error al obtener ventas por fecha:', error);
-    res.status(500).json({ error: 'Error al obtener ventas por fecha' });
+    console.error("Error al obtener ventas por fecha:", error);
+    res.status(500).json({ error: "Error al obtener ventas por fecha" });
   }
 };
 
@@ -89,42 +95,126 @@ adminController.exportSalesExcel = async (req, res) => {
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet('Ventas');
 
+  workbook.creator = 'Sistema de Ventas';
+  workbook.lastModifiedBy = 'Administrador';
+  workbook.created = new Date();
+
   const titulo = salesTitle({ tipo: 'fecha', rango, mes, fecha, anio, desde, hasta });
   const titleRow = sheet.addRow([titulo]);
-  sheet.mergeCells('A1:B1');
+  sheet.mergeCells('A1:E1');
   styles.styleTitleCell(titleRow.getCell(1));
+  
+  const fechaGeneracion = new Date().toLocaleDateString('es-ES', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+  
+  const subtitleRow = sheet.addRow([`Reporte generado: ${fechaGeneracion}`]);
+  sheet.mergeCells('A2:E2');
+  styles.styleSubtitleCell(subtitleRow.getCell(1));
+  
   sheet.addRow([]);
 
   const data = await admin.graficoVentas(rango, mes, fecha, anio, desde, hasta);
 
-  sheet.addRow([rango === 'fecha-especifica' ? "Hora" : "Fecha", "Ventas"]);
-  data.forEach(r => {
-    const valorFecha = rango === 'fecha-especifica'
-      ? new Date(1970, 0, 1, r.hora).toLocaleTimeString("es-DO", { hour: "numeric", minute: "2-digit", hour12: true })
-      : formatDateForExcel(r.fecha);
-
-    sheet.addRow([valorFecha, Number(r.totalVentas)]);
-  });
-
-  sheet.addRow([]);
-  const totalRow = sheet.addRow(['TOTAL', data.reduce((sum, r) => sum + Number(r.totalVentas), 0)]);
-  sheet.getColumn(2).numFmt = '"$"#,##0.00';
-  styles.styleTotalRow(totalRow);
-
-  const headerRow = sheet.getRow(3);
-  styles.styleHeaderRow(headerRow);
-
-  for (let i = 0; i < data.length; i++) {
-    const row = sheet.getRow(4 + i);
-    styles.styleDataRow(row, (4 + i) % 2 === 0);
+  if (!data || data.length === 0) {
+    return res.status(400).json({
+      error: "No hay datos para exportar",
+    });
   }
 
-  sheet.autoFilter = { from: 'A3', to: 'B3' };
-  sheet.columns.forEach(col => {
-    let max = 10;
-    col.eachCell({ includeEmpty: true }, cell => max = Math.max(max, (cell.value || '').toString().length));
-    col.width = max + 2;
+  const resumen = salesSummary(data);
+
+  const headers = sheet.addRow([
+    rango === 'fecha-especifica' ? "Hora" : "Fecha", 
+    "Ventas", "Porcentaje", "Tendencia"]);
+    styles.styleHeaderRow(headers);
+
+  data.forEach((r, index) => {
+    const valorFecha = rango === 'fecha-especifica'
+      ? new Date(1970, 0, 1, r.hora).toLocaleTimeString("es-DO", { 
+          hour: "numeric", minute: "2-digit", hour12: true 
+        }) : formatDateForExcel(r.fecha);
+
+    const totalVentas = Number(r.totalVentas);
+    const totalGeneral = data.reduce((sum, item) => sum + Number(item.totalVentas), 0);
+    const porcentaje = totalGeneral > 0 ? (totalVentas / totalGeneral) * 100 : 0;
+    
+    const previousSale = index > 0 ? Number(data[index - 1].totalVentas) : null;
+    const tendencia = previousSale ? totalVentas - previousSale : 0;
+
+    const row = sheet.addRow([ valorFecha, totalVentas,
+      { formula: `C${index + 5}/SUM(C$5:C$${data.length + 4})*100`, result: porcentaje },
+      tendencia]);
+      styles.styleDataRow(row, index);
+    });
+
+  const totalRow = sheet.addRow([
+    'TOTAL',
+    { formula: `SUM(B5:B${data.length + 4})` },
+    '100.00%',
+    { formula: `SUM(D5:D${data.length + 4})` }
+  ]);
+  
+  styles.styleTotalRow(totalRow);
+
+  sheet.getColumn('B').numFmt = '"$"#,##0.00;[Red]"$"#,##0.00';
+  sheet.getColumn('C').numFmt = '0.00"%";[Red]0.00"%";"-"';
+  sheet.getColumn('D').numFmt = '"$"#,##0.00;[Red]"$"#,##0.00';
+
+  sheet.addRow([]);
+  sheet.addRow([]);
+  
+  const summaryTitle = sheet.addRow(['RESUMEN ESTADÍSTICO']);
+  sheet.mergeCells(`A${summaryTitle.number}:D${summaryTitle.number}`);
+  styles.styleSummaryTitle(summaryTitle.getCell(1));
+  
+  const totalVendido = data.reduce((sum, r) => sum + Number(r.totalVentas || 0), 0);
+  const totalPedidos = data.reduce((sum, r) => sum + Number(r.totalPedidos || 0), 0);
+  const ticketPromedio = totalPedidos > 0 ? totalVendido / totalPedidos : 0;
+  const ventaMaxima = Math.max(...data.map(r => Number(r.totalVentas || 0)));
+  const ventaMinima = Math.min(...data.map(r => Number(r.totalVentas || 0)));
+  const fechaMaxima = data.find(r => Number(r.totalVentas) === ventaMaxima);
+  const fechaMinima = data.find(r => Number(r.totalVentas) === ventaMinima);
+
+  const resumenData = [
+    ["Total vendido:", totalVendido],
+    ["Total de pedidos:", totalPedidos],
+    ["Ticket promedio:", ticketPromedio],
+    ["Venta más alta:", ventaMaxima],
+    ["Fecha de venta más alta:", fechaMaxima ? (rango === 'fecha-especifica' 
+      ? new Date(1970, 0, 1, fechaMaxima.hora).toLocaleTimeString("es-DO", { 
+          hour: "numeric", minute: "2-digit", hour12: true })
+      : formatDateForExcel(fechaMaxima.fecha)) : 'N/A'],
+    ["Venta más baja:", ventaMinima],
+    ["Fecha de venta más baja:", fechaMinima ? (rango === 'fecha-especifica' 
+      ? new Date(1970, 0, 1, fechaMinima.hora).toLocaleTimeString("es-DO", { 
+          hour: "numeric", minute: "2-digit", hour12: true })
+      : formatDateForExcel(fechaMinima.fecha)) : 'N/A'],
+    ["Promedio diario:", totalPedidos > 0 ? totalVendido / totalPedidos : 0]
+  ];
+
+  resumenData.forEach(([label, value], index) => {
+    const row = sheet.addRow([label, value]);
+    styles.styleSummaryRow(row, index);
   });
+
+  sheet.autoFilter = { 
+    from: { row: 4, column: 1 }, 
+    to: { row: data.length + 4, column: 4 } 
+  };
+  
+  sheet.columns.forEach((col, index) => {
+    col.width = [20, 15, 15, 15][index] || 15;
+  });
+
+  sheet.views = [
+    { state: 'frozen', ySplit: 3, xSplit: 0 }
+  ];
 
   const fechaActual = new Date().toLocaleDateString("es-DO").replace(/\//g, "-");
   res.setHeader("Content-Disposition", `attachment; filename=Ventas_${fechaActual}.xlsx`);

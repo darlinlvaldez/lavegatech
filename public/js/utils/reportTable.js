@@ -52,7 +52,6 @@ export function renderTablaVentasBase({
   );
 });
 
-
     tfoot.innerHTML = `
       <tr>
         <td style="text-align:left; font-weight:bold">Total</td>

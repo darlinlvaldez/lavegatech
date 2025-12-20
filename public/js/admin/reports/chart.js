@@ -8,15 +8,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const fechaSelect = document.getElementById("fechaSelect");
   const labelMesSelect = document.getElementById("labelMesSelect");
   const labelFechaSelect = document.getElementById("labelFechaSelect");
-  const contenedorFiltrosFecha = document.getElementById(
-    "contenedorFiltrosFecha"
-  );
+  const contenedorFiltrosFecha = document.getElementById("contenedorFiltrosFecha");
   const anioInput = document.getElementById("anioInput");
   const labelAnioInput = document.getElementById("labelAnioInput");
   const fechaDesde = document.getElementById("fechaDesde");
   const fechaHasta = document.getElementById("fechaHasta");
   const labelFechaDesde = document.getElementById("labelFechaDesde");
   const labelFechaHasta = document.getElementById("labelFechaHasta");
+  const btnExcel = document.getElementById("btnExcel");
 
   const ctx = document.getElementById("ventasChart").getContext("2d");
   let ventasChart = null;
@@ -43,8 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ];
 
   function toggleFiltroFecha() {
-    contenedorFiltrosFecha.style.display =
-      tipoFiltro === "productos" ? "none" : "block";
+    contenedorFiltrosFecha.style.display = tipoFiltro === "productos" ? "none" : "block";
   }
 
   async function loadData() {
@@ -61,8 +59,26 @@ document.addEventListener("DOMContentLoaded", () => {
         : `/api/admin/top-productos`;
 
     const res = await fetch(url);
+
+    if (!res.ok) {
+      throw new Error("Error al obtener datos");
+    }
+
     const responseData = await res.json();
-    const data = tipoFiltro === "productos" ? responseData.top10 : responseData;
+
+    const data = tipoFiltro === "productos" ? responseData.top10 : responseData.rows;
+
+    const resumen = tipoFiltro === "fecha" ? responseData.resumen : null;
+
+    if (tipoFiltro === "fecha" && resumen) {
+      document.getElementById("resumenVentas").innerHTML = `
+    Total vendido: <strong>$${formatPrice(resumen.totalVendido)}</strong><br>
+    Total de pedidos: <strong>${resumen.totalPedidos}</strong><br>
+    Ticket promedio: <strong>$${formatPrice(resumen.ticketPromedio)}</strong>
+  `;
+    } else {
+      document.getElementById("resumenVentas").innerHTML = "";
+    }
 
     const tituloExtra = dateTitle({
       rango: rangoSelect.value,
@@ -84,22 +100,6 @@ document.addEventListener("DOMContentLoaded", () => {
       mostrarTituloFecha: true,
     });
 
-    if (tipoFiltro === "fecha") {
-      const totalVendido = data.reduce(
-        (sum, item) => sum + Number(item.totalVentas),
-        0
-      );
-      const totalPedidos = data.length;
-      const ticketPromedio = totalPedidos > 0 ? totalVendido / totalPedidos : 0;
-
-      document.getElementById("resumenVentas").innerHTML = `
-        Total vendido: <strong>$${formatPrice(totalVendido)}</strong><br>
-        Total de pedidos: <strong>${totalPedidos}</strong><br>
-        Ticket promedio: <strong>$${formatPrice(ticketPromedio)}</strong>`;
-    } else {
-      document.getElementById("resumenVentas").innerHTML = "";
-    }
-
     const etiquetas =
       tipoFiltro === "fecha"
         ? data.map((item) => formatDate(item.fecha, rangoSelect.value))
@@ -120,14 +120,33 @@ document.addEventListener("DOMContentLoaded", () => {
         ? data.map((item) => Number(item.totalPrecio))
         : [];
 
-    if (ventasChart) ventasChart.destroy();
-
     window.chartReadyForPDF = false;
 
     Chart.register(ChartDataLabels);
 
-    const tipoGraficoActual =
-      tipoFiltro === "productos" ? "bar" : tipoGraficoSelect.value;
+    const tipoGraficoActual = tipoGraficoSelect.value;
+
+    if (tipoFiltro === "fecha") {
+      tipoGraficoSelect.querySelector('option[value="pie"]').disabled = true;
+    } else {
+      tipoGraficoSelect.querySelector('option[value="pie"]').disabled = false;
+    }
+
+    if (data && data.length > 0) {
+      btnExcel?.removeAttribute("disabled");
+    } else {
+      btnExcel?.setAttribute("disabled", "true");
+    }
+
+    if (ventasChart) ventasChart.destroy();
+
+    const chartWrapper = document.querySelector(".chart-wrapper");
+
+    chartWrapper.classList.remove("pie");
+
+    if (tipoGraficoActual === "pie") {
+      chartWrapper.classList.add("pie");
+    }
 
     ventasChart = new Chart(ctx, {
       type: tipoGraficoActual,
@@ -176,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
             display: true,
             text:
               tipoFiltro === "productos"
-                ? "Top productos vendidos"
+                ? "Top Productos Vendidos (resumen)"
                 : tituloExtra
                 ? ["Ventas", tituloExtra]
                 : "Ventas",
@@ -191,12 +210,20 @@ document.addEventListener("DOMContentLoaded", () => {
                   ? `${tooltipItems[0].label} ${especificaciones[i]}`
                   : tooltipItems[0].label;
               },
-              label: (context) =>
-                tipoFiltro === "productos"
+              label: (context) => {
+                if (tipoGraficoActual === "pie") {
+                  const value = context.parsed;
+                  return `${value} unidades - $${formatPrice(
+                    precios[context.dataIndex]
+                  )}`;
+                }
+
+                return tipoFiltro === "productos"
                   ? `${context.parsed.y} unidades - $${formatPrice(
                       precios[context.dataIndex]
                     )}`
-                  : `$${formatPrice(context.parsed.y)}`,
+                  : `$${formatPrice(context.parsed.y)}`;
+              },
             },
           },
           datalabels:
@@ -211,21 +238,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
               : false,
         },
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: tipoFiltro === "fecha" ? "Fecha" : "Producto(s)",
-            },
-          },
-          y: {
-            title: {
-              display: true,
-              text: tipoFiltro === "fecha" ? "Ventas ($)" : "Cantidad vendida",
-            },
-            beginAtZero: true,
-          },
-        },
+        scales:
+          tipoGraficoActual === "pie"
+            ? {}
+            : {
+                x: {
+                  title: {
+                    display: true,
+                    text: tipoFiltro === "fecha" ? "Fecha" : "Producto(s)",
+                  },
+                },
+                y: {
+                  title: {
+                    display: true,
+                    text:
+                      tipoFiltro === "fecha"
+                        ? "Ventas ($)"
+                        : "Cantidad vendida",
+                  },
+                  beginAtZero: true,
+                },
+              },
       },
     });
 
@@ -238,10 +271,25 @@ document.addEventListener("DOMContentLoaded", () => {
     window.chartReadyForPDF = true;
   }
 
+    function optionalCharts() {
+    const pieOption = tipoGraficoSelect.querySelector('option[value="pie"]');
+
+    if (tipoFiltro === "fecha") {
+      pieOption.style.display = "none";
+
+      if (tipoGraficoSelect.value === "pie") {
+        tipoGraficoSelect.value = "bar";
+      }
+    } else {
+      pieOption.style.display = "block";
+    }
+  }
+
   document.getElementById("btnFecha").addEventListener("click", () => {
     tipoFiltro = "fecha";
     document.getElementById("btnFecha").classList.add("active");
     document.getElementById("btnProductos").classList.remove("active");
+    optionalCharts();
     toggleFiltroFecha();
     loadData();
   });
@@ -250,6 +298,7 @@ document.addEventListener("DOMContentLoaded", () => {
     tipoFiltro = "productos";
     document.getElementById("btnProductos").classList.add("active");
     document.getElementById("btnFecha").classList.remove("active");
+    optionalCharts();
     toggleFiltroFecha();
     loadData();
   });
@@ -274,9 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   tipoGraficoSelect.addEventListener("change", () => {
-    if (tipoFiltro === "fecha") {
       loadData();
-    }
   });
 
   initDateFilters({
@@ -306,9 +353,15 @@ document.addEventListener("DOMContentLoaded", () => {
       limit: tipoFiltro === "productos" ? 10 : null,
     });
 
-    window.location.href = `/api/admin/export-excel?${params}`;
+    const url =
+      tipoFiltro === "fecha"
+        ? `/api/admin/export-ventas-excel?${params}`
+        : `/api/admin/export-top-productos-excel?${params}`;
+
+    window.location.href = url;
   });
 
-  loadData();
+  optionalCharts();
   toggleFiltroFecha();
+  loadData();
 });

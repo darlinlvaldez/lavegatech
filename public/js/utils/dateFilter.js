@@ -66,14 +66,8 @@ export function buildDateQuery({
   return query;
 }
 
-export function dateTitle({
-  rango,
-  fecha,
-  mes,
-  anio,
-  desde,
-  hasta,
-}) {
+export function dateTitle({rango, fecha, mes, anio, desde, hasta}) {
+  
   if (rango === "fecha-especifica" && fecha) {
     const [y, m, d] = fecha.split("-").map(Number);
     return new Date(y, m - 1, d).toLocaleDateString("es-DO", {

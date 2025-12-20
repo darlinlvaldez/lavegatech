@@ -41,7 +41,8 @@ admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
   if (rango === 'mes') {
     if (mes) {
       query = `
-        SELECT DATE_FORMAT(p.fecha_creacion, '%Y-%m-%d') AS fecha, SUM(p.total) AS totalVentas
+        SELECT DATE_FORMAT(p.fecha_creacion, '%Y-%m-%d') AS fecha, SUM(p.total) AS totalVentas, 
+        COUNT(DISTINCT p.id) AS totalPedidos
         FROM pedidos p
         JOIN envios e ON p.id = e.pedido_id
         WHERE p.estado = 'pagado' 
@@ -53,7 +54,8 @@ admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
     }
     else {
       query = `
-        SELECT DATE_FORMAT(fecha_creacion, '%Y-%m-%d') AS fecha, SUM(total) AS totalVentas
+        SELECT DATE_FORMAT(fecha_creacion, '%Y-%m-%d') AS fecha, SUM(total) AS totalVentas,
+        COUNT(DISTINCT p.id) AS totalPedidos
         FROM pedidos p
         JOIN envios e ON p.id = e.pedido_id
         WHERE estado = 'pagado' AND e.estado_envio != 'cancelado'
@@ -64,7 +66,8 @@ admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
 
   else if (rango === 'año' && anio) {
     query = `
-      SELECT DATE_FORMAT(fecha_creacion, '%Y-%m-%d') AS fecha, SUM(total) AS totalVentas
+      SELECT DATE_FORMAT(fecha_creacion, '%Y-%m-%d') AS fecha, SUM(total) AS totalVentas,
+      COUNT(DISTINCT p.id) AS totalPedidos
       FROM pedidos p
       JOIN envios e ON p.id = e.pedido_id
       WHERE estado = 'pagado' AND e.estado_envio != 'cancelado'
@@ -78,7 +81,8 @@ admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
     query = `
       SELECT 
         HOUR(fecha_creacion) AS hora,
-        SUM(total) AS totalVentas
+        SUM(total) AS totalVentas,
+        COUNT(DISTINCT p.id) AS totalPedidos
       FROM pedidos p
       JOIN envios e ON p.id = e.pedido_id
       WHERE p.estado = 'pagado'
@@ -92,7 +96,8 @@ admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
 
   else if (rango === 'personalizado' && desde && hasta) {
     query = `
-      SELECT DATE_FORMAT(fecha_creacion, '%Y-%m-%d') AS fecha, SUM(total) AS totalVentas
+      SELECT DATE_FORMAT(fecha_creacion, '%Y-%m-%d') AS fecha, SUM(total) AS totalVentas,
+      COUNT(DISTINCT p.id) AS totalPedidos
       FROM pedidos p 
       JOIN envios e ON p.id = e.pedido_id
       WHERE estado = 'pagado' AND e.estado_envio != 'cancelado'
@@ -104,7 +109,8 @@ admin.graficoVentas = async (rango, mes, fecha, anio, desde, hasta) => {
 
   else {
     query = `
-      SELECT DATE_FORMAT(fecha_creacion, '%Y-%m-%d') AS fecha, SUM(total) AS totalVentas
+      SELECT DATE_FORMAT(fecha_creacion, '%Y-%m-%d') AS fecha, SUM(total) AS totalVentas,
+      COUNT(DISTINCT p.id) AS totalPedidos
       FROM pedidos p 
       JOIN envios e ON p.id = e.pedido_id
       WHERE estado = 'pagado' AND e.estado_envio != 'cancelado'
