@@ -127,27 +127,32 @@ admin.getTopProductos = async ({
   categorias = [],
   marcas = [],
 } = {}) => {
-  
   const { where, params } = buildProductFilters({ categorias, marcas });
 
   let query = `
     SELECT 
-      dp.producto_id,
-      dp.nombre_producto,
-      SUM(dp.cantidad) AS totalVendido,
-      SUM(dp.subtotal) AS totalPrecio,
-      CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
-    FROM detalles_pedido dp
-    JOIN pedidos ped ON dp.pedido_id = ped.id
-    JOIN envios e ON ped.id = e.pedido_id
-    JOIN productos p ON dp.producto_id = p.id
-    LEFT JOIN ram r ON p.ram_id = r.id
-    LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
-    WHERE ped.estado = 'pagado'
-      AND e.estado_envio != 'cancelado'
-      ${where ? `AND ${where}` : ""}
-    GROUP BY dp.producto_id, dp.nombre_producto
-    ORDER BY totalVendido DESC
+  dp.producto_id,
+  dp.nombre_producto,
+  SUM(dp.cantidad) AS totalVendido,
+  SUM(dp.subtotal) AS totalPrecio,
+  CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones,
+  p.categoria_id,
+  c.categoria,
+  p.marca_id,
+  m.nombre AS marca
+FROM detalles_pedido dp
+JOIN pedidos ped ON dp.pedido_id = ped.id
+JOIN envios e ON ped.id = e.pedido_id
+JOIN productos p ON dp.producto_id = p.id
+LEFT JOIN ram r ON p.ram_id = r.id
+LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
+LEFT JOIN categorias c ON p.categoria_id = c.id
+LEFT JOIN p_marcas m ON p.marca_id = m.id
+WHERE ped.estado = 'pagado'
+  AND e.estado_envio != 'cancelado'
+  ${where ? `AND ${where}` : ""}
+GROUP BY dp.producto_id, dp.nombre_producto, p.categoria_id, c.categoria, p.marca_id, m.nombre
+ORDER BY totalVendido DESC
   `;
 
   if (limit) {
@@ -158,7 +163,9 @@ admin.getTopProductos = async ({
   return rows;
 };
 
-admin.cantidadCategoriaVendida = async () => {
+admin.cantidadCategoriaVendida = async ({ categorias = [], marcas = [] } = {}) => {
+  const { where, params } = buildProductFilters({ categorias, marcas });
+
   const query = `
     SELECT
       c.id AS categoria_id,
@@ -171,22 +178,15 @@ admin.cantidadCategoriaVendida = async () => {
     LEFT JOIN envios e ON ped.id = e.pedido_id
     WHERE ped.estado = 'pagado'
       AND e.estado_envio != 'cancelado'
+      ${where ? `AND ${where}` : ""}
     GROUP BY c.id
   `;
-
-  const [rows] = await db.query(query);
+  const [rows] = await db.query(query, params);
   return rows;
 };
 
-admin.cantidadMarcasVendidas = async (categorias = []) => {
-  let where = "";
-  let params = [];
-
-  if (categorias.length) {
-    const placeholders = categorias.map(() => "?").join(",");
-    where = `AND p.categoria_id IN (${placeholders})`;
-    params.push(...categorias);
-  }
+admin.cantidadMarcasVendidas = async ({ categorias = [], marcas = [] } = {}) => {
+  const { where, params } = buildProductFilters({ categorias, marcas });
 
   const query = `
     SELECT
@@ -200,12 +200,11 @@ admin.cantidadMarcasVendidas = async (categorias = []) => {
     JOIN envios e ON ped.id = e.pedido_id
     WHERE ped.estado = 'pagado'
       AND e.estado_envio != 'cancelado'
-      ${where}
+      ${where ? `AND ${where}` : ""}
     GROUP BY m.id
     HAVING cantidad > 0
-    ORDER BY m.nombre
+    ORDER BY cantidad DESC
   `;
-
   const [rows] = await db.query(query, params);
   return rows;
 };

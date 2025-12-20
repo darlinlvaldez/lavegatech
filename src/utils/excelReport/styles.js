@@ -86,14 +86,12 @@ styles.styleDataRow = function (row, index) {
       left: colNumber === 1 ? { style: 'thin', color: { argb: 'FFE2E8F0' } } : {}
     };
 
-    // Color para columna de tendencia
     if (colNumber === 4 && cell.value < 0) {
       cell.font.color = { argb: 'FFE53E3E' };
     } else if (colNumber === 4 && cell.value > 0) {
       cell.font.color = { argb: 'FF38A169' };
     }
 
-    // Fondo alternado
     if (isEven) {
       cell.fill = {
         type: 'pattern',
@@ -196,5 +194,38 @@ styles.styleSummaryRow = function (row, index) {
     };
   });
 };
-  
+
+styles.styleExecutiveSummaryRow = function (row, index) {
+  const isEven = index % 2 === 0;
+
+  row.eachCell((cell, colNumber) => {
+    cell.font = {
+      name: 'Segoe UI',
+      size: 10,
+      bold: colNumber === 2,
+      color: { argb: 'FF1A202C' }, 
+    };
+
+    cell.alignment = {
+      vertical: 'middle',
+      horizontal: colNumber === 2 ? 'left' : 'right',
+      wrapText: true
+    };
+
+    cell.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: isEven ? 'FFF7FAFC' : 'FFFFFFFF' } 
+    };
+
+    cell.border = {
+      bottom: { style: 'thin', color: { argb: 'FFE2E8F0' } }
+    };
+
+    if (colNumber === 3 && typeof cell.value === 'string' && cell.value.startsWith('$')) {
+      cell.numFmt = '"$"#,##0.00';
+    }
+  });
+};
+
 export default styles;
