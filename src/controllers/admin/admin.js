@@ -80,7 +80,7 @@ adminController.marcaCategoria = async (req, res) => {
     const categorias = req.query.categoria
       ? req.query.categoria.split(',').map(Number) : [];
 
-    const marcas = await admin.cantidadMarcasVendidas(categorias);
+    const marcas = await admin.cantidadMarcasVendidas({ categorias });
     res.json({ marcas });
 
   } catch (error) {
@@ -104,14 +104,14 @@ adminController.exportSalesExcel = async (req, res) => {
   sheet.mergeCells('A1:E1');
   styles.styleTitleCell(titleRow.getCell(1));
   
-  const fechaGeneracion = new Date().toLocaleDateString('es-ES', {
+  const fechaGeneracion = new Date().toLocaleDateString('es-DO', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit'
-  });
+  });   
   
   const subtitleRow = sheet.addRow([`Reporte generado: ${fechaGeneracion}`]);
   sheet.mergeCells('A2:E2');
