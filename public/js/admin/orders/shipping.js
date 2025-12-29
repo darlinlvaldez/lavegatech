@@ -23,7 +23,7 @@ function renderCities() {
     const row = document.createElement("tr");
 
     const estadoTexto = city.activo ? "Activo" : "Inactivo";
-    const estadoClase = city.activo ? "estado-activo" : "estado-inactivo";
+    const estadoClase = city.activo ?  "active-state" : "inactive-state";
     
     row.innerHTML = `
       <td class="truncate-cell">${city.id || ''}</td>
@@ -115,7 +115,7 @@ window.ciudadEstado = async function(id, estadoActual) {
   try {
     const nuevoEstado = estadoActual ? 0 : 1;
 
-    const res = await fetch(`/api/admin/ciudades/${id}/ciudadEstado`, {
+    const res = await fetch(`/api/admin/ciudades/${id}/estado`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ activo: nuevoEstado })

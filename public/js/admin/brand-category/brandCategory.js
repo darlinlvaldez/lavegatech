@@ -1,11 +1,10 @@
 import { showToast } from '../../utils/toastify.js';
-import { sweetAlert } from '../../utils/sweetAlert2.js';
 import { showValidation, clearError } from '../../utils/showValidation.js';
 
 let categorias = [];
 let marcas = [];
-let filteredCategorias = [];
-let filteredMarcas = [];
+let filteredCategories = [];
+let filteredBrands = [];
 
 const categoriesTableBody = document.getElementById("categoriesTableBody");
 const addCategoryBtn = document.getElementById("addCategoryBtn");
@@ -34,18 +33,25 @@ const brandErrorFields = ["nombre"];
 function renderCategories() {
   categoriesTableBody.innerHTML = "";
 
-  const lista = filteredCategorias.length > 0 ? filteredCategorias : categorias;
-
-  lista.forEach((cat) => {
+  (filteredCategories.length ? filteredCategories : categorias).forEach((cat) => {
     const row = document.createElement("tr");
+    
+    const stateText = cat.activo ? "Activo" : "Inactivo";
+    const stateClass = cat.activo ? "active-state" : "inactive-state";
+
     row.innerHTML = `
       <td>${cat.id}</td>
       <td>${cat.categoria}</td>
       <td>
+        <button class="estado-btn ${stateClass}" onclick="changeStatus('categorias', ${cat.id}, 
+        ${cat.activo})"> ${stateText}
+        </button>
+      </td>
+      <td>
         <button onclick="editCategory(${cat.id})" class="edit-button">Editar</button>
-        <button onclick="deleteCategory(${cat.id})" class="delete-button">Eliminar</button>
       </td>
     `;
+
     categoriesTableBody.appendChild(row);
   });
 }
@@ -56,9 +62,9 @@ searchCategoriaInput.addEventListener("input", () => {
   const query = searchCategoriaInput.value.trim().toLowerCase();
 
   if (query.length === 0) {
-    filteredCategorias = [];
+    filteredCategories = [];
   } else {
-    filteredCategorias = categorias.filter(c =>
+    filteredCategories = categorias.filter(c =>
       c.categoria.toLowerCase().includes(query)
     );
   }
@@ -129,6 +135,38 @@ categoryForm.addEventListener("submit", async (e) => {
   }
 });
 
+window.changeStatus = async function (type, id, currentStatus) {
+  try {
+    const newState = currentStatus ? 0 : 1;
+
+    const res = await fetch(`/api/admin/${type}/${id}/estado`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ activo: newState })
+    });
+
+    if (!res.ok) throw new Error();
+
+    const data = await res.json();
+    if (!data.success) throw new Error();
+
+    if (type === "categorias") {
+      const index = categorias.findIndex(c => c.id === id);
+      if (index !== -1) categorias[index].activo = newState;
+      renderCategories();
+    }
+
+    if (type === "marcas") {
+      const index = marcas.findIndex(m => m.id === id);
+      if (index !== -1) marcas[index].activo = newState;
+      renderBrands();
+    }
+
+  } catch (err) {
+    showToast("No se pudo cambiar el estado.", "#e74c3c", "alert-circle");
+  }
+};
+
 window.editCategory = function (id) {
   const cat = categorias.find((c) => c.id === id);
   if (cat) {
@@ -136,27 +174,6 @@ window.editCategory = function (id) {
     categoryNameInput.value = cat.categoria;
     categoryIdInput.value = cat.id;
     categoryModal.classList.add("visible");
-  }
-}
-
-window.deleteCategory = async function (id) {
-  const confirmed = await sweetAlert({
-    title: "¿Eliminar Categoría?",
-    text: "Esta acción no se puede deshacer.",
-    confirmButtonText: "Aceptar",
-  });
-
-  if (!confirmed) return;
-
-  try {
-    const res = await fetch(`/api/admin/categorias/${id}`, { method: "DELETE" });
-    if (!res.ok) throw new Error();
-
-    await fetchCategories();
-    showToast("Categoría eliminada con éxito.", "#27ae60", "check-circle");
-
-  } catch (err) {
-    showToast("Error al eliminar la categoría.", "#e74c3c", "alert-circle");
   }
 }
 
@@ -169,18 +186,24 @@ async function fetchCategories() {
 function renderBrands() {
   brandsTableBody.innerHTML = "";
 
-  const lista = filteredMarcas.length > 0 ? filteredMarcas : marcas;
-
-  lista.forEach((brand) => {
+  (filteredBrands.length ? filteredBrands : marcas).forEach((brand) => {
     const row = document.createElement("tr");
+
+    const statusText = brand.activo ? "Activo" : "Inactivo";
+    const statusClass = brand.activo ?  "active-state" : "inactive-state";
     const categoriasNombres = brand.categorias?.map(c => c.categoria).join(", ") || "";
+
     row.innerHTML = `
       <td>${brand.id}</td>
       <td>${brand.nombre}</td>
       <td>${categoriasNombres}</td>
       <td>
+        <button class="estado-btn ${statusClass}" onclick="changeStatus('marcas', ${brand.id}, 
+        ${brand.activo})"> ${statusText}
+        </button>
+      </td>
+      <td>
         <button onclick="editBrand(${brand.id})" class="edit-button">Editar</button>
-        <button onclick="deleteBrand(${brand.id})" class="delete-button">Eliminar</button>
       </td>
     `;
     brandsTableBody.appendChild(row);
@@ -191,9 +214,9 @@ searchMarcaInput.addEventListener("input", () => {
   const query = searchMarcaInput.value.trim().toLowerCase();
 
   if (query.length === 0) {
-    filteredMarcas = [];
+    filteredBrands = [];
   } else {
-    filteredMarcas = marcas.filter(m =>
+    filteredBrands = marcas.filter(m =>
       m.nombre.toLowerCase().includes(query) ||
       m.categorias?.some(c => c.categoria.toLowerCase().includes(query))
     );
@@ -274,27 +297,6 @@ window.editBrand = function (id) {
     });
 
     brandModal.classList.add("visible");
-  }
-}
-
-window.deleteBrand = async function(id) {
-   const confirmed = await sweetAlert({
-    title: "¿Eliminar Categoría?",
-    text: "Esta acción no se puede deshacer.",
-    confirmButtonText: "Aceptar",
-  });
-
-  if (!confirmed) return;
-  
-  try {
-    const res = await fetch(`/api/admin/marcas/${id}`, { method: "DELETE" });
-    if (!res.ok) throw new Error();
-
-   await fetchBrands();
-    showToast("Marca eliminada con éxito.", "#27ae60", "check-circle");
-
-  } catch (err) {
-    showToast("Error al eliminar la marca.", "#e74c3c", "alert-circle");
   }
 }
 

@@ -39,7 +39,7 @@ function renderProducts() {
     });
     
     const estadoTexto = product.activo ? "Activo" : "Inactivo";
-    const estadoClase = product.activo ? "estado-activo" : "estado-inactivo";
+    const estadoClase = product.activo ?  "active-state" : "inactive-state";
 
     row.innerHTML = `
       <td class="truncate-cell">${product.id || ''}</td>
@@ -63,7 +63,7 @@ function renderProducts() {
 
 window.itemEstado = async function(id) {
   try {
-    const res = await fetch(`/api/admin/productos/${id}/itemEstado`, {
+    const res = await fetch(`/api/admin/productos/${id}/estado`, {
       method: "PATCH"
     });
     

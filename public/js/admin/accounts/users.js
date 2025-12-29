@@ -37,7 +37,7 @@ function renderUsers() {
     const row = document.createElement("tr");
 
     const estadoTexto = user.activo ? "Activo" : "Inactivo";
-    const estadoClase = user.activo ? "estado-activo" : "estado-inactivo";
+    const estadoClase = user.activo ? "active-state" : "inactive-state";
 
     row.innerHTML = `
       <td>${user.id}</td>

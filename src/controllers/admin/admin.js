@@ -781,14 +781,16 @@ adminController.editarMarca = async (req, res) => {
   }
 };
 
-adminController.borrarMarca = async (req, res) => {
+adminController.estadoMarca = async (req, res) => {
   try {
     const { id } = req.params;
-    await admin.eliminarMarca(id);
-    res.json({ success: true });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al eliminar la categoría' });
+    const { activo } = req.body;
+
+    const affectedRows = await admin.estadoMarca(id, activo);
+
+    res.json({ success: affectedRows > 0 });
+  } catch (err) {
+    res.status(500).json({ error: 'Error al cambiar estado' });
   }
 };
 
@@ -815,14 +817,16 @@ adminController.editarCategoria = async (req, res) => {
   }
 };
 
-adminController.borrarCategoria = async (req, res) => {
+adminController.estadoCategoria = async (req, res) => {
   try {
     const { id } = req.params;
-    await admin.eliminarCategoria(id);
-    res.json({ success: true });
-  } catch (error) { 
-    console.error(error);
-    res.status(500).json({ error: 'Error al eliminar la categoría' });
+    const { activo } = req.body;
+
+    const affectedRows = await admin.estadoCategoria(id, activo);
+
+    res.json({ success: affectedRows > 0 });
+  } catch (err) {
+    res.status(500).json({ error: 'Error al cambiar estado' });
   }
 };
 

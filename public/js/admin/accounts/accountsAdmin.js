@@ -35,7 +35,7 @@ function renderAdmins() {
     const row = document.createElement("tr");
 
     const estadoTexto = admin.activo ? "Activo" : "Inactivo";
-    const estadoClase = admin.activo ? "estado-activo" : "estado-inactivo";
+    const estadoClase = admin.activo ? "active-state" : "inactive-state";
 
     const estadoBtn = admin.id !== currentAdminId ? `
       <button class="estado-btn ${estadoClase}" onclick="toggleEstado(${admin.id})">

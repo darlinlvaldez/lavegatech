@@ -335,7 +335,7 @@ admin.obtenerAlm = async () => {
 // Categorias
 
 admin.obtenerCategorias = async () => {
-  const [rows] = await db.query("SELECT id, categoria FROM categorias ORDER BY id DESC");
+  const [rows] = await db.query("SELECT id, categoria, activo FROM categorias ORDER BY activo, id DESC");
   return rows;
 };
 
@@ -347,10 +347,6 @@ admin.actualizarCategoria = async (id, categoria) => {
   await db.query("UPDATE categorias SET categoria = ? WHERE id = ?", [categoria, id]);
 };
 
-admin.eliminarCategoria = async (id) => {
-  await db.query("DELETE FROM categorias WHERE id = ?", [id]);
-};
-
 admin.asociarCategoriasMarca = async (marcaId, categoriasIds) => {
   await db.query("DELETE FROM marca_categoria WHERE marca_id = ?", [marcaId]);
 
@@ -360,10 +356,18 @@ admin.asociarCategoriasMarca = async (marcaId, categoriasIds) => {
   }
 };
 
+admin.estadoCategoria = async (id, activo) => {
+  const [result] = await db.query(
+    `UPDATE categorias SET activo = ? WHERE id = ?`,
+    [activo, id]
+  );
+  return result.affectedRows;
+};
+
 // Marcas
 
 admin.obtenerMarcas = async () => {
-  const [marcas] = await db.query("SELECT id, nombre FROM p_marcas ORDER BY id DESC;");
+  const [marcas] = await db.query("SELECT id, nombre, activo FROM p_marcas ORDER BY activo, id DESC;");
 
   const [asociaciones] = await db.query(`
     SELECT m.id AS marca_id, c.id AS categoria_id, c.categoria
@@ -392,10 +396,12 @@ admin.editarMarca = async (id, nombre, categorias = []) => {
   await admin.asociarCategoriasMarca(id, categorias);
 };
 
-admin.eliminarMarca = async (id) => {
-  await db.query("DELETE FROM marca_categoria WHERE marca_id = ?", [id]);
-
-  await db.query("DELETE FROM p_marcas WHERE id = ?", [id]);
+admin.estadoMarca = async (id, activo) => {
+  const [result] = await db.query(
+    `UPDATE p_marcas SET activo = ? WHERE id = ?`,
+    [activo, id]
+  );
+  return result.affectedRows;
 };
 
 // Variantes
@@ -507,7 +513,7 @@ admin.productoPedido = async (pedido_id) => {
 
 admin.obtenerCiudades = async () => {
   const [rows] = await db.query(
-    `SELECT * FROM ciudades_envio ORDER BY activo DESC, nombre ASC`
+    `SELECT * FROM ciudades_envio ORDER BY activo, nombre ASC`
   );
   return rows;
 };

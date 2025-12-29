@@ -6,12 +6,12 @@
   font-weight: bold;
 }
 
-.estado-activo {
+.active-state {
   background-color: #4CAF50;
   color: white;
 }
 
-.estado-inactivo {
+.inactive-state {
   background-color: #f44336;
   color: white;
 }

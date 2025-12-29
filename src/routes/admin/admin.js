@@ -30,7 +30,7 @@ router.get('/productos',  requireRole('superadmin', 'admin', 'editor'), admin.li
 router.post('/productos',  requireRole('superadmin', 'admin', 'editor'), validate(request.product), admin.crearItems);
 router.put('/productos/:id',  requireRole('superadmin', 'admin', 'editor'), validate(request.product), admin.editarItems);
 router.delete('/productos/:id',  requireRole('superadmin', 'admin'), admin.borrarItems);
-router.patch('/productos/:id/itemEstado', requireRole('superadmin', 'admin', 'editor'), admin.productoEstado);
+router.patch('/productos/:id/estado', requireRole('superadmin', 'admin', 'editor'), admin.productoEstado);
     
 // Variantes
 router.get('/variantes',  requireRole('superadmin', 'admin', 'editor'), admin.listarVariantes);
@@ -43,19 +43,19 @@ router.post('/variantes/upload',  requireRole('superadmin', 'admin', 'editor'), 
 router.get('/marcas',  requireRole('superadmin', 'admin', 'editor'), admin.listarMarcas);
 router.post('/marcas',  requireRole('superadmin', 'admin'), validate(request.brand), admin.crearMarca);
 router.put('/marcas/:id',  requireRole('superadmin', 'admin'), validate(request.brand), admin.editarMarca);
-router.delete('/marcas/:id',  requireRole('superadmin', 'admin'), admin.borrarMarca);
+router.patch('/marcas/:id/estado', requireRole('superadmin', 'admin', 'ventas'), admin.estadoMarca);
 
 // Categorías
 router.get('/categorias',  requireRole('superadmin', 'admin', 'editor'), admin.listarCategorias);
 router.post('/categorias',  requireRole('superadmin', 'admin'), validate(request.category), admin.agregarCategoria); 
 router.put('/categorias/:id',  requireRole('superadmin', 'admin'), validate(request.category), admin.editarCategoria); 
-router.delete('/categorias/:id',  requireRole('superadmin', 'admin'), admin.borrarCategoria);
+router.patch('/categorias/:id/estado', requireRole('superadmin', 'admin', 'ventas'), admin.estadoCategoria);
 
 // Ciudades de envíos
 router.get('/ciudades',  requireRole('superadmin', 'admin', 'ventas', 'transportista'), admin.listarCiudades);
 router.post('/ciudades',  requireRole('superadmin', 'admin', 'ventas'), validate(request.shipping), admin.crearCiudad);
 router.put('/ciudades/:id',  requireRole('superadmin', 'admin', 'ventas'), validate(request.shipping), admin.editarCiudad);
-router.patch('/ciudades/:id/ciudadEstado', requireRole('superadmin', 'admin', 'ventas'), admin.estadoCiudad);
+router.patch('/ciudades/:id/estado', requireRole('superadmin', 'admin', 'ventas'), admin.estadoCiudad);
 
 // RAM y Almacenamiento 
 router.get('/ram',  requireRole('superadmin', 'admin', 'editor'), admin.listarRAM);
