@@ -1,5 +1,6 @@
 import { showToast } from '../../utils/toastify.js';
 import { showValidation, clearError } from '../../utils/showValidation.js';
+import { changeEntityStatus} from '../../utils/changeState.js';
 
 let cities = [];
 let filteredCities = [];
@@ -30,7 +31,7 @@ function renderCities() {
       <td class="truncate-cell">${city.nombre || ''}</td>
       <td>$${formatPrice(parseFloat(city.costo_envio)) || 0}</td>
       <td>
-        <button class="estado-btn ${estadoClase}" onclick="ciudadEstado(${city.id}, 
+        <button class="estado-btn ${estadoClase}" onclick="changeStatus(${city.id}, 
         ${city.activo})"> ${estadoTexto}
         </button>
       </td>
@@ -79,8 +80,7 @@ cityForm.addEventListener("submit", async (e) => {
   clearError(cityErrorFields,'#cityForm');
 
   const id = cityIdInput.value;
-  const body = {
-    nombre: nombreInput.value.trim(),
+  const body = { nombre: nombreInput.value.trim(),
     costo_envio: costoInput.value ? parseFloat(costoInput.value) : 0
   };
 
@@ -111,29 +111,16 @@ cityForm.addEventListener("submit", async (e) => {
   }
 });
 
-window.ciudadEstado = async function(id, estadoActual) {
-  try {
-    const nuevoEstado = estadoActual ? 0 : 1;
-
-    const res = await fetch(`/api/admin/ciudades/${id}/estado`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ activo: nuevoEstado })
-    });
-
-    if (!res.ok) throw new Error("Error al cambiar el estado");
-
-    const data = await res.json();
-    if (!data.success) throw new Error("No se actualizó");
-
-    const index = cities.findIndex(c => c.id === id);
-    if (index !== -1) cities[index].activo = nuevoEstado;
-
-    renderCities();
-  } catch (err) {
-    showToast("No se pudo cambiar el estado de la ciudad.", "#e74c3c", "alert-circle");
-  }
-};  
+window.changeStatus = function (id, estadoActual) {
+  changeEntityStatus({
+    endpoint: "/api/admin/ciudades",
+    id,
+    currentStatus: estadoActual,
+    collection: cities,
+    render: renderCities,
+    errorMessage: "No se pudo cambiar el estado de la ciudad."
+  });
+};
 
 window.editCity = function(id) {
   const city = cities.find((c) => c.id === id);

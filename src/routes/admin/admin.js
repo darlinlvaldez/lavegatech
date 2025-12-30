@@ -16,7 +16,7 @@ router.get('/ventas-por-fecha', requireRole('superadmin', 'admin', 'ventas'), ad
 router.get('/allSales', requireRole('superadmin', 'admin', 'ventas'), admin.graficoVentas);
 router.get('/export-ventas-excel', requireRole('superadmin', 'admin', 'ventas'), admin.exportSalesExcel);
 
-// Productos
+// Estadisticas 
 router.get('/top-productos', requireRole('superadmin', 'admin', 'ventas'), admin.topProductos);
 router.get('/export-top-productos-excel', requireRole('superadmin', 'admin', 'ventas'), admin.exportTopProductsExcel);
 router.get('/allProducts', requireRole('superadmin', 'admin', 'ventas'), admin.allProductsView);
@@ -29,7 +29,7 @@ router.post('/orders/:id/estado-envio', requireRole('superadmin', 'admin', 'tran
 router.get('/productos',  requireRole('superadmin', 'admin', 'editor'), admin.listarItems);
 router.post('/productos',  requireRole('superadmin', 'admin', 'editor'), validate(request.product), admin.crearItems);
 router.put('/productos/:id',  requireRole('superadmin', 'admin', 'editor'), validate(request.product), admin.editarItems);
-router.delete('/productos/:id',  requireRole('superadmin', 'admin'), admin.borrarItems);
+router.delete('/productos/:id',  requireRole('superadmin'), admin.borrarItems);
 router.patch('/productos/:id/estado', requireRole('superadmin', 'admin', 'editor'), admin.productoEstado);
     
 // Variantes

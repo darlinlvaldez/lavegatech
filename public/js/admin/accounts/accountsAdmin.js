@@ -1,6 +1,7 @@
 import { showToast } from '../../utils/toastify.js';
 import { showValidation, clearError } from "../../utils/showValidation.js";
 import { sweetAlert } from '../../utils/sweetAlert2.js';
+import { changeEntityStatus} from '../../utils/changeState.js';
 
 let admins = [];
 
@@ -38,7 +39,7 @@ function renderAdmins() {
     const estadoClase = admin.activo ? "active-state" : "inactive-state";
 
     const estadoBtn = admin.id !== currentAdminId ? `
-      <button class="estado-btn ${estadoClase}" onclick="toggleEstado(${admin.id})">
+      <button class="estado-btn ${estadoClase}" onclick="changeStatus(${admin.id})">
         ${estadoTexto}
       </button>
     ` : '';
@@ -84,25 +85,19 @@ window.deleteAdmin = async function (id) {
   }
 }
 
-window.toggleEstado = async function (id) {
-  const admin = admins.find(a => a.id === id);
+window.changeStatus = async function (id) {
+  const admin = admins.find(c => Number(c.id) === Number(id));
   if (!admin) return;
 
-  const nuevoEstado = admin.activo ? 0 : 1;
-
-  const res = await fetch(`/api/adminAuth/usuarios/${id}/estado`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ activo: nuevoEstado }),
+  changeEntityStatus({
+    endpoint: "/api/admin/usuarios",
+    id,
+    currentStatus: admin.activo,
+    collection: admins,
+    render: renderAdmins,
+    errorMessage: "No se pudo cambiar el estado.",
   });
-
-  if (res.ok) {
-    admin.activo = nuevoEstado;
-    renderAdmins();
-  } else {
-    alert("Error al actualizar el estado");
-  }
-}
+};
 
 function openAddModal() {
   document.getElementById("modalTitle").innerText = "Añadir Nuevo Administrador";
