@@ -1,6 +1,7 @@
 import { showToast } from '../../utils/toastify.js';
 import { sweetAlert } from '../../utils/sweetAlert2.js';
 import { showValidation, clearError } from '../../utils/showValidation.js';
+import { changeEntityStatus} from '../../utils/changeState.js';
 
 const variantsTableBody = document.getElementById("variantsTableBody");
 const addVariantBtn = document.getElementById("addVariantBtn");
@@ -21,7 +22,7 @@ let filteredVariants = [];
 let productos = [];
 let productoIdSeleccionado = null;
 
-async function fetchProductos() {
+async function fetchProducts() {
   const res = await fetch("/api/admin/productos");
   productos = await res.json();
 }
@@ -64,7 +65,7 @@ document.addEventListener("click", (e) => {
 
 const errorFields = ["producto_id", "color", "stock", "img"]
 
-async function fetchVariantes() {
+async function fetchVariants() {
   const res = await fetch("/api/admin/variantes");
   variants = await res.json();
   filteredVariants = [];
@@ -74,26 +75,26 @@ async function fetchVariantes() {
 function renderVariants() {
   variantsTableBody.innerHTML = "";
 
-  (filteredvariants.length ? filteredvariants : varia).forEach((cat) => {
+  (filteredVariants.length ? filteredVariants : variants).forEach((variants) => {
     const row = document.createElement("tr");
 
-    const stateText = cat.activo ? "Activo" : "Inactivo";
-    const stateClass = cat.activo ? "active-state" : "inactive-state";
+    const stateText = variants.activo ? "Activo" : "Inactivo";
+    const stateClass = variants.activo ? "active-state" : "inactive-state";
 
     row.innerHTML = `
-      <td>${vari.id}</td>
-      <td>${vari.producto} ${vari.especificaciones || ""}</td>
-      <td>${vari.color}</td>
-      <td>${vari.stock}</td>
-      <td><img src="${vari.img || ''}" alt="Img" width="40" height="40"></td>
+      <td>${variants.id}</td>
+      <td>${variants.producto} ${variants.especificaciones || ""}</td>
+      <td>${variants.color}</td>
+      <td>${variants.stock}</td>
+      <td><img src="${variants.img || ''}" alt="Img" width="40" height="40"></td>
       <td>
-        <button class="estado-btn ${stateClass}" onclick="changeStatus('categorias', ${cat.id}, 
-        ${cat.activo})"> ${stateText}
+        <button class="estado-btn ${stateClass}" onclick="changeStatus(${variants.id}, 
+        ${variants.activo})"> ${stateText}
         </button>
       </td>
       <td>
-        <button onclick="editVariante(${vari.id})" class="edit-button">Editar</button>
-        <button onclick="deleteVariante(${vari.id})" class="delete-button">Eliminar</button>
+        <button onclick="editVariant(${variants.id})" class="edit-button">Editar</button>
+        <button onclick="deleteVariant(${variants.id})" class="delete-button">Eliminar</button>
       </td>
     `;
 
@@ -101,10 +102,10 @@ function renderVariants() {
   });
 }
 
-const searchVarianteInput = document.getElementById("searchVarianteInput");
+const searchVariantInput = document.getElementById("searchVariantInput");
 
-searchVarianteInput.addEventListener("input", () => {
-  const query = searchVarianteInput.value.trim().toLowerCase();
+searchVariantInput.addEventListener("input", () => {
+  const query = searchVariantInput.value.trim().toLowerCase();
 
   if (query.length === 0) {
     filteredVariants = [];
@@ -116,7 +117,7 @@ searchVarianteInput.addEventListener("input", () => {
     );
   }
 
-  renderVariantes();
+  renderVariants();
 });
 
 addVariantBtn.addEventListener("click", () => {
@@ -206,27 +207,41 @@ variantForm.addEventListener("submit", async (e) => {
 
     showToast(id ? "Variante actualizada con éxito." : "Variante agregada con éxito.", "#27ae60", "check-circle");
     variantModal.classList.remove("visible");
-    fetchVariantes();
+    fetchVariants();
 
   } catch (err) {
     showToast("Error inesperado al guardar la variante.", "#e74c3c", "alert-circle");
   }
 });
 
-window.editVariante = function (id) {
-  const variante = variantes.find(v => v.id === id);
-  if (!variante) return;
+window.changeStatus = async function (id) {
+  const variant = variants.find(c => Number(c.id) === Number(id));
+  if (!variant) return;
 
-  const producto = productos.find(p => p.id === variante.producto_id);
+  changeEntityStatus({
+    endpoint: "/api/admin/variantes",
+    id,
+    currentStatus: variant.activo,
+    collection: variants,
+    render: renderVariants,
+    errorMessage: "No se pudo cambiar el estado.",
+  });
+};
+
+window.editVariant = function (id) {
+  const variant = variants.find(v => v.id === id);
+  if (!variant) return;
+
+  const producto = productos.find(p => p.id === variant.producto_id);
   productoInput.value = producto ? producto.nombre : "";
   productoIdSeleccionado = producto ? producto.id : null;
 
   modalTitle.textContent = "Editar Variante";
-  variantIdInput.value = variante.id;
-  variantColorInput.value = variante.color;
-  variantStockInput.value = variante.stock;
+  variantIdInput.value = variant.id;
+  variantColorInput.value = variant.color;
+  variantStockInput.value = variant.stock;
 
-  variantImgInput.value = variante.img || "";
+  variantImgInput.value = variant.img || "";
   variantImgFileInput.value = "";
 
   toggleImageInputs();
@@ -250,9 +265,9 @@ function toggleImageInputs() {
 variantImgInput.addEventListener("input", toggleImageInputs);
 variantImgFileInput.addEventListener("change", toggleImageInputs);
 
-window.deleteVariante = async function(id) {
+window.deleteVariant = async function(id) {
   const confirmed = await sweetAlert({
-    title: "¿Eliminar Categoría?",
+    title: "¿Eliminar Variante?",
     text: "Esta acción no se puede deshacer.",
     confirmButtonText: "Aceptar",
   });
@@ -263,7 +278,7 @@ window.deleteVariante = async function(id) {
     const res = await fetch(`/api/admin/variantes/${id}`, { method: "DELETE" });
     if (!res.ok) throw new Error();
 
-    await fetchVariantes();
+    await fetchVariants();
     showToast("Variante eliminada con éxito.", "#27ae60", "check-circle");
 
   } catch (err) {
@@ -272,6 +287,6 @@ window.deleteVariante = async function(id) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  await fetchProductos();
-  fetchVariantes();
+  await fetchProducts();
+  fetchVariants();
 });

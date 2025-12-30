@@ -414,6 +414,7 @@ admin.obtenerVariantes = async () => {
       v.color,
       v.stock,
       v.img,
+      v.activo,
       p.nombre AS producto,
       r.capacidad AS ram,
       a.capacidad AS almacenamiento,
@@ -450,7 +451,7 @@ admin.actualizarVariante = async ({ id, color, stock, img, producto_id }) => {
 };
 
 admin.estadoVariante = async (id, activo) => {
-  const [result] = await db.query("UPDATE usuarios SET activo = ? WHERE id = ?", [activo, id]);
+  const [result] = await db.query("UPDATE p_variantes SET activo = ? WHERE id = ?", [activo, id]);
   return result.affectedRows > 0;
 };
 

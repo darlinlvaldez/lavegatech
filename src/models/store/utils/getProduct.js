@@ -57,7 +57,7 @@ productosBase.obtenerProductosBase = async ({
         CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
       FROM productos p
       JOIN categorias c ON p.categoria_id = c.id
-      LEFT JOIN p_variantes v ON p.id = v.producto_id
+      LEFT JOIN p_variantes v ON p.id = v.producto_id AND v.activo = 1
       LEFT JOIN ram r ON p.ram_id = r.id
       LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
       ${whereClause}
