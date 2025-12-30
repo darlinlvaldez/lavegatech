@@ -711,6 +711,19 @@ adminController.imagenArchivo = async (req, res) => {
   }
 };
 
+adminController.varianteEstado = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { activo } = req.body;
+
+    const success = await admin.estadoVariante(id, activo);
+
+    res.json({ success });
+  } catch (error) {
+    res.status(500).json({ error: "Error al actualizar estado de la variante" });
+  }
+};
+
 // Pedidos
 
 adminController.listarPedidos = async (req, res) => {
@@ -841,7 +854,7 @@ adminController.listarUsuarios = async (req, res) => {
   }
 };
 
-adminController.actualizarEstado = async (req, res) => {
+adminController.estadoUsuario = async (req, res) => {
   try {
     const { id } = req.params;
     const { activo } = req.body;

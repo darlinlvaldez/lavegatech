@@ -2,21 +2,21 @@ import { showToast } from '../../utils/toastify.js';
 import { sweetAlert } from '../../utils/sweetAlert2.js';
 import { showValidation, clearError } from '../../utils/showValidation.js';
 
-const variantesTableBody = document.getElementById("variantesTableBody");
-const addVarianteBtn = document.getElementById("addVarianteBtn");
-const varianteModal = document.getElementById("varianteModal");
+const variantsTableBody = document.getElementById("variantsTableBody");
+const addVariantBtn = document.getElementById("addVariantBtn");
+const variantModal = document.getElementById("variantModal");
 const cancelModalBtn = document.getElementById("cancelModalBtn");
-const varianteForm = document.getElementById("varianteForm");
+const variantForm = document.getElementById("variantForm");
 
-const varianteIdInput = document.getElementById("varianteId");
-const varianteColorInput = document.getElementById("varianteColor");
-const varianteStockInput = document.getElementById("varianteStock");
-const varianteImgInput = document.getElementById("varianteImg");
+const variantIdInput = document.getElementById("variantId");
+const variantColorInput = document.getElementById("variantColor");
+const variantStockInput = document.getElementById("variantStock");
+const variantImgInput = document.getElementById("variantImg");
 const modalTitle = document.getElementById("modalTitle");
-const varianteImgFileInput = document.getElementById("varianteImgFile");
+const variantImgFileInput = document.getElementById("variantImgFile");
 
-let variantes = [];
-let filteredVariantes = [];
+let variants = [];
+let filteredVariants = [];
 
 let productos = [];
 let productoIdSeleccionado = null;
@@ -66,18 +66,19 @@ const errorFields = ["producto_id", "color", "stock", "img"]
 
 async function fetchVariantes() {
   const res = await fetch("/api/admin/variantes");
-  variantes = await res.json();
-  filteredVariantes = [];
-  renderVariantes();
+  variants = await res.json();
+  filteredVariants = [];
+  renderVariants();
 }
 
-function renderVariantes() {
-  variantesTableBody.innerHTML = "";
+function renderVariants() {
+  variantsTableBody.innerHTML = "";
 
-  const lista = filteredVariantes.length > 0 ? filteredVariantes : variantes;
-
-  lista.forEach(vari => {
+  (filteredvariants.length ? filteredvariants : varia).forEach((cat) => {
     const row = document.createElement("tr");
+
+    const stateText = cat.activo ? "Activo" : "Inactivo";
+    const stateClass = cat.activo ? "active-state" : "inactive-state";
 
     row.innerHTML = `
       <td>${vari.id}</td>
@@ -86,12 +87,17 @@ function renderVariantes() {
       <td>${vari.stock}</td>
       <td><img src="${vari.img || ''}" alt="Img" width="40" height="40"></td>
       <td>
+        <button class="estado-btn ${stateClass}" onclick="changeStatus('categorias', ${cat.id}, 
+        ${cat.activo})"> ${stateText}
+        </button>
+      </td>
+      <td>
         <button onclick="editVariante(${vari.id})" class="edit-button">Editar</button>
         <button onclick="deleteVariante(${vari.id})" class="delete-button">Eliminar</button>
       </td>
     `;
 
-    variantesTableBody.appendChild(row);
+    variantsTableBody.appendChild(row);
   });
 }
 
@@ -101,9 +107,9 @@ searchVarianteInput.addEventListener("input", () => {
   const query = searchVarianteInput.value.trim().toLowerCase();
 
   if (query.length === 0) {
-    filteredVariantes = [];
+    filteredVariants = [];
   } else {
-    filteredVariantes = variantes.filter(v =>
+    filteredVariants = variants.filter(v =>
       v.producto?.toLowerCase().includes(query) ||
       v.color?.toLowerCase().includes(query) ||
       String(v.stock).includes(query)
@@ -113,44 +119,44 @@ searchVarianteInput.addEventListener("input", () => {
   renderVariantes();
 });
 
-addVarianteBtn.addEventListener("click", () => {
+addVariantBtn.addEventListener("click", () => {
   modalTitle.textContent = "Nueva Variante";
-  varianteForm.reset();
-  varianteIdInput.value = "";
+  variantForm.reset();
+  variantIdInput.value = "";
   productoInput.value = "";
   productoIdSeleccionado = null;
 
-  varianteImgInput.value = "";
-  varianteImgFileInput.value = "";
+  variantImgInput.value = "";
+  variantImgFileInput.value = "";
 
   toggleImageInputs();
 
-  varianteModal.classList.add("visible");
+  variantModal.classList.add("visible");
 });
 
 cancelModalBtn.addEventListener("click", () => {
-  varianteModal.classList.remove("visible");
-  clearError(errorFields, "#varianteForm");
+  variantModal.classList.remove("visible");
+  clearError(errorFields, "#variantForm");
 });
 
-varianteForm.addEventListener("submit", async (e) => {
+variantForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  clearError(errorFields, "#varianteForm");
+  clearError(errorFields, "#variantForm");
 
-  const id = varianteIdInput.value;
+  const id = variantIdInput.value;
   if (!productoIdSeleccionado) {
-    showValidation([{ path: "producto_id", message: "Debe seleccionar un producto válido" }], "#varianteForm");
+    showValidation([{ path: "producto_id", message: "Debe seleccionar un producto válido" }], "#variantForm");
     return;
   }
 
   const producto_id = productoIdSeleccionado;
-  const color = varianteColorInput.value;
-  const stock = parseInt(varianteStockInput.value);
+  const color = variantColorInput.value;
+  const stock = parseInt(variantStockInput.value);
 
-  let imgPath = varianteImgInput.value.trim();
+  let imgPath = variantImgInput.value.trim();
 
-  if (varianteImgFileInput.files.length > 0) {
-    const file = varianteImgFileInput.files[0];
+  if (variantImgFileInput.files.length > 0) {
+    const file = variantImgFileInput.files[0];
     const formData = new FormData();
     formData.append("img", file);
 
@@ -176,7 +182,7 @@ varianteForm.addEventListener("submit", async (e) => {
   }
 
   if (!imgPath) {
-    showValidation([{ path: "img", message: "Debe proporcionar una imagen o URL" }], "#varianteForm");
+    showValidation([{ path: "img", message: "Debe proporcionar una imagen o URL" }], "#variantForm");
     return;
   }
 
@@ -199,7 +205,7 @@ varianteForm.addEventListener("submit", async (e) => {
     }
 
     showToast(id ? "Variante actualizada con éxito." : "Variante agregada con éxito.", "#27ae60", "check-circle");
-    varianteModal.classList.remove("visible");
+    variantModal.classList.remove("visible");
     fetchVariantes();
 
   } catch (err) {
@@ -216,34 +222,33 @@ window.editVariante = function (id) {
   productoIdSeleccionado = producto ? producto.id : null;
 
   modalTitle.textContent = "Editar Variante";
-  varianteIdInput.value = variante.id;
-  varianteColorInput.value = variante.color;
-  varianteStockInput.value = variante.stock;
+  variantIdInput.value = variante.id;
+  variantColorInput.value = variante.color;
+  variantStockInput.value = variante.stock;
 
-  varianteImgInput.value = variante.img || "";
-  varianteImgFileInput.value = "";
+  variantImgInput.value = variante.img || "";
+  variantImgFileInput.value = "";
 
   toggleImageInputs();
 
-  varianteModal.classList.add("visible");
+  variantModal.classList.add("visible");
 };
 
 clearImgFileBtn.addEventListener("click", () => {
-  varianteImgFileInput.value = "";
+  variantImgFileInput.value = "";
   toggleImageInputs();
 });
 
 function toggleImageInputs() {
-  const hasUrl = varianteImgInput.value.trim();
-  const hasFile = varianteImgFileInput.files.length > 0;
+  const hasUrl = variantImgInput.value.trim();
+  const hasFile = variantImgFileInput.files.length > 0;
 
-  varianteImgInput.disabled = hasFile;
-  varianteImgFileInput.disabled = hasUrl;
+  variantImgInput.disabled = hasFile;
+  variantImgFileInput.disabled = hasUrl;
 }
 
-varianteImgInput.addEventListener("input", toggleImageInputs);
-varianteImgFileInput.addEventListener("change", toggleImageInputs);
-
+variantImgInput.addEventListener("input", toggleImageInputs);
+variantImgFileInput.addEventListener("change", toggleImageInputs);
 
 window.deleteVariante = async function(id) {
   const confirmed = await sweetAlert({

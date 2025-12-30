@@ -38,6 +38,7 @@ router.post('/variantes',  requireRole('superadmin', 'admin', 'editor'), validat
 router.put('/variantes/:id',  requireRole('superadmin', 'admin', 'editor'), validate(request.variant), admin.editarVariante);
 router.delete('/variantes/:id',  requireRole('superadmin', 'admin'), admin.borrarVariante);
 router.post('/variantes/upload',  requireRole('superadmin', 'admin', 'editor'), admin.imagenArchivo);
+router.patch('/variantes/:id/estado', requireRole('superadmin', 'admin', 'editor'), admin.varianteEstado);
 
 // Marcas
 router.get('/marcas',  requireRole('superadmin', 'admin', 'editor'), admin.listarMarcas);
@@ -47,9 +48,9 @@ router.patch('/marcas/:id/estado', requireRole('superadmin', 'admin', 'ventas'),
 
 // Categorías
 router.get('/categorias',  requireRole('superadmin', 'admin', 'editor'), admin.listarCategorias);
-router.post('/categorias',  requireRole('superadmin', 'admin'), validate(request.category), admin.agregarCategoria); 
-router.put('/categorias/:id',  requireRole('superadmin', 'admin'), validate(request.category), admin.editarCategoria); 
-router.patch('/categorias/:id/estado', requireRole('superadmin', 'admin', 'ventas'), admin.estadoCategoria);
+router.post('/categorias',  requireRole('superadmin', 'admin', 'editor'), validate(request.category), admin.agregarCategoria); 
+router.put('/categorias/:id',  requireRole('superadmin', 'admin', 'editor'), validate(request.category), admin.editarCategoria); 
+router.patch('/categorias/:id/estado', requireRole('superadmin', 'admin', 'editor'), admin.estadoCategoria);
 
 // Ciudades de envíos
 router.get('/ciudades',  requireRole('superadmin', 'admin', 'ventas', 'transportista'), admin.listarCiudades);
@@ -67,6 +68,6 @@ router.get('/orders/:id',  requireRole('superadmin', 'admin',  'ventas', 'transp
 
 // Usuarios/Clientes
 router.get('/usuarios',  requireRole('superadmin', 'admin'), admin.listarUsuarios);
-router.patch('/usuarios/:id/estado',  requireRole('superadmin', 'admin'), admin.actualizarEstado);
+router.patch('/usuarios/:id/estado',  requireRole('superadmin', 'admin'), admin.estadoUsuario);
 
 export default router;

@@ -449,6 +449,11 @@ admin.actualizarVariante = async ({ id, color, stock, img, producto_id }) => {
   return result.affectedRows > 0;
 };
 
+admin.estadoVariante = async (id, activo) => {
+  const [result] = await db.query("UPDATE usuarios SET activo = ? WHERE id = ?", [activo, id]);
+  return result.affectedRows > 0;
+};
+
 // Usuarios 
 
 admin.obtenerUsuarios = async () => {
@@ -513,7 +518,7 @@ admin.productoPedido = async (pedido_id) => {
 
 admin.obtenerCiudades = async () => {
   const [rows] = await db.query(
-    `SELECT * FROM ciudades_envio ORDER BY activo, nombre ASC`
+    `SELECT * FROM ciudades_envio ORDER BY activo, id DESC`
   );
   return rows;
 };
