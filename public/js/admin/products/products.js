@@ -1,6 +1,7 @@
 import { showToast } from '../../utils/toastify.js';
 import { sweetAlert } from '../../utils/sweetAlert2.js';
 import { showValidation, clearError } from '../../utils/showValidation.js';
+import { changeEntityStatus} from '../../utils/changeState.js';
 
 let products = [];
 let filteredProducts = [];
@@ -40,6 +41,7 @@ function renderProducts() {
     
     const estadoTexto = product.activo ? "Activo" : "Inactivo";
     const estadoClase = product.activo ?  "active-state" : "inactive-state";
+    const canDelete = window.ADMIN_ROLE === 'superadmin';
 
     row.innerHTML = `
       <td class="truncate-cell">${product.id || ''}</td>
@@ -48,36 +50,32 @@ function renderProducts() {
       <td>${product.categoria || ''}</td>
       <td>${fechaFormateada || ''}</td>
       <td>
-        <button class="estado-btn ${estadoClase}" onclick="itemEstado(${product.id})">
+        <button class="estado-btn ${estadoClase}" onclick="changeStatus(${product.id})">
           ${estadoTexto}
         </button>
       </td>
       <td class="actions">
-        <button onclick="editProduct(${product.id})" class="edit-button">Editar</button>
-        <button onclick="deleteProduct(${product.id})" class="delete-button">Eliminar</button>
-      </td>
+    <button onclick="editProduct(${product.id})" class="edit-button">Editar</button>
+    ${canDelete ? `<button onclick="deleteProduct(${product.id})" 
+    class="delete-button">Eliminar</button>` : ''}
+  </td>
     `;
     productsTableBody.appendChild(row);
   });
 }
 
-window.itemEstado = async function(id) {
-  try {
-    const res = await fetch(`/api/admin/productos/${id}/estado`, {
-      method: "PATCH"
-    });
-    
-    if (!res.ok) throw new Error("Error al cambiar el estado");
+window.changeStatus = async function (id) {
+  const product = products.find(c => Number(c.id) === Number(id));
+  if (!product) return;
 
-    const updatedProduct = await res.json();
-
-    const index = products.findIndex(p => p.id === id);
-    if (index !== -1) products[index].activo = updatedProduct.activo;
-
-    renderProducts();
-  } catch (err) {
-    showToast("No se pudo cambiar el estado del producto.", "#e74c3c", "alert-circle");
-  }
+  changeEntityStatus({
+    endpoint: "/api/admin/productos",
+    id,
+    currentStatus: product.activo,
+    collection: products,
+    render: renderProducts,
+    errorMessage: "No se pudo cambiar el estado.",
+  });
 };
 
 const searchProductInput = document.getElementById("searchProductInput");

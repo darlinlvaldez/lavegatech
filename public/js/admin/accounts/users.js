@@ -1,3 +1,5 @@
+import { changeEntityStatus} from '../../utils/changeState.js';
+
 let users = [];
 let filteredUsers = [];
 
@@ -22,7 +24,7 @@ searchUserInput.addEventListener("input", () => {
       user.email.toLowerCase().includes(query)
     );
   }
-console.log("Filtrados:", filteredUsers);
+  console.log("Filtrados:", filteredUsers);
 
   renderUsers();
 });
@@ -55,24 +57,17 @@ function renderUsers() {
   });
 }
 
-async function toggleEstado(id) {
+window.toggleEstado = async function (id) {
   const user = users.find(u => u.id === id);
   if (!user) return;
 
-  const nuevoEstado = user.activo ? 0 : 1;
-
-  const res = await fetch(`/api/admin/usuarios/${id}/estado`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ activo: nuevoEstado }),
+  changeEntityStatus({
+    endpoint: "/api/admin/usuarios",
+    id,
+    currentStatus: user.activo,
+    collection: users,
+    render: renderUsers
   });
-
-  if (res.ok) {
-    user.activo = nuevoEstado;
-    renderUsers();
-  } else {
-    alert("Error al actualizar el estado");
-  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {

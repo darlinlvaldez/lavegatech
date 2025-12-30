@@ -1,5 +1,6 @@
 import { showToast } from '../../utils/toastify.js';
 import { showValidation, clearError } from '../../utils/showValidation.js';
+import { changeEntityStatus} from '../../utils/changeState.js';
 
 let categorias = [];
 let marcas = [];
@@ -135,36 +136,35 @@ categoryForm.addEventListener("submit", async (e) => {
   }
 });
 
-window.changeStatus = async function (type, id, currentStatus) {
-  try {
-    const newState = currentStatus ? 0 : 1;
+window.changeStatus = async function (type, id) {
+  let item, config;
 
-    const res = await fetch(`/api/admin/${type}/${id}/estado`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ activo: newState })
-    });
-
-    if (!res.ok) throw new Error();
-
-    const data = await res.json();
-    if (!data.success) throw new Error();
-
-    if (type === "categorias") {
-      const index = categorias.findIndex(c => c.id === id);
-      if (index !== -1) categorias[index].activo = newState;
-      renderCategories();
-    }
-
-    if (type === "marcas") {
-      const index = marcas.findIndex(m => m.id === id);
-      if (index !== -1) marcas[index].activo = newState;
-      renderBrands();
-    }
-
-  } catch (err) {
-    showToast("No se pudo cambiar el estado.", "#e74c3c", "alert-circle");
+  if (type === "categorias") {
+    item = categorias.find(c => Number(c.id) === Number(id));
+    config = {
+      endpoint: "/api/admin/categorias",
+      collection: categorias,
+      render: renderCategories,
+      errorMessage: "No se pudo cambiar el estado de la categoría.",
+    };
   }
+
+  if (type === "marcas") {
+    item = marcas.find(m => Number(m.id) === Number(id));
+    config = {
+      endpoint: "/api/admin/marcas",
+      collection: marcas,
+      render: renderBrands,
+      errorMessage: "No se pudo cambiar el estado de la marca.",
+    };
+  }
+
+  if (!item) return;
+
+  changeEntityStatus({
+    ...config, id,
+    currentStatus: item.activo
+  });
 };
 
 window.editCategory = function (id) {
