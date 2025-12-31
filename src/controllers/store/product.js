@@ -2,6 +2,7 @@ import product from "../../models/store/product.js";
 import rating from "../../models/store/rating.js";
 import comparison from "../../models/store/comparison.js";
 import principal from '../../models/store/principal.js';
+import { filterRecentProducts } from '../../utils/filterRecent.js';
 
 product.detallesController = async (req, res) => {
   try {
@@ -41,6 +42,8 @@ product.detallesController = async (req, res) => {
 
     const dispositivos = await comparison.getDevice([id]);
 
+    const productosRecientes = filterRecentProducts(productos, 30);
+    
     res.render("store/product", {
       producto: {
         ...producto,
@@ -51,6 +54,7 @@ product.detallesController = async (req, res) => {
         ratingDistribution,
         totalReviews,
         totalPagesReviews,
+        productosRecientes,
         currentPageReviews: parseInt(paginaReviews),
         limiteReviews: parseInt(limiteReviews),
       },

@@ -3,7 +3,7 @@ import { impuestoDescuento } from "../../../utils/applyRate.js";
 
 const productosBase = {};
 
-const columnasOrden = [
+const columnsOrder = [
   "p.fecha_publicacion ASC",
   "p.fecha_publicacion DESC",
   "p.precio ASC",
@@ -11,12 +11,12 @@ const columnasOrden = [
   "p.descuento DESC",
 ];
 
-function validarOrder(order) {
+function validateOrder(order) {
   if (!order) return "";
-  return columnasOrden.includes(order.trim()) ? `ORDER BY ${order}` : "";
+  return columnsOrder.includes(order.trim()) ? `ORDER BY ${order}` : "";
 }
 
-function validarLimit(limit) {
+function validateLimit(limit) {
   if (!limit) return "";
   const match = limit.match(/^LIMIT\s+(\d+)(\s+OFFSET\s+(\d+))?$/i);
   return match ? limit : "";
@@ -36,8 +36,8 @@ productosBase.obtenerProductosBase = async ({
 
   const whereClause = `WHERE ${condiciones.join(" AND ")}`;
 
-  const orderClause = validarOrder(order);
-  const limitClause = validarLimit(limit);
+  const orderClause = validateOrder(order);
+  const limitClause = validateLimit(limit);
 
   const query = `
       SELECT 
@@ -56,7 +56,7 @@ productosBase.obtenerProductosBase = async ({
         a.capacidad AS almacenamiento,
         CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
       FROM productos p
-      JOIN categorias c ON p.categoria_id = c.id
+      JOIN categorias c ON p.categoria_id = c.id AND c.activo = 1
       LEFT JOIN p_variantes v ON p.id = v.producto_id AND v.activo = 1
       LEFT JOIN ram r ON p.ram_id = r.id
       LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id

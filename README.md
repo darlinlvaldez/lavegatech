@@ -6,4 +6,5 @@ Filtrar por productos mas gustados o mejor calificados en admin y el cliente.
 Optimizar codigo en reportes de excel.
 Eliminar categorias del titulo del excel.
 Mensaje de error con zod en cuentas admin.
-Activo en variantes.
+Aplicar activo de categorias y marcas en la tienda.
+Corregir query pesado de rating.
