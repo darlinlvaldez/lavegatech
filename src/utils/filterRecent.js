@@ -1,9 +1,11 @@
-export const filterRecentProducts = (productos, dias = 30) => {
+export function esProductoNuevo(fechaPublicacion, dias = 30) {
+  if (!fechaPublicacion) return false;
+
+  const fechaPub = new Date(fechaPublicacion);
   const hoy = new Date();
-  return productos.filter(p => {
-    if (!p.fecha_publicacion) return false;
-    const fechaPub = new Date(p.fecha_publicacion);
-    const diferenciaDias = (hoy - fechaPub) / (1000 * 60 * 60 * 24);
-    return diferenciaDias <= dias;
-  });
-};
+
+  const diffMs = hoy - fechaPub; 
+  const diffDias = diffMs / (1000 * 60 * 60 * 24);
+
+  return diffDias <= dias;
+}

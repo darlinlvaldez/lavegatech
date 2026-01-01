@@ -56,8 +56,8 @@ document.querySelector(".tablink").click();
                 <div class="row">
                     <div class="products-tabs">
                         <div id="moviles" class="tabcontent active">
-                            <div class="products-slick" data-nav="#slick-nav-1" id="product-list-moviles">
-                                <% const productosMoviles = productosRecientes.filter(p => p.categoria === 'moviles'); %>
+                            <div class="products-slick" data-nav="#slick-nav-moviles" id="product-list-moviles">
+                                <% const productosMoviles = productos.filter(p => p.categoria === 'moviles'); %>
                                     <% productosMoviles.forEach(producto => { %>
                                 <div class="product" data-categoria="<%= producto.categoria %>">
                                     <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
@@ -66,7 +66,9 @@ document.querySelector(".tablink").click();
                                             <% if (producto.descuento > 0) { %>
                                             <span class="sale">-<%= producto.descuento %>%</span>
                                             <% } %>
+                                            <% if (producto.esNuevo) { %>
                                             <span class="new">Nuevo</span>
+                                            <% } %>
                                         </div>
                                     </div>
                                     <div class="product-body">
@@ -128,11 +130,12 @@ document.querySelector(".tablink").click();
                                 </div>
                                 <% }); %>
                             </div>  
+                            <div id="slick-nav-moviles" class="products-slick-nav"></div>
                         </div>
                     
                         <div id="smarttv" class="tabcontent">
-                            <div class="products-slick" data-nav="#slick-nav-2" id="product-list-smarttv">
-                                <% const productosSmarttv = productosRecientes.filter(p => p.categoria === 'smarttv'); %>
+                            <div class="products-slick" data-nav="#slick-nav-smarttv" id="product-list-smarttv">
+                                <% const productosSmarttv = productos.filter(p => p.categoria === 'smarttv'); %>
                                     <% productosSmarttv.forEach(producto => { %>
                                 <div class="product" data-categoria="<%= producto.categoria %>">
                                     <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
@@ -141,7 +144,9 @@ document.querySelector(".tablink").click();
                                             <% if (producto.descuento > 0) { %>
                                             <span class="sale">-<%= producto.descuento %>%</span>
                                             <% } %>
+                                            <% if (producto.esNuevo) { %>
                                             <span class="new">Nuevo</span>
+                                            <% } %>
                                         </div>
                                     </div>
                                     <div class="product-body">
@@ -203,11 +208,12 @@ document.querySelector(".tablink").click();
                                 </div>
                                 <% }); %>
                             </div>
+                              <div id="slick-nav-smarttv" class="products-slick-nav"></div>
                         </div>    
                         
                         <div id="laptops" class="tabcontent">
-                            <div class="products-slick" data-nav="#slick-nav-3" id="product-list-laptops">
-                                <% const productosLaptops = productosRecientes.filter(p => p.categoria === 'laptops'); %>
+                            <div class="products-slick" data-nav="#slick-nav-laptops" id="product-list-laptops">
+                                <% const productosLaptops = productos.filter(p => p.categoria === 'laptops'); %>
                                     <% productosLaptops.forEach(producto => { %>
                                 <div class="product" data-categoria="<%= producto.categoria %>"> 
                                     <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
@@ -216,7 +222,9 @@ document.querySelector(".tablink").click();
                                             <% if (producto.descuento > 0) { %>
                                             <span class="sale">-<%= producto.descuento %>%</span>
                                             <% } %>
+                                            <% if (producto.esNuevo) { %>
                                             <span class="new">Nuevo</span>
+                                            <% } %>
                                         </div>
                                     </div>
                                     <div class="product-body">
@@ -279,11 +287,12 @@ document.querySelector(".tablink").click();
                                 </div>
                                 <% }); %>
                             </div>
+                              <div id="slick-nav-laptops" class="products-slick-nav"></div>
                         </div>
 
                         <div id="consolas" class="tabcontent">
-                            <div class="products-slick" data-nav="#slick-nav-4" id="product-list-consolas">
-								<% const productosConsolas = productosRecientes.filter(p => p.categoria === 'consolas'); %>
+                            <div class="products-slick" data-nav="#slick-nav-consolas" id="product-list-consolas">
+								<% const productosConsolas = productos.filter(p => p.categoria === 'consolas'); %>
                                     <% productosConsolas.forEach(producto => { %>
                                 <div class="product" data-categoria="<%= producto.categoria %>">
                                     <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
@@ -292,7 +301,9 @@ document.querySelector(".tablink").click();
                                             <% if (producto.descuento > 0) { %>
                                             <span class="sale">-<%= producto.descuento %>%</span>
                                             <% } %>
+                                            <% if (producto.esNuevo) { %>
                                             <span class="new">Nuevo</span>
+                                            <% } %>
                                         </div>
                                     </div>
                                     <div class="product-body">
@@ -354,11 +365,12 @@ document.querySelector(".tablink").click();
                                 </div>
                                 <% }); %>
                             </div>
+                              <div id="slick-nav-consolas" class="products-slick-nav"></div>
                         </div>
 
                         <div id="tablets" class="tabcontent">
-                            <div class="products-slick" data-nav="#slick-nav-5" id="product-list-tablets">
-								<% const productosTablets = productosRecientes.filter(p => p.categoria === 'tablets'); %>
+                            <div class="products-slick" data-nav="#slick-nav-tablets" id="product-list-tablets">
+								<% const productosTablets = productos.filter(p => p.categoria === 'tablets'); %>
                                     <% productosTablets.forEach(producto => { %>
                                 <div class="product" data-categoria="<%= producto.categoria %>">
                                     <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
@@ -367,7 +379,9 @@ document.querySelector(".tablink").click();
                                             <% if (producto.descuento > 0) { %>
                                             <span class="sale">-<%= producto.descuento %>%</span>
                                             <% } %>
+                                            <% if (producto.esNuevo) { %>
                                             <span class="new">Nuevo</span>
+                                            <% } %>
                                         </div>
                                     </div>
                                     <div class="product-body">
@@ -429,10 +443,10 @@ document.querySelector(".tablink").click();
                                 </div>
                                 <% }); %>
                             </div>
+                              <div id="slick-nav-tablets" class="products-slick-nav"></div>
                         </div>
                     </div>
                 </div>
-				<div id="slick-nav-1" class="products-slick-nav"></div>
             </div>
             <!-- /Products tab & slick -->
         </div>
@@ -516,11 +530,9 @@ document.querySelector(".tablink").click();
                                         <% if (producto.descuento > 0) { %>
                                             <span class="sale">-<%= producto.descuento %>%</span>
                                         <% } %>
-
-                                        <% if (producto.fecha_publicacion) { %>
-                                        <span class="new">Nuevo</span>
-                                        <% } %>
-
+                                        <% if (producto.esNuevo) { %>
+                                            <span class="new">Nuevo</span>
+                                            <% } %>
                                     </div>
                             </div>
 
