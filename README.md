@@ -7,4 +7,4 @@ Optimizar codigo en reportes de excel.
 Eliminar categorias del titulo del excel.
 Mensaje de error con zod en cuentas admin.
 Aplicar activo de categorias y marcas en la tienda.
-Corregir query pesado de rating.
+Problema de visualizacion en productos mas recientes.
