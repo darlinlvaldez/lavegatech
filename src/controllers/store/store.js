@@ -1,5 +1,4 @@
 import store from '../../models/store/store.js';
-import rating from "../../models/store/rating.js";
 
 store.storeController = async (req, res) => {
   try {
@@ -27,12 +26,9 @@ store.storeController = async (req, res) => {
       store.cantidadMarcas(categorias)
     ]);
 
-    for (let producto of productos) {
-      const avg = await rating.getAverageRating(producto.id);
-      producto.averageRating = parseFloat(avg) || 0;
-
-      producto.esMovil = producto.categoria?.toLowerCase() === "moviles";
-    }
+    productos.forEach((p) => {
+      p.esMovil = p.categoria?.toLowerCase() === "moviles";
+    });
 
     res.render("store/store", {productos, totalProduct, limite, pagina, orden, categorias,
       marcas: marcasFiltradas, marcasFiltradas, cantCategoria, cantMarcas, precioMin,

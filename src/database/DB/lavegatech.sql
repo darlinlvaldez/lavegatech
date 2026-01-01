@@ -3,7 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
+
 -- Tiempo de generación: 30-12-2025 a las 18:57:05
+
+-- Tiempo de generación: 31-12-2025 a las 03:34:03
+
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -1218,6 +1222,7 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`, `activo
 (614, 174, 'Negro', 2, 'https://hisense.com.pe/static/1fee299aec5f19ca4ecea543fbc6bb4f/cd18a/75Q6.jpg', 1),
 (615, 175, 'Negro', 2, 'https://www.megaaudio.com.mx/cdn/shop/files/Pantalla-Hisense-85A7H_01.jpg?v=1736465649&width=416', 1),
 (623, 1, 'Rojo', 2, 'https://target.scene7.com/is/image/Target/GUEST_58d0978e-bfe1-4ad0-b2bf-e3b5f49546f9', 0);
+(623, 1, 'Rojo', 2, 'https://target.scene7.com/is/image/Target/GUEST_58d0978e-bfe1-4ad0-b2bf-e3b5f49546f9', 1);
 
 -- --------------------------------------------------------
 

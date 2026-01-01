@@ -80,13 +80,19 @@ store.obtenerStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], 
 store.totalProductos = async (categorias = [], marcas = [], precioMin, precioMax) => {
   const { where, params } = construirWhereClause(categorias, marcas, precioMin, precioMax);
 
-  const whereClause = where
-    ? `WHERE p.activo = 1 AND ${where}`
-    : `WHERE p.activo = 1`;
+ const whereClause = `
+    WHERE 
+      p.activo = 1
+      AND c.activo = 1
+      AND m.activo = 1
+      ${where ? `AND ${where}` : ""}
+  `;
 
   const query = `
-    SELECT COUNT(*) AS total
+    SELECT COUNT(DISTINCT p.id) AS total
     FROM productos p
+    JOIN categorias c ON p.categoria_id = c.id
+    JOIN p_marcas m ON p.marca_id = m.id
     ${whereClause}
   `;
 
@@ -100,11 +106,17 @@ store.totalProductos = async (categorias = [], marcas = [], precioMin, precioMax
 
 store.obtenerRangoPrecios = async () => {
   const query = `
-    SELECT 
+       SELECT 
       MIN(p.precio * (1 + p.impuesto/100) * (1 - p.descuento/100)) AS minPrecio, 
       MAX(p.precio * (1 + p.impuesto/100) * (1 - p.descuento/100)) AS maxPrecio 
     FROM productos p
-    WHERE p.activo = 1`;
+    JOIN categorias c ON p.categoria_id = c.id
+    JOIN p_marcas m ON p.marca_id = m.id
+    WHERE 
+      p.activo = 1
+      AND c.activo = 1
+      AND m.activo = 1
+  `;
   
   try {
     const [results] = await db.query(query);
@@ -117,12 +129,18 @@ store.obtenerRangoPrecios = async () => {
 store.cantidadCategoria = async () => {
     const query = `
     SELECT  
-    c.id AS categoria_id, 
-    c.categoria, 
-    COUNT(CASE WHEN p.activo = 1 THEN p.id END) AS cantidad
+      c.id AS categoria_id, 
+      c.categoria, 
+      COUNT(DISTINCT p.id) AS cantidad
     FROM categorias c
-    LEFT JOIN productos p ON c.id = p.categoria_id
-    GROUP BY c.id`;
+    JOIN productos p ON c.id = p.categoria_id
+    JOIN p_marcas m ON p.marca_id = m.id
+    WHERE 
+      c.activo = 1
+      AND p.activo = 1
+      AND m.activo = 1
+    GROUP BY c.id
+    HAVING cantidad > 0`;
 
     try {
         const [results] = await db.query(query);
@@ -138,7 +156,7 @@ store.cantidadMarcas = async (categorias = []) => {
 
   if (categorias.length > 0) {
     const placeholders = categorias.map(() => '?').join(',');
-    where = `WHERE mc.categoria_id IN (${placeholders})`;
+    where = `AND mc.categoria_id IN (${placeholders})`;
     params.push(...categorias);
   }
 
@@ -146,12 +164,18 @@ store.cantidadMarcas = async (categorias = []) => {
     SELECT
       m.id AS marca_id,
       m.nombre AS marca,
-      COUNT(DISTINCT CASE WHEN p.activo = 1 THEN p.id END) AS cantidad
+      COUNT(DISTINCT p.id) AS cantidad
     FROM p_marcas m
-    INNER JOIN marca_categoria mc ON m.id = mc.marca_id
-    LEFT JOIN productos p ON p.marca_id = m.id 
-    ${categorias.length > 0 ? 'AND p.categoria_id = mc.categoria_id' : ''}
-    ${where}
+    JOIN marca_categoria mc ON m.id = mc.marca_id
+    JOIN productos p 
+      ON p.marca_id = m.id 
+     AND p.categoria_id = mc.categoria_id
+    JOIN categorias c ON c.id = p.categoria_id
+    WHERE
+      m.activo = 1
+      AND p.activo = 1
+      AND c.activo = 1
+      ${where}
     GROUP BY m.id, m.nombre
     HAVING cantidad > 0
     ORDER BY m.nombre

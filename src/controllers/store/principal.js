@@ -1,5 +1,4 @@
 import principal from '../../models/store/principal.js';
-import rating from "../../models/store/rating.js";
 import { filterRecentProducts } from '../../utils/filterRecent.js';
 
 principal.productosController = async (req, res) => {
@@ -11,16 +10,9 @@ principal.productosController = async (req, res) => {
     const recomendados = await principal.obtenerRecomendados();
     const productosRecientes = filterRecentProducts(productos, 30);
     
-    const listas = [productos, recomendados];
-
-    for (let lista of listas) {
-      for (let producto of lista) {
-        const avg = await rating.getAverageRating(producto.id);
-        producto.averageRating = parseFloat(avg) || 0;
-        
-        producto.esMovil = producto.categoria?.toLowerCase() === "moviles";
-      }
-    }
+     productos.forEach((p) => {
+       p.esMovil = p.categoria?.toLowerCase() === "moviles";
+     });
 
     res.render("index", { productos, categorias, recomendados, productosRecientes });
   } catch (err) {
