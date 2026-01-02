@@ -1,11 +1,11 @@
-export function esProductoNuevo(fechaPublicacion, dias = 30) {
-  if (!fechaPublicacion) return false;
+export function itsNewProduct(publicationDate, days = 30) {
+  if (!publicationDate) return false;
 
-  const fechaPub = new Date(fechaPublicacion);
-  const hoy = new Date();
+  const publicDate = new Date(publicationDate);
+  const today = new Date();
 
-  const diffMs = hoy - fechaPub; 
-  const diffDias = diffMs / (1000 * 60 * 60 * 24);
+  const diffMs = today - publicDate; 
+  const diffDays = diffMs / (1000 * 60 * 60 * 24);
 
-  return diffDias <= dias;
+  return diffDays <= days;
 }

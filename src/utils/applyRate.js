@@ -1,4 +1,4 @@
-export const impuestoDescuento = (productos) => {
+export const applyTaxDiscount = (productos) => {
   return productos.map(producto => {
     const precio = Number(producto.precio);
     const tasaImpuesto = Number(producto.impuesto) / 100 || 0;       

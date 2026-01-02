@@ -334,7 +334,7 @@ admin.obtenerAlm = async () => {
 
 // Categorias
 
-admin.obtenerCategorias = async () => {
+admin.getCategories = async () => {
   const [rows] = await db.query("SELECT id, categoria, activo FROM categorias ORDER BY activo, id DESC");
   return rows;
 };

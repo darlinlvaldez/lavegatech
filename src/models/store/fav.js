@@ -1,5 +1,5 @@
 import db from "../../database/mobiles.js";
-import {impuestoDescuento} from "../../utils/applyRate.js";
+import {applyTaxDiscount} from "../../utils/applyRate.js";
 
 const fav = {};
 
@@ -70,7 +70,7 @@ fav.getByUserId = async (usuario_id) => {
     [usuario_id]
     );
 
-    const precioFinal = impuestoDescuento(rows);
+    const precioFinal = applyTaxDiscount(rows);
 
     return precioFinal;
 };

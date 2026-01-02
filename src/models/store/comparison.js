@@ -1,5 +1,5 @@
 import db from "../../database/mobiles.js";
-import {impuestoDescuento} from "../../utils/applyRate.js";
+import {applyTaxDiscount} from "../../utils/applyRate.js";
 
 const comparison = {};
 
@@ -31,7 +31,7 @@ comparison.searchDevice = async (query, excludeMovilIds = []) => {
 
   try {
     const [results] = await db.query(searchQuery, params);
-    return impuestoDescuento(results);
+    return applyTaxDiscount(results);
   } catch (err) {
     throw new Error("Error al buscar móviles: " + err.message);
   }
@@ -106,7 +106,7 @@ comparison.getDevice = async (productIds) => {
 
   try {
     const [results] = await db.query(query, [productIds]);
-    return impuestoDescuento(results);
+    return applyTaxDiscount(results);
   } catch (err) {
     console.error("Error en comparación:", err);
     throw new Error("Error al obtener dispositivos para comparar: " + err.message);

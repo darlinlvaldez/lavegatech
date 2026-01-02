@@ -169,10 +169,10 @@
 												<% if (producto.descuento> 0) { %>
 													<span class="sale">-<%= producto.descuento %>%</span>
 													<% } %>
-														<% if (producto.fecha_publicacion) { %>
+														<% if (producto.itsNew) { %>
 														<span class="new">Nuevo</span>
 														<% } %>
-															</div>
+														</div>
 														</div>
 														<div class="product-body">
 															<p class="product-category"><%= producto.categoria %></p>
@@ -204,8 +204,7 @@
 																	<i class="fa-regular fa-heart"></i>
 																	<span class="tooltipp">Favoritos</span>
 																</button>
-																	
-																	<% if (producto.esMovil) { %>
+																	<% if (producto.itsMobile) { %>
 																	<button class="add-to-compare" data-id="<%= producto.id %>">
 																		<i class="fa-solid fa-arrow-right-arrow-left"></i>
 																	<span class="tooltipp">Comparar</span></button>

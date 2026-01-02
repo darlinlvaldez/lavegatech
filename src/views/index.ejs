@@ -57,41 +57,41 @@ document.querySelector(".tablink").click();
                     <div class="products-tabs">
                         <div id="moviles" class="tabcontent active">
                             <div class="products-slick" data-nav="#slick-nav-moviles" id="product-list-moviles">
-                                <% const productosMoviles = productos.filter(p => p.categoria === 'moviles'); %>
-                                    <% productosMoviles.forEach(producto => { %>
-                                <div class="product" data-categoria="<%= producto.categoria %>">
-                                    <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
-                                        <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">
+                                <% const productsMoviles = products.filter(p => p.category === 'moviles'); %>
+                                    <% productsMoviles.forEach(product => { %>
+                                <div class="product" data-category="<%= product.category %>">
+                                    <div class="product-img"> <a href="/product/<%= product.id %>?color=<%= product.color %>">
+                                        <img src="<%= product.imagen %>" alt="<%= product.nombre %>">
                                         <div class="product-label">
-                                            <% if (producto.descuento > 0) { %>
-                                            <span class="sale">-<%= producto.descuento %>%</span>
+                                            <% if (product.descuento > 0) { %>
+                                            <span class="sale">-<%= product.descuento %>%</span>
                                             <% } %>
-                                            <% if (producto.esNuevo) { %>
+                                            <% if (product.itsNew) { %>
                                             <span class="new">Nuevo</span>
                                             <% } %>
                                         </div>
                                     </div>
                                     <div class="product-body">
                                         <p class="product-category">
-                                            <%= producto.categoria === 'moviles' ? 'Móviles' : producto.categoria.charAt(0).toUpperCase() + producto.categoria.slice(1) %>
+                                            <%= product.category === 'moviles' ? 'Móviles' : product.category.charAt(0).toUpperCase() + product.category.slice(1) %>
                                         </p>
                                         <h3 class="product-name">
-                                                <%= producto.nombre %> <%= producto.especificaciones %>
+                                                <%= product.nombre %> <%= product.especificaciones %>
                                             </h3>
                                             <h4 class="product-price">
-                                            $<%= Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-                                            <% if (producto.descuento > 0) { %>
+                                            $<%= Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                            <% if (product.descuento > 0) { %>
                                                 <del class="product-old-price">
-                                                    $<%= Number(producto.precio / (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                                    $<%= Number(product.precio / (1 - product.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                                 </del>
                                             <% } %>
                                         </h4>
                                         </a>
                                         <div class="product-rating">
                                         <% for (let i = 1; i <= 5; i++) { %>
-                                            <% if (i <= Math.floor(producto.averageRating)) { %>
+                                            <% if (i <= Math.floor(product.averageRating)) { %>
                                                 <i class="fa-solid fa-star"></i>
-                                            <% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
+                                            <% } else if (i - product.averageRating < 1 && i > product.averageRating) { %>
                                                 <i class="fa-regular fa-star-half-stroke"></i>
                                             <% } else { %>
                                                 <i class="fa-regular fa-star"></i>
@@ -100,30 +100,30 @@ document.querySelector(".tablink").click();
                                     </div>
                                         <div class="product-btns">
                                             <button class="add-to-wishlist" 
-                                                data-product-id="<%= producto.id %>" 
-                                                data-product-color="<%= producto.color %>">
+                                                data-product-id="<%= product.id %>" 
+                                                data-product-color="<%= product.color %>">
                                                 <i class="fa-regular fa-heart"></i>  
                                                 <span class="tooltipp">Favoritos</span>
                                             </button>
-                                                <% if (producto.esMovil) { %>
-                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
+                                                <% if (product.itsMobile) { %>
+                                                <button class="add-to-compare" data-id="<%= product.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
                                                 <span class="tooltipp">Comparar</span></button>
                                                 <% } %>
                                         </div>
                                     </div>
                                     <div class="add-to-cart">
                                     <button class="add-to-cart-btn"
-                                    data-id="<%= producto.id %>"
-                                    data-variante_id="<%= producto.variante_id %>"
-                                    data-color="<%= producto.color %>"
-                                    data-ram="<%= producto.ram %>"
-                                    data-almacenamiento="<%= producto.almacenamiento %>"
-                                    data-stock="<%= producto.stock %>"
-                                    data-nombre="<%= producto.nombre %>"
-                                    data-precio="<%= producto.precio %>"
-                                    data-descuento="<%= producto.descuento %>"   
-                                    data-impuesto="<%= producto.impuesto %>"       
-                                    data-imagen="<%= producto.imagen %>">
+                                    data-id="<%= product.id %>"
+                                    data-variante_id="<%= product.variante_id %>"
+                                    data-color="<%= product.color %>"
+                                    data-ram="<%= product.ram %>"
+                                    data-almacenamiento="<%= product.almacenamiento %>"
+                                    data-stock="<%= product.stock %>"
+                                    data-nombre="<%= product.nombre %>"
+                                    data-precio="<%= product.precio %>"
+                                    data-descuento="<%= product.descuento %>"   
+                                    data-impuesto="<%= product.impuesto %>"       
+                                    data-imagen="<%= product.imagen %>">
                                 <i class="fa fa-shopping-cart"></i> Añadir al carrito
                             </button>
                             </div>                      
@@ -135,40 +135,40 @@ document.querySelector(".tablink").click();
                     
                         <div id="smarttv" class="tabcontent">
                             <div class="products-slick" data-nav="#slick-nav-smarttv" id="product-list-smarttv">
-                                <% const productosSmarttv = productos.filter(p => p.categoria === 'smarttv'); %>
-                                    <% productosSmarttv.forEach(producto => { %>
-                                <div class="product" data-categoria="<%= producto.categoria %>">
-                                    <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
-                                        <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">
+                                <% const productsSmarttv = products.filter(p => p.category === 'smarttv'); %>
+                                    <% productsSmarttv.forEach(product => { %>
+                                <div class="product" data-category="<%= product.category %>">
+                                    <div class="product-img"> <a href="/product/<%= product.id %>?color=<%= product.color %>">
+                                        <img src="<%= product.imagen %>" alt="<%= product.nombre %>">
                                         <div class="product-label">
-                                            <% if (producto.descuento > 0) { %>
-                                            <span class="sale">-<%= producto.descuento %>%</span>
+                                            <% if (product.descuento > 0) { %>
+                                            <span class="sale">-<%= product.descuento %>%</span>
                                             <% } %>
-                                            <% if (producto.esNuevo) { %>
+                                            <% if (product.itsNew) { %>
                                             <span class="new">Nuevo</span>
                                             <% } %>
                                         </div>
                                     </div>
                                     <div class="product-body">
                                         <p class="product-category">
-                                            <%= producto.categoria === 'smarttv' ? 'SmartTV' : producto.categoria.charAt(0).toUpperCase() + producto.categoria.slice(1) %>
+                                            <%= product.category === 'smarttv' ? 'SmartTV' : product.category.charAt(0).toUpperCase() + product.category.slice(1) %>
                                         </p>
                                         <h3 class="product-name">
-                                                <%= producto.nombre %><%= producto.especificaciones %>
+                                                <%= product.nombre %><%= product.especificaciones %>
                                             </h3>
                                             <h4 class="product-price">
-                                            $<%= Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-                                            <% if (producto.descuento > 0) { %>
+                                            $<%= Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                            <% if (product.descuento > 0) { %>
                                                 <del class="product-old-price">
-                                                    $<%= Number(producto.precio / (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                                    $<%= Number(product.precio / (1 - product.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                                 </del>
                                             <% } %>
                                         </h4></a>
                                         <div class="product-rating">
                                         <% for (let i = 1; i <= 5; i++) { %>
-                                            <% if (i <= Math.floor(producto.averageRating)) { %>
+                                            <% if (i <= Math.floor(product.averageRating)) { %>
                                                 <i class="fa-solid fa-star"></i>
-                                            <% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
+                                            <% } else if (i - product.averageRating < 1 && i > product.averageRating) { %>
                                                 <i class="fa-regular fa-star-half-stroke"></i>
                                             <% } else { %>
                                                 <i class="fa-regular fa-star"></i>
@@ -177,31 +177,31 @@ document.querySelector(".tablink").click();
                                     </div>
                                         <div class="product-btns">
                                             <button class="add-to-wishlist" 
-                                                data-product-id="<%= producto.id %>" 
-                                                data-product-color="<%= producto.color %>">
+                                                data-product-id="<%= product.id %>" 
+                                                data-product-color="<%= product.color %>">
                                                 <i class="fa-regular fa-heart"></i>  
                                                 <span class="tooltipp">Favoritos</span>
                                             </button>
 
-                                                <% if (producto.esMovil) { %>
-                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
+                                                <% if (product.itsMobile) { %>
+                                                <button class="add-to-compare" data-id="<%= product.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
                                                 <span class="tooltipp">Comparar</span></button>
                                                 <% } %>
                                         </div>
                                     </div>
                                     <div class="add-to-cart">
                                     <button class="add-to-cart-btn"
-                                    data-id="<%= producto.id %>"
-                                    data-variante_id="<%= producto.variante_id %>"
-                                    data-color="<%= producto.color %>"
-                                    data-ram="<%= producto.ram %>"
-                                    data-almacenamiento="<%= producto.almacenamiento %>"
-                                    data-stock="<%= producto.stock %>"
-                                    data-nombre="<%= producto.nombre %>"
-                                    data-precio="<%= producto.precio %>"
-                                    data-descuento="<%= producto.descuento %>"   
-                                    data-impuesto="<%= producto.impuesto %>"       
-                                    data-imagen="<%= producto.imagen %>">
+                                    data-id="<%= product.id %>"
+                                    data-variante_id="<%= product.variante_id %>"
+                                    data-color="<%= product.color %>"
+                                    data-ram="<%= product.ram %>"
+                                    data-almacenamiento="<%= product.almacenamiento %>"
+                                    data-stock="<%= product.stock %>"
+                                    data-nombre="<%= product.nombre %>"
+                                    data-precio="<%= product.precio %>"
+                                    data-descuento="<%= product.descuento %>"   
+                                    data-impuesto="<%= product.impuesto %>"       
+                                    data-imagen="<%= product.imagen %>">
                                 <i class="fa fa-shopping-cart"></i> Añadir al carrito
                             </button>
                             </div>
@@ -213,40 +213,40 @@ document.querySelector(".tablink").click();
                         
                         <div id="laptops" class="tabcontent">
                             <div class="products-slick" data-nav="#slick-nav-laptops" id="product-list-laptops">
-                                <% const productosLaptops = productos.filter(p => p.categoria === 'laptops'); %>
-                                    <% productosLaptops.forEach(producto => { %>
-                                <div class="product" data-categoria="<%= producto.categoria %>"> 
-                                    <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
-                                        <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">
+                                <% const productsLaptops = products.filter(p => p.category === 'laptops'); %>
+                                    <% productsLaptops.forEach(product => { %>
+                                <div class="product" data-category="<%= product.category %>"> 
+                                    <div class="product-img"> <a href="/product/<%= product.id %>?color=<%= product.color %>">
+                                        <img src="<%= product.imagen %>" alt="<%= product.nombre %>">
                                         <div class="product-label">
-                                            <% if (producto.descuento > 0) { %>
-                                            <span class="sale">-<%= producto.descuento %>%</span>
+                                            <% if (product.descuento > 0) { %>
+                                            <span class="sale">-<%= product.descuento %>%</span>
                                             <% } %>
-                                            <% if (producto.esNuevo) { %>
+                                            <% if (product.itsNew) { %>
                                             <span class="new">Nuevo</span>
                                             <% } %>
                                         </div>
                                     </div>
                                     <div class="product-body">
                                         <p class="product-category">
-                                            <%= producto.categoria === 'laptops' ? 'Laptops' : producto.categoria.charAt(0).toUpperCase() + producto.categoria.slice(1) %>
+                                            <%= product.category === 'laptops' ? 'Laptops' : product.category.charAt(0).toUpperCase() + product.category.slice(1) %>
                                         </p>
                                         <h3 class="product-name">
-                                                <%= producto.nombre %>
+                                                <%= product.nombre %>
                                             </h3>
                                             <h4 class="product-price">
-                                            $<%= Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-                                            <% if (producto.descuento > 0) { %>
+                                            $<%= Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                            <% if (product.descuento > 0) { %>
                                                 <del class="product-old-price">
-                                                    $<%= Number(producto.precio / (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                                    $<%= Number(product.precio / (1 - product.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                                 </del>
                                             <% } %>
                                         </h4></a>
                                         <div class="product-rating">
                                             <% for (let i = 1; i <= 5; i++) { %>
-                                                <% if (i <= Math.floor(producto.averageRating)) { %>
+                                                <% if (i <= Math.floor(product.averageRating)) { %>
                                                     <i class="fa-solid fa-star"></i>
-                                                <% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
+                                                <% } else if (i - product.averageRating < 1 && i > product.averageRating) { %>
                                                     <i class="fa-regular fa-star-half-stroke"></i>
                                                 <% } else { %>
                                                     <i class="fa-regular fa-star"></i>
@@ -256,31 +256,31 @@ document.querySelector(".tablink").click();
                                         <div class="product-btns"> 
 
                                             <button class="add-to-wishlist" 
-                                                data-product-id="<%= producto.id %>" 
-                                                data-product-color="<%= producto.color %>">
+                                                data-product-id="<%= product.id %>" 
+                                                data-product-color="<%= product.color %>">
                                                 <i class="fa-regular fa-heart"></i>  
                                                 <span class="tooltipp">Favoritos</span>
                                             </button>
                                                 
-                                                <% if (producto.esMovil) { %>
-                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
+                                                <% if (product.itsMobile) { %>
+                                                <button class="add-to-compare" data-id="<%= product.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
                                                 <span class="tooltipp">Comparar</span></button>
                                                 <% } %>
                                         </div>
                                     </div>
                                     <div class="add-to-cart">
                                     <button class="add-to-cart-btn"
-                                    data-id="<%= producto.id %>"
-                                    data-variante_id="<%= producto.variante_id %>"
-                                    data-color="<%= producto.color %>"
-                                    data-ram="<%= producto.ram %>"
-                                    data-almacenamiento="<%= producto.almacenamiento %>"
-                                    data-stock="<%= producto.stock %>"
-                                    data-nombre="<%= producto.nombre %>"
-                                    data-precio="<%= producto.precio %>"
-                                    data-descuento="<%= producto.descuento %>"   
-                                    data-impuesto="<%= producto.impuesto %>"       
-                                    data-imagen="<%= producto.imagen %>">
+                                    data-id="<%= product.id %>"
+                                    data-variante_id="<%= product.variante_id %>"
+                                    data-color="<%= product.color %>"
+                                    data-ram="<%= product.ram %>"
+                                    data-almacenamiento="<%= product.almacenamiento %>"
+                                    data-stock="<%= product.stock %>"
+                                    data-nombre="<%= product.nombre %>"
+                                    data-precio="<%= product.precio %>"
+                                    data-descuento="<%= product.descuento %>"   
+                                    data-impuesto="<%= product.impuesto %>"       
+                                    data-imagen="<%= product.imagen %>">
                                 <i class="fa fa-shopping-cart"></i> Añadir al carrito
                             </button>
                             </div>
@@ -292,40 +292,40 @@ document.querySelector(".tablink").click();
 
                         <div id="consolas" class="tabcontent">
                             <div class="products-slick" data-nav="#slick-nav-consolas" id="product-list-consolas">
-								<% const productosConsolas = productos.filter(p => p.categoria === 'consolas'); %>
-                                    <% productosConsolas.forEach(producto => { %>
-                                <div class="product" data-categoria="<%= producto.categoria %>">
-                                    <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
-                                        <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">
+								<% const productsConsolas = products.filter(p => p.category === 'consolas'); %>
+                                    <% productsConsolas.forEach(product => { %>
+                                <div class="product" data-category="<%= product.category %>">
+                                    <div class="product-img"> <a href="/product/<%= product.id %>?color=<%= product.color %>">
+                                        <img src="<%= product.imagen %>" alt="<%= product.nombre %>">
                                         <div class="product-label">
-                                            <% if (producto.descuento > 0) { %>
-                                            <span class="sale">-<%= producto.descuento %>%</span>
+                                            <% if (product.descuento > 0) { %>
+                                            <span class="sale">-<%= product.descuento %>%</span>
                                             <% } %>
-                                            <% if (producto.esNuevo) { %>
+                                            <% if (product.itsNew) { %>
                                             <span class="new">Nuevo</span>
                                             <% } %>
                                         </div>
                                     </div>
                                     <div class="product-body">
                                         <p class="product-category">
-                                            <%= producto.categoria === 'consolas' ? 'Consolas' : producto.categoria.charAt(0).toUpperCase() + producto.categoria.slice(1) %>
+                                            <%= product.category === 'consolas' ? 'Consolas' : product.category.charAt(0).toUpperCase() + product.category.slice(1) %>
                                         </p>
                                         <h3 class="product-name">
-                                                <%= producto.nombre %>
+                                                <%= product.nombre %>
                                             </h3>
                                             <h4 class="product-price">
-                                            $<%= Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-                                            <% if (producto.descuento > 0) { %>
+                                            $<%= Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                            <% if (product.descuento > 0) { %>
                                                 <del class="product-old-price">
-                                                    $<%= Number(producto.precio / (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                                    $<%= Number(product.precio / (1 - product.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                                 </del>
                                             <% } %>
                                         </h4></a>
                                         <div class="product-rating">
                                             <% for (let i = 1; i <= 5; i++) { %>
-                                                <% if (i <= Math.floor(producto.averageRating)) { %>
+                                                <% if (i <= Math.floor(product.averageRating)) { %>
                                                     <i class="fa-solid fa-star"></i>
-                                                <% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
+                                                <% } else if (i - product.averageRating < 1 && i > product.averageRating) { %>
                                                     <i class="fa-regular fa-star-half-stroke"></i>
                                                 <% } else { %>
                                                     <i class="fa-regular fa-star"></i>
@@ -334,31 +334,31 @@ document.querySelector(".tablink").click();
                                         </div>
                                         <div class="product-btns">
                                             <button class="add-to-wishlist" 
-                                                data-product-id="<%= producto.id %>" 
-                                                data-product-color="<%= producto.color %>">
+                                                data-product-id="<%= product.id %>" 
+                                                data-product-color="<%= product.color %>">
                                                 <i class="fa-regular fa-heart"></i>  
                                                 <span class="tooltipp">Favoritos</span>
                                             </button>
 
-                                                <% if (producto.esMovil) { %>
-                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
+                                                <% if (product.itsMobile) { %>
+                                                <button class="add-to-compare" data-id="<%= product.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
                                                 <span class="tooltipp">Comparar</span></button>
                                                 <% } %>
                                         </div>
                                     </div>
                                     <div class="add-to-cart">
                                     <button class="add-to-cart-btn"
-                                    data-id="<%= producto.id %>"
-                                    data-variante_id="<%= producto.variante_id %>"
-                                    data-color="<%= producto.color %>"
-                                    data-ram="<%= producto.ram %>"
-                                    data-almacenamiento="<%= producto.almacenamiento %>"
-                                    data-stock="<%= producto.stock %>"
-                                    data-nombre="<%= producto.nombre %>"
-                                    data-precio="<%= producto.precio %>"
-                                    data-descuento="<%= producto.descuento %>"   
-                                    data-impuesto="<%= producto.impuesto %>"       
-                                    data-imagen="<%= producto.imagen %>">
+                                    data-id="<%= product.id %>"
+                                    data-variante_id="<%= product.variante_id %>"
+                                    data-color="<%= product.color %>"
+                                    data-ram="<%= product.ram %>"
+                                    data-almacenamiento="<%= product.almacenamiento %>"
+                                    data-stock="<%= product.stock %>"
+                                    data-nombre="<%= product.nombre %>"
+                                    data-precio="<%= product.precio %>"
+                                    data-descuento="<%= product.descuento %>"   
+                                    data-impuesto="<%= product.impuesto %>"       
+                                    data-imagen="<%= product.imagen %>">
                                 <i class="fa fa-shopping-cart"></i> Añadir al carrito
                             </button>
                             </div>
@@ -370,40 +370,40 @@ document.querySelector(".tablink").click();
 
                         <div id="tablets" class="tabcontent">
                             <div class="products-slick" data-nav="#slick-nav-tablets" id="product-list-tablets">
-								<% const productosTablets = productos.filter(p => p.categoria === 'tablets'); %>
-                                    <% productosTablets.forEach(producto => { %>
-                                <div class="product" data-categoria="<%= producto.categoria %>">
-                                    <div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
-                                        <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">                                    
+								<% const productsTablets = products.filter(p => p.category === 'tablets'); %>
+                                    <% productsTablets.forEach(product => { %>
+                                <div class="product" data-category="<%= product.category %>">
+                                    <div class="product-img"> <a href="/product/<%= product.id %>?color=<%= product.color %>">
+                                        <img src="<%= product.imagen %>" alt="<%= product.nombre %>">                                    
                                         <div class="product-label">
-                                            <% if (producto.descuento > 0) { %>
-                                            <span class="sale">-<%= producto.descuento %>%</span>
+                                            <% if (product.descuento > 0) { %>
+                                            <span class="sale">-<%= product.descuento %>%</span>
                                             <% } %>
-                                            <% if (producto.esNuevo) { %>
+                                            <% if (product.itsNew) { %>
                                             <span class="new">Nuevo</span>
                                             <% } %>
                                         </div>
                                     </div>
                                     <div class="product-body">
                                         <p class="product-category">
-                                            <%= producto.categoria === 'tablets' ? 'Tablets' : producto.categoria.charAt(0).toUpperCase() + producto.categoria.slice(1) %>
+                                            <%= product.category === 'tablets' ? 'Tablets' : product.category.charAt(0).toUpperCase() + product.category.slice(1) %>
                                         </p>
                                         <h3 class="product-name">
-                                                <%= producto.nombre %> <%= producto.especificaciones %>
+                                                <%= product.nombre %> <%= product.especificaciones %>
                                             </h3>
                                             <h4 class="product-price">
-                                            $<%= Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-                                            <% if (producto.descuento > 0) { %>
+                                            $<%= Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                            <% if (product.descuento > 0) { %>
                                                 <del class="product-old-price">
-                                                    $<%= Number(producto.precio / (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                                    $<%= Number(product.precio / (1 - product.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                                 </del>
                                             <% } %>
                                         </h4></a>
                                         <div class="product-rating">
                                             <% for (let i = 1; i <= 5; i++) { %>
-                                                <% if (i <= Math.floor(producto.averageRating)) { %>
+                                                <% if (i <= Math.floor(product.averageRating)) { %>
                                                     <i class="fa-solid fa-star"></i>
-                                                <% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
+                                                <% } else if (i - product.averageRating < 1 && i > product.averageRating) { %>
                                                     <i class="fa-regular fa-star-half-stroke"></i>
                                                 <% } else { %>
                                                     <i class="fa-regular fa-star"></i>
@@ -412,31 +412,31 @@ document.querySelector(".tablink").click();
                                         </div>
                                         <div class="product-btns">
                                             <button class="add-to-wishlist" 
-                                                data-product-id="<%= producto.id %>" 
-                                                data-product-color="<%= producto.color %>">
+                                                data-product-id="<%= product.id %>" 
+                                                data-product-color="<%= product.color %>">
                                                 <i class="fa-regular fa-heart"></i>  
                                                 <span class="tooltipp">Favoritos</span>
                                             </button>
 
-                                                <% if (producto.esMovil) { %>
-                                                <button class="add-to-compare" data-id="<%= producto.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
+                                                <% if (product.itsMobile) { %>
+                                                <button class="add-to-compare" data-id="<%= product.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
                                                 <span class="tooltipp">Comparar</span></button>
                                                 <% } %>
                                         </div>
                                     </div>
                                     <div class="add-to-cart">
                                     <button class="add-to-cart-btn"
-                                    data-id="<%= producto.id %>"
-                                    data-variante_id="<%= producto.variante_id %>"
-                                    data-color="<%= producto.color %>"
-                                    data-ram="<%= producto.ram %>"
-                                    data-almacenamiento="<%= producto.almacenamiento %>"
-                                    data-stock="<%= producto.stock %>"
-                                    data-nombre="<%= producto.nombre %>"
-                                    data-precio="<%= producto.precio %>"
-                                    data-descuento="<%= producto.descuento %>"   
-                                    data-impuesto="<%= producto.impuesto %>"       
-                                    data-imagen="<%= producto.imagen %>">
+                                    data-id="<%= product.id %>"
+                                    data-variante_id="<%= product.variante_id %>"
+                                    data-color="<%= product.color %>"
+                                    data-ram="<%= product.ram %>"
+                                    data-almacenamiento="<%= product.almacenamiento %>"
+                                    data-stock="<%= product.stock %>"
+                                    data-nombre="<%= product.nombre %>"
+                                    data-precio="<%= product.precio %>"
+                                    data-descuento="<%= product.descuento %>"   
+                                    data-impuesto="<%= product.impuesto %>"       
+                                    data-imagen="<%= product.imagen %>">
                                 <i class="fa fa-shopping-cart"></i> Añadir al carrito
                             </button>
                             </div>
@@ -465,34 +465,34 @@ document.querySelector(".tablink").click();
             <div class="section-title text-center">
                 <h3 class="title">Nuestras colecciones</h3>
             </div>
-            <% categorias.forEach(categoria => { %>
-            <% if (['moviles', 'smarttv', 'laptops','consolas', 'tablets', 'otros'].includes(categoria.categoria)) { %>
+            <% categories.forEach(category => { %>
+            <% if (['moviles', 'smarttv', 'laptops','consolas', 'tablets', 'otros'].includes(category.category)) { %>
             <!-- shop -->
             <div class="col-md-4 col-xs-6">
                 <div class="shop">
                      <div class="shop-img">
                         <img 
                             src="
-                            <% if (categoria.categoria === 'moviles') { %>/img/moviles.png
-                            <% } else if (categoria.categoria === 'smarttv') { %>/img/smarttv.png
-                            <% } else if (categoria.categoria === 'laptops') { %>/img/laptops.png
-                            <% } else if (categoria.categoria === 'consolas') { %>/img/consolas.png
-                            <% } else if (categoria.categoria === 'tablets') { %>/img/tablets.png
+                            <% if (category.category === 'moviles') { %>/img/moviles.png
+                            <% } else if (category.category === 'smarttv') { %>/img/smarttv.png
+                            <% } else if (category.category === 'laptops') { %>/img/laptops.png
+                            <% } else if (category.category === 'consolas') { %>/img/consolas.png
+                            <% } else if (category.category === 'tablets') { %>/img/tablets.png
                             <% } else { %>/img/otros.png
                             <% } %>" 
-                            alt="<%= categoria.categoria %>">
+                            alt="<%= category.category %>">
                     </div>
                     <div class="shop-body">
                         <h3>
                             Colección de<br>
                             <%= 
-                                categoria.categoria === 'moviles' ? 'Móviles' :
-                                categoria.categoria === 'smarttv' ? 'SmartTV' :
-                                categoria.categoria === 'otros' ? 'Tech & Hogar' :
-                                categoria.categoria.charAt(0).toUpperCase() + categoria.categoria.slice(1) 
+                                category.category === 'moviles' ? 'Móviles' :
+                                category.category === 'smarttv' ? 'SmartTV' :
+                                category.category === 'otros' ? 'Tech & Hogar' :
+                                category.category.charAt(0).toUpperCase() + category.category.slice(1) 
                             %>
                         </h3>
-                        <a href="/store/1?&categoria=<%= categoria.id %>" class="cta-btn">
+                        <a href="/store/1?&category=<%= category.id %>" class="cta-btn">
                             Comprar ahora<i class="fa fa-arrow-circle-right"></i>
                         </a>
                     </div>
@@ -518,42 +518,42 @@ document.querySelector(".tablink").click();
                 </div>
             </div>
 
-            <% if (recomendados && recomendados.length > 0) { %>
-                <% recomendados.forEach(producto => { %>
+            <% if (recommended && recommended.length > 0) { %>
+                <% recommended.forEach(product => { %>
                     <!-- product -->
                     <div class="col-md-3 col-xs-6">
                         <div class="product">
                             <div class="product-img">
-                                <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
-                                    <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>">
+                                <a href="/product/<%= product.id %>?color=<%= product.color %>">
+                                    <img src="<%= product.imagen %>" alt="<%= product.nombre %>">
                                     <div class="product-label">
-                                        <% if (producto.descuento > 0) { %>
-                                            <span class="sale">-<%= producto.descuento %>%</span>
+                                        <% if (product.descuento > 0) { %>
+                                            <span class="sale">-<%= product.descuento %>%</span>
                                         <% } %>
-                                        <% if (producto.esNuevo) { %>
+                                        <% if (product.itsNew) { %>
                                             <span class="new">Nuevo</span>
                                             <% } %>
                                     </div>
                             </div>
 
                             <div class="product-body">
-                                <p class="product-category"><%= producto.categoria || 'Sin categoría' %></p>
-                                <h3 class="product-name"><%= producto.nombre %> <%= producto.especificaciones %></h3>
+                                <p class="product-category"><%= product.category || 'Sin categoría' %></p>
+                                <h3 class="product-name"><%= product.nombre %> <%= product.especificaciones %></h3>
 
                                 <h4 class="product-price">
-                                    $<%= Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-                                    <% if (producto.descuento > 0) { %>
+                                    $<%= Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                    <% if (product.descuento > 0) { %>
                                         <del class="product-old-price">
-                                            $<%= Number(producto.precio / (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                            $<%= Number(product.precio / (1 - product.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                         </del>
                                     <% } %>
                                 </h4></a>
 
                                 <div class="product-rating">
                                     <% for (let i = 1; i <= 5; i++) { %>
-                                        <% if (i <= Math.floor(producto.averageRating)) { %>
+                                        <% if (i <= Math.floor(product.averageRating)) { %>
                                             <i class="fa-solid fa-star"></i>
-                                        <% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
+                                        <% } else if (i - product.averageRating < 1 && i > product.averageRating) { %>
                                             <i class="fa-regular fa-star-half-stroke"></i>
                                         <% } else { %>
                                             <i class="fa-regular fa-star"></i>
@@ -563,14 +563,14 @@ document.querySelector(".tablink").click();
 
                                 <div class="product-btns">
                                     <button class="add-to-wishlist" 
-                                            data-product-id="<%= producto.id %>" 
-                                            data-product-color="<%= producto.color %>">
+                                            data-product-id="<%= product.id %>" 
+                                            data-product-color="<%= product.color %>">
                                         <i class="fa-regular fa-heart"></i>  
                                         <span class="tooltipp">Favoritos</span>
                                     </button>
 
-                                    <% if (producto.esMovil) { %>
-                                        <button class="add-to-compare" data-id="<%= producto.id %>">
+                                    <% if (product.itsMobile) { %>
+                                        <button class="add-to-compare" data-id="<%= product.id %>">
                                             <i class="fa-solid fa-arrow-right-arrow-left"></i>
                                             <span class="tooltipp">Comparar</span>
                                         </button>
@@ -579,17 +579,17 @@ document.querySelector(".tablink").click();
                             </div>
                             <div class="add-to-cart">
                             <button class="add-to-cart-btn"
-                                    data-id="<%= producto.id %>"
-                                    data-variante_id="<%= producto.variante_id %>"
-                                    data-color="<%= producto.color %>"
-                                    data-ram="<%= producto.ram %>"
-                                    data-almacenamiento="<%= producto.almacenamiento %>"
-                                    data-stock="<%= producto.stock %>"
-                                    data-nombre="<%= producto.nombre %>"
-                                    data-precio="<%= producto.precio %>"
-                                    data-descuento="<%= producto.descuento %>"   
-                                    data-impuesto="<%= producto.impuesto %>"       
-                                    data-imagen="<%= producto.imagen %>">
+                                    data-id="<%= product.id %>"
+                                    data-variante_id="<%= product.variante_id %>"
+                                    data-color="<%= product.color %>"
+                                    data-ram="<%= product.ram %>"
+                                    data-almacenamiento="<%= product.almacenamiento %>"
+                                    data-stock="<%= product.stock %>"
+                                    data-nombre="<%= product.nombre %>"
+                                    data-precio="<%= product.precio %>"
+                                    data-descuento="<%= product.descuento %>"   
+                                    data-impuesto="<%= product.impuesto %>"       
+                                    data-imagen="<%= product.imagen %>">
                                 <i class="fa fa-shopping-cart"></i> Añadir al carrito
                             </button>
                             </div>
@@ -598,7 +598,7 @@ document.querySelector(".tablink").click();
                     <!-- /product -->
                 <% }); %>
             <% } else { %>
-                <p class="text-center">No hay productos recomendados en este momento.</p>
+                <p class="text-center">No hay products recommended en este momento.</p>
             <% } %>
         </div>
     </div>

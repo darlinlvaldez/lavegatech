@@ -1,31 +1,28 @@
 import principal from '../../models/store/principal.js';
-import { esProductoNuevo } from '../../utils/filterRecent.js';
+import { itsNewProduct } from '../../utils/filterRecent.js';
 
-principal.productosController = async (req, res) => {
+principal.productsController = async (req, res) => {
   try {
-    const { categoria } = req.query;
+    const { category } = req.query;
     
-    const productos = await principal.obtenerProductos(categoria);
-    const categorias = await principal.obtenerCategorias();
-    const recomendados = await principal.obtenerRecomendados();
+    const products = await principal.getProducts(category);
+    const categories = await principal.getCategories();
+    const recommended = await principal.getRecommended();
 
-    const normalizar = (lista) => {
+    const normalize = (lista) => {
       lista.forEach(p => {
-        p.esMovil = p.categoria?.toLowerCase() === "moviles";
-        p.esNuevo = esProductoNuevo(p.fecha_publicacion, 30);
+        p.category = p.categoria;
+        p.itsMobile = p.category?.toLowerCase() === "moviles";
+        p.itsNew = itsNewProduct(p.fecha_publicacion, 30);
       });
     };
 
-    normalizar(productos);
-    normalizar(recomendados);
+    normalize(products);
+    normalize(recommended);
 
-    const recentProduct = productos.filter(p => p.esNuevo);
+    const recentProduct = products.filter(p => p.itsNew);
 
-    res.render("index", {
-      productos: recentProduct,
-      categorias,
-      recomendados
-    });
+    res.render("index", { products: recentProduct, categories, recommended });
   } catch (err) {
     console.error("Error al obtener datos", err);
     res.status(500).send("Error al cargar los datos.");
@@ -35,8 +32,8 @@ principal.productosController = async (req, res) => {
 principal.searchController = async (req, res) => {
   try {
       const { q: query } = req.query;
-      const productos = await principal.buscarProductos(query);
-      res.json(productos);
+      const products = await principal.searchProducts(query);
+      res.json(products);
   } catch (error) {
       console.error('Error en la búsqueda:', error);
       res.status(500).json({ error: 'Error en la búsqueda' });

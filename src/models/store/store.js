@@ -69,7 +69,7 @@ store.obtenerStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], 
 
   const limitClause = `LIMIT ${limite} OFFSET ${offset}`;
 
-  return productosBase.obtenerProductosBase({
+  return productosBase.getProductsBase({
     where,
     order: orderByClause,
     limit: limitClause,

@@ -1,5 +1,5 @@
 import db from "../../database/mobiles.js";
-import {impuestoDescuento} from "../../utils/applyRate.js";
+import {applyTaxDiscount} from "../../utils/applyRate.js";
 
 const cart = {};
 
@@ -68,7 +68,7 @@ cart.getByUserId = async (usuario_id) => {
     ORDER BY c.fecha_agregado DESC
   `, [usuario_id]);
 
-  const precioFinal = impuestoDescuento(rows);
+  const precioFinal = applyTaxDiscount(rows);
 
   for (const item of precioFinal) {
     if (item.stock_real !== null && item.cantidad > item.stock_real) {

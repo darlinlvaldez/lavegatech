@@ -1,5 +1,5 @@
 import db from "../../database/mobiles.js";
-import {impuestoDescuento} from "../../utils/applyRate.js";
+import {applyTaxDiscount} from "../../utils/applyRate.js";
 import productosBase from "../store/utils/getProduct.js";
 
 const product = {};
@@ -33,7 +33,7 @@ product.obtenerDetalles = async (id) => {
   const [results] = await db.query(query, [id]);
   if (!results.length) return null;
 
-  const productoFinal = impuestoDescuento([results[0]])[0];
+  const productoFinal = applyTaxDiscount([results[0]])[0];
 
   const producto = {
     ...productoFinal,
@@ -66,7 +66,7 @@ product.obtenerRelacionados = async (productoId, categoriaId) => {
   const params = [...ids, ...cats];
   const limit = "LIMIT 4";
 
-  return productosBase.obtenerProductosBase({ where, params, limit });
+  return productosBase.getProductsBase({ where, params, limit });
 };
 
 export default product;

@@ -3,7 +3,7 @@ import rating from "../../models/store/rating.js";
 import comparison from "../../models/store/comparison.js";
 import principal from '../../models/store/principal.js';
 
-product.detallesController = async (req, res) => {
+product.productDetails = async (req, res) => {
   try {
     const { id } = req.params;
     const { color, paginaReviews = 1, limiteReviews = 3 } = req.query;
@@ -16,7 +16,7 @@ product.detallesController = async (req, res) => {
 
     producto.esMovil = producto.categoria?.toLowerCase() === "moviles";
 
-    const categorias = await principal.obtenerCategorias();
+    const categorias = await principal.getCategories();
 
     const colorActual =
       color && producto.imagenesPorColor[decodeURIComponent(color)]

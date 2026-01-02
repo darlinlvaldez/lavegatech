@@ -1,4 +1,5 @@
 import store from '../../models/store/store.js';
+import { itsNewProduct } from "../../utils/filterRecent.js";
 
 store.storeController = async (req, res) => {
   try {
@@ -27,7 +28,9 @@ store.storeController = async (req, res) => {
     ]);
 
     productos.forEach((p) => {
-      p.esMovil = p.categoria?.toLowerCase() === "moviles";
+      p.category = p.categoria; 
+      p.itsMobile = p.category?.toLowerCase() === "moviles";
+      p.itsNew = itsNewProduct(p.fecha_publicacion, 30);
     });
 
     res.render("store/store", {productos, totalProduct, limite, pagina, orden, categorias,

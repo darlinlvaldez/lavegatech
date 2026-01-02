@@ -1,5 +1,5 @@
 import db from "../../../database/mobiles.js";
-import { impuestoDescuento } from "../../../utils/applyRate.js";
+import { applyTaxDiscount } from "../../../utils/applyRate.js";
 
 const productosBase = {};
 
@@ -22,7 +22,7 @@ function validateLimit(limit) {
   return match ? limit : "";
 }
 
-productosBase.obtenerProductosBase = async ({
+productosBase.getProductsBase = async ({
   where = "",
   limit = "",
   order = "",
@@ -69,7 +69,7 @@ productosBase.obtenerProductosBase = async ({
     `;
 
   const [rows] = await db.query(query, params);
-  return impuestoDescuento(rows);
+  return applyTaxDiscount(rows);
 };
 
 export default productosBase;

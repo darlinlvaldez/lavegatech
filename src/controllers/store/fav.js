@@ -97,7 +97,7 @@ favController.getFavPage = async (req, res) => {
         [lastFav.id], [lastFav.categoria_id]);
     }
 
-    res.render('store/clients/fav', {
+    res.render('store/fav', {
       favItems, productRelacionados, isAuthenticated: true
     });
   } catch (error) {

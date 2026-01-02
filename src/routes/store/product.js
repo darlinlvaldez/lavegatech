@@ -6,13 +6,13 @@ import comparison  from '../../controllers/store/comparison.js';
 
 const router = express.Router();
 
-router.get('/', principal.productosController);
+router.get('/', principal.productsController);
 router.get('/search', principal.searchController);
 
 router.get('/store', store.storeController);
 router.get('/store/:pagina', store.storeController);
 
-router.get("/product/:id", product.detallesController);
+router.get("/product/:id", product.productDetails);
 router.get('/compare', comparison.comparer)
 
 export default router;

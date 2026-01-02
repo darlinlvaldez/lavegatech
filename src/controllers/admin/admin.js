@@ -755,7 +755,7 @@ adminController.detallePedido = async (req, res) => {
 
 adminController.listarCategorias = async (req, res) => {
   try {
-    const categorias = await admin.obtenerCategorias();
+    const categorias = await admin.getCategories();
     res.json(categorias);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener categorías' });

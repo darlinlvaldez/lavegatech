@@ -3,28 +3,29 @@ import productosBase from "../store/utils/getProduct.js";
 
 const principal = {};
 
-principal.buscarProductos = async (query) => {
+principal.searchProducts = async (query) => {
   const where = `p.nombre LIKE ?`;
   const params = [`%${query}%`];
   const limit = "LIMIT 10";
 
-  return productosBase.obtenerProductosBase({ where, limit, params });
+  return productosBase.getProductsBase({ where, limit, params });
 };
 
-principal.obtenerProductos = async (categoria) => {
+principal.getProducts = async (category) => {
   let where = "";
   const params = [];
 
-  if (categoria) {
+  if (category) {
+    const categoria = category; 
     where = "c.categoria = ?";
     params.push(categoria);
   }
 
-  return productosBase.obtenerProductosBase({ where, params });
+  return productosBase.getProductsBase({ where, params });
 };
 
-principal.obtenerCategorias = async () => {
-  const query = `SELECT * FROM categorias`;
+principal.getCategories = async () => {
+  const query = `SELECT *, categoria AS category FROM categorias`;
   try {
     const [results] = await db.query(query);
     return results;
@@ -33,9 +34,9 @@ principal.obtenerCategorias = async () => {
   }
 };
 
-principal.obtenerRecomendados = async () => {
+principal.getRecommended = async () => {
   const limit = "LIMIT 20";
-  return productosBase.obtenerProductosBase({ limit });
+  return productosBase.getProductsBase({ limit });
 };
 
 export default principal;
