@@ -8,3 +8,4 @@ Eliminar categorias del titulo del excel.
 Mensaje de error con zod en cuentas admin.
 Aplicar activo de categorias y marcas en la tienda.
 Terminar de filtrar los mas recientes.
+Hacer una reseña si se compró el producto.

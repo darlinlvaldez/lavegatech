@@ -1,7 +1,7 @@
 import db from "../../../database/mobiles.js";
 import { applyTaxDiscount } from "../../../utils/applyRate.js";
 
-const productosBase = {};
+const productsBase = {};
 
 const columnsOrder = [
   "p.fecha_publicacion ASC",
@@ -22,7 +22,7 @@ function validateLimit(limit) {
   return match ? limit : "";
 }
 
-productosBase.getProductsBase = async ({
+productsBase.getProductsBase = async ({
   where = "",
   limit = "",
   order = "",
@@ -72,4 +72,4 @@ productosBase.getProductsBase = async ({
   return applyTaxDiscount(rows);
 };
 
-export default productosBase;
+export default productsBase;

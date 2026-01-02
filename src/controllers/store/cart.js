@@ -1,5 +1,6 @@
 import cart from '../../models/store/cart.js';
 import product from "../../models/store/product.js";
+import { itsNewProduct } from "../../utils/filterRecent.js";
 
 const cartController = {};
 
@@ -236,14 +237,20 @@ cartController.getRelated = async (req, res) => {
     }
 
     const lastCart = cartItems[0];
-    let productRelacionados = [];
+    let productRelated = [];
 
     if (lastCart && lastCart.categoria_id) {
-      productRelacionados = await product.obtenerRelacionados(
+      productRelated = await product.getRelated(
         [lastCart.carrito_id], [lastCart.categoria_id]);
     }
 
-    res.render("store/cart", {cartItems, productRelacionados, isAuthenticated: !!userId});
+     productRelated.forEach((p) => {
+       p.category = p.categoria;
+       p.itsMobile = p.category?.toLowerCase() === "moviles";
+       p.itsNew = itsNewProduct(p.fecha_publicacion, 30);
+     });
+
+    res.render("store/cart", {cartItems, productRelated, isAuthenticated: !!userId});
   } catch (error) {
     console.error("Error al cargar la página del carrito:", error);
     res.status(500).render("error", { mensaje: error.message });

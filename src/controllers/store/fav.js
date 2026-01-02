@@ -1,5 +1,6 @@
 import fav from "../../models/store/fav.js"
 import product from "../../models/store/product.js";
+import { itsNewProduct } from "../../utils/filterRecent.js";
 
 const favController = {};
 
@@ -90,15 +91,21 @@ favController.getFavPage = async (req, res) => {
     }
 
     const lastFav = favItems[0]; 
-    let productRelacionados = [];
+    let productRelated = [];
 
     if (lastFav && lastFav.categoria_id) {
-      productRelacionados = await product.obtenerRelacionados(
+      productRelated = await product.getRelated(
         [lastFav.id], [lastFav.categoria_id]);
     }
 
+    productRelated.forEach((p) => {
+      p.category = p.categoria;
+      p.itsMobile = p.category?.toLowerCase() === "moviles";
+      p.itsNew = itsNewProduct(p.fecha_publicacion, 30);
+    });
+
     res.render('store/fav', {
-      favItems, productRelacionados, isAuthenticated: true
+      favItems, productRelated, isAuthenticated: true
     });
   } catch (error) {
     console.error('Error al cargar la página del carrito:', error);

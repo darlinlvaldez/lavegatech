@@ -1,9 +1,9 @@
 import db from "../../database/mobiles.js";
-import productosBase from "../store/utils/getProduct.js";
+import productsBase from "../store/utils/getProduct.js";
 
 const store = {};
 
-const construirWhereClause = (categorias = [], marcas = [], precioMin = null, precioMax = null) => {
+const constructWhereClause = (categorias = [], marcas = [], precioMin = null, precioMax = null) => {
   const condiciones = [];
   const params = [];
 
@@ -55,10 +55,10 @@ const construirWhereClause = (categorias = [], marcas = [], precioMin = null, pr
   };
 };
 
-store.obtenerStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], marcas = [], precioMin, precioMax) => {
+store.getStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], marcas = [], precioMin, precioMax) => {
   const offset = (pagina - 1) * limite;
 
-  const { where, params } = construirWhereClause(categorias, marcas, precioMin, precioMax);
+  const { where, params } = constructWhereClause(categorias, marcas, precioMin, precioMax);
 
   const orderByClause = {
     1: "ORDER BY p.fecha_publicacion ASC",
@@ -69,7 +69,7 @@ store.obtenerStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], 
 
   const limitClause = `LIMIT ${limite} OFFSET ${offset}`;
 
-  return productosBase.getProductsBase({
+  return productsBase.getProductsBase({
     where,
     order: orderByClause,
     limit: limitClause,
@@ -77,8 +77,8 @@ store.obtenerStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], 
   });
 };
 
-store.totalProductos = async (categorias = [], marcas = [], precioMin, precioMax) => {
-  const { where, params } = construirWhereClause(categorias, marcas, precioMin, precioMax);
+store.totalProducts = async (categorias = [], marcas = [], precioMin, precioMax) => {
+  const { where, params } = constructWhereClause(categorias, marcas, precioMin, precioMax);
 
  const whereClause = `
     WHERE 
@@ -104,7 +104,7 @@ store.totalProductos = async (categorias = [], marcas = [], precioMin, precioMax
   }
 };
 
-store.obtenerRangoPrecios = async () => {
+store.getPriceRange = async () => {
   const query = `
        SELECT 
       MIN(p.precio * (1 + p.impuesto/100) * (1 - p.descuento/100)) AS minPrecio, 
@@ -126,7 +126,7 @@ store.obtenerRangoPrecios = async () => {
   }
 };
 
-store.cantidadCategoria = async () => {
+store.categoriesQuantity = async () => {
     const query = `
     SELECT  
       c.id AS categoria_id, 
@@ -150,7 +150,7 @@ store.cantidadCategoria = async () => {
     }
 };
 
-store.cantidadMarcas = async (categorias = []) => {
+store.brandsQuantity = async (categorias = []) => {
   let where = "";
   let params = [];
 

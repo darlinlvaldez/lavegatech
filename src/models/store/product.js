@@ -1,10 +1,10 @@
 import db from "../../database/mobiles.js";
+import productsBase from "../store/utils/getProduct.js";
 import {applyTaxDiscount} from "../../utils/applyRate.js";
-import productosBase from "../store/utils/getProduct.js";
 
-const product = {};
+const productDetails = {};
 
-product.obtenerDetalles = async (id) => {
+productDetails.getProductDetails = async (id) => {
   const query = `
   SELECT 
     p.id,
@@ -55,7 +55,7 @@ product.obtenerDetalles = async (id) => {
   return producto;
 };
 
-product.obtenerRelacionados = async (productoId, categoriaId) => {
+productDetails.getRelated = async (productoId, categoriaId) => {
   const ids = Array.isArray(productoId) ? productoId : [productoId];
   const cats = Array.isArray(categoriaId) ? categoriaId : [categoriaId];
 
@@ -66,7 +66,7 @@ product.obtenerRelacionados = async (productoId, categoriaId) => {
   const params = [...ids, ...cats];
   const limit = "LIMIT 4";
 
-  return productosBase.getProductsBase({ where, params, limit });
+  return productsBase.getProductsBase({ where, params, limit });
 };
 
-export default product;
+export default productDetails;

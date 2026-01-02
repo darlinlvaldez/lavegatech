@@ -38,45 +38,39 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="section-title text-center">
-                        <h3 class="title">Productos que podrían interesarte</h3>
+                        <h3 class="title">productos que podrían interesarte</h3>
                     </div>
                 </div>
                 <div class="related-products-container">
-                <% if (productRelacionados && productRelacionados.length > 0) { %>
-                    <% productRelacionados.forEach(producto => { %>
+                <% if (productRelated && productRelated.length > 0) { %>
+                    <% productRelated.forEach(product => { %>
                         <!-- product -->
                         <div class="col-md-3 col-xs-6">
                             <div class="product">
                                 <div class="product-img">
-                                    <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
-                                        <img src="<%= producto.imagen || '/img/iphone12black.png' %>" alt="<%= producto.nombre %>">
+                                    <a href="/product/<%= product.id %>?color=<%= product.color %>">
+                                        <img src="<%= product.imagen || '/img/iphone12black.png' %>" alt="<%= product.nombre %>">
                                         <div class="product-label">
-                                        <% if (producto.descuento > 0) { %>
-                                            <span class="sale">-<%= producto.descuento %>%</span>
-                                        <% } %>
-                        
-                                        <% 
-                                        const fechaCreacion = new Date(producto.fecha);
-                                        const hoy = new Date();
-                                        const diferenciaDias = (hoy - fechaCreacion) / (1000 * 60 * 60 * 24);
-                                        if (diferenciaDias <= 30) { 
-                                        %>
+                                            <% if (product.descuento > 0) { %>
+                                            <span class="sale">-<%= product.descuento %>%</span>
+                                            <% } %>
+                                            <% if (product.itsNew) { %>
                                             <span class="new">Nuevo</span>
-                                        <% } %>
-                                    </div>
+                                            <% } %>
+                                        </div>
                                 </div>
                                 <div class="product-body">
                                     <p class="product-category">
-                                        <%= producto.categoria === 'moviles' ? 'Móviles' : producto.categoria.charAt(0).toUpperCase() + producto.categoria.slice(1) %>
+                                        <%= product.category === 'moviles' ? 'Móviles' : product.category.charAt(0).toUpperCase() + product.category.slice(1) %>
                                     </p>
                                     <h3 class="product-name">
-                                            <%= producto.nombre %> <%= producto.ram %> + <%= producto.almacenamiento %>
+                                            <%= product.nombre %> <%= product.especificaciones %>
                                         </h3>
-                                    <h4 class="product-price">
-                                        $<%= Number(producto.precio * (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-                                        <% if (producto.descuento > 0) { %>
-                                        <del class="product-old-price">$<%= Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></del>
-                                        <% } %>
+                                     <h4 class="product-price">
+									$<%= Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+									<% if (product.descuento > 0) { %>
+										<del class="product-old-price">$<%= Number(product.precio / (1 - product.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></del>
+									<% } %>
                                     </h4></a>
                                 </div>
                             </div>

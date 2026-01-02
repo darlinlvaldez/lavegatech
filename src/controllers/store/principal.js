@@ -9,8 +9,8 @@ principal.productsController = async (req, res) => {
     const categories = await principal.getCategories();
     const recommended = await principal.getRecommended();
 
-    const normalize = (lista) => {
-      lista.forEach(p => {
+    const normalize = (list) => {
+      list.forEach(p => {
         p.category = p.categoria;
         p.itsMobile = p.category?.toLowerCase() === "moviles";
         p.itsNew = itsNewProduct(p.fecha_publicacion, 30);

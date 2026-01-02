@@ -11,20 +11,20 @@ store.storeController = async (req, res) => {
     const precioMin = req.query.precioMin ? parseFloat(req.query.precioMin) : null;
     const precioMax = req.query.precioMax ? parseFloat(req.query.precioMax) : null;
 
-    const rangoPrecios = await store.obtenerRangoPrecios();
+    const rangoPrecios = await store.getPriceRange();
     const defaultMin = rangoPrecios.minPrecio;
     const defaultMax = rangoPrecios.maxPrecio;
 
-    const marcasCompatibles = await store.cantidadMarcas(categorias);
+    const marcasCompatibles = await store.brandsQuantity(categorias);
     const marcasCompatiblesIds = marcasCompatibles.map(m => m.marca_id.toString());
 
     const marcasFiltradas = marcas.filter(marca => marcasCompatiblesIds.includes(marca));
 
     const [productos, totalProduct, cantCategoria, cantMarcas] = await Promise.all([
-      store.obtenerStore(pagina, limite, orden, categorias, marcasFiltradas, precioMin, precioMax),
-      store.totalProductos(categorias, marcasFiltradas, precioMin, precioMax),
-      store.cantidadCategoria(),
-      store.cantidadMarcas(categorias)
+      store.getStore(pagina, limite, orden, categorias, marcasFiltradas, precioMin, precioMax),
+      store.totalProducts(categorias, marcasFiltradas, precioMin, precioMax),
+      store.categoriesQuantity(),
+      store.brandsQuantity(categorias)
     ]);
 
     productos.forEach((p) => {

@@ -9,6 +9,7 @@ comparisonController.searchMobiles = async (req, res) => {
       req.query.exclude.split(',').map(id => parseInt(id)) : [];
     
     const results = await comparison.searchDevice(query, excludeMovilIds);
+    
     res.json(results);
   } catch (err) {
     res.status(500).json({ error: err.message });

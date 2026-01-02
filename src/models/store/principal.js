@@ -1,5 +1,5 @@
 import db from "../../database/mobiles.js";
-import productosBase from "../store/utils/getProduct.js";
+import productsBase from "../store/utils/getProduct.js";
 
 const principal = {};
 
@@ -8,7 +8,7 @@ principal.searchProducts = async (query) => {
   const params = [`%${query}%`];
   const limit = "LIMIT 10";
 
-  return productosBase.getProductsBase({ where, limit, params });
+  return productsBase.getProductsBase({ where, limit, params });
 };
 
 principal.getProducts = async (category) => {
@@ -21,7 +21,7 @@ principal.getProducts = async (category) => {
     params.push(categoria);
   }
 
-  return productosBase.getProductsBase({ where, params });
+  return productsBase.getProductsBase({ where, params });
 };
 
 principal.getCategories = async () => {
@@ -36,7 +36,7 @@ principal.getCategories = async () => {
 
 principal.getRecommended = async () => {
   const limit = "LIMIT 20";
-  return productosBase.getProductsBase({ limit });
+  return productsBase.getProductsBase({ limit });
 };
 
 export default principal;

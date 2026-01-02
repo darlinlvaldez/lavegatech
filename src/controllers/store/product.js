@@ -1,68 +1,84 @@
-import product from "../../models/store/product.js";
+import productDetails from "../../models/store/product.js";
 import rating from "../../models/store/rating.js";
 import comparison from "../../models/store/comparison.js";
 import principal from '../../models/store/principal.js';
+import { itsNewProduct } from "../../utils/filterRecent.js";
 
-product.productDetails = async (req, res) => {
+const productController = {};
+
+productController.productDetails = async (req, res) => {
   try {
     const { id } = req.params;
-    const { color, paginaReviews = 1, limiteReviews = 3 } = req.query;
+    const { color, pageReviews = 1, limitReviews = 3 } = req.query;
 
-    const producto = await product.obtenerDetalles(id);
+    const product = await productDetails.getProductDetails(id);
 
-    if (!producto) {
+    if (!product) {
       return res.status(404).render("error", { message: "Producto no encontrado" });
     }
 
-    producto.esMovil = producto.categoria?.toLowerCase() === "moviles";
-
-    const categorias = await principal.getCategories();
+    const categories = await principal.getCategories();
 
     const colorActual =
-      color && producto.imagenesPorColor[decodeURIComponent(color)]
-        ? decodeURIComponent(color)
-        : producto.colores[0];
+      color && product.imagenesPorColor[decodeURIComponent(color)]
+        ? decodeURIComponent(color) : product.colores[0];
 
-    if (!color && producto.colores.length > 0) {
-      return res.redirect(`/product/${id}?color=${encodeURIComponent(colorActual)}`);
+    if (!color && product.colores.length > 0) {
+      return res.redirect(
+        `/product/${id}?color=${encodeURIComponent(colorActual)}`
+      );
     }
 
-    const varianteActual = producto.variantesPorColor[colorActual];
+    const varianteActual = product.variantesPorColor[colorActual];
 
-    const [ totalReviews, reviews, averageRating, ratingDistribution,
-      productRelacionados, dispositivos
-    ] = await Promise.all([ 
+    const [
+      totalReviews, reviews, averageRating, ratingDistribution,
+      productRelated, dispositivos
+    ] = await Promise.all([
       rating.countByProductId(id),
-      rating.findByProductId(id, paginaReviews, limiteReviews),
+      rating.findByProductId(id, pageReviews, limitReviews),
       rating.getAverageRating(id),
       rating.getRatingDistribution(id),
-      product.obtenerRelacionados(id, producto.categoriaId),
-      comparison.getDevice([id])
+      productDetails.getRelated(id, product.categoriaId),
+      comparison.getDevice([id]),
     ]);
 
-    const totalPagesReviews = Math.ceil(totalReviews / limiteReviews);
+    const normalize = (data) => {
+      const list = Array.isArray(data) ? data : [data];
+
+      list.forEach((p) => {
+        p.category = p.categoria;
+        p.itsMobile = p.category?.toLowerCase() === "moviles";
+        p.itsNew = itsNewProduct(p.fecha_publicacion, 30);
+      });
+    };
+
+    normalize(product); 
+    normalize(productRelated); 
+
+    const totalPagesReviews = Math.ceil(totalReviews / limitReviews);
 
     res.render("store/product", {
-      producto: {
-        ...producto,
-        categorias,
+      product: {
+        ...product,
+        categories,
         variante_id: varianteActual,
         reviews,
         averageRating: Number(averageRating) || 0,
         ratingDistribution,
         totalReviews,
         totalPagesReviews,
-        currentPageReviews: parseInt(paginaReviews),
-        limiteReviews: parseInt(limiteReviews),
+        currentPageReviews: parseInt(pageReviews),
+        limitReviews: parseInt(limitReviews),
       },
       dispositivos,
-      productRelacionados,
-      imagenesPorColor: producto.imagenesPorColor,
+      productRelated,
+      imagenesPorColor: product.imagenesPorColor,
       colorSeleccionado: colorActual,
-      stocksPorColor: producto.stocksPorColor,
-      variantesPorColor: producto.variantesPorColor,
+      stocksPorColor: product.stocksPorColor,
+      variantesPorColor: product.variantesPorColor,
       currentUrl: req.originalUrl,
-      colores: producto.colores,
+      colores: product.colores,
       user: req.session.user || null,
     });
   } catch (error) {
@@ -71,4 +87,4 @@ product.productDetails = async (req, res) => {
   }
 };
 
-export default product;
+export default productController;
