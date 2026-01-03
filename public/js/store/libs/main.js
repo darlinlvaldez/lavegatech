@@ -243,7 +243,7 @@ import { checkFavorites } from "../fav/fav.js";
 
         priceSlider.noUiSlider.set([defaultMin, defaultMax]);
 
-        actualizarProductos();
+        updateProducts();
       });
     }
   }

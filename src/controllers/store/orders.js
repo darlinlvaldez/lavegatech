@@ -116,8 +116,8 @@ orderController.processPayment = async (req, res) => {
       const descuento = Number(item.descuento) || 0;
       const impuesto = Number(item.impuesto) || 0;
 
-      const precioFinal = precioBase * (1 - descuento / 100) * (1 + impuesto / 100);
-      return sum + (precioFinal * item.cantidad);
+      const finalPrice = precioBase * (1 - descuento / 100) * (1 + impuesto / 100);
+      return sum + (finalPrice * item.cantidad);
     }, 0);
 
     const totalPesos = subtotalProductos + costoEnvio;

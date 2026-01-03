@@ -70,9 +70,9 @@ fav.getByUserId = async (usuario_id) => {
     [usuario_id]
     );
 
-    const precioFinal = applyTaxDiscount(rows);
+    const finalPrice = applyTaxDiscount(rows);
 
-    return precioFinal;
+    return finalPrice;
 };
 
 fav.getCount = async (usuario_id) => {

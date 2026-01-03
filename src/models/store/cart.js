@@ -68,16 +68,16 @@ cart.getByUserId = async (usuario_id) => {
     ORDER BY c.fecha_agregado DESC
   `, [usuario_id]);
 
-  const precioFinal = applyTaxDiscount(rows);
+  const finalPrice = applyTaxDiscount(rows);
 
-  for (const item of precioFinal) {
+  for (const item of finalPrice) {
     if (item.stock_real !== null && item.cantidad > item.stock_real) {
       await cart.updateQuantity(item.carrito_id, usuario_id, item.stock_real);
       item.cantidad = item.stock_real;
     }
   }
 
-  return precioFinal;
+  return finalPrice;
 };
 
 cart.getCartToPay = async (usuario_id) => {

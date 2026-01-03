@@ -6,11 +6,11 @@ export const applyTaxDiscount = (productos) => {
 
     const precioConImpuesto = precio * (1 + tasaImpuesto);
 
-    const precioFinal = precioConImpuesto * (1 - tasaDescuento);
+    const finalPrice = precioConImpuesto * (1 - tasaDescuento);
 
     return {
       ...producto,
-      precio: precioFinal
+      precio: finalPrice
     };
   });
 };

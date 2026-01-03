@@ -83,7 +83,7 @@ function displaySearchResults(products) {
       <div class="product-info">
         <h4>${product.nombre}</h4>
         <div class="product-price">
-        $${formatPrice(calc.precioFinal)}
+        $${formatPrice(calc.finalPrice)}
           ${product.descuento > 0 ? `<del class="product-old-price">$${formatPrice(calc.precioAntesDescuento)}</del>` : ''}
       </div>
       </div>
@@ -209,7 +209,7 @@ function displayComparisonResults(devices) {
       </div>
       
       <div class="search-result-item">
-        <div class="product-price"> $${formatPrice(calc.precioFinal)}
+        <div class="product-price"> $${formatPrice(calc.finalPrice)}
           ${device.descuento > 0 ? `<del class="product-old-price">$${formatPrice(calc.precioAntesDescuento)}</del>` : ''}
         </div>
       </div>

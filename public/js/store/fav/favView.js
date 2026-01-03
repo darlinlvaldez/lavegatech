@@ -77,7 +77,7 @@ function generateFavItemHTML(item) {
                 <h5>${item.nombre} ${data.especificaciones}</h5>
                 <b>Precio:</b>
                 <span class="product-price">  
-                    <b>$${formatPrice(data.precioFinal)}</b>
+                    <b>$${formatPrice(data.finalPrice)}</b>
                     ${data.descuento > 0 ? `
                       <del class="product-old-price">$${formatPrice(data.precioAntesDescuento)}</del>
                       <span class="sale">-${data.descuento.toFixed(2)}%</span> ` : ''}

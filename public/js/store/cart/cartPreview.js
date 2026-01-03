@@ -31,7 +31,7 @@ function renderCart(carrito, cartList, carritoCount, cartSummary, cartSubtotal) 
                     <h3 class="product-nombres">${item.nombre} ${data.especificaciones}</h3>
                     <h4 class="product-precios">
                     <span class="qty-cart">${data.cantidad}x</span> 
-                    $${formatPrice(data.precioFinal)}
+                    $${formatPrice(data.finalPrice)}
                 </h4>
             </div>
             </a>

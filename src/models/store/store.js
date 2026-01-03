@@ -3,23 +3,23 @@ import productsBase from "../store/utils/getProduct.js";
 
 const store = {};
 
-const constructWhereClause = (categorias = [], marcas = [], precioMin = null, precioMax = null) => {
+const constructWhereClause = (categories = [], brands = [], minPrice = null, precioMax = null) => {
   const condiciones = [];
   const params = [];
 
-  const tieneCategorias = categorias.length > 0;
-  const tieneMarcas = marcas.length > 0;
+  const hasCategories = categories.length > 0;
+  const hasBrands = brands.length > 0;
 
-  if (tieneCategorias) {
-    const placeholders = categorias.map(() => '?').join(',');
+  if (hasCategories) {
+    const placeholders = categories.map(() => '?').join(',');
     condiciones.push(`p.categoria_id IN (${placeholders})`);
-    params.push(...categorias);
+    params.push(...categories);
   }
 
-  if (tieneMarcas) {
-    const placeholders = marcas.map(() => '?').join(',');
+  if (hasBrands) {
+    const placeholders = brands.map(() => '?').join(',');
 
-    if (tieneCategorias) {
+    if (hasCategories) {
       condiciones.push(`(
         p.marca_id IN (${placeholders})
         OR p.categoria_id NOT IN (
@@ -29,23 +29,23 @@ const constructWhereClause = (categorias = [], marcas = [], precioMin = null, pr
         )
       )`);
       
-      params.push(...marcas, ...marcas);
+      params.push(...brands, ...brands);
 
     } else {
       condiciones.push(`p.marca_id IN (${placeholders})`);
-      params.push(...marcas);
+      params.push(...brands);
     }
   }
 
-  const precioFinal = `(p.precio * (1 + p.impuesto/100) * (1 - p.descuento/100))`;
+  const finalPrice = `(p.precio * (1 + p.impuesto/100) * (1 - p.descuento/100))`;
 
-  if (precioMin !== null && !isNaN(precioMin)) {
-    condiciones.push(`${precioFinal} >= ?`);
-    params.push(precioMin);
+  if (minPrice !== null && !isNaN(minPrice)) {
+    condiciones.push(`${finalPrice} >= ?`);
+    params.push(minPrice);
   }
 
   if (precioMax !== null && !isNaN(precioMax)) {
-    condiciones.push(`${precioFinal} <= ?`);
+    condiciones.push(`${finalPrice} <= ?`);
     params.push(precioMax);
   }
 
@@ -55,19 +55,19 @@ const constructWhereClause = (categorias = [], marcas = [], precioMin = null, pr
   };
 };
 
-store.getStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], marcas = [], precioMin, precioMax) => {
-  const offset = (pagina - 1) * limite;
+store.getStore = async (page = 1, limit = 9, sortBy = 0, categories = [], brands = [], minPrice, precioMax) => {
+  const offset = (page - 1) * limit;
 
-  const { where, params } = constructWhereClause(categorias, marcas, precioMin, precioMax);
+  const { where, params } = constructWhereClause(categories, brands, minPrice, precioMax);
 
   const orderByClause = {
     1: "ORDER BY p.fecha_publicacion ASC",
     2: "ORDER BY p.precio ASC",     
     3: "ORDER BY p.precio DESC",
     4: "ORDER BY p.descuento DESC",
-  }[orden] || "ORDER BY p.fecha_publicacion DESC";
+  }[sortBy] || "ORDER BY p.fecha_publicacion DESC";
 
-  const limitClause = `LIMIT ${limite} OFFSET ${offset}`;
+  const limitClause = `LIMIT ${limit} OFFSET ${offset}`;
 
   return productsBase.getProductsBase({
     where,
@@ -77,8 +77,8 @@ store.getStore = async (pagina = 1, limite = 9, orden = 0, categorias = [], marc
   });
 };
 
-store.totalProducts = async (categorias = [], marcas = [], precioMin, precioMax) => {
-  const { where, params } = constructWhereClause(categorias, marcas, precioMin, precioMax);
+store.totalProducts = async (categories = [], brands = [], minPrice, precioMax) => {
+  const { where, params } = constructWhereClause(categories, brands, minPrice, precioMax);
 
  const whereClause = `
     WHERE 
@@ -107,8 +107,8 @@ store.totalProducts = async (categorias = [], marcas = [], precioMin, precioMax)
 store.getPriceRange = async () => {
   const query = `
        SELECT 
-      MIN(p.precio * (1 + p.impuesto/100) * (1 - p.descuento/100)) AS minPrecio, 
-      MAX(p.precio * (1 + p.impuesto/100) * (1 - p.descuento/100)) AS maxPrecio 
+      MIN(p.precio * (1 + p.impuesto/100) * (1 - p.descuento/100)) AS minPrice, 
+      MAX(p.precio * (1 + p.impuesto/100) * (1 - p.descuento/100)) AS maxPrice 
     FROM productos p
     JOIN categorias c ON p.categoria_id = c.id
     JOIN p_marcas m ON p.marca_id = m.id
@@ -129,8 +129,8 @@ store.getPriceRange = async () => {
 store.categoriesQuantity = async () => {
     const query = `
     SELECT  
-      c.id AS categoria_id, 
-      c.categoria, 
+      c.id AS category_id, 
+      c.categoria AS category, 
       COUNT(DISTINCT p.id) AS cantidad
     FROM categorias c
     JOIN productos p ON c.id = p.categoria_id
@@ -150,20 +150,20 @@ store.categoriesQuantity = async () => {
     }
 };
 
-store.brandsQuantity = async (categorias = []) => {
+store.brandsQuantity = async (categories = []) => {
   let where = "";
   let params = [];
 
-  if (categorias.length > 0) {
-    const placeholders = categorias.map(() => '?').join(',');
+  if (categories.length > 0) {
+    const placeholders = categories.map(() => '?').join(',');
     where = `AND mc.categoria_id IN (${placeholders})`;
-    params.push(...categorias);
+    params.push(...categories);
   }
 
   const query = `
     SELECT
-      m.id AS marca_id,
-      m.nombre AS marca,
+      m.id AS brand_id,
+      m.nombre AS brand,
       COUNT(DISTINCT p.id) AS cantidad
     FROM p_marcas m
     JOIN marca_categoria mc ON m.id = mc.marca_id

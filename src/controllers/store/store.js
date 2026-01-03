@@ -3,39 +3,39 @@ import { itsNewProduct } from "../../utils/filterRecent.js";
 
 store.storeController = async (req, res) => {
   try {
-    const pagina = req.params.pagina ? parseInt(req.params.pagina) : 1;
-    const limite = req.query.limite ? parseInt(req.query.limite) : 9;
-    const orden = req.query.orden ? parseInt(req.query.orden) : 0;
-    const categorias = req.query.categoria ? req.query.categoria.split(',').map(Number) : [];
-    const marcas = req.query.marca ? req.query.marca.split(',').map(String) : [];
-    const precioMin = req.query.precioMin ? parseFloat(req.query.precioMin) : null;
-    const precioMax = req.query.precioMax ? parseFloat(req.query.precioMax) : null;
+    const page = req.params.page ? parseInt(req.params.page) : 1;
+    const limit = req.query.limit ? parseInt(req.query.limit) : 9;
+    const sortBy = req.query.sortBy ? parseInt(req.query.sortBy) : 0;
+    const categories = req.query.category ? req.query.category.split(',').map(Number) : [];
+    const brands = req.query.brand ? req.query.brand.split(',').map(String) : [];
+    const minPrice = req.query.minPrice ? parseFloat(req.query.minPrice) : null;
+    const maxPrice = req.query.maxPrice ? parseFloat(req.query.maxPrice) : null;
 
-    const rangoPrecios = await store.getPriceRange();
-    const defaultMin = rangoPrecios.minPrecio;
-    const defaultMax = rangoPrecios.maxPrecio;
+    const priceRange = await store.getPriceRange();
+    const defaultMin = priceRange.minPrice;
+    const defaultMax = priceRange.maxPrice;
 
-    const marcasCompatibles = await store.brandsQuantity(categorias);
-    const marcasCompatiblesIds = marcasCompatibles.map(m => m.marca_id.toString());
+    const compatibleBrands = await store.brandsQuantity(categories);
+    const compatibleBrandsIds = compatibleBrands.map(m => m.brand_id.toString());
 
-    const marcasFiltradas = marcas.filter(marca => marcasCompatiblesIds.includes(marca));
+    const filteredBrands = brands.filter(brand => compatibleBrandsIds.includes(brand));
 
-    const [productos, totalProduct, cantCategoria, cantMarcas] = await Promise.all([
-      store.getStore(pagina, limite, orden, categorias, marcasFiltradas, precioMin, precioMax),
-      store.totalProducts(categorias, marcasFiltradas, precioMin, precioMax),
+    const [products, totalProduct, categoryCount, brandCount] = await Promise.all([
+      store.getStore(page, limit, sortBy, categories, filteredBrands, minPrice, maxPrice),
+      store.totalProducts(categories, filteredBrands, minPrice, maxPrice),
       store.categoriesQuantity(),
-      store.brandsQuantity(categorias)
+      store.brandsQuantity(categories)
     ]);
 
-    productos.forEach((p) => {
+    products.forEach((p) => {
       p.category = p.categoria; 
       p.itsMobile = p.category?.toLowerCase() === "moviles";
       p.itsNew = itsNewProduct(p.fecha_publicacion, 30);
     });
 
-    res.render("store/store", {productos, totalProduct, limite, pagina, orden, categorias,
-      marcas: marcasFiltradas, marcasFiltradas, cantCategoria, cantMarcas, precioMin,
-      precioMax, defaultMin, defaultMax, req
+    res.render("store/store", {products, totalProduct, limit, page, sortBy, categories,
+      brands: filteredBrands, filteredBrands, categoryCount, brandCount, minPrice,
+      maxPrice, defaultMin, defaultMax, req
     });
   } catch (err) {
     console.error('Error al obtener datos de productos:', err);
