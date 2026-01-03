@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       orderProducts.innerHTML += `
         <div class="order-col">
-          <div>${item.cantidad}x ${item.nombre} ${item.especificaciones || ""} ${item.colorSeleccionado.toUpperCase()}</div>
+          <div>${item.cantidad}x ${item.nombre} ${item.specs || ""} ${item.colorSeleccionado.toUpperCase()}</div>
           <div>$${formatPrice(subtotal)}</div>
         </div>`;
     });

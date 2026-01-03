@@ -58,7 +58,7 @@ cart.getByUserId = async (usuario_id) => {
       v.color AS colorSeleccionado, v.img AS imagen, v.stock AS stock_real,
       r.capacidad AS ram,
       a.capacidad AS almacenamiento,
-      CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
+      CONCAT(r.capacidad, '+', a.capacidad) AS specs
     FROM carrito c
     JOIN productos p ON c.producto_id = p.id
     JOIN p_variantes v ON c.variante_id = v.id
@@ -94,7 +94,7 @@ cart.getCartToPay = async (usuario_id) => {
       c.fecha_agregado,
       r.capacidad AS ram,
       a.capacidad AS almacenamiento,
-      CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones,
+      CONCAT(r.capacidad, '+', a.capacidad) AS specs,
       v.color AS colorSeleccionado,
       v.img AS imagen,
       v.stock

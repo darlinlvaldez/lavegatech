@@ -180,7 +180,7 @@ function renderProductosSeleccionados() {
   productosSeleccionados.forEach(producto => {
     const li = document.createElement("li");
 
-    li.textContent = `${producto.nombre} ${producto.especificaciones || ""}`;
+    li.textContent = `${producto.nombre} ${producto.specs || ""}`;
     
     const removeBtn = document.createElement("button");
     removeBtn.textContent = "×";
@@ -220,13 +220,13 @@ searchMobileInput.addEventListener("input", async () => {
   resultados.forEach(p => {
   const div = document.createElement("div");
   
-  div.textContent = `${p.nombre} ${p.especificaciones || ""}`;
+  div.textContent = `${p.nombre} ${p.specs || ""}`;
   
   div.addEventListener("click", () => {
     productosSeleccionados.push({
       id: p.id,
       nombre: p.nombre,
-      especificaciones: p.especificaciones
+      specs: p.specs
     });
     renderProductosSeleccionados();
     searchMobileInput.value = "";
@@ -306,7 +306,7 @@ window.editDispositivo = async function (movilId) {
       productosSeleccionados = productosAsociados.map((p) => ({
       id: p.id,
       nombre: p.nombre,
-      especificaciones: p.especificaciones
+      specs: p.specs
     }));
     renderProductosSeleccionados();
   }

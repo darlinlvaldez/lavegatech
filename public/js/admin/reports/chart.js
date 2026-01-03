@@ -105,9 +105,9 @@ document.addEventListener("DOMContentLoaded", () => {
         ? data.map((item) => formatDate(item.fecha, rangoSelect.value))
         : data.map((item) => item.nombre_producto);
 
-    const especificaciones =
+    const specs =
       tipoFiltro === "productos"
-        ? data.map((item) => item.especificaciones || "")
+        ? data.map((item) => item.specs || "")
         : [];
 
     const valores =
@@ -207,7 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
               title: (tooltipItems) => {
                 const i = tooltipItems[0].dataIndex;
                 return tipoFiltro === "productos"
-                  ? `${tooltipItems[0].label} ${especificaciones[i]}`
+                  ? `${tooltipItems[0].label} ${specs[i]}`
                   : tooltipItems[0].label;
               },
               label: (context) => {

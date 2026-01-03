@@ -326,7 +326,7 @@ adminController.exportTopProductsExcel = async (req, res) => {
     const participacionAcumulada = totalIngresos > 0 ? (ingresoAcumulado / totalIngresos) * 100 : 0;
     
     sheet.addRow([ i + 1, 
-      `${p.nombre_producto} ${p.especificaciones || ""}`.trim(),
+      `${p.nombre_producto} ${p.specs || ""}`.trim(),
       cantidad,
       porcentajeCantidad,
       ingresos,

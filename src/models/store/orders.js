@@ -158,7 +158,7 @@ orders.getOrderById = async (pedido_id, userId) => {
 
   const [items] = await db.query(
     `SELECT dp.*, 
-     CONCAT(dp.ram, '+', dp.almacenamiento) AS especificaciones
+     CONCAT(dp.ram, '+', dp.almacenamiento) AS specs
      FROM detalles_pedido dp
      WHERE pedido_id = ?`,
     [pedido_id]

@@ -1,9 +1,9 @@
 import db from "../../database/mobiles.js";
-import productsBase from "../store/utils/getProduct.js";
+import productsBase from "./utils/getProducts.js";
 
 const store = {};
 
-const constructWhereClause = (categories = [], brands = [], minPrice = null, precioMax = null) => {
+const constructWhereClause = (categories = [], brands = [], minPrice = null, maxPrice = null) => {
   const condiciones = [];
   const params = [];
 
@@ -44,9 +44,9 @@ const constructWhereClause = (categories = [], brands = [], minPrice = null, pre
     params.push(minPrice);
   }
 
-  if (precioMax !== null && !isNaN(precioMax)) {
+  if (maxPrice !== null && !isNaN(maxPrice)) {
     condiciones.push(`${finalPrice} <= ?`);
-    params.push(precioMax);
+    params.push(maxPrice);
   }
 
   return {
@@ -55,30 +55,36 @@ const constructWhereClause = (categories = [], brands = [], minPrice = null, pre
   };
 };
 
-store.getStore = async (page = 1, limit = 9, sortBy = 0, categories = [], brands = [], minPrice, precioMax) => {
+const ORDER_MAP = {
+  0: "p.fecha_publicacion DESC",
+  1: "p.fecha_publicacion ASC",
+  2: "p.precio ASC",
+  3: "p.precio DESC",
+  4: "p.descuento DESC",
+};
+
+store.getStore = async (page = 1, limit = 9, sortBy = 0, categories = [], brands = [], minPrice, maxPrice) => {
   const offset = (page - 1) * limit;
 
-  const { where, params } = constructWhereClause(categories, brands, minPrice, precioMax);
+  const { where, params } = constructWhereClause(categories, brands, minPrice, maxPrice);
 
-  const orderByClause = {
-    1: "ORDER BY p.fecha_publicacion ASC",
-    2: "ORDER BY p.precio ASC",     
-    3: "ORDER BY p.precio DESC",
-    4: "ORDER BY p.descuento DESC",
-  }[sortBy] || "ORDER BY p.fecha_publicacion DESC";
+  const orderColumn =
+    ORDER_MAP.hasOwnProperty(sortBy)
+      ? ORDER_MAP[sortBy]
+      : ORDER_MAP[0];
 
   const limitClause = `LIMIT ${limit} OFFSET ${offset}`;
 
   return productsBase.getProductsBase({
     where,
-    order: orderByClause,
+    order: `ORDER BY ${orderColumn}`,
     limit: limitClause,
     params
   });
 };
 
-store.totalProducts = async (categories = [], brands = [], minPrice, precioMax) => {
-  const { where, params } = constructWhereClause(categories, brands, minPrice, precioMax);
+store.totalProducts = async (categories = [], brands = [], minPrice, maxPrice) => {
+  const { where, params } = constructWhereClause(categories, brands, minPrice, maxPrice);
 
  const whereClause = `
     WHERE 
@@ -131,7 +137,7 @@ store.categoriesQuantity = async () => {
     SELECT  
       c.id AS category_id, 
       c.categoria AS category, 
-      COUNT(DISTINCT p.id) AS cantidad
+      COUNT(DISTINCT p.id) AS count
     FROM categorias c
     JOIN productos p ON c.id = p.categoria_id
     JOIN p_marcas m ON p.marca_id = m.id
@@ -140,7 +146,7 @@ store.categoriesQuantity = async () => {
       AND p.activo = 1
       AND m.activo = 1
     GROUP BY c.id
-    HAVING cantidad > 0`;
+    HAVING count > 0`;
 
     try {
         const [results] = await db.query(query);
@@ -164,7 +170,7 @@ store.brandsQuantity = async (categories = []) => {
     SELECT
       m.id AS brand_id,
       m.nombre AS brand,
-      COUNT(DISTINCT p.id) AS cantidad
+      COUNT(DISTINCT p.id) AS count
     FROM p_marcas m
     JOIN marca_categoria mc ON m.id = mc.marca_id
     JOIN productos p 
@@ -177,7 +183,7 @@ store.brandsQuantity = async (categories = []) => {
       AND c.activo = 1
       ${where}
     GROUP BY m.id, m.nombre
-    HAVING cantidad > 0
+    HAVING count > 0
     ORDER BY m.nombre
   `;
 

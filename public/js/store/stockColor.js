@@ -1,4 +1,4 @@
-function cambiarImagen(productId, color) {
+function changeImage(productId, color) {
     const slickInstance = $('#product-main-img').slick('getSlick');
     const slides = $('#product-main-img img');
 
@@ -22,40 +22,38 @@ async function changeColor(selectOrEvent, productId) {
 
   const encodedColor = encodeURIComponent(color);
 
-  if ($('#colorSeleccionado').val() !== color) {
-    $('#colorSeleccionado').val(color);
+  if ($('#selectedColor').val() !== color) {
+    $('#selectedColor').val(color);
   }
 
-  cambiarImagen(productId, color);
-
-  
+  changeImage(productId, color);
 
   const addToCartBtn = document.getElementById('add-to-cart-btn');
   if (addToCartBtn) {
     addToCartBtn.dataset.color = color;
     
-    const variantesPorColor = window.productData.variantesPorColor || {};
-    const varianteId = variantesPorColor[color];
+    const variantsByColor = window.productData.variantsByColor || {};
+    const varianteId = variantsByColor[color];
     
     if (varianteId) {
-      addToCartBtn.dataset.variante_id = varianteId;
+      addToCartBtn.dataset.variantId = varianteId;
       console.log('Variante ID actualizado:', varianteId, 'para color:', color);
     }
   }
   
   history.replaceState({ color }, '', `/product/${productId}?color=${encodedColor}`);
 
-  const stockColor = window.productData.stocksPorColor[color] || 0;
+  const stockColor = window.productData.stockByColor[color] || 0;
 
-  const cantidadSelect = document.getElementById('cantidad');
-  if (cantidadSelect) {
-    cantidadSelect.innerHTML = '';
+  const quantitySelect  = document.getElementById('productQuantity');
+  if (quantitySelect ) {
+    quantitySelect .innerHTML = '';
     const maxOptions = Math.min(stockColor); 
     for(let i = 1; i <= maxOptions; i++) {
       const option = document.createElement('option');
       option.value = i;
       option.textContent = i;
-      cantidadSelect.appendChild(option);
+      quantitySelect .appendChild(option);
     }
   }
 
@@ -70,14 +68,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (productRoot) {
         window.productData = {
-            stocksPorColor: JSON.parse(productRoot.dataset.productStocks),
-            variantesPorColor: JSON.parse(productRoot.dataset.productVariantes || '{}'),
+            stockByColor: JSON.parse(productRoot.dataset.productStocks),
+            variantsByColor: JSON.parse(productRoot.dataset.productVariantes || '{}'),
             productId: productRoot.dataset.productId
         };
     } else {
         window.productData = {
-            stocksPorColor: {},
-            variantesPorColor: {},
+            stockByColor: {},
+            variantsByColor: {},
             productId: null
         };
     }
@@ -90,7 +88,7 @@ function syncColorFromURL() {
     const color = urlParams.get('color');
     if (color) {
         const decodedColor = decodeURIComponent(color);
-        const colorSelect = document.getElementById('colorSeleccionado');
+        const colorSelect = document.getElementById('selectedColor');
         if (colorSelect) {colorSelect.value = decodedColor;
             colorSelect.dispatchEvent(new Event('change', { bubbles: true }));
         }

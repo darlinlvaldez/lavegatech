@@ -64,7 +64,7 @@
                                         <%= product.category === 'moviles' ? 'Móviles' : product.category.charAt(0).toUpperCase() + product.category.slice(1) %>
                                     </p>
                                     <h3 class="product-name">
-                                            <%= product.nombre %> <%= product.especificaciones %>
+                                            <%= product.nombre %> <%= product.specs %>
                                         </h3>
                                      <h4 class="product-price">
 									$<%= Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>

@@ -45,10 +45,10 @@ productoInput.addEventListener("input", () => {
 
   resultados.slice(0, 10).forEach((p) => {
     const div = document.createElement("div");
-    div.textContent = `${p.nombre} ${p.especificaciones || ""}`;
+    div.textContent = `${p.nombre} ${p.specs || ""}`;
     
     div.addEventListener("click", () => {
-      productoInput.value = `${p.nombre} ${p.especificaciones || ""} `;
+      productoInput.value = `${p.nombre} ${p.specs || ""} `;
       productoIdSeleccionado = p.id;
       sugerenciasProducto.innerHTML = "";
     });
@@ -83,7 +83,7 @@ function renderVariants() {
 
     row.innerHTML = `
       <td>${variants.id}</td>
-      <td>${variants.producto} ${variants.especificaciones || ""}</td>
+      <td>${variants.producto} ${variants.specs || ""}</td>
       <td>${variants.color}</td>
       <td>${variants.stock}</td>
       <td><img src="${variants.img || ''}" alt="Img" width="40" height="40"></td>

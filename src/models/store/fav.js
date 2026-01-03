@@ -59,7 +59,7 @@ fav.getByUserId = async (usuario_id) => {
         v.stock as stockPorColor,
         r.capacidad AS ram, 
         a.capacidad AS almacenamiento,
-        CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
+        CONCAT(r.capacidad, '+', a.capacidad) AS specs
         FROM fav f
         JOIN productos p ON f.producto_id = p.id
         LEFT JOIN p_variantes v ON f.variante_id = v.id

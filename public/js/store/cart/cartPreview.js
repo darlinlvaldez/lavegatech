@@ -28,7 +28,7 @@ function renderCart(carrito, cartList, carritoCount, cartSummary, cartSubtotal) 
                     <img src="${item.imagen}" alt="${item.nombre}">
                 </div>
                 <div class="product-body">
-                    <h3 class="product-nombres">${item.nombre} ${data.especificaciones}</h3>
+                    <h3 class="product-nombres">${item.nombre} ${data.specs}</h3>
                     <h4 class="product-precios">
                     <span class="qty-cart">${data.cantidad}x</span> 
                     $${formatPrice(data.finalPrice)}

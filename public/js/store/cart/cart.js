@@ -30,7 +30,7 @@ async function addToCart(product) {
       if (!stockResponse.ok) throw new Error();
       stockReal = (await stockResponse.json()).stock || 0;
     } else {
-      const colorStock = window.productData?.stocksPorColor?.[color];
+      const colorStock = window.productData?.stockByColor?.[color];
       stockReal = colorStock !== undefined ? colorStock : product.stock || 0;
     }
 

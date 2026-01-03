@@ -55,7 +55,7 @@ specs.obtenerProductos = async () => {
       p.movil_id,
       r.capacidad AS ram,
       a.capacidad AS almacenamiento,
-      CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
+      CONCAT(r.capacidad, '+', a.capacidad) AS specs
     FROM productos p
     LEFT JOIN ram r ON p.ram_id = r.id
     LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id

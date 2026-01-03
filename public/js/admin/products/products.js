@@ -45,7 +45,7 @@ function renderProducts() {
 
     row.innerHTML = `
       <td class="truncate-cell">${product.id || ''}</td>
-      <td class="truncate-cell">${product.nombre || ''} ${product.especificaciones || ''}</td>
+      <td class="truncate-cell">${product.nombre || ''} ${product.specs || ''}</td>
       <td>$${formatPrice(parseFloat(product.precio)) || 0}</td>
       <td>${product.categoria || ''}</td>
       <td>${fechaFormateada || ''}</td>

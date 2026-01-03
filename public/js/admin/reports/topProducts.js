@@ -45,7 +45,7 @@ const TopProductos = {
 
     data.forEach((item, index) => {
       const nombre = item.nombre_producto || "Producto";
-      const especificaciones = item.especificaciones || "";
+      const specs = item.specs || "";
       const cantidad = Number(item.totalVendido || 0);
       const ingresos = Number(item.totalPrecio || 0);
 
@@ -57,7 +57,7 @@ const TopProductos = {
         `
         <tr>
           <td style="text-align:left; font-weight:bold">${index + 1}</td>
-          <td>${nombre} ${especificaciones}</td>
+          <td>${nombre} ${specs}</td>
           <td style="text-align:right">${cantidad}</td>
           <td style="text-align:right">$${formatPrice(ingresos)}</td>
         </tr>

@@ -3,7 +3,7 @@ function calculateItem(item, stock = Infinity) {
     const descuento = Number(item.descuento) || 0;
     const impuesto = Number(item.impuesto) || 0; 
     const cantidad = Math.min(Number(item.cantidad) || 1, stock);
-    const especificaciones = item.especificaciones || "";
+    const specs = item.specs || "";
     const precioAntesDescuento = descuento > 0 ? finalPrice / (1 - descuento / 100) : finalPrice;
     const total = finalPrice * cantidad;
 
@@ -12,7 +12,7 @@ function calculateItem(item, stock = Infinity) {
     const varianteId = item.variante_id || null;
 
     return {
-        finalPrice, descuento, impuesto, cantidad, especificaciones,
+        finalPrice, descuento, impuesto, cantidad, specs,
         precioAntesDescuento, total, productId, color, varianteId
     };
 }

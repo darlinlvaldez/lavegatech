@@ -19,29 +19,26 @@ productController.productDetails = async (req, res) => {
 
     const categories = await principal.getCategories();
 
-    const colorActual =
-      color && product.imagenesPorColor[decodeURIComponent(color)]
-        ? decodeURIComponent(color) : product.colores[0];
+    const currentColor =
+      color && product.imagesByColor[decodeURIComponent(color)]
+        ? decodeURIComponent(color) : product.colors[0];
 
-    if (!color && product.colores.length > 0) {
+    if (!color && product.colors.length > 0) {
       return res.redirect(
-        `/product/${id}?color=${encodeURIComponent(colorActual)}`
+        `/product/${id}?color=${encodeURIComponent(currentColor)}`
       );
     }
 
-    const varianteActual = product.variantesPorColor[colorActual];
+    const currentVariant = product.variantsByColor[currentColor];
 
-    const [
-      totalReviews, reviews, averageRating, ratingDistribution,
-      productRelated, dispositivos
-    ] = await Promise.all([
-      rating.countByProductId(id),
+    const [totalReviews, reviews, averageRating, ratingDistribution,
+      productRelated, devices] = await Promise.all
+      ([rating.countByProductId(id),
       rating.findByProductId(id, pageReviews, limitReviews),
       rating.getAverageRating(id),
       rating.getRatingDistribution(id),
       productDetails.getRelated(id, product.categoriaId),
-      comparison.getDevice([id]),
-    ]);
+      comparison.getDevice([id])]);
 
     const normalize = (data) => {
       const list = Array.isArray(data) ? data : [data];
@@ -62,7 +59,7 @@ productController.productDetails = async (req, res) => {
       product: {
         ...product,
         categories,
-        variante_id: varianteActual,
+        variantId: currentVariant,
         reviews,
         averageRating: Number(averageRating) || 0,
         ratingDistribution,
@@ -71,14 +68,14 @@ productController.productDetails = async (req, res) => {
         currentPageReviews: parseInt(pageReviews),
         limitReviews: parseInt(limitReviews),
       },
-      dispositivos,
+      devices,
       productRelated,
-      imagenesPorColor: product.imagenesPorColor,
-      colorSeleccionado: colorActual,
-      stocksPorColor: product.stocksPorColor,
-      variantesPorColor: product.variantesPorColor,
+      imagesByColor: product.imagesByColor,
+      selectedColor: currentColor,
+      stockByColor: product.stockByColor,
+      variantsByColor: product.variantsByColor,
       currentUrl: req.originalUrl,
-      colores: product.colores,
+      colors: product.colors,
       user: req.session.user || null,
     });
   } catch (error) {

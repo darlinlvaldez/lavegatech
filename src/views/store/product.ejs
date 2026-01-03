@@ -9,15 +9,15 @@
 	<!-- container -->
 	<div class="container">
 		<div id="product-root" 
-			data-product-stocks='<%- JSON.stringify(stocksPorColor) %>'
-			data-product-variantes='<%- JSON.stringify(variantesPorColor) %>'
+			data-product-stocks='<%- JSON.stringify(stockByColor) %>'
+			data-product-variants='<%- JSON.stringify(variantsByColor) %>'
 			data-product-id="<%= product.id %>">
 			<!-- row -->
 			<div class="row">
 				<!-- Product main img -->
 				<div class="col-md-5 col-md-push-2">
 					<div id="product-main-img">
-						<% if (imagenesPorColor) { for (const [color, imagen] of Object.entries(imagenesPorColor)) { %>
+						<% if (imagesByColor) { for (const [color, imagen] of Object.entries(imagesByColor)) { %>
 							<div class="product-preview">
 								<img src="<%= imagen %>" alt="<%= color %>" class="product-img">
 							</div>
@@ -28,7 +28,7 @@
 			<!-- Product thumb imgs -->
 			<div class="col-md-2 col-md-pull-5">
 				<div id="product-imgs">
-					<% for (const [color, imagen] of Object.entries(imagenesPorColor)) { %>
+					<% for (const [color, imagen] of Object.entries(imagesByColor)) { %>
 						<div class="product-preview"
 							onclick="changeColor({ value: '<%= color %>' }, '<%= product.id %>')"
 							data-product-id="<%= product.id %>">
@@ -41,7 +41,7 @@
 	<!-- Product details -->
 	<div class="col-md-5">
 		<div class="product-details">
-			<h2 class="product-name"><%= product.nombre %> <%= product.especificaciones %></h2>
+			<h2 class="product-name"><%= product.nombre %> <%= product.specs %></h2>
 			<div>
 			<div class="product-rating">
 			<% for (let i=1; i <=5; i++) { %>
@@ -69,21 +69,21 @@
 				</h3>
 				<span class="product-available">
 					<p id="stockDisponible">
-						Cantidad disponible: <% if (stocksPorColor) { %>
-						<%= stocksPorColor %>
+						Cantidad disponible: <% if (stockByColor) { %>
+						<%= stockByColor %>
 					<% } else { %>0<% } %>
 					</p>
 				</span>
 			</div>
 			<!-- Product options -->
-			<% if (colores && colores.length> 0) { %>
+			<% if (colors && colors.length> 0) { %>
 				<div class="product-options">
 					<label>
 						Color
-						<select class="input-select" id="colorSeleccionado"
+						<select class="input-select" id="selectedColor"
 							onchange="changeColor(this, '<%= product.id %>')">
-							<% colores.forEach(color=> { %>
-								<option value="<%= color %>" <%=color===colorSeleccionado ? 'selected' : '' %>>
+							<% colors.forEach(color=> { %>
+								<option value="<%= color %>" <%=color===selectedColor ? 'selected' : '' %>>
 									<%= color %>
 								</option>
 							<% }); %>
@@ -95,8 +95,8 @@
 					<div class="qty-label">
 						Cantidad
 						<div class="input-number product-quantity">
-							<select class="input-select" id="cantidad">
-								<% for(let i=1; i <=stocksPorColor; i++) { %>
+							<select class="input-select" id="productQuantity">
+								<% for(let i=1; i <=stockByColor; i++) { %>
 									<option value="<%= i %>">
 										<%= i %>
 									</option>
@@ -108,7 +108,7 @@
 					<div class="add-to-cart">
 						<button class="add-to-cart-btn" id="add-to-cart-btn" 
 						data-id="<%= product.id %>"
-						data-variante_id="<%= product.variante_id %>"
+						data-variantId="<%= product.variantId %>"
 						data-color="<%= product.color %>"
 						data-ram="<%= product.ram %>"
 						data-almacenamiento="<%= product.almacenamiento %>"
@@ -210,65 +210,65 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="device-card">
-								<% dispositivos.forEach(dispositivo=> { %>
+								<% devices.forEach(device=> { %>
 								<div class="specs-grid">
 									<div class="spec-item spec-header">Pantalla:</div>
 									<div class="spec-item spec-value">
-									<%= dispositivo.pantalla_tamaño %>" <%= dispositivo.pantalla_tipo %><br>
-									<%= dispositivo.pantalla_resolucion %><br>
-									<%= dispositivo.pantalla_frecuencia %>Hz
+									<%= device.pantalla_tamaño %>" <%= device.pantalla_tipo %><br>
+									<%= device.pantalla_resolucion %><br>
+									<%= device.pantalla_frecuencia %>Hz
 									</div>
 
 									<div class="spec-item spec-header">Procesador:</div>
 									<div class="spec-item spec-value">
-									<%= dispositivo.cpu_nombre %><br>
-									<%= dispositivo.cpu_nucleos %> núcleos<br>
-									<%= dispositivo.cpu_velocidad %>
+									<%= device.cpu_nombre %><br>
+									<%= device.cpu_nucleos %> núcleos<br>
+									<%= device.cpu_velocidad %>
 									</div>
 
 									<div class="spec-item spec-header">GPU:</div>
 									<div class="spec-item spec-value">
-									<%= dispositivo.gpu_modelo %><br>
-									<%= dispositivo.gpu_nucleos %> núcleos
+									<%= device.gpu_modelo %><br>
+									<%= device.gpu_nucleos %> núcleos
 									</div>
 
 									<div class="spec-item spec-header">RAM:</div>
-									<div class="spec-item spec-value"><%= dispositivo.ram_capacidades %></div>
+									<div class="spec-item spec-value"><%= device.ram_capacidades %></div>
 
 									<div class="spec-item spec-header">Almacenamiento:</div>
-									<div class="spec-item spec-value"><%= dispositivo.almacenamiento_capacidades %></div>
+									<div class="spec-item spec-value"><%= device.almacenamiento_capacidades %></div>
 
 									<div class="spec-item spec-header">Cámara:</div>
 									<div class="spec-item spec-value">
-									Principal: <%= dispositivo.camara_principal %><br>
-									Selfie: <%= dispositivo.camara_selfie %><br>
-									Video: <%= dispositivo.camara_video %>
+									Principal: <%= device.camara_principal %><br>
+									Selfie: <%= device.camara_selfie %><br>
+									Video: <%= device.camara_video %>
 									</div>
 
 									<div class="spec-item spec-header">Batería:</div>
 									<div class="spec-item spec-value">
-									<%= dispositivo.bateria_capacidad %> mAh<br>
-									<%= dispositivo.bateria_tipo %><br>
-									<% if (dispositivo.bateria_carga_rapida) { %>
-										Carga rápida: <%= dispositivo.bateria_carga_rapida %><br>
+									<%= device.bateria_capacidad %> mAh<br>
+									<%= device.bateria_tipo %><br>
+									<% if (device.bateria_carga_rapida) { %>
+										Carga rápida: <%= device.bateria_carga_rapida %><br>
 									<% } %>
-									<% if (dispositivo.bateria_carga_inalambrica) { %>
+									<% if (device.bateria_carga_inalambrica) { %>
 										Carga inalámbrica
 									<% } %>
 									</div>
 
 									<div class="spec-item spec-header">Conectividad:</div>
 									<div class="spec-item spec-value">
-									<%= dispositivo.conectividad_red %><br>
-									WiFi: <%= dispositivo.conectividad_wifi %><br>
-									Bluetooth: <%= dispositivo.conectividad_bluetooth %>
-									<% if (dispositivo.conectividad_nfc) { %><br>NFC<% } %>
+									<%= device.conectividad_red %><br>
+									WiFi: <%= device.conectividad_wifi %><br>
+									Bluetooth: <%= device.conectividad_bluetooth %>
+									<% if (device.conectividad_nfc) { %><br>NFC<% } %>
 									</div>
 
 									<div class="spec-item spec-header">Dimensiones:</div>
 									<div class="spec-item spec-value">
-									<%= dispositivo.dimensiones_altura %> x <%= dispositivo.dimensiones_anchura %> x <%= dispositivo.dimensiones_grosor %> mm<br>
-									Peso: <%= dispositivo.dimensiones_peso %> 
+									<%= device.dimensiones_altura %> x <%= device.dimensiones_anchura %> x <%= device.dimensiones_grosor %> mm<br>
+									Peso: <%= device.dimensiones_peso %> 
 									</div>
 								<% }) %>
 								</div>
@@ -420,7 +420,7 @@
 										<%= product.category === 'moviles' ? 'Móviles' : product.category.charAt(0).toUpperCase() + product.category.slice(1) %>
 									</p>
 									<h3 class="product-name">
-											<%= product.nombre %> <%= product.especificaciones %>
+											<%= product.nombre %> <%= product.specs %>
 										</h3>
 									<h4 class="product-price">
 									$<%= Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>

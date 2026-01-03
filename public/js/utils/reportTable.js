@@ -85,7 +85,7 @@ export function renderTablaVentasBase({
         "beforeend",
         `<tr>
           <td style="text-align:left; font-weight:bold">${rank}</td>
-          <td>${item.nombre_producto} ${item.especificaciones || ""}</td>
+          <td>${item.nombre_producto} ${item.specs || ""}</td>
           <td style="text-align:right">${item.totalVendido}</td>
           <td style="text-align:right">$${formatPrice(item.totalPrecio)}</td>
         </tr>`

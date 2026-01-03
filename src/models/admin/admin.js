@@ -135,7 +135,7 @@ admin.getTopProductos = async ({
   dp.nombre_producto,
   SUM(dp.cantidad) AS totalVendido,
   SUM(dp.subtotal) AS totalPrecio,
-  CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones,
+  CONCAT(r.capacidad, '+', a.capacidad) AS specs,
   p.categoria_id,
   c.categoria,
   p.marca_id,
@@ -260,7 +260,7 @@ admin.obtenerItems = async () => {
       p.activo,
       p.almacenamiento_id,
       p.ram_id,
-      CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones,
+      CONCAT(r.capacidad, '+', a.capacidad) AS specs,
       c.categoria AS categoria,
       m.nombre AS marca,
       p.fecha,
@@ -418,7 +418,7 @@ admin.obtenerVariantes = async () => {
       p.nombre AS producto,
       r.capacidad AS ram,
       a.capacidad AS almacenamiento,
-      CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
+      CONCAT(r.capacidad, '+', a.capacidad) AS specs
     FROM p_variantes v
     JOIN productos p ON v.producto_id = p.id
     LEFT JOIN ram r ON p.ram_id = r.id
@@ -504,7 +504,7 @@ admin.obtenerPedidoId = async (id) => {
 admin.productoPedido = async (pedido_id) => {
   const [rows] = await db.query(`
     SELECT dp.*,
-    CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
+    CONCAT(r.capacidad, '+', a.capacidad) AS specs
     FROM detalles_pedido dp
     LEFT JOIN productos p ON dp.producto_id = p.id
     LEFT JOIN ram r ON p.ram_id = r.id

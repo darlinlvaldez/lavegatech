@@ -1,5 +1,5 @@
 import db from "../../database/mobiles.js";
-import productsBase from "../store/utils/getProduct.js";
+import productsBase from "../store/utils/getProducts.js";
 
 const principal = {};
 

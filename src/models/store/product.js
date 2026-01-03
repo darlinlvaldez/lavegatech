@@ -1,5 +1,5 @@
 import db from "../../database/mobiles.js";
-import productsBase from "../store/utils/getProduct.js";
+import productsBase from "./utils/getProducts.js";
 import {applyTaxDiscount} from "../../utils/applyRate.js";
 
 const productDetails = {};
@@ -16,15 +16,16 @@ productDetails.getProductDetails = async (id) => {
     p.fecha_publicacion,
     p.categoria_id AS categoriaId,
     c.categoria,
-    v.id AS variante_id,
+    v.id AS variantId,
     v.color,
     v.stock,
     v.img,
     r.capacidad AS ram,
     a.capacidad AS almacenamiento,
-    CONCAT(r.capacidad, '+', a.capacidad) AS especificaciones
+    CONCAT(r.capacidad, '+', a.capacidad) AS specs
   FROM productos p
-  JOIN categorias c ON p.categoria_id = c.id
+  JOIN categorias c ON p.categoria_id = c.id AND c.activo = 1
+  JOIN p_marcas m ON p.marca_id = m.id AND m.activo = 1
   LEFT JOIN p_variantes v ON p.id = v.producto_id AND v.activo = 1 
   LEFT JOIN ram r ON p.ram_id = r.id
   LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
@@ -33,26 +34,26 @@ productDetails.getProductDetails = async (id) => {
   const [results] = await db.query(query, [id]);
   if (!results.length) return null;
 
-  const productoFinal = applyTaxDiscount([results[0]])[0];
+  const finalProduct = applyTaxDiscount([results[0]])[0];
 
-  const producto = {
-    ...productoFinal,
-    stocksPorColor: {},
-    imagenesPorColor: {},
-    colores: [],
-    variantesPorColor: {}  
+  const product = {
+    ...finalProduct,
+    stockByColor: {},
+    imagesByColor: {},
+    colors: [],
+    variantsByColor: {}  
   };
 
-  results.forEach(({ color, stock, img, variante_id }) => {
+  results.forEach(({ color, stock, img, variantId }) => {
     if (color) {
-      producto.stocksPorColor[color] = stock;
-      producto.imagenesPorColor[color] = img;
-      producto.colores.push(color);
-      producto.variantesPorColor[color] = variante_id; 
+      product.stockByColor[color] = stock;
+      product.imagesByColor[color] = img;
+      product.colors.push(color);
+      product.variantsByColor[color] = variantId; 
     }
   });
 
-  return producto;
+  return product;
 };
 
 productDetails.getRelated = async (productoId, categoriaId) => {
