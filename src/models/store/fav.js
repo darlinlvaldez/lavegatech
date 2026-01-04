@@ -3,62 +3,62 @@ import {applyTaxDiscount} from "../../utils/applyRate.js";
 
 const fav = {};
 
-fav.addItem = async ({usuario_id, producto_id, variante_id}) => {
+fav.addItem = async ({userId, productId, variantId}) => {
     await db.query(
         `INSERT INTO fav (usuario_id, producto_id, variante_id) 
          VALUES (?, ?, ?)`,
-        [usuario_id, producto_id, variante_id]
+        [userId, productId, variantId]
     );
 };
 
-fav.getVariant = async (producto_id, selectedColor) => {
+fav.getVariant = async (productId, selectedColor) => {
     const [rows] = await db.query(
         `SELECT id FROM p_variantes 
          WHERE producto_id = ? AND color = ?`,
-        [producto_id, selectedColor]
+        [productId, selectedColor]
     );
     return rows[0] || null;
 };
 
-fav.removeItem = async (usuario_id, producto_id, variante_id) => {
+fav.removeItem = async (userId, productId, variantId) => {
     await db.query(
         `DELETE FROM fav 
          WHERE usuario_id = ? AND producto_id = ? AND variante_id = ?`,
-        [usuario_id, producto_id, variante_id]
+        [userId, productId, variantId]
     );
 };
 
-fav.clearAll = async (usuario_id) => {
-  await db.query("DELETE FROM fav WHERE usuario_id = ?", [usuario_id]);
+fav.clearAll = async (userId) => {
+  await db.query("DELETE FROM fav WHERE usuario_id = ?", [userId]);
 };
 
-fav.itemExists = async (usuario_id, producto_id, variante_id) => {
+fav.itemExists = async (userId, productId, variantId) => {
     const [rows] = await db.query(
         `SELECT id FROM fav 
          WHERE usuario_id = ? AND producto_id = ? AND variante_id = ?`,
-        [usuario_id, producto_id, variante_id]
+        [userId, productId, variantId]
     );
     return rows.length > 0;
 };
 
-fav.getByUserId = async (usuario_id) => {
+fav.getByUserId = async (userId) => {
     const [rows] = await db.query(
         `SELECT 
         f.id,
-        p.id as producto_id,
-        p.nombre,
-        p.descripcion,
-        p.precio,
-        p.impuesto,
-        p.descuento,
-        p.categoria_id,
-        p.marca_id,
-        v.id as variante_id,
-        v.color as selectedColor,
-        v.img as imagen,
-        v.stock as stockPorColor,
+        p.id AS productId,
+        p.nombre AS name,
+        p.descripcion AS description,
+        p.precio AS price,
+        p.impuesto AS tax,
+        p.descuento AS discount,
+        p.categoria_id AS categoryId,
+        p.marca_id AS brandId,
+        v.id AS variantId,
+        v.color AS selectedColor,
+        v.img as image,
+        v.stock AS stockByColor,
         r.capacidad AS ram, 
-        a.capacidad AS almacenamiento,
+        a.capacidad AS storage,
         CONCAT(r.capacidad, '+', a.capacidad) AS specs
         FROM fav f
         JOIN productos p ON f.producto_id = p.id
@@ -67,7 +67,7 @@ fav.getByUserId = async (usuario_id) => {
         LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
         WHERE f.usuario_id = ? AND p.activo = 1
         ORDER BY f.fecha_agregado DESC`,
-    [usuario_id]
+    [userId]
     );
 
     const finalPrice = applyTaxDiscount(rows);
@@ -75,10 +75,10 @@ fav.getByUserId = async (usuario_id) => {
     return finalPrice;
 };
 
-fav.getCount = async (usuario_id) => {
+fav.getCount = async (userId) => {
   const [rows] = await db.query(
     "SELECT COUNT(*) as count FROM fav WHERE usuario_id = ? ",
-    [usuario_id]
+    [userId]
   );
   return rows[0].count;
 };

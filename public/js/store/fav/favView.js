@@ -72,15 +72,15 @@ function generateFavItemHTML(item) {
   return ` 
   <div class="fav-item" data-id="${data.productId}" data-color="${data.color}">
         <a href="/product/${data.productId}${data.color ? `?color=${encodeURIComponent(data.color)}` : ''}">
-            <img src="${item.imagen}" alt="${item.nombre}" class="product-imagen">
+            <img src="${item.image}" alt="${item.name}" class="product-image">
             <div class="product-info">
-                <h5>${item.nombre} ${data.specs}</h5>
+                <h5>${item.name} ${data.specs}</h5>
                 <b>Precio:</b>
                 <span class="product-price">  
                     <b>$${formatPrice(data.finalPrice)}</b>
-                    ${data.descuento > 0 ? `
+                    ${data.discount > 0 ? `
                       <del class="product-old-price">$${formatPrice(data.originalPrice)}</del>
-                      <span class="sale">-${data.descuento.toFixed(2)}%</span> ` : ''}
+                      <span class="sale">-${data.discount.toFixed(2)}%</span> ` : ''}
                 </span>
                 </a>
             </div>
@@ -93,20 +93,20 @@ function generateFavItemHTML(item) {
         <div class="action-buttons">
             <button class="add-to-cart-btn"
             data-id="${data.productId}"
-            data-variante-id="${data.varianteId}"
+            data-variante-id="${data.variantId}"
             data-color="${data.color}"
             data-ram="${item.ram || ''}"
-            data-almacenamiento="${item.almacenamiento || ''}"
-            data-stock="${item.cantidad || 0}"
-            data-nombre="${item.nombre}"
-            data-precio="${item.precio || 0}"
-            data-descuento="${item.descuento || 0}"
-            data-impuesto="${item.impuesto || 0}"
-            data-imagen="${item.imagen || ''}">
+            data-storage="${item.storage || ''}"
+            data-stock="${item.quantity || 0}"
+            data-name="${item.name}"
+            data-price="${item.price || 0}"
+            data-discount="${item.discount || 0}"
+            data-tax="${item.tax || 0}"
+            data-image="${item.image || ''}">
             <i class="fa fa-shopping-cart"></i> Añadir al carrito
         </button>
         </div>
-          <i class="bi bi-trash remove-btn" onclick="removeFromFav('${data.productId}', '${data.color}', '${data.varianteId}')"></i>
+          <i class="bi bi-trash remove-btn" onclick="removeFromFav('${data.productId}', '${data.color}', '${data.variantId}')"></i>
       </div>`;
     }
 

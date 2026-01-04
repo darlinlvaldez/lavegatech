@@ -61,10 +61,10 @@ document.querySelector(".tablink").click();
                                     <% productsMoviles.forEach(product => { %>
                                 <div class="product" data-category="<%= product.category %>">
                                     <div class="product-img"> <a href="/product/<%= product.id %>?color=<%= product.color %>">
-                                        <img src="<%= product.imagen %>" alt="<%= product.nombre %>">
+                                        <img src="<%= product.image %>" alt="<%= product.name %>">
                                         <div class="product-label">
-                                            <% if (product.descuento > 0) { %>
-                                            <span class="sale">-<%= product.descuento %>%</span>
+                                            <% if (product.discount > 0) { %>
+                                            <span class="sale">-<%= product.discount %>%</span>
                                             <% } %>
                                             <% if (product.itsNew) { %>
                                             <span class="new">Nuevo</span>
@@ -76,13 +76,13 @@ document.querySelector(".tablink").click();
                                             <%= product.category === 'moviles' ? 'Móviles' : product.category.charAt(0).toUpperCase() + product.category.slice(1) %>
                                         </p>
                                         <h3 class="product-name">
-                                                <%= product.nombre %> <%= product.specs %>
+                                                <%= product.name %> <%= product.specs %>
                                             </h3>
                                             <h4 class="product-price">
-                                            $<%= Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-                                            <% if (product.descuento > 0) { %>
+                                            $<%= Number(product.price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                            <% if (product.discount > 0) { %>
                                                 <del class="product-old-price">
-                                                    $<%= Number(product.precio / (1 - product.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                                    $<%= Number(product.price / (1 - product.discount / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                                 </del>
                                             <% } %>
                                         </h4>
@@ -139,10 +139,10 @@ document.querySelector(".tablink").click();
                                     <% productsSmarttv.forEach(product => { %>
                                 <div class="product" data-category="<%= product.category %>">
                                     <div class="product-img"> <a href="/product/<%= product.id %>?color=<%= product.color %>">
-                                        <img src="<%= product.imagen %>" alt="<%= product.nombre %>">
+                                        <img src="<%= product.image %>" alt="<%= product.name %>">
                                         <div class="product-label">
-                                            <% if (product.descuento > 0) { %>
-                                            <span class="sale">-<%= product.descuento %>%</span>
+                                            <% if (product.discount > 0) { %>
+                                            <span class="sale">-<%= product.discount %>%</span>
                                             <% } %>
                                             <% if (product.itsNew) { %>
                                             <span class="new">Nuevo</span>
@@ -154,13 +154,13 @@ document.querySelector(".tablink").click();
                                             <%= product.category === 'smarttv' ? 'SmartTV' : product.category.charAt(0).toUpperCase() + product.category.slice(1) %>
                                         </p>
                                         <h3 class="product-name">
-                                                <%= product.nombre %><%= product.specs %>
+                                                <%= product.name %><%= product.specs %>
                                             </h3>
                                             <h4 class="product-price">
-                                            $<%= Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-                                            <% if (product.descuento > 0) { %>
+                                            $<%= Number(product.price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                            <% if (product.discount > 0) { %>
                                                 <del class="product-old-price">
-                                                    $<%= Number(product.precio / (1 - product.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                                    $<%= Number(product.price / (1 - product.discount / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                                 </del>
                                             <% } %>
                                         </h4></a>
@@ -192,16 +192,16 @@ document.querySelector(".tablink").click();
                                     <div class="add-to-cart">
                                     <button class="add-to-cart-btn"
                                     data-id="<%= product.id %>"
-                                    data-variante_id="<%= product.variante_id %>"
+                                    data-variantId="<%= product.variantId %>"
                                     data-color="<%= product.color %>"
                                     data-ram="<%= product.ram %>"
-                                    data-almacenamiento="<%= product.almacenamiento %>"
+                                    data-storage="<%= product.storage %>"
                                     data-stock="<%= product.stock %>"
-                                    data-nombre="<%= product.nombre %>"
-                                    data-precio="<%= product.precio %>"
-                                    data-descuento="<%= product.descuento %>"   
-                                    data-impuesto="<%= product.impuesto %>"       
-                                    data-imagen="<%= product.imagen %>">
+                                    data-name="<%= product.name %>"
+                                    data-price="<%= product.price %>"
+                                    data-discount="<%= product.discount %>"   
+                                    data-tax="<%= product.tax %>"       
+                                    data-image="<%= product.image %>">
                                 <i class="fa fa-shopping-cart"></i> Añadir al carrito
                             </button>
                             </div>
@@ -217,10 +217,10 @@ document.querySelector(".tablink").click();
                                     <% productsLaptops.forEach(product => { %>
                                 <div class="product" data-category="<%= product.category %>"> 
                                     <div class="product-img"> <a href="/product/<%= product.id %>?color=<%= product.color %>">
-                                        <img src="<%= product.imagen %>" alt="<%= product.nombre %>">
+                                        <img src="<%= product.image %>" alt="<%= product.name %>">
                                         <div class="product-label">
-                                            <% if (product.descuento > 0) { %>
-                                            <span class="sale">-<%= product.descuento %>%</span>
+                                            <% if (product.discount > 0) { %>
+                                            <span class="sale">-<%= product.discount %>%</span>
                                             <% } %>
                                             <% if (product.itsNew) { %>
                                             <span class="new">Nuevo</span>
@@ -232,13 +232,13 @@ document.querySelector(".tablink").click();
                                             <%= product.category === 'laptops' ? 'Laptops' : product.category.charAt(0).toUpperCase() + product.category.slice(1) %>
                                         </p>
                                         <h3 class="product-name">
-                                                <%= product.nombre %>
+                                                <%= product.name %>
                                             </h3>
                                             <h4 class="product-price">
-                                            $<%= Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-                                            <% if (product.descuento > 0) { %>
+                                            $<%= Number(product.price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                            <% if (product.discount > 0) { %>
                                                 <del class="product-old-price">
-                                                    $<%= Number(product.precio / (1 - product.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                                    $<%= Number(product.price / (1 - product.discount / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                                 </del>
                                             <% } %>
                                         </h4></a>
@@ -271,16 +271,16 @@ document.querySelector(".tablink").click();
                                     <div class="add-to-cart">
                                     <button class="add-to-cart-btn"
                                     data-id="<%= product.id %>"
-                                    data-variante_id="<%= product.variante_id %>"
+                                    data-variantId="<%= product.variantId %>"
                                     data-color="<%= product.color %>"
                                     data-ram="<%= product.ram %>"
-                                    data-almacenamiento="<%= product.almacenamiento %>"
+                                    data-storage="<%= product.storage %>"
                                     data-stock="<%= product.stock %>"
-                                    data-nombre="<%= product.nombre %>"
-                                    data-precio="<%= product.precio %>"
-                                    data-descuento="<%= product.descuento %>"   
-                                    data-impuesto="<%= product.impuesto %>"       
-                                    data-imagen="<%= product.imagen %>">
+                                    data-name="<%= product.name %>"
+                                    data-price="<%= product.price %>"
+                                    data-discount="<%= product.discount %>"   
+                                    data-tax="<%= product.tax %>"       
+                                    data-image="<%= product.image %>">
                                 <i class="fa fa-shopping-cart"></i> Añadir al carrito
                             </button>
                             </div>
@@ -296,10 +296,10 @@ document.querySelector(".tablink").click();
                                     <% productsConsolas.forEach(product => { %>
                                 <div class="product" data-category="<%= product.category %>">
                                     <div class="product-img"> <a href="/product/<%= product.id %>?color=<%= product.color %>">
-                                        <img src="<%= product.imagen %>" alt="<%= product.nombre %>">
+                                        <img src="<%= product.image %>" alt="<%= product.name %>">
                                         <div class="product-label">
-                                            <% if (product.descuento > 0) { %>
-                                            <span class="sale">-<%= product.descuento %>%</span>
+                                            <% if (product.discount > 0) { %>
+                                            <span class="sale">-<%= product.discount %>%</span>
                                             <% } %>
                                             <% if (product.itsNew) { %>
                                             <span class="new">Nuevo</span>
@@ -311,13 +311,13 @@ document.querySelector(".tablink").click();
                                             <%= product.category === 'consolas' ? 'Consolas' : product.category.charAt(0).toUpperCase() + product.category.slice(1) %>
                                         </p>
                                         <h3 class="product-name">
-                                                <%= product.nombre %>
+                                                <%= product.name %>
                                             </h3>
                                             <h4 class="product-price">
-                                            $<%= Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-                                            <% if (product.descuento > 0) { %>
+                                            $<%= Number(product.price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                            <% if (product.discount > 0) { %>
                                                 <del class="product-old-price">
-                                                    $<%= Number(product.precio / (1 - product.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                                    $<%= Number(product.price / (1 - product.discount / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                                 </del>
                                             <% } %>
                                         </h4></a>
@@ -349,16 +349,16 @@ document.querySelector(".tablink").click();
                                     <div class="add-to-cart">
                                     <button class="add-to-cart-btn"
                                     data-id="<%= product.id %>"
-                                    data-variante_id="<%= product.variante_id %>"
+                                    data-variantId="<%= product.variantId %>"
                                     data-color="<%= product.color %>"
                                     data-ram="<%= product.ram %>"
-                                    data-almacenamiento="<%= product.almacenamiento %>"
+                                    data-storage="<%= product.storage %>"
                                     data-stock="<%= product.stock %>"
-                                    data-nombre="<%= product.nombre %>"
-                                    data-precio="<%= product.precio %>"
-                                    data-descuento="<%= product.descuento %>"   
-                                    data-impuesto="<%= product.impuesto %>"       
-                                    data-imagen="<%= product.imagen %>">
+                                    data-name="<%= product.name %>"
+                                    data-price="<%= product.price %>"
+                                    data-discount="<%= product.discount %>"   
+                                    data-tax="<%= product.tax %>"       
+                                    data-image="<%= product.image %>">
                                 <i class="fa fa-shopping-cart"></i> Añadir al carrito
                             </button>
                             </div>
@@ -374,10 +374,10 @@ document.querySelector(".tablink").click();
                                     <% productsTablets.forEach(product => { %>
                                 <div class="product" data-category="<%= product.category %>">
                                     <div class="product-img"> <a href="/product/<%= product.id %>?color=<%= product.color %>">
-                                        <img src="<%= product.imagen %>" alt="<%= product.nombre %>">                                    
+                                        <img src="<%= product.image %>" alt="<%= product.name %>">                                    
                                         <div class="product-label">
-                                            <% if (product.descuento > 0) { %>
-                                            <span class="sale">-<%= product.descuento %>%</span>
+                                            <% if (product.discount > 0) { %>
+                                            <span class="sale">-<%= product.discount %>%</span>
                                             <% } %>
                                             <% if (product.itsNew) { %>
                                             <span class="new">Nuevo</span>
@@ -389,13 +389,13 @@ document.querySelector(".tablink").click();
                                             <%= product.category === 'tablets' ? 'Tablets' : product.category.charAt(0).toUpperCase() + product.category.slice(1) %>
                                         </p>
                                         <h3 class="product-name">
-                                                <%= product.nombre %> <%= product.specs %>
+                                                <%= product.name %> <%= product.specs %>
                                             </h3>
                                             <h4 class="product-price">
-                                            $<%= Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-                                            <% if (product.descuento > 0) { %>
+                                            $<%= Number(product.price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                            <% if (product.discount > 0) { %>
                                                 <del class="product-old-price">
-                                                    $<%= Number(product.precio / (1 - product.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                                    $<%= Number(product.price / (1 - product.discount / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                                 </del>
                                             <% } %>
                                         </h4></a>
@@ -427,16 +427,16 @@ document.querySelector(".tablink").click();
                                     <div class="add-to-cart">
                                     <button class="add-to-cart-btn"
                                     data-id="<%= product.id %>"
-                                    data-variante_id="<%= product.variante_id %>"
+                                    data-variantId="<%= product.variantId %>"
                                     data-color="<%= product.color %>"
                                     data-ram="<%= product.ram %>"
-                                    data-almacenamiento="<%= product.almacenamiento %>"
+                                    data-storage="<%= product.storage %>"
                                     data-stock="<%= product.stock %>"
-                                    data-nombre="<%= product.nombre %>"
-                                    data-precio="<%= product.precio %>"
-                                    data-descuento="<%= product.descuento %>"   
-                                    data-impuesto="<%= product.impuesto %>"       
-                                    data-imagen="<%= product.imagen %>">
+                                    data-name="<%= product.name %>"
+                                    data-price="<%= product.price %>"
+                                    data-discount="<%= product.discount %>"   
+                                    data-tax="<%= product.tax %>"       
+                                    data-image="<%= product.image %>">
                                 <i class="fa fa-shopping-cart"></i> Añadir al carrito
                             </button>
                             </div>
@@ -525,10 +525,10 @@ document.querySelector(".tablink").click();
                         <div class="product">
                             <div class="product-img">
                                 <a href="/product/<%= product.id %>?color=<%= product.color %>">
-                                    <img src="<%= product.imagen %>" alt="<%= product.nombre %>">
+                                    <img src="<%= product.image %>" alt="<%= product.name %>">
                                     <div class="product-label">
-                                        <% if (product.descuento > 0) { %>
-                                            <span class="sale">-<%= product.descuento %>%</span>
+                                        <% if (product.discount > 0) { %>
+                                            <span class="sale">-<%= product.discount %>%</span>
                                         <% } %>
                                         <% if (product.itsNew) { %>
                                             <span class="new">Nuevo</span>
@@ -538,13 +538,13 @@ document.querySelector(".tablink").click();
 
                             <div class="product-body">
                                 <p class="product-category"><%= product.category || 'Sin categoría' %></p>
-                                <h3 class="product-name"><%= product.nombre %> <%= product.specs %></h3>
+                                <h3 class="product-name"><%= product.name %> <%= product.specs %></h3>
 
                                 <h4 class="product-price">
-                                    $<%= Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-                                    <% if (product.descuento > 0) { %>
+                                    $<%= Number(product.price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                    <% if (product.discount > 0) { %>
                                         <del class="product-old-price">
-                                            $<%= Number(product.precio / (1 - product.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                            $<%= Number(product.price / (1 - product.discount / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                         </del>
                                     <% } %>
                                 </h4></a>
@@ -580,16 +580,16 @@ document.querySelector(".tablink").click();
                             <div class="add-to-cart">
                             <button class="add-to-cart-btn"
                                     data-id="<%= product.id %>"
-                                    data-variante_id="<%= product.variante_id %>"
+                                    data-variantId="<%= product.variantId %>"
                                     data-color="<%= product.color %>"
                                     data-ram="<%= product.ram %>"
-                                    data-almacenamiento="<%= product.almacenamiento %>"
+                                    data-storage="<%= product.storage %>"
                                     data-stock="<%= product.stock %>"
-                                    data-nombre="<%= product.nombre %>"
-                                    data-precio="<%= product.precio %>"
-                                    data-descuento="<%= product.descuento %>"   
-                                    data-impuesto="<%= product.impuesto %>"       
-                                    data-imagen="<%= product.imagen %>">
+                                    data-name="<%= product.name %>"
+                                    data-price="<%= product.price %>"
+                                    data-discount="<%= product.discount %>"   
+                                    data-tax="<%= product.tax %>"       
+                                    data-image="<%= product.image %>">
                                 <i class="fa fa-shopping-cart"></i> Añadir al carrito
                             </button>
                             </div>

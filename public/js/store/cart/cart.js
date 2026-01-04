@@ -151,9 +151,11 @@ document.addEventListener("click", async (e) => {
   if (!btn) return;
 
   const getImage = () => {
-    if (btn.dataset.image) return btn.dataset.image;
     const slider = $("#product-main-img");
-    return slider.length ? slider.find(".slick-current img").attr("src") : "";
+    if (!slider.length) return "";
+
+    const currentImg = slider.find(".slick-current img");
+    return currentImg.length ? currentImg.attr("src") : "";
   };
 
   await addToCart({

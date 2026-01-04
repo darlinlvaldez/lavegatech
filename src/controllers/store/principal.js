@@ -11,9 +11,8 @@ principal.productsController = async (req, res) => {
 
     const normalize = (list) => {
       list.forEach(p => {
-        p.category = p.categoria;
         p.itsMobile = p.category?.toLowerCase() === "moviles";
-        p.itsNew = itsNewProduct(p.fecha_publicacion, 30);
+        p.itsNew = itsNewProduct(p.publicationDate, 30);
       });
     };
 

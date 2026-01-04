@@ -27,18 +27,18 @@ productsBase.getProductsBase = async ({
   const query = `
       SELECT 
         p.id,
-        p.nombre,
-        p.precio,
-        p.impuesto,
-        p.descuento,
-        p.fecha_publicacion,
-        c.categoria,
-        v.id AS variante_id,
+        p.nombre AS name,
+        p.precio AS price,
+        p.impuesto AS tax,
+        p.descuento AS discount,
+        p.fecha_publicacion AS publicationDate,
+        c.categoria AS category,
+        v.id AS variantId,
         v.color,
         v.stock,
-        v.img AS imagen,
+        v.img AS image,
         r.capacidad AS ram,
-        a.capacidad AS almacenamiento,
+        a.capacidad AS storage,
         CONCAT(r.capacidad, '+', a.capacidad) AS specs,
         COALESCE(AVG(cl.calificacion), 0) AS averageRating
       FROM productos p

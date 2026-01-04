@@ -16,7 +16,7 @@ store.storeController = async (req, res) => {
     const defaultMax = priceRange.maxPrice;
 
     const compatibleBrands = await store.brandsQuantity(categories);
-    const compatibleBrandsIds = compatibleBrands.map(m => m.brand_id.toString());
+    const compatibleBrandsIds = compatibleBrands.map(m => m.brandId.toString());
 
     const filteredBrands = brands.filter(brand => compatibleBrandsIds.includes(brand));
 
@@ -28,9 +28,8 @@ store.storeController = async (req, res) => {
     ]);
 
     products.forEach((p) => {
-      p.category = p.categoria; 
       p.itsMobile = p.category?.toLowerCase() === "moviles";
-      p.itsNew = itsNewProduct(p.fecha_publicacion, 30);
+      p.itsNew = itsNewProduct(p.publicationDate, 30);
     });
 
     res.render("store/store", {products, totalProduct, limit, page, sortBy, categories,

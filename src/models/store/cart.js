@@ -50,7 +50,7 @@ cart.itemExists = async (userId, productId, variantId) => {
 cart.getByUserId = async (userId) => {
   const [rows] = await db.query(`
     SELECT 
-      c.id AS carrito_id, 
+      c.id AS cartId, 
       c.producto_id AS productId, 
       c.variante_id AS variantId,  
       c.cantidad AS quantity, 
@@ -58,11 +58,11 @@ cart.getByUserId = async (userId) => {
       p.nombre AS name, 
       p.precio AS price, 
       p.descuento AS discount, 
-      p.categoria_id, 
+      p.categoria_id AS categoryId, 
       p.impuesto AS tax,
       v.color AS selectedColor, 
       v.img AS image, 
-      v.stock AS stock_real,
+      v.stock AS realStock,
       r.capacidad AS ram,
       a.capacidad AS storage,
       CONCAT(r.capacidad, '+', a.capacidad) AS specs
@@ -78,9 +78,9 @@ cart.getByUserId = async (userId) => {
   const finalPrice = applyTaxDiscount(rows);
 
   for (const item of finalPrice) {
-    if (item.stock_real !== null && item.quantity > item.stock_real) {
-      await cart.updateQuantity(item.carrito_id, userId, item.stock_real);
-      item.quantity = item.stock_real;
+    if (item.realStock !== null && item.quantity > item.realStock) {
+      await cart.updateQuantity(item.cartId, userId, item.realStock);
+      item.quantity = item.realStock;
     }
   }
 

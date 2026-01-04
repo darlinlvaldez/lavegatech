@@ -17,9 +17,9 @@
 				<!-- Product main img -->
 				<div class="col-md-5 col-md-push-2">
 					<div id="product-main-img">
-						<% if (imagesByColor) { for (const [color, imagen] of Object.entries(imagesByColor)) { %>
+						<% if (imagesByColor) { for (const [color, image] of Object.entries(imagesByColor)) { %>
 							<div class="product-preview">
-								<img src="<%= imagen %>" alt="<%= color %>" class="product-img">
+								<img src="<%= image %>" alt="<%= color %>" class="product-img">
 							</div>
 						<% } } %>
 					</div>
@@ -28,11 +28,11 @@
 			<!-- Product thumb imgs -->
 			<div class="col-md-2 col-md-pull-5">
 				<div id="product-imgs">
-					<% for (const [color, imagen] of Object.entries(imagesByColor)) { %>
+					<% for (const [color, image] of Object.entries(imagesByColor)) { %>
 						<div class="product-preview"
 							onclick="changeColor({ value: '<%= color %>' }, '<%= product.id %>')"
 							data-product-id="<%= product.id %>">
-							<img src="<%= imagen %>" alt="<%= color %>" class="product-img">
+							<img src="<%= image %>" alt="<%= color %>" class="product-img">
 						</div>
 						<% } %>
 					</div>
@@ -41,7 +41,7 @@
 	<!-- Product details -->
 	<div class="col-md-5">
 		<div class="product-details">
-			<h2 class="product-name"><%= product.nombre %> <%= product.specs %></h2>
+			<h2 class="product-name"><%= product.name %> <%= product.specs %></h2>
 			<div>
 			<div class="product-rating">
 			<% for (let i=1; i <=5; i++) { %>
@@ -60,10 +60,10 @@
 			</div>
 			<div>
 				<h3 class="product-price">
-				$<%= Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-				<% if (product.descuento > 0) { %>
+				$<%= Number(product.price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+				<% if (product.discount > 0) { %>
 					<del class="product-old-price">
-					$<%= Number(product.precio / (1 - product.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+					$<%= Number(product.price / (1 - product.discount / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
 					</del>
 				<% } %>
 				</h3>
@@ -111,13 +111,13 @@
 						data-variantId="<%= product.variantId %>"
 						data-color="<%= product.color %>"
 						data-ram="<%= product.ram %>"
-						data-almacenamiento="<%= product.almacenamiento %>"
+						data-storage="<%= product.storage %>"
 						data-stock="<%= product.stock %>"
-						data-nombre="<%= product.nombre %>"
-						data-precio="<%= product.precio %>"
-						data-impuesto="<%= product.impuesto %>"
-						data-descuento="<%= product.descuento %>"
-						data-imagen="<%= product.imagen %>">
+						data-name="<%= product.name %>"
+						data-price="<%= product.price %>"
+						data-tax="<%= product.tax %>"
+						data-discount="<%= product.discount %>"
+						data-image="<%= product.image %>">
 						<i class="fa fa-shopping-cart"></i> Añadir al carrito
 						</button>
 					</div>
@@ -139,7 +139,7 @@
 				<ul class="product-links">
 				<li>Categoría:</li>
 				<li>
-				<a href="/store/1?categoria=<%= product.categoriaId %>">
+				<a href="/store/1?category=<%= product.categoryId %>">
 					<%= product.category.toLowerCase() === 'moviles' ? 'Móviles' :
 					product.category.charAt(0).toUpperCase() + product.category.slice(1) %>
 				</a>
@@ -160,7 +160,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent('Mira este product: ' + product.nombre) %>&url=<%= encodeURIComponent('http://localhost:3000' + currentUrl) %>" target="_blank">
+					<a href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent('Mira este product: ' + product.name) %>&url=<%= encodeURIComponent('http://localhost:3000' + currentUrl) %>" target="_blank">
 					<i class="fa-brands fa-x-twitter"></i>
 					</a>
 				</li>
@@ -170,7 +170,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="mailto:?subject=<%= encodeURIComponent('Mira este product: ' + product.nombre) %>&body=<%= encodeURIComponent('Te comparto este product que encontré: http://localhost:3000' + currentUrl) %>">
+					<a href="mailto:?subject=<%= encodeURIComponent('Mira este product: ' + product.name) %>&body=<%= encodeURIComponent('Te comparto este product que encontré: http://localhost:3000' + currentUrl) %>">
 					<i class="fa-solid fa-envelope"></i>
 					</a>
 				</li>
@@ -405,10 +405,10 @@
 							<div class="product">
 								<div class="product-img">
 									<a href="/product/<%= product.id %>?color=<%= product.color %>">
-										<img src="<%= product.imagen %>" alt="<%= product.nombre %>">
+										<img src="<%= product.image %>" alt="<%= product.name %>">
 										<div class="product-label">
-                                            <% if (product.descuento > 0) { %>
-                                            <span class="sale">-<%= product.descuento %>%</span>
+                                            <% if (product.discount > 0) { %>
+                                            <span class="sale">-<%= product.discount %>%</span>
                                             <% } %>
                                             <% if (product.itsNew) { %>
                                             <span class="new">Nuevo</span>
@@ -420,12 +420,12 @@
 										<%= product.category === 'moviles' ? 'Móviles' : product.category.charAt(0).toUpperCase() + product.category.slice(1) %>
 									</p>
 									<h3 class="product-name">
-											<%= product.nombre %> <%= product.specs %>
+											<%= product.name %> <%= product.specs %>
 										</h3>
 									<h4 class="product-price">
-									$<%= Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-									<% if (product.descuento > 0) { %>
-										<del class="product-old-price">$<%= Number(product.precio / (1 - product.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></del>
+									$<%= Number(product.price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+									<% if (product.discount > 0) { %>
+										<del class="product-old-price">$<%= Number(product.price / (1 - product.discount / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></del>
 									<% } %>
                                     </h4></a>
 								</div>

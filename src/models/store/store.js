@@ -118,10 +118,7 @@ store.getPriceRange = async () => {
     FROM productos p
     JOIN categorias c ON p.categoria_id = c.id
     JOIN p_marcas m ON p.marca_id = m.id
-    WHERE 
-      p.activo = 1
-      AND c.activo = 1
-      AND m.activo = 1
+    WHERE p.activo = 1 AND c.activo = 1 AND m.activo = 1
   `;
   
   try {
@@ -135,7 +132,7 @@ store.getPriceRange = async () => {
 store.categoriesQuantity = async () => {
     const query = `
     SELECT  
-      c.id AS category_id, 
+      c.id AS categoryId, 
       c.categoria AS category, 
       COUNT(DISTINCT p.id) AS count
     FROM categorias c
@@ -168,7 +165,7 @@ store.brandsQuantity = async (categories = []) => {
 
   const query = `
     SELECT
-      m.id AS brand_id,
+      m.id AS brandId,
       m.nombre AS brand,
       COUNT(DISTINCT p.id) AS count
     FROM p_marcas m

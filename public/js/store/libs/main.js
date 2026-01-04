@@ -180,7 +180,7 @@ import { checkFavorites } from "../fav/fav.js";
     var priceInputMax = document.getElementById("price-max"),
       priceInputMin = document.getElementById("price-min"),
       priceSlider = document.getElementById("price-slider"),
-      resetButton = document.getElementById("reset-filtro-precio");
+      resetButton = document.getElementById("reset-filter-price");
 
     var defaultMin = window.defaultMin || 0;
     var defaultMax = window.defaultMax || 100000;

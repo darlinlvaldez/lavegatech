@@ -37,16 +37,15 @@ productController.productDetails = async (req, res) => {
       rating.findByProductId(id, pageReviews, limitReviews),
       rating.getAverageRating(id),
       rating.getRatingDistribution(id),
-      productDetails.getRelated(id, product.categoriaId),
+      productDetails.getRelated(id, product.categoryId),
       comparison.getDevice([id])]);
 
     const normalize = (data) => {
       const list = Array.isArray(data) ? data : [data];
 
       list.forEach((p) => {
-        p.category = p.categoria;
         p.itsMobile = p.category?.toLowerCase() === "moviles";
-        p.itsNew = itsNewProduct(p.fecha_publicacion, 30);
+        p.itsNew = itsNewProduct(p.publicationDate, 30);
       });
     };
 

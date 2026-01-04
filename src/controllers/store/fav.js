@@ -7,29 +7,28 @@ const favController = {};
 favController.addToFav = async (req, res) => {
     try {
         const userId = req.session.user.id;
-        const { producto_id, selectedColor } = req.body;
+        const { productId, selectedColor } = req.body;
 
-        if (!producto_id || !selectedColor) {
+        if (!productId || !selectedColor) {
             return res.status(400).json({ 
                 success: false, message: 'Datos inválidos'
             });
         }
 
-        const variante = await fav.getVariant(producto_id, selectedColor);
-        const variante_id = variante ? variante.id : null;
+        const variant = await fav.getVariant(productId, selectedColor);
+        const variantId = variant ? variant.id : null;
 
-        if (!variante_id) {
-            return res.status(400).json({
-                success: false,
+        if (!variantId) {
+            return res.status(400).json({success: false,
                 message: 'Variante no encontrada para el color seleccionado'
             });
         }
 
-        const existingItem = await fav.itemExists(userId, producto_id, variante_id);
+        const existingItem = await fav.itemExists(userId, productId, variantId);
 
         if (!existingItem) {
-            await fav.addItem({usuario_id: userId, 
-              producto_id, variante_id
+            await fav.addItem({userId: userId, 
+              productId, variantId
             });
         }
 
@@ -47,9 +46,9 @@ favController.addToFav = async (req, res) => {
 favController.removeFromFav = async (req, res) => {
   try {
     const userId = req.session.user.id;
-    const { producto_id, variante_id } = req.body; 
+    const { productId, variantId } = req.body; 
 
-    await fav.removeItem(userId, producto_id, variante_id); 
+    await fav.removeItem(userId, productId, variantId); 
     
     res.json({success: true, count: await fav.getCount(userId) });
   } catch (error) {
@@ -93,15 +92,14 @@ favController.getFavPage = async (req, res) => {
     const lastFav = favItems[0]; 
     let productRelated = [];
 
-    if (lastFav && lastFav.categoria_id) {
+    if (lastFav && lastFav.categoryId) {
       productRelated = await product.getRelated(
-        [lastFav.id], [lastFav.categoria_id]);
+        [lastFav.id], [lastFav.categoryId]);
     }
 
     productRelated.forEach((p) => {
-      p.category = p.categoria;
       p.itsMobile = p.category?.toLowerCase() === "moviles";
-      p.itsNew = itsNewProduct(p.fecha_publicacion, 30);
+      p.itsNew = itsNewProduct(p.publicationDate, 30);
     });
 
     res.render('store/fav', {

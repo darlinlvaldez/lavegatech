@@ -33,11 +33,11 @@ async function changeColor(selectOrEvent, productId) {
     addToCartBtn.dataset.color = color;
     
     const variantsByColor = window.productData.variantsByColor || {};
-    const varianteId = variantsByColor[color];
+    const variantId = variantsByColor[color];
     
-    if (varianteId) {
-      addToCartBtn.dataset.variantId = varianteId;
-      console.log('Variante ID actualizado:', varianteId, 'para color:', color);
+    if (variantId) {
+      addToCartBtn.dataset.variantId = variantId;
+      console.log('Variante ID actualizado:', variantId, 'para color:', color);
     }
   }
   
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (productRoot) {
         window.productData = {
             stockByColor: JSON.parse(productRoot.dataset.productStocks),
-            variantsByColor: JSON.parse(productRoot.dataset.productVariantes || '{}'),
+            variantsByColor: JSON.parse(productRoot.dataset.productVariants || '{}'),
             productId: productRoot.dataset.productId
         };
     } else {

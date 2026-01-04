@@ -3,11 +3,11 @@ import { calculateItem } from '../../utils/calculateItem.js';
 
 window.renderCart = renderCart;
 
-function renderCart(carrito, cartList, carritoCount, cartSummary, cartSubtotal) {
+function renderCart(cart, cartList, cartCount, cartSummary, cartSubtotal) {
     
-    if (carrito.length === 0) {
-        if (cartList) cartList.innerHTML = '<p>No hay productos en el carrito.</p>';
-        if (carritoCount) carritoCount.textContent = '0';
+    if (cart.length === 0) {
+        if (cartList) cartList.innerHTML = '<p>No hay productos en el cart.</p>';
+        if (cartCount) cartCount.textContent = '0';
         if (cartSummary) cartSummary.textContent = '0 producto(s) seleccionado(s)';
         if (cartSubtotal) cartSubtotal.textContent = 'SUBTOTAL: $0.00';
         return;
@@ -16,7 +16,7 @@ function renderCart(carrito, cartList, carritoCount, cartSummary, cartSubtotal) 
     let total = 0;
     let html = '';
 
-    carrito.forEach(item => {
+    cart.forEach(item => {
         const data = calculateItem(item);
 
         total += data.total;
@@ -25,10 +25,10 @@ function renderCart(carrito, cartList, carritoCount, cartSummary, cartSubtotal) 
         <div class="product-widget">
             <a href="/product/${data.productId}${data.color ? `?color=${encodeURIComponent(data.color)}` : ''}">
                 <div class="product-img">
-                    <img src="${item.image}" alt="${item.nombre}">
+                    <img src="${item.image}" alt="${item.name}">
                 </div>
                 <div class="product-body">
-                    <h3 class="product-nombres">${item.nombre} ${data.specs}</h3>
+                    <h3 class="product-nombres">${item.name} ${data.specs}</h3>
                     <h4 class="product-precios">
                     <span class="qty-cart">${data.quantity}x</span> 
                     $${formatPrice(data.finalPrice)}
@@ -42,8 +42,8 @@ function renderCart(carrito, cartList, carritoCount, cartSummary, cartSubtotal) 
     });
 
     if (cartList) cartList.innerHTML = html;
-    if (carritoCount) carritoCount.textContent = carrito.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
-    if (cartSummary) cartSummary.textContent = `${carrito.length} producto(s) seleccionado(s)`;
+    if (cartCount) cartCount.textContent = cart.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
+    if (cartSummary) cartSummary.textContent = `${cart.length} producto(s) seleccionado(s)`;
     if (cartSubtotal) cartSubtotal.textContent = `SUBTOTAL: $${formatPrice(total)}`;
 }
 

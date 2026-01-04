@@ -43,7 +43,7 @@ cartController.syncCart = async (req, res) => {
         await cart.addItem({
           userId: userId, 
           productId: item.productId,
-          variantId,
+          variantId: variantId,
           quantity: finalQuantity,
           discount: item.discount,
           price: item.price,
@@ -239,15 +239,14 @@ cartController.getRelated = async (req, res) => {
     const lastCart = cartItems[0];
     let productRelated = [];
 
-    if (lastCart && lastCart.categoria_id) {
+    if (lastCart && lastCart.categoryId) {
       productRelated = await product.getRelated(
-        [lastCart.carrito_id], [lastCart.categoria_id]);
+        [lastCart.cartId], [lastCart.categoryId]);
     }
 
      productRelated.forEach((p) => {
-       p.category = p.categoria;
        p.itsMobile = p.category?.toLowerCase() === "moviles";
-       p.itsNew = itsNewProduct(p.fecha_publicacion, 30);
+       p.itsNew = itsNewProduct(p.publicationDate, 30);
      });
 
     res.render("store/cart", {cartItems, productRelated, isAuthenticated: !!userId});

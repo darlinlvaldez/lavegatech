@@ -68,10 +68,10 @@
                             <div class="product">
                                 <div class="product-img">
                                     <a href="/product/<%= product.id %>?color=<%= product.color %>">
-                                        <img src="<%= product.imagen || '/img/iphone12black.png' %>" alt="<%= product.name %>">
+                                        <img src="<%= product.image || '/img/iphone12black.png' %>" alt="<%= product.name %>">
                                         <div class="product-label">
-                                            <% if (product.descuento > 0) { %>
-                                            <span class="sale">-<%= product.descuento %>%</span>
+                                            <% if (product.discount > 0) { %>
+                                            <span class="sale">-<%= product.discount %>%</span>
                                             <% } %>
                                             <% if (product.itsNew) { %>
                                             <span class="new">Nuevo</span>
@@ -87,8 +87,8 @@
                                         </h3>
                                     <h4 class="product-price">
 									$<%= Number(product.price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-									<% if (product.descuento > 0) { %>
-										<del class="product-old-price">$<%= Number(product.price / (1 - product.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></del>
+									<% if (product.discount > 0) { %>
+										<del class="product-old-price">$<%= Number(product.price / (1 - product.discount / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></del>
 									<% } %>
                                     </h4></a>
                                 </div>

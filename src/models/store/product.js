@@ -8,20 +8,20 @@ productDetails.getProductDetails = async (id) => {
   const query = `
   SELECT 
     p.id,
-    p.nombre,
-    p.descripcion,
-    p.precio,
-    p.impuesto,
-    p.descuento,
-    p.fecha_publicacion,
-    p.categoria_id AS categoriaId,
-    c.categoria,
+    p.nombre AS name,
+    p.descripcion AS description,
+    p.precio AS price,
+    p.impuesto AS tax,
+    p.descuento AS discount,
+    p.fecha_publicacion AS publicationDate,
+    p.categoria_id AS categoryId,
+    c.categoria AS category,
     v.id AS variantId,
     v.color,
     v.stock,
-    v.img,
+    v.img AS image,
     r.capacidad AS ram,
-    a.capacidad AS almacenamiento,
+    a.capacidad AS storage,
     CONCAT(r.capacidad, '+', a.capacidad) AS specs
   FROM productos p
   JOIN categorias c ON p.categoria_id = c.id AND c.activo = 1
@@ -44,10 +44,10 @@ productDetails.getProductDetails = async (id) => {
     variantsByColor: {}  
   };
 
-  results.forEach(({ color, stock, img, variantId }) => {
+  results.forEach(({ color, stock, image, variantId }) => {
     if (color) {
       product.stockByColor[color] = stock;
-      product.imagesByColor[color] = img;
+      product.imagesByColor[color] = image;
       product.colors.push(color);
       product.variantsByColor[color] = variantId; 
     }
@@ -56,9 +56,9 @@ productDetails.getProductDetails = async (id) => {
   return product;
 };
 
-productDetails.getRelated = async (productoId, categoriaId) => {
-  const ids = Array.isArray(productoId) ? productoId : [productoId];
-  const cats = Array.isArray(categoriaId) ? categoriaId : [categoriaId];
+productDetails.getRelated = async (productId, categoryId) => {
+  const ids = Array.isArray(productId) ? productId : [productId];
+  const cats = Array.isArray(categoryId) ? categoryId : [categoryId];
 
   const placeholders = ids.map(() => "?").join(",");
   const catPlaceholders = cats.map(() => "?").join(",");

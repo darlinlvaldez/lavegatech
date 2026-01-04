@@ -25,7 +25,7 @@
 	}
 	
 	document.addEventListener("DOMContentLoaded", function () {
-		document.getElementById("aplicar-filtro-precio").addEventListener("click", updateProducts);
+		document.getElementById("apply-filter-price").addEventListener("click", updateProducts);
 	});
 </script>
 
@@ -43,9 +43,9 @@
 			<div class="col-md-12">
 				<ul class="breadcrumb-tree">
 					<li class="active">
-						<%= categories.length> 0 ? categories.map(id => categoryCount.find(c => c.category_id ==
+						<%= categories.length> 0 ? categories.map(id => categoryCount.find(c => c.categoryId ==
 							id)?.category).join(' / ') : 'Todos los productos' %>
-							<%= brands.length > 0 ? ' -- ' + brands.map(id => brandCount.find(m => m.brand_id == id)?.brand).join(' / ') : '' %>
+							<%= brands.length > 0 ? ' -- ' + brands.map(id => brandCount.find(m => m.brandId == id)?.brand).join(' / ') : '' %>
 							(<%= totalProduct %> Resultados)
 					</li>
 				</ul>
@@ -71,10 +71,10 @@
 					<div class="checkbox-filter">
 						<% categoryCount.forEach(category=> { %>
 							<div class="input-checkbox">
-								<input type="checkbox" id="category-<%= category.category_id %>" name="category"
-									value="<%= category.category_id %>" onchange="updateProducts()"
-									<%=categories.includes(category.category_id) ? 'checked' : '' %>>
-								<label for="category-<%= category.category_id %>">
+								<input type="checkbox" id="category-<%= category.categoryId %>" name="category"
+									value="<%= category.categoryId %>" onchange="updateProducts()"
+									<%=categories.includes(category.categoryId) ? 'checked' : '' %>>
+								<label for="category-<%= category.categoryId %>">
 									<span></span>
 									<%= category.category %>
 										<small>(<%= category.count %>)</small>
@@ -101,8 +101,8 @@
 							<span class="qty-up">+</span>
 							<span class="qty-down">-</span>
 						</div><br><br>
-						<button id="aplicar-filtro-precio" class="btn btn-primary">Aplicar</button>
-						<button id="reset-filtro-precio" class="btn btn-danger">Reiniciar</button>
+						<button id="apply-filter-price" class="btn btn-primary">Aplicar</button>
+						<button id="reset-filter-price" class="btn btn-danger">Reiniciar</button>
 					</div>
 				</div>
 				<!-- /aside Widget -->
@@ -113,10 +113,10 @@
 					<div class="checkbox-filter">
 						<% brandCount.forEach(brand=> { %>
 							<div class="input-checkbox">
-								<input type="checkbox" id="brand-<%= brand.brand_id %>" name="brand"
-									value="<%= brand.brand_id %>" onchange="updateProducts()"
-									<%= brands.includes(brand.brand_id.toString()) ? 'checked' : '' %>>
-								<label for="brand-<%= brand.brand_id %>">
+								<input type="checkbox" id="brand-<%= brand.brandId %>" name="brand"
+									value="<%= brand.brandId %>" onchange="updateProducts()"
+									<%= brands.includes(brand.brandId.toString()) ? 'checked' : '' %>>
+								<label for="brand-<%= brand.brandId %>">
 									<span></span>
 									<%= brand.brand %>
 									<small>(<%= brand.count %>)</small>
@@ -160,37 +160,37 @@
 				<div id="store-products">
 					<div class="row">
 						<% if (products && products.length> 0) { %>
-							<% products.forEach(producto=> { %>
+							<% products.forEach(product=> { %>
 								<div class="col-md-4 col-xs-6">
 									<div class="product">
-										<div class="product-img"> <a href="/product/<%= producto.id %>?color=<%= producto.color %>">
-											<img src="<%= producto.imagen %>" alt="<%= producto.nombre %>" >
+										<div class="product-img"> <a href="/product/<%= product.id %>?color=<%= product.color %>">
+											<img src="<%= product.image %>" alt="<%= product.name %>" >
 											<div class="product-label">
-												<% if (producto.descuento> 0) { %>
-													<span class="sale">-<%= producto.descuento %>%</span>
+												<% if (product.discount> 0) { %>
+													<span class="sale">-<%= product.discount %>%</span>
 													<% } %>
-														<% if (producto.itsNew) { %>
+														<% if (product.itsNew) { %>
 														<span class="new">Nuevo</span>
 														<% } %>
 														</div>
 														</div>
 														<div class="product-body">
-															<p class="product-category"><%= producto.category %></p>
-															<h3 class="product-name"><%= producto.nombre %> <%= producto.specs %></h3>
+															<p class="product-category"><%= product.category %></p>
+															<h3 class="product-name"><%= product.name %> <%= product.specs %></h3>
 															<h4 class="product-price">
-															$<%= Number(producto.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-															<% if (producto.descuento > 0) { %>
+															$<%= Number(product.price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+															<% if (product.discount > 0) { %>
 																<del class="product-old-price">
-																	$<%= Number(producto.precio / (1 - producto.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+																	$<%= Number(product.price / (1 - product.discount / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
 																</del>
 															<% } %>
 															</h4>
 															</a>
 															<div class="product-rating">
 															<% for (let i = 1; i <= 5; i++) { %>
-                                                        	<% if (i <= Math.floor(producto.averageRating)) { %>
+                                                        	<% if (i <= Math.floor(product.averageRating)) { %>
                                                             <i class="fa-solid fa-star"></i>
-                                                       		<% } else if (i - producto.averageRating < 1 && i > producto.averageRating) { %>
+                                                       		<% } else if (i - product.averageRating < 1 && i > product.averageRating) { %>
                                                             <i class="fa-regular fa-star-half-stroke"></i>
                                                       		<% } else { %>
                                                             <i class="fa-regular fa-star"></i>
@@ -199,13 +199,13 @@
 															</div>
 															<div class="product-btns">
 																<button class="add-to-wishlist" 
-																	data-product-id="<%= producto.id %>" 
-																	data-product-color="<%= producto.color %>">
+																	data-product-id="<%= product.id %>" 
+																	data-product-color="<%= product.color %>">
 																	<i class="fa-regular fa-heart"></i>
 																	<span class="tooltipp">Favoritos</span>
 																</button>
-																	<% if (producto.itsMobile) { %>
-																	<button class="add-to-compare" data-id="<%= producto.id %>">
+																	<% if (product.itsMobile) { %>
+																	<button class="add-to-compare" data-id="<%= product.id %>">
 																		<i class="fa-solid fa-arrow-right-arrow-left"></i>
 																	<span class="tooltipp">Comparar</span></button>
 																	<% } %>
@@ -213,17 +213,17 @@
 														</div>
 														<div class="add-to-cart">
 														<button class="add-to-cart-btn"
-														data-id="<%= producto.id %>"
-														data-variante_id="<%= producto.variante_id %>"
-														data-color="<%= producto.color %>"
-														data-ram="<%= producto.ram %>"
-														data-almacenamiento="<%= producto.almacenamiento %>"
-														data-stock="<%= producto.stock %>"
-														data-nombre="<%= producto.nombre %>"
-														data-precio="<%= producto.precio %>"
-														data-descuento="<%= producto.descuento %>"   
-														data-impuesto="<%= producto.impuesto %>"       
-														data-imagen="<%= producto.imagen %>">
+														data-id="<%= product.id %>"
+														data-variantId="<%= product.variantId %>"
+														data-color="<%= product.color %>"
+														data-ram="<%= product.ram %>"
+														data-storage="<%= product.storage %>"
+														data-stock="<%= product.stock %>"
+														data-name="<%= product.name %>"
+														data-price="<%= product.price %>"
+														data-discount="<%= product.discount %>"   
+														data-tax="<%= product.tax %>"       
+														data-image="<%= product.image %>">
 													<i class="fa fa-shopping-cart"></i> Añadir al carrito
 													</button>
 												</div>

@@ -34,18 +34,18 @@ async function toggleFavorite(button) {
         const data = await fetchFav('/fav/items');
         const favs = data.success && data.items ? data.items : [];
 
-        const favItem = favs.find(item => item.producto_id == productId && item.selectedColor == color);
-        const varianteId = favItem ? favItem.variante_id : null;
+        const favItem = favs.find(item => item.productId == productId && item.selectedColor == color);
+        const variantId = favItem ? favItem.variantId : null;
 
-        if (isAlreadyAdded && varianteId) {
-            await removeFromFav(productId, color, varianteId);
+        if (isAlreadyAdded && variantId) {
+            await removeFromFav(productId, color, variantId);
             setButtonState(button, false);
         } else if (!isAlreadyAdded) {
             await fetchFav('/fav/add', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    producto_id: productId,
+                    productId: productId,
                     selectedColor: color
                 })
             });
@@ -73,7 +73,7 @@ async function checkFavorites() {
             const productId = button.dataset.productId;
             const currentColor = button.dataset.productColor;
             const isFav = favorites.some(item => 
-                item.producto_id == productId && item.selectedColor == currentColor
+                item.productId == productId && item.selectedColor == currentColor
             );
             setButtonState(button, isFav);
         });
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkFavorites();
 });
 
-async function removeFromFav(productId, color, varianteId) {
+async function removeFromFav(productId, color, variantId) {
   const authData = await checkAuth();
   if (!authData.authenticated) return;
 
@@ -116,9 +116,9 @@ async function removeFromFav(productId, color, varianteId) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
-        producto_id: productId, 
+        productId: productId, 
         selectedColor: color,
-        variante_id: varianteId
+        variantId: variantId
       })
     });
 
