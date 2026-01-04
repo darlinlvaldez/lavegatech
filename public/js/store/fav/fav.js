@@ -34,7 +34,7 @@ async function toggleFavorite(button) {
         const data = await fetchFav('/fav/items');
         const favs = data.success && data.items ? data.items : [];
 
-        const favItem = favs.find(item => item.producto_id == productId && item.colorSeleccionado == color);
+        const favItem = favs.find(item => item.producto_id == productId && item.selectedColor == color);
         const varianteId = favItem ? favItem.variante_id : null;
 
         if (isAlreadyAdded && varianteId) {
@@ -46,7 +46,7 @@ async function toggleFavorite(button) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     producto_id: productId,
-                    colorSeleccionado: color
+                    selectedColor: color
                 })
             });
             setButtonState(button, true);
@@ -73,7 +73,7 @@ async function checkFavorites() {
             const productId = button.dataset.productId;
             const currentColor = button.dataset.productColor;
             const isFav = favorites.some(item => 
-                item.producto_id == productId && item.colorSeleccionado == currentColor
+                item.producto_id == productId && item.selectedColor == currentColor
             );
             setButtonState(button, isFav);
         });
@@ -86,7 +86,7 @@ async function checkFavorites() {
 }
 
 function setupEventListeners() {
-    document.querySelectorAll('[name="color"], .color-option, #colorSeleccionado').forEach(element => {
+    document.querySelectorAll('[name="color"], .color-option, #selectedColor').forEach(element => {
         element.addEventListener('change', function() {
             const selectedColor = this.dataset.color;
             document.querySelectorAll('.add-to-wishlist').forEach(button => {
@@ -117,7 +117,7 @@ async function removeFromFav(productId, color, varianteId) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         producto_id: productId, 
-        colorSeleccionado: color,
+        selectedColor: color,
         variante_id: varianteId
       })
     });

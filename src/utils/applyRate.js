@@ -1,16 +1,16 @@
-export const applyTaxDiscount = (productos) => {
-  return productos.map(producto => {
-    const precio = Number(producto.precio);
-    const tasaImpuesto = Number(producto.impuesto) / 100 || 0;       
-    const tasaDescuento = Number(producto.descuento) / 100 || 0; 
+export const applyTaxDiscount = (products) => {
+  return products.map(product => {
+    const price = Number(product.price ?? product.precio);
+    const taxRate = Number(product.tax ?? product.impuesto) / 100 || 0;       
+    const discountRate  = Number(product.discount ?? product.descuento) / 100 || 0; 
 
-    const precioConImpuesto = precio * (1 + tasaImpuesto);
+    const priceWithTax = price * (1 + taxRate);
 
-    const finalPrice = precioConImpuesto * (1 - tasaDescuento);
+    const finalPrice = priceWithTax * (1 - discountRate );
 
     return {
-      ...producto,
-      precio: finalPrice
+      ...product,
+      price: finalPrice
     };
   });
 };

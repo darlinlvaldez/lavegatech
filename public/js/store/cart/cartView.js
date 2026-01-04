@@ -16,10 +16,10 @@ window.updateQuantity = async function(element, change, productId, color) {
 
     const authData = await checkAuth();
     let cart = JSON.parse(localStorage.getItem('carrito')) || [];
-    const itemIndex = cart.findIndex(item => item.colorSeleccionado === color && item.producto_id === productId);
+    const itemIndex = cart.findIndex(item => item.selectedColor === color && item.productId === productId);
 
     if (itemIndex >= 0) {
-      isRemove ? cart.splice(itemIndex, 1) : cart[itemIndex].cantidad = finalQuantity;
+      isRemove ? cart.splice(itemIndex, 1) : cart[itemIndex].quantity = finalQuantity;
     }
 
     if (!authData.authenticated) {
@@ -28,8 +28,8 @@ window.updateQuantity = async function(element, change, productId, color) {
 
     if (authData.authenticated) {
       const action = isRemove ? 'remove-item' : 'update-quantity';
-      const body = { producto_id: productId, colorSeleccionado: color,
-        ...(action === 'update-quantity' && { cantidad: finalQuantity })
+      const body = { productId, selectedColor: color,
+        ...(action === 'update-quantity' && { quantity: finalQuantity })
       };
 
       const response = await fetch(`/cart/${action}`, {
@@ -139,26 +139,26 @@ async function loadCartPage() {
     let totalItems = 0;
 
     for (const item of cart) {
-        const stock = await getRealStock(item.id || item.producto_id, item.colorSeleccionado);
+        const stock = await getRealStock(item.id || item.productId, item.selectedColor);
         if (stock <= 0) continue;
 
         const data = calculateItem(item, stock);
 
         total += data.total;
-        totalItems += data.cantidad;
+        totalItems += data.quantity;
     
       html += `
       <div class="cart-item" data-id="${data.productId}" data-color="${data.color}">
       <a href="/product/${data.productId}${data.color ? `?color=${encodeURIComponent(data.color)}` : ''}">
-        <img src="${item.imagen}" alt="${item.nombre}" class="product-imagen">
+        <img src="${item.image}" alt="${item.name}" class="product-image">
         <div class="product-info">
-          <h5>${item.nombre} ${data.specs}</h5>
+          <h5>${item.name} ${data.specs}</h5>
           <b>Precio:</b>
           <span class="product-price">
             <b>$${formatPrice(data.finalPrice)}</b>
-            ${data.descuento > 0 ? `
-            <del class="product-old-price">$${formatPrice(data.precioAntesDescuento)}</del>
-            <span class="sale">-${data.descuento.toFixed(2)}%</span>` : ''}
+            ${data.discount > 0 ? `
+            <del class="product-old-price">$${formatPrice(data.originalPrice)}</del>
+            <span class="sale">-${data.discount.toFixed(2)}%</span>` : ''}
         </span>
           <div class="item-total">
             <span><strong>Total:</strong></span>
@@ -179,7 +179,7 @@ async function loadCartPage() {
               <select class="input-select" 
                 onchange="updateQuantity(this, 0, '${data.productId}', '${data.color}')">
                 ${Array.from({length: Math.min(stock, 20)}, (_, i) =>
-                  `<option value="${i+1}" ${i+1 === data.cantidad ? 'selected' : ''}>${i+1}</option>`
+                  `<option value="${i+1}" ${i+1 === data.quantity ? 'selected' : ''}>${i+1}</option>`
               ).join('')}
               </select>
             </div>

@@ -25,12 +25,12 @@ function renderCart(carrito, cartList, carritoCount, cartSummary, cartSubtotal) 
         <div class="product-widget">
             <a href="/product/${data.productId}${data.color ? `?color=${encodeURIComponent(data.color)}` : ''}">
                 <div class="product-img">
-                    <img src="${item.imagen}" alt="${item.nombre}">
+                    <img src="${item.image}" alt="${item.nombre}">
                 </div>
                 <div class="product-body">
                     <h3 class="product-nombres">${item.nombre} ${data.specs}</h3>
                     <h4 class="product-precios">
-                    <span class="qty-cart">${data.cantidad}x</span> 
+                    <span class="qty-cart">${data.quantity}x</span> 
                     $${formatPrice(data.finalPrice)}
                 </h4>
             </div>
@@ -42,7 +42,7 @@ function renderCart(carrito, cartList, carritoCount, cartSummary, cartSubtotal) 
     });
 
     if (cartList) cartList.innerHTML = html;
-    if (carritoCount) carritoCount.textContent = carrito.reduce((sum, item) => sum + (Number(item.cantidad) || 1), 0);
+    if (carritoCount) carritoCount.textContent = carrito.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
     if (cartSummary) cartSummary.textContent = `${carrito.length} producto(s) seleccionado(s)`;
     if (cartSubtotal) cartSubtotal.textContent = `SUBTOTAL: $${formatPrice(total)}`;
 }

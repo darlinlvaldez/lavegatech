@@ -17,7 +17,7 @@ async function fetchCart(action, data = {}) {
 }
 
 async function addToCart(product) {
-  const { id, variante_id, color, cantidad = 1, nombre, precio, imagen, ram, almacenamiento, descuento, impuesto } = product;
+  const { id, variantId, color, quantity = 1, name, price, image, ram, storage, discount, tax } = product;
 
   try {
     const { authenticated } = await checkAuth();
@@ -40,27 +40,27 @@ async function addToCart(product) {
       return;
     }
 
-    const safeQty = Math.min(parseInt(cantidad) || 1, stockReal);
+    const safeQty = Math.min(parseInt(quantity) || 1, stockReal);
 
-    const cartItem = { producto_id: id, variante_id, colorSeleccionado: color, 
-      cantidad: safeQty, nombre, precio, impuesto: impuesto || 0, 
-      descuento: descuento || 0, imagen, ram, almacenamiento };
+    const cartItem = { productId: id, variantId, selectedColor: color, 
+      quantity: safeQty, name, price, tax: tax || 0, 
+      discount: discount || 0, image, ram, storage };
 
     if (!authenticated) {
       const localCart = JSON.parse(localStorage.getItem("carrito")) || [];
       const existingIndex = localCart.findIndex(
-        (item) => item.producto_id === id && item.colorSeleccionado === color
+        (item) => item.productId === id && item.selectedColor === color
       );
 
       if (existingIndex !== -1) {
         const newQty = Math.min(
-          localCart[existingIndex].cantidad + safeQty,
+          localCart[existingIndex].quantity + safeQty,
           stockReal
         );
         if (newQty <= 0) {
           localCart.splice(existingIndex, 1);
         } else {
-          localCart[existingIndex].cantidad = newQty;
+          localCart[existingIndex].quantity = newQty;
         }
       } else {
         localCart.unshift(cartItem);
@@ -122,14 +122,14 @@ async function deleteProduct(id, color) {
     if (!authenticated) {
       let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
       carrito = carrito.filter(
-        (item) => !(item.producto_id === id && item.colorSeleccionado === color)
+        (item) => !(item.productId === id && item.selectedColor === color)
       );
       localStorage.setItem("carrito", JSON.stringify(carrito));
     } else {
       await fetch("/cart/remove-item", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ producto_id: id, colorSeleccionado: color }),
+        body: JSON.stringify({ productId: id, selectedColor: color }),
         credentials: "include",
       });
     }
@@ -151,23 +151,23 @@ document.addEventListener("click", async (e) => {
   if (!btn) return;
 
   const getImage = () => {
-    if (btn.dataset.imagen) return btn.dataset.imagen;
+    if (btn.dataset.image) return btn.dataset.image;
     const slider = $("#product-main-img");
     return slider.length ? slider.find(".slick-current img").attr("src") : "";
   };
 
   await addToCart({
     id: btn.dataset.id,
-    variante_id: btn.dataset.variante_id,
+    variantId: btn.dataset.variantId,
     ram: btn.dataset.ram,
-    almacenamiento: btn.dataset.almacenamiento,
-    cantidad: document.getElementById("cantidad")?.value || 1,
+    storage: btn.dataset.storage,
+    quantity: document.getElementById("quantity")?.value || 1,
     color: btn.dataset.color,
     stock: parseInt(btn.dataset.stock) || 0,
-    nombre: btn.dataset.nombre,
-    precio: parseFloat(btn.dataset.precio),
-    descuento: parseFloat(btn.dataset.descuento) || 0,
-    impuesto: parseFloat(btn.dataset.impuesto) || 0,
-    imagen: getImage(),
+    name: btn.dataset.name,
+    price: parseFloat(btn.dataset.price),
+    discount: parseFloat(btn.dataset.discount) || 0,
+    tax: parseFloat(btn.dataset.tax) || 0,
+    image: getImage(),
   });
 });

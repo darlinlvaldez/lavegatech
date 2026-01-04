@@ -68,7 +68,7 @@
                             <div class="product">
                                 <div class="product-img">
                                     <a href="/product/<%= product.id %>?color=<%= product.color %>">
-                                        <img src="<%= product.imagen || '/img/iphone12black.png' %>" alt="<%= product.nombre %>">
+                                        <img src="<%= product.imagen || '/img/iphone12black.png' %>" alt="<%= product.name %>">
                                         <div class="product-label">
                                             <% if (product.descuento > 0) { %>
                                             <span class="sale">-<%= product.descuento %>%</span>
@@ -83,12 +83,12 @@
                                         <%= product.category === 'moviles' ? 'Móviles' : product.category.charAt(0).toUpperCase() + product.category.slice(1) %>
                                     </p>
                                     <h3 class="product-name">
-                                            <%= product.nombre %> <%= product.specs %>
+                                            <%= product.name %> <%= product.specs %>
                                         </h3>
                                     <h4 class="product-price">
-									$<%= Number(product.precio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+									$<%= Number(product.price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
 									<% if (product.descuento > 0) { %>
-										<del class="product-old-price">$<%= Number(product.precio / (1 - product.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></del>
+										<del class="product-old-price">$<%= Number(product.price / (1 - product.descuento / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></del>
 									<% } %>
                                     </h4></a>
                                 </div>

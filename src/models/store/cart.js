@@ -3,61 +3,68 @@ import {applyTaxDiscount} from "../../utils/applyRate.js";
 
 const cart = {};
 
-cart.addItem = async ({ usuario_id, producto_id, variante_id, cantidad }) => {
+cart.addItem = async ({ userId, productId, variantId, quantity }) => {
   await db.query(
     `INSERT INTO carrito (usuario_id, producto_id, variante_id, cantidad) 
      VALUES (?, ?, ?, ?)`,
-    [usuario_id, producto_id, variante_id, cantidad]
+    [userId, productId, variantId, quantity]
   );
 };
 
-cart.getVariant = async (producto_id, color) => {
+cart.getVariant = async (productId, color) => {
   const [rows] = await db.query(
     `SELECT id, stock FROM p_variantes WHERE producto_id = ? AND color = ?`,
-    [producto_id, color]
+    [productId, color]
   );
   return rows[0] || null;
 };
 
-cart.updateQuantity = async (identifier, usuario_id, value) => {
+cart.updateQuantity = async (identifier, userId, value) => {
   if (typeof identifier === 'number') {
     await db.query(
       "UPDATE carrito SET cantidad = ? WHERE id = ? AND usuario_id = ?",
-      [value, identifier, usuario_id]
+      [value, identifier, userId]
     );
   }
 };
 
-cart.removeItem = async (id, usuario_id) => {
+cart.removeItem = async (id, userId) => {
   await db.query("DELETE FROM carrito WHERE id = ? AND usuario_id = ?", 
-    [id, usuario_id]);
+    [id, userId]);
 };
 
-cart.clearCart = async (usuario_id) => {
-  await db.query("DELETE FROM carrito WHERE usuario_id = ?", [usuario_id]);
+cart.clearCart = async (userId) => {
+  await db.query("DELETE FROM carrito WHERE usuario_id = ?", [userId]);
 };
 
-cart.itemExists = async (usuario_id, producto_id, variante_id) => {
+cart.itemExists = async (userId, productId, variantId) => {
   const [rows] = await db.query( 
-    `SELECT id, cantidad FROM carrito 
-     WHERE usuario_id = ? AND producto_id = ? AND variante_id = ?`,
-    [usuario_id, producto_id, variante_id]
+    `SELECT id, cantidad AS quantity 
+    FROM carrito 
+    WHERE usuario_id = ? AND producto_id = ? AND variante_id = ?`,
+    [userId, productId, variantId]
   );
   return rows[0] || null;
 };
 
-cart.getByUserId = async (usuario_id) => {
+cart.getByUserId = async (userId) => {
   const [rows] = await db.query(`
     SELECT 
       c.id AS carrito_id, 
-      c.producto_id, 
-      c.variante_id,  
-      c.cantidad, 
+      c.producto_id AS productId, 
+      c.variante_id AS variantId,  
+      c.cantidad AS quantity, 
       c.fecha_agregado,
-      p.nombre, p.precio, p.descuento, p.categoria_id, p.impuesto,
-      v.color AS colorSeleccionado, v.img AS imagen, v.stock AS stock_real,
+      p.nombre AS name, 
+      p.precio AS price, 
+      p.descuento AS discount, 
+      p.categoria_id, 
+      p.impuesto AS tax,
+      v.color AS selectedColor, 
+      v.img AS image, 
+      v.stock AS stock_real,
       r.capacidad AS ram,
-      a.capacidad AS almacenamiento,
+      a.capacidad AS storage,
       CONCAT(r.capacidad, '+', a.capacidad) AS specs
     FROM carrito c
     JOIN productos p ON c.producto_id = p.id
@@ -66,37 +73,37 @@ cart.getByUserId = async (usuario_id) => {
     LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
     WHERE c.usuario_id = ? AND p.activo = 1
     ORDER BY c.fecha_agregado DESC
-  `, [usuario_id]);
+  `, [userId]);
 
   const finalPrice = applyTaxDiscount(rows);
 
   for (const item of finalPrice) {
-    if (item.stock_real !== null && item.cantidad > item.stock_real) {
-      await cart.updateQuantity(item.carrito_id, usuario_id, item.stock_real);
-      item.cantidad = item.stock_real;
+    if (item.stock_real !== null && item.quantity > item.stock_real) {
+      await cart.updateQuantity(item.carrito_id, userId, item.stock_real);
+      item.quantity = item.stock_real;
     }
   }
 
   return finalPrice;
 };
 
-cart.getCartToPay = async (usuario_id) => {
+cart.getCartToPay = async (userId) => {
   const [rows] = await db.query(
     `SELECT 
-      c.id AS cart_id,
-      c.producto_id,
-      c.cantidad,
-      p.nombre,
+      c.id AS cartid,
+      c.producto_id AS productoId,
+      c.cantidad AS quantity,
+      p.nombre AS name,
       p.precio AS precioOriginal,
-      p.impuesto,
-      p.descuento,
-      p.categoria_id,
+      p.impuesto AS tax,
+      p.descuento AS discount,
+      p.categoria_id AS categoryId,
       c.fecha_agregado,
       r.capacidad AS ram,
       a.capacidad AS almacenamiento,
       CONCAT(r.capacidad, '+', a.capacidad) AS specs,
-      v.color AS colorSeleccionado,
-      v.img AS imagen,
+      v.color AS selectedColor,
+      v.img AS image,
       v.stock
     FROM carrito c
     JOIN productos p ON c.producto_id = p.id
@@ -105,26 +112,26 @@ cart.getCartToPay = async (usuario_id) => {
     LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
     WHERE c.usuario_id = ? AND p.activo = 1
     ORDER BY c.fecha_agregado DESC`,
-    [usuario_id]
+    [userId]
   );
   
   return rows;
 };
 
-cart.getCount = async (usuario_id) => {
+cart.getCount = async (userId) => {
   const [rows] = await db.query(
     `SELECT COUNT(*) as count
     FROM carrito c
     JOIN productos p ON c.producto_id = p.id
     WHERE c.usuario_id = ? AND p.activo = 1`,
-    [usuario_id]);
+    [userId]);
   return rows[0].count;
 };
 
-cart.getRealStock = async (producto_id, color) => {
+cart.getRealStock = async (productId, color) => {
   const [rows] = await db.query(
     "SELECT stock FROM p_variantes WHERE producto_id = ? AND color = ?",
-    [producto_id, color]);
+    [productId, color]);
   return rows[0]?.stock || 0;
 };
 

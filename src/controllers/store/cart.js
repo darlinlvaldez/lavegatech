@@ -12,7 +12,7 @@ cartController.syncCart = async (req, res) => {
 
     for (const dbItem of dbItems) {
       const existsInLocal = localItems.some(
-        (item) => item.producto_id === dbItem.producto_id && item.colorSeleccionado === dbItem.colorSeleccionado);
+        (item) => item.productId === dbItem.productId && item.selectedColor === dbItem.selectedColor);
 
       if (!existsInLocal) {
         await cart.removeItem(dbItem.id, userId);
@@ -20,13 +20,13 @@ cartController.syncCart = async (req, res) => {
     }
 
     for (const item of localItems) {
-      const variante = await cart.getVariant(item.producto_id, item.colorSeleccionado);
-      if (!variante) continue;
+      const variant = await cart.getVariant(item.productId, item.selectedColor);
+      if (!variant) continue;
       
-      const stockReal = variante.stock;
-      const variante_id = variante.id;
+      const stockReal = variant.stock;
+      const variantId = variant.id;
 
-      const existingItem = await cart.itemExists(userId, item.producto_id, variante_id);
+      const existingItem = await cart.itemExists(userId, item.productId, variantId);
 
       if (stockReal <= 0) {
         if (existingItem) await cart.removeItem(existingItem.id, userId);
@@ -34,23 +34,23 @@ cartController.syncCart = async (req, res) => {
       }
       
       if (existingItem) {
-        const nuevaCantidad = existingItem.cantidad + item.cantidad;
-        const cantidadFinal = Math.min(nuevaCantidad, stockReal);
+        const newQuantity = existingItem.quantity + item.quantity;
+        const finalQuantity = Math.min(newQuantity, stockReal);
         
-        await cart.updateQuantity(existingItem.id, userId, cantidadFinal);
+        await cart.updateQuantity(existingItem.id, userId, finalQuantity);
       } else {
-        const cantidadFinal = Math.min(item.cantidad, stockReal);
+        const finalQuantity = Math.min(item.quantity, stockReal);
         await cart.addItem({
-          usuario_id: userId, 
-          producto_id: item.producto_id,
-          variante_id: variante_id,
-          cantidad: cantidadFinal,
-          descuento: item.descuento,
-          precio: item.precio,
-          imagen: item.imagen,
-          nombre: item.nombre,
+          userId: userId, 
+          productId: item.productId,
+          variantId,
+          quantity: finalQuantity,
+          discount: item.discount,
+          price: item.price,
+          image: item.image,
+          name: item.name,
           ram: item.ram,
-          almacenamiento: item.almacenamiento
+          storage: item.storage
         });
       }
     }
@@ -65,46 +65,46 @@ cartController.syncCart = async (req, res) => {
 cartController.addToCart = async (req, res) => {
   try {
     const userId = req.session.user.id;
-    const { producto_id, colorSeleccionado, cantidad = 1 } = req.body;
+    const { productId, selectedColor, quantity = 1 } = req.body;
 
-    if (!producto_id || !colorSeleccionado || cantidad < 1) {
+    if (!productId || !selectedColor || quantity < 1) {
       return res.status(400).json({ success: false, message: "Datos inválidos" });
     }
 
-    const variante = await cart.getVariant(producto_id, colorSeleccionado);
+    const variant = await cart.getVariant(productId, selectedColor);
     
-    if (!variante) {
+    if (!variant) {
       return res.status(404).json({success: false,
-        message: "Variante no encontrada para este producto y color"
+        message: "variant no encontrada para este producto y color"
       });
     }
 
-    const { id: variante_id, stock: stockReal } = variante;
+    const { id: variantId, stock: stockReal } = variant;
 
     if (stockReal <= 0) {
       return res.status(400).json({success: false,
-        message: "Este producto está agotado. Haz clic para ver otras variantes disponibles."
+        message: "Este producto está agotado. Haz clic para ver otras variants disponibles."
       });
     }
 
-    const existingItem = await cart.itemExists(userId, producto_id, variante_id);
+    const existingItem = await cart.itemExists(userId, productId, variantId);
 
     if (existingItem) {
-      const nuevaCantidad = existingItem.cantidad + cantidad;
-      const cantidadFinal = Math.min(nuevaCantidad, stockReal);
+      const newQuantity = existingItem.quantity + quantity;
+      const finalQuantity = Math.min(newQuantity, stockReal);
 
-      await cart.updateQuantity(existingItem.id, userId, cantidadFinal);
+      await cart.updateQuantity(existingItem.id, userId, finalQuantity);
       return res.json({
         success: true,
         count: await cart.getCount(userId),
-        message: cantidadFinal !== nuevaCantidad
-          ? `Solo se agregaron ${cantidadFinal - existingItem.cantidad} unidades (stock máximo: ${stockReal})`
+        message: finalQuantity !== newQuantity
+          ? `Solo se agregaron ${finalQuantity - existingItem.quantity} unidades (stock máximo: ${stockReal})`
           : "Producto actualizado en el carrito"
       });
     } else {
-      const cantidadFinal = Math.min(cantidad, stockReal);
+      const finalQuantity = Math.min(quantity, stockReal);
 
-      await cart.addItem({usuario_id: userId, producto_id, variante_id, cantidad: cantidadFinal});
+      await cart.addItem({userId, productId, variantId, quantity: finalQuantity});
 
       return res.json({
         success: true,
@@ -132,51 +132,51 @@ cartController.getCartItems = async (req, res) => {
 
 cartController.updateQuantity = async (req, res) => {
   try {
-    const { producto_id, colorSeleccionado, cantidad } = req.body;
+    const { productId, selectedColor, quantity } = req.body;
 
-    if (!producto_id || !colorSeleccionado || cantidad === undefined) {
+    if (!productId || !selectedColor || quantity === undefined) {
       return res.status(400).json({ success: false, message: 'Datos inválidos' });
     }
 
-    const variante = await cart.getVariant(producto_id, colorSeleccionado);
-    if (!variante) {
-      return res.status(404).json({ success: false, message: 'Variante no encontrada' });
+    const variant = await cart.getVariant(productId, selectedColor);
+    if (!variant) {
+      return res.status(404).json({ success: false, message: 'variant no encontrada' });
     }
 
-    const item = await cart.itemExists(req.session.user.id, producto_id, variante.id);
+    const item = await cart.itemExists(req.session.user.id, productId, variant.id);
     if (!item) {
       return res.status(404).json({ success: false, message: 'Producto no encontrado en carrito' });
     }
 
-    await cart.updateQuantity(item.id, req.session.user.id, cantidad);
+    await cart.updateQuantity(item.id, req.session.user.id, quantity);
 
     res.json({ success: true });
   } catch (error) {
     console.error('Error en updateQuantity:', error);
-    res.status(500).json({ success: false, message: 'Error al actualizar cantidad' });
+    res.status(500).json({ success: false, message: 'Error al actualizar quantity' });
   }
 };
 
 cartController.removeItem = async (req, res) => {
   try {
     const userId = req.session.user.id;
-    const { producto_id, colorSeleccionado } = req.body; 
+    const { productId, selectedColor } = req.body; 
 
-    if (!producto_id || !colorSeleccionado) {
+    if (!productId || !selectedColor) {
       return res.status(400).json({ success: false, message: 'Datos inválidos' });
     }
 
-    const variante = await cart.getVariant(producto_id, colorSeleccionado);
-    if (!variante) {
-      return res.status(404).json({ success: false, message: 'Variante no encontrada' });
+    const variant = await cart.getVariant(productId, selectedColor);
+    if (!variant) {
+      return res.status(404).json({ success: false, message: 'variant no encontrada' });
     }
 
-    const item = await cart.itemExists(userId, producto_id, variante.id);
+    const item = await cart.itemExists(userId, productId, variant.id);
     if (item) await cart.removeItem(item.id, userId);
 
     const items = await cart.getByUserId(userId);
-    const subtotal = items.reduce((sum, i) => sum + (i.precio * i.cantidad), 0);
-    const total = items.reduce((sum, i) => sum + ((i.precio * (1 - i.descuento/100)) * i.cantidad), 0);
+    const subtotal = items.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+    const total = items.reduce((sum, i) => sum + ((i.price * (1 - i.discount/100)) * i.quantity), 0);
     const count = await cart.getCount(userId);
 
     res.json({ success: true, subtotal, total, count });
@@ -207,8 +207,8 @@ cartController.getStock = async (req, res) => {
       const stockInfo = {};
       
       for (const item of items) {
-        const stock = await cart.getRealStock(item.producto_id, item.colorSeleccionado);
-        stockInfo[`${item.producto_id}_${item.colorSeleccionado}`] = stock;
+        const stock = await cart.getRealStock(item.productId, item.selectedColor);
+        stockInfo[`${item.productId}_${item.selectedColor}`] = stock;
       }
       
       return res.json({ success: true, stocks: stockInfo });

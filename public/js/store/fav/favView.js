@@ -79,7 +79,7 @@ function generateFavItemHTML(item) {
                 <span class="product-price">  
                     <b>$${formatPrice(data.finalPrice)}</b>
                     ${data.descuento > 0 ? `
-                      <del class="product-old-price">$${formatPrice(data.precioAntesDescuento)}</del>
+                      <del class="product-old-price">$${formatPrice(data.originalPrice)}</del>
                       <span class="sale">-${data.descuento.toFixed(2)}%</span> ` : ''}
                 </span>
                 </a>

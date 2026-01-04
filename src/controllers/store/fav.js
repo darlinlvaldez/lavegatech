@@ -7,15 +7,15 @@ const favController = {};
 favController.addToFav = async (req, res) => {
     try {
         const userId = req.session.user.id;
-        const { producto_id, colorSeleccionado } = req.body;
+        const { producto_id, selectedColor } = req.body;
 
-        if (!producto_id || !colorSeleccionado) {
+        if (!producto_id || !selectedColor) {
             return res.status(400).json({ 
                 success: false, message: 'Datos inválidos'
             });
         }
 
-        const variante = await fav.getVariant(producto_id, colorSeleccionado);
+        const variante = await fav.getVariant(producto_id, selectedColor);
         const variante_id = variante ? variante.id : null;
 
         if (!variante_id) {

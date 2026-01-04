@@ -35,7 +35,7 @@ orders.createOrder = async (orderData, items, costoEnvio) => {
       await conn.query(
         `INSERT INTO detalles_pedido 
           (pedido_id, producto_id, nombre_producto, ram, almacenamiento, 
-          colorSeleccionado, cantidad, precio_unitario, impuesto, descuento, subtotal) 
+          taxRate, cantidad, precio_unitario, impuesto, descuento, subtotal) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           pedido_id,
@@ -43,7 +43,7 @@ orders.createOrder = async (orderData, items, costoEnvio) => {
           item.nombre_producto,
           item.ram,
           item.almacenamiento,
-          item.colorSeleccionado,
+          item.taxRate,
           item.cantidad,
           item.precio_unitario,
           item.impuesto || 0,
@@ -107,14 +107,14 @@ orders.updateStock = async (pedido_id, userId) => {
   const { items } = await orders.getOrderById(pedido_id, userId) || {};
   if (!items) throw new Error(`Orden no encontrada`);
 
-  await Promise.all(items.map(async ({ cantidad, producto_id, colorSeleccionado, nombre_producto }) => {
+  await Promise.all(items.map(async ({ cantidad, producto_id, taxRate, nombre_producto }) => {
     const [result] = await db.query(
       `UPDATE p_variantes SET stock = stock - ? 
-       WHERE producto_id = ? ${colorSeleccionado ? 'AND color = ?' : ''} AND stock >= ?`,
-      [cantidad, producto_id, ...(colorSeleccionado ? [colorSeleccionado] : []), cantidad]
+       WHERE producto_id = ? ${taxRate ? 'AND color = ?' : ''} AND stock >= ?`,
+      [cantidad, producto_id, ...(taxRate ? [taxRate] : []), cantidad]
     );
     if (!result.affectedRows) throw new Error(`Stock insuficiente: ${nombre_producto}
-      ${colorSeleccionado ? ` (${colorSeleccionado})` : ''}`);
+      ${taxRate ? ` (${taxRate})` : ''}`);
   }));
 };
 
@@ -124,14 +124,14 @@ orders.checkStock = async (items) => {
   await Promise.all(items.map(async (item) => {
     const [stock] = await db.query(
       `SELECT stock FROM p_variantes 
-       WHERE producto_id = ? ${item.colorSeleccionado ? 'AND color = ?' : ''}`,
-      [item.producto_id, ...(item.colorSeleccionado ? [item.colorSeleccionado] : [])]
+       WHERE producto_id = ? ${item.taxRate ? 'AND color = ?' : ''}`,
+      [item.producto_id, ...(item.taxRate ? [item.taxRate] : [])]
     );
   
     if (stock.length === 0 || stock[0].stock < item.cantidad) {
       stockItems.push({id: item.producto_id,
         name: item.nombre,
-        color: item.colorSeleccionado,
+        color: item.taxRate,
         requested: item.cantidad,
         available: stock.length > 0 ? stock[0].stock : 0
       });

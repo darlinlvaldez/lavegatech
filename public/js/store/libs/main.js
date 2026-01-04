@@ -60,7 +60,7 @@ import { checkFavorites } from "../fav/fav.js";
     var productId = "<%= producto.id %>";
 
     if (color && productId) {
-      $("#colorSeleccionado").val(color).trigger("change");
+      $("#selectedColor").val(color).trigger("change");
 
       document.querySelectorAll(".add-to-wishlist").forEach((button) => {
         button.dataset.productColor = color;

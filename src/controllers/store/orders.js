@@ -33,7 +33,7 @@ orderController.createOrder = async (req, res) => {
         nombre_producto: item.nombre,
         ram: item.ram,
         almacenamiento: item.almacenamiento,
-        colorSeleccionado: item.colorSeleccionado,
+        selectedColor: item.selectedColor,
         cantidad: item.cantidad,
         precio_unitario: precioBase,
         impuesto,

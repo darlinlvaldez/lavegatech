@@ -14,7 +14,7 @@
     border-bottom: none;
 }
 
-.product-imagen {
+.product-image {
     width: 100px;        
     height: 100px;
     overflow: hidden;  
@@ -197,7 +197,7 @@ span.sale {
     width: 100%;
   }
 
-  .product-imagen {
+  .product-image {
     width: 80px;
     height: 80px;
   }
@@ -259,7 +259,7 @@ span.sale {
     padding: 8px;
   }
 
-  .product-imagen {
+  .product-image {
     width: 90px;
     height: 90px;
   }

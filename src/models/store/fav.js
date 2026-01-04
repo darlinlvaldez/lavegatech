@@ -11,11 +11,11 @@ fav.addItem = async ({usuario_id, producto_id, variante_id}) => {
     );
 };
 
-fav.getVariant = async (producto_id, colorSeleccionado) => {
+fav.getVariant = async (producto_id, selectedColor) => {
     const [rows] = await db.query(
         `SELECT id FROM p_variantes 
          WHERE producto_id = ? AND color = ?`,
-        [producto_id, colorSeleccionado]
+        [producto_id, selectedColor]
     );
     return rows[0] || null;
 };
@@ -54,7 +54,7 @@ fav.getByUserId = async (usuario_id) => {
         p.categoria_id,
         p.marca_id,
         v.id as variante_id,
-        v.color as colorSeleccionado,
+        v.color as selectedColor,
         v.img as imagen,
         v.stock as stockPorColor,
         r.capacidad AS ram, 

@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const stockInfo = stockData.stocks;
 
     const validItems = cartData.items.filter(item => {
-      const key = `${item.producto_id}_${item.colorSeleccionado}`;
+      const key = `${item.producto_id}_${item.selectedColor}`;
       const stock = stockInfo[key] ?? 0;
       return stock > 0;
     });
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       orderProducts.innerHTML += `
         <div class="order-col">
-          <div>${item.cantidad}x ${item.nombre} ${item.specs || ""} ${item.colorSeleccionado.toUpperCase()}</div>
+          <div>${item.cantidad}x ${item.nombre} ${item.specs || ""} ${item.selectedColor.toUpperCase()}</div>
           <div>$${formatPrice(subtotal)}</div>
         </div>`;
     });
