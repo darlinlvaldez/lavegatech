@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (form) {
     form.addEventListener("submit", handleFormSubmit);
 
-    const stars = document.querySelectorAll('input[name="calificacion"]');
-    const hiddenInput = document.getElementById("calificacionInput");
+    const stars = document.querySelectorAll('input[name="rating"]');
+    const hiddenInput = document.getElementById("ratingInput");
 
     stars.forEach((star) => {
       star.addEventListener("change", () => {
@@ -38,21 +38,21 @@ async function handleFormSubmit(e) {
   const form = e.target;
   const formData = new FormData(form);
 
-  const reviewId = formData.get("review_id");
-  const data = {comentario: formData.get("comentario"),
-    calificacion: parseInt(formData.get("calificacion")),
+  const reviewId = formData.get("reviewId");
+  const data = {review: formData.get("review"),
+    rating: parseInt(formData.get("rating")),
   };
 
   try {
     const method = reviewId ? "PUT" : "POST";
     const url = reviewId ? `/api/ratings/${reviewId}` : "/api/ratings";
 
-    if (!data.comentario || data.calificacion < 1 || data.calificacion > 5) {
+    if (!data.review || data.rating < 1 || data.rating > 5) {
       showToast("Datos inválidos", "#e74c3c", "alert-circle");
       return;
     }
 
-    if (!reviewId) data.producto_id = formData.get("producto_id");
+    if (!reviewId) data.productId = formData.get("productId");
 
     const response = await fetch(url, {
       method,
@@ -111,12 +111,12 @@ async function loadReviews(page, limit, productId) {
 
 function handleEditReview(reviewId) {
   const reviewElement = document.querySelector(`.edit-review-btn[data-id="${reviewId}"]`).closest("li");
-  const comentario = reviewElement.querySelector(".review-body p")?.innerText || "";
-  const calificacion = reviewElement.querySelectorAll(".fa-star").length;
+  const review = reviewElement.querySelector(".review-body p")?.innerText || "";
+  const rating = reviewElement.querySelectorAll(".fa-star").length;
 
-  document.getElementById("review_id").value = reviewId;
-  document.getElementById("comentarioInput").value = comentario.trim();
-  document.getElementById("calificacionInput").value = calificacion;
+  document.getElementById("reviewId").value = reviewId;
+  document.getElementById("reviewInput").value = review.trim();
+  document.getElementById("ratingInput").value = rating;
 
   showToast("Editando reseña...", "#f39c12", "edit");
 
@@ -124,26 +124,26 @@ function handleEditReview(reviewId) {
 }
 
 function renderReviewsList(reviews) {
-  const listItems = reviews.map(({ username, fecha_creacion, fecha_actualizacion, calificacion, comentario, esAutor, id }) => {
-    const creada = new Date(fecha_creacion);
-    const actualizada = new Date(fecha_actualizacion);
-    const esEditada = creada.getTime() !== actualizada.getTime();
+  const listItems = reviews.map(({ username, fecha_creacion, fecha_actualizacion, rating, review, isAuthor, id }) => {
+    const created = new Date(fecha_creacion);
+    const updated = new Date(fecha_actualizacion);
+    const isEdited = created.getTime() !== updated.getTime();
 
-    const fechaMostrar = esEditada ? actualizada : creada;
+    const showDate = isEdited ? updated : created;
 
     return `
       <li>
         <div class="review-heading">
           <h5 class="name">${username.toUpperCase()}</h5>
           <p class="date">
-            ${fechaMostrar.toLocaleDateString()} 
-            ${esEditada ? `<span class="edited">(Editada)</span>` : ''}
+            ${showDate.toLocaleDateString()} 
+            ${isEdited ? `<span class="edited">(Editada)</span>` : ''}
           </p>
-          <div class="review-rating">${renderStars(calificacion)}</div>
-          ${esAutor ? `<button class="edit-review-btn" data-id="${id}"><i class="fa-solid fa-pen"></i> Editar</button>` : ''}
+          <div class="review-rating">${renderStars(rating)}</div>
+          ${isAuthor ? `<button class="edit-review-btn" data-id="${id}"><i class="fa-solid fa-pen"></i> Editar</button>` : ''}
         </div>
         <div class="review-body">
-          <p>${comentario || 'El usuario no dejó comentario'}</p>
+          <p>${review || 'El usuario no dejó comentario'}</p>
         </div>
       </li>
     `;

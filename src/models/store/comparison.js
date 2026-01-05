@@ -3,31 +3,30 @@ import {applyTaxDiscount} from "../../utils/applyRate.js";
 
 const comparison = {};
 
-comparison.searchDevice = async (query, excludeMovilIds = []) => {
+comparison.searchDevice = async (query, excludeMobileIds = []) => {
   let searchQuery = `
     SELECT 
       p.id,
-      p.movil_id,
-      p.nombre,
-      p.precio,
-      p.impuesto,
-      p.descuento,
-      c.categoria,
-      v.img AS imagenes
+      p.movil_id AS mobileId,
+      p.nombre AS name,
+      p.precio AS price,
+      p.impuesto AS tax,
+      p.descuento AS discount,
+      c.categoria AS category,
+      v.img AS image
     FROM productos p
-    INNER JOIN p_variantes v ON p.id = v.producto_id
-    INNER JOIN categorias c ON p.categoria_id = c.id
-    WHERE c.categoria = 'moviles'
-      AND p.activo = 1
-      AND p.nombre LIKE ?
-      ${excludeMovilIds.length > 0 ? "AND p.movil_id NOT IN (" + excludeMovilIds.map(() => "?").join(",") + ")" : ""}
+    JOIN p_marcas ma ON p.marca_id = ma.id AND ma.activo = 1
+    JOIN categorias c ON p.categoria_id = c.id AND c.activo = 1
+    LEFT JOIN p_variantes v ON p.id = v.producto_id AND v.activo = 1
+    WHERE c.categoria = 'moviles' AND p.activo = 1 AND p.nombre LIKE ?
+      ${excludeMobileIds.length > 0 ? "AND p.movil_id NOT IN (" + excludeMobileIds.map(() => "?").join(",") + ")" : ""}
     GROUP BY p.movil_id
     LIMIT 10
   `;
 
   const params = [`%${query}%`];
-  if (excludeMovilIds.length > 0) 
-    params.push(...excludeMovilIds);
+  if (excludeMobileIds.length > 0) 
+    params.push(...excludeMobileIds);
 
   try {
     const [results] = await db.query(searchQuery, params);
@@ -37,13 +36,13 @@ comparison.searchDevice = async (query, excludeMovilIds = []) => {
   }
 };
 
-comparison.getProductMovilIds = async (productIds) => {
+comparison.getProductMobileIds = async (productIds) => {
   try {
-    const [movilIds] = await db.query(
-      'SELECT DISTINCT movil_id FROM productos WHERE id IN (?)',
+    const [mobileIds] = await db.query(
+      'SELECT DISTINCT movil_id AS mobileId FROM productos WHERE id IN (?)',
       [productIds]
     );
-    return movilIds;
+    return mobileIds;
   } catch (err) {
     throw new Error("Error al obtener IDs de móviles: " + err.message);
   }
@@ -53,42 +52,42 @@ comparison.getDevice = async (productIds) => {
   const query = `
     SELECT 
       p.id,
-      p.movil_id,
-      p.nombre,
-      p.precio,
-      p.impuesto,
-      p.descuento,
-      v.img AS imagen,
-      pant.tamaño AS pantalla_tamaño,
-      pant.resolucion AS pantalla_resolucion,
-      pant.tipo AS pantalla_tipo,
-      pant.frecuencia AS pantalla_frecuencia,
-      pant.proteccion AS pantalla_proteccion,
-      cpu.nombre AS cpu_nombre,
-      cpu.nucleos AS cpu_nucleos,
-      cpu.velocidad AS cpu_velocidad,
-      gpu.modelo AS gpu_modelo,
-      gpu.nucleos AS gpu_nucleos,
-      cam.principal AS camara_principal,
-      cam.selfie AS camara_selfie,
-      cam.video AS camara_video,
-      bat.capacidad AS bateria_capacidad,
-      bat.tipo AS bateria_tipo,
-      bat.carga_rapida AS bateria_carga_rapida,
-      bat.carga_inalambrica AS bateria_carga_inalambrica,
-      con.red AS conectividad_red,
-      con.wifi AS conectividad_wifi,
-      con.bluetooth AS conectividad_bluetooth,
-      con.nfc AS conectividad_nfc,
-      dim.altura AS dimensiones_altura,
-      dim.anchura AS dimensiones_anchura,
-      dim.grosor AS dimensiones_grosor,
-      dim.peso AS dimensiones_peso,
-      GROUP_CONCAT(DISTINCT ram.capacidad ORDER BY ram.capacidad SEPARATOR ' / ') AS ram_capacidades,
-      GROUP_CONCAT(DISTINCT alm.capacidad ORDER BY alm.capacidad SEPARATOR ' / ') AS almacenamiento_capacidades
+      p.movil_id AS mobileId,
+      p.nombre AS name,
+      p.precio AS price,
+      p.impuesto AS tax,
+      p.descuento AS discount,
+      v.img AS image,
+      pant.tamaño AS screen_size,
+      pant.resolucion AS screen_resolution,
+      pant.tipo AS screen_type,
+      pant.frecuencia AS screen_refresh_rate,
+      pant.proteccion AS screen_protection,
+      cpu.nombre AS processor_name,
+      cpu.nucleos AS processor_cores,
+      cpu.velocidad AS processor_speed,
+      gpu.modelo AS gpu_model,
+      gpu.nucleos AS gpu_cores,
+      cam.principal AS main_camera,
+      cam.selfie AS selfie_camera,
+      cam.video AS video_recording,
+      bat.capacidad AS battery_capacity,
+      bat.tipo AS battery_type,
+      bat.carga_rapida AS fast_charging,
+      bat.carga_inalambrica AS wireless_charging,
+      con.red AS network,
+      con.wifi AS wifi,
+      con.bluetooth AS bluetooth,
+      con.nfc AS nfc,
+      dim.altura AS height,
+      dim.anchura AS width,
+      dim.grosor AS thickness,
+      dim.peso AS weight,
+      GROUP_CONCAT(DISTINCT ram.capacidad ORDER BY ram.capacidad SEPARATOR ' / ') AS ram_capacities,
+      GROUP_CONCAT(DISTINCT alm.capacidad ORDER BY alm.capacidad SEPARATOR ' / ') AS storage_capacities
     FROM productos p
     JOIN moviles m ON p.movil_id = m.id
-    LEFT JOIN p_variantes v ON p.id = v.producto_id
+    LEFT JOIN p_variantes v ON p.id = v.producto_id AND v.activo = 1
     LEFT JOIN cpu ON m.cpu_id = cpu.id
     LEFT JOIN gpu ON m.gpu_id = gpu.id
     LEFT JOIN camara cam ON m.camara_id = cam.id
@@ -100,6 +99,8 @@ comparison.getDevice = async (productIds) => {
     LEFT JOIN ram ON vr.ram_id = ram.id
     LEFT JOIN variantes_almacenamiento va ON m.id = va.movil_id
     LEFT JOIN almacenamiento alm ON va.almacenamiento_id = alm.id
+    JOIN p_marcas ma ON p.marca_id = ma.id AND ma.activo = 1
+    JOIN categorias c ON p.categoria_id = c.id AND c.activo = 1
     WHERE p.id IN (?) AND p.activo = 1
     GROUP BY p.id
   `;

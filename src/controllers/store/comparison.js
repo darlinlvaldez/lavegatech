@@ -5,10 +5,10 @@ const comparisonController = {};
 comparisonController.searchMobiles = async (req, res) => {
   try {
     const query = req.query.q || '';
-    const excludeMovilIds = req.query.exclude ? 
+    const excludeMobileIds = req.query.exclude ? 
       req.query.exclude.split(',').map(id => parseInt(id)) : [];
     
-    const results = await comparison.searchDevice(query, excludeMovilIds);
+    const results = await comparison.searchDevice(query, excludeMobileIds);
     
     res.json(results);
   } catch (err) {
@@ -24,19 +24,19 @@ comparisonController.comparer = async (req, res) => {
         error: "Debes seleccionar al menos dos dispositivos válidos" });
     }
     
-    const movilIds = await comparison.getProductMovilIds(ids);
-    const uniqueMovilIds = [...new Set(movilIds.map(item => item.movil_id))];
+    const mobileIds = await comparison.getProductMobileIds(ids);
+    const uniqueMobileIds = [...new Set(mobileIds.map(item => item.mobileId))];
 
-    if (uniqueMovilIds.length < ids.length) {
+    if (uniqueMobileIds.length < ids.length) {
       return res.status(400).json({
         error: "No puedes comparar productos que pertenecen al mismo dispositivo móvil.",
       });
     }
     
     const devices = await comparison.getDevice(ids);
-    console.log("Dispositivos cargados:", devices.map(d => d.nombre));
+    console.log("Dispositivos cargados:", devices.map(d => d.name));
 
-    res.json({devices, excludedMovilIds: uniqueMovilIds});
+    res.json({devices, excludedMobileIds: uniqueMobileIds});
   } catch (err) {
     console.error("Error en comparación:", err);
     res.status(500).json({ error: err.message });

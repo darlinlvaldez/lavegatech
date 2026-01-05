@@ -198,7 +198,7 @@
 					<div id="tab1" class="tab-pane fade in active">
 						<div class="row">
 							<div class="col-md-12">
-								<p><%= product.descripcion %></p>
+								<p><%= product.description %></p>
 							</div>
 						</div>
 					</div>
@@ -210,75 +210,74 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="device-card">
-								<% devices.forEach(device=> { %>
-								<div class="specs-grid">
-									<div class="spec-item spec-header">Pantalla:</div>
-									<div class="spec-item spec-value">
-									<%= device.pantalla_tamaño %>" <%= device.pantalla_tipo %><br>
-									<%= device.pantalla_resolucion %><br>
-									<%= device.pantalla_frecuencia %>Hz
+									<% devices.forEach(device=> { %>
+									<div class="specs-grid">
+										<div class="spec-item spec-header">Pantalla:</div>
+										<div class="spec-item spec-value">
+											<%= device.screen_size %>" <%= device.screen_type %><br>
+											<%= device.screen_resolution %><br>
+											<%= device.screen_refresh_rate %>Hz
+										</div>
+
+										<div class="spec-item spec-header">Procesador:</div>
+										<div class="spec-item spec-value">
+											<%= device.processor_name %><br>
+											<%= device.processor_cores %> núcleos<br>
+											<%= device.processor_speed %>
+										</div>
+
+										<div class="spec-item spec-header">GPU:</div>
+										<div class="spec-item spec-value">
+											<%= device.gpu_model %><br>
+											<%= device.gpu_cores %> núcleos
+										</div>
+
+										<div class="spec-item spec-header">RAM:</div>
+										<div class="spec-item spec-value"><%= device.ram_capacities %></div>
+
+										<div class="spec-item spec-header">Almacenamiento:</div>
+										<div class="spec-item spec-value"><%= device.storage_capacities %></div>
+
+										<div class="spec-item spec-header">Cámara:</div>
+										<div class="spec-item spec-value">
+											Principal: <%= device.main_camera %><br>
+											Frontal: <%= device.selfie_camera %><br>
+											Video: <%= device.video_recording %>
+										</div>
+
+										<div class="spec-item spec-header">Batería:</div>
+										<div class="spec-item spec-value">
+											<%= device.battery_capacity %> mAh<br>
+											<%= device.battery_type %><br>
+											<% if (device.fast_charging) { %>
+												Carga rápida: <%= device.fast_charging %><br>
+											<% } %>
+											<% if (device.wireless_charging) { %>
+												Carga inalámbrica
+											<% } %>
+										</div>
+
+										<div class="spec-item spec-header">Conectividad:</div>
+										<div class="spec-item spec-value">
+											<%= device.network %><br>
+											WiFi: <%= device.wifi %><br>
+											Bluetooth: <%= device.bluetooth %>
+											<% if (device.nfc) { %><br>NFC<% } %>
+										</div>
+
+										<div class="spec-item spec-header">Dimensiones:</div>
+										<div class="spec-item spec-value">
+											<%= device.height %> x <%= device.width %> x <%= device.thickness %> mm<br>
+											Peso: <%= device.weight %> g
+										</div>
+									<% }) %>
 									</div>
-
-									<div class="spec-item spec-header">Procesador:</div>
-									<div class="spec-item spec-value">
-									<%= device.cpu_nombre %><br>
-									<%= device.cpu_nucleos %> núcleos<br>
-									<%= device.cpu_velocidad %>
-									</div>
-
-									<div class="spec-item spec-header">GPU:</div>
-									<div class="spec-item spec-value">
-									<%= device.gpu_modelo %><br>
-									<%= device.gpu_nucleos %> núcleos
-									</div>
-
-									<div class="spec-item spec-header">RAM:</div>
-									<div class="spec-item spec-value"><%= device.ram_capacidades %></div>
-
-									<div class="spec-item spec-header">Almacenamiento:</div>
-									<div class="spec-item spec-value"><%= device.almacenamiento_capacidades %></div>
-
-									<div class="spec-item spec-header">Cámara:</div>
-									<div class="spec-item spec-value">
-									Principal: <%= device.camara_principal %><br>
-									Selfie: <%= device.camara_selfie %><br>
-									Video: <%= device.camara_video %>
-									</div>
-
-									<div class="spec-item spec-header">Batería:</div>
-									<div class="spec-item spec-value">
-									<%= device.bateria_capacidad %> mAh<br>
-									<%= device.bateria_tipo %><br>
-									<% if (device.bateria_carga_rapida) { %>
-										Carga rápida: <%= device.bateria_carga_rapida %><br>
-									<% } %>
-									<% if (device.bateria_carga_inalambrica) { %>
-										Carga inalámbrica
-									<% } %>
-									</div>
-
-									<div class="spec-item spec-header">Conectividad:</div>
-									<div class="spec-item spec-value">
-									<%= device.conectividad_red %><br>
-									WiFi: <%= device.conectividad_wifi %><br>
-									Bluetooth: <%= device.conectividad_bluetooth %>
-									<% if (device.conectividad_nfc) { %><br>NFC<% } %>
-									</div>
-
-									<div class="spec-item spec-header">Dimensiones:</div>
-									<div class="spec-item spec-value">
-									<%= device.dimensiones_altura %> x <%= device.dimensiones_anchura %> x <%= device.dimensiones_grosor %> mm<br>
-									Peso: <%= device.dimensiones_peso %> 
-									</div>
-								<% }) %>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<% } %>
-				<!-- /tab2  -->
-
+					<% } %>
+					<!-- /tab2  -->
 					<!-- tab3  -->
 					<div id="tab3" class="tab-pane fade in">
 						<div class="row">
@@ -308,7 +307,7 @@
 										}
 										
 										product.ratingDistribution.forEach(item => {
-											distribution[item.calificacion] = item.count;
+											distribution[item.rating] = item.count;
 										});
 										
 										const totalReviews = product.totalReviews;
@@ -347,18 +346,18 @@
 								<div class="col-md-3">
 											<div id="review-form">
 												<form class="review-form" id="reviewForm">
-													<input type="hidden" name="product_id" value="<%= product.id %>">
-													<input type="hidden" name="review_id" id="review_id" value="">
-													<textarea class="input" name="comentario" id="comentarioInput" placeholder="Tu reseña" required></textarea>
-													<input type="hidden" name="calificacion" id="calificacionInput">
+													<input type="hidden" name="productId" value="<%= product.id %>">
+													<input type="hidden" name="reviewId" id="reviewId" value="">
+													<textarea class="input" name="review" id="reviewInput" placeholder="Tu reseña" required></textarea>
+													<input type="hidden" name="rating" id="ratingInput">
 													<div class="input-rating">
 														<span>Tu calificación: </span>
 														<div class="stars">
-															<input id="star5" name="calificacion" value="5" type="radio" required><label for="star5"></label>
-															<input id="star4" name="calificacion" value="4" type="radio"><label for="star4"></label>
-															<input id="star3" name="calificacion" value="3" type="radio"><label for="star3"></label>
-															<input id="star2" name="calificacion" value="2" type="radio"><label for="star2"></label>
-															<input id="star1" name="calificacion" value="1" type="radio"><label for="star1"></label>
+															<input id="star5" name="rating" value="5" type="radio" required><label for="star5"></label>
+															<input id="star4" name="rating" value="4" type="radio"><label for="star4"></label>
+															<input id="star3" name="rating" value="3" type="radio"><label for="star3"></label>
+															<input id="star2" name="rating" value="2" type="radio"><label for="star2"></label>
+															<input id="star1" name="rating" value="1" type="radio"><label for="star1"></label>
 														</div>
 													</div>
 													<button type="submit" class="primary-btn">Enviar</button>

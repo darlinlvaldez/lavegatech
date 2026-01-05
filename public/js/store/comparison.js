@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const comparisonResults = document.getElementById('comparison-results');
   
   let selectedDevices = [];
-  let excludedMovilIds = [];
+  let excludedMobileIds = [];
 
 async function searchMobiles(query) {
   if (query.length < 2) {
@@ -21,7 +21,7 @@ async function searchMobiles(query) {
   try {
     const response = await fetch(
       `/comparison/searchMobiles?q=${encodeURIComponent(query)}` + 
-      (excludedMovilIds.length > 0 ? `&exclude=${excludedMovilIds.join(',')}` : '')
+      (excludedMobileIds.length > 0 ? `&exclude=${excludedMobileIds.join(',')}` : '')
     );
     if (!response.ok) throw new Error('Error en la búsqueda');
     const results = await response.json();
@@ -42,11 +42,11 @@ function loadDevicesURL() {
 
   fetch(`/comparison/compare?ids=${idList.join(',')}`)
     .then(res => res.json())
-    .then(({ devices = [], excludedMovilIds: excluded = [] }) => {
-      excludedMovilIds = excluded;
+    .then(({ devices = [], excludedMobileIds: excluded = [] }) => {
+      excludedMobileIds = excluded;
 
-      selectedDevices = devices.map(({ id, movil_id, nombre, imagen }) => ({
-        id, movil_id, nombre, imagen
+      selectedDevices = devices.map(({ id, mobileId, name, image }) => ({
+        id, mobileId, name, image
       }));
       updateSelectedDevicesDisplay();
 
@@ -79,12 +79,12 @@ function displaySearchResults(products) {
     const productElement = document.createElement('div');
     productElement.className = 'search-result-item';
     productElement.innerHTML = `
-      <img src="${product.imagenes?.split(',')[0]}" alt="${product.nombre}">
+      <img src="${product.image?.split(',')[0]}" alt="${product.name}">
       <div class="product-info">
-        <h4>${product.nombre}</h4>
+        <h4>${product.name}</h4>
         <div class="product-price">
         $${formatPrice(calc.finalPrice)}
-          ${product.descuento > 0 ? `<del class="product-old-price">$${formatPrice(calc.originalPrice)}</del>` : ''}
+          ${product.discount > 0 ? `<del class="product-old-price">$${formatPrice(calc.originalPrice)}</del>` : ''}
       </div>
       </div>
     `;
@@ -101,19 +101,19 @@ function displaySearchResults(products) {
   searchResults.style.display = 'block';
 }
   
-function addDeviceToComparison({ id, nombre, imagenes }) {
+function addDeviceToComparison({ id, name, image }) {
   if (selectedDevices.some(d => d.id === id)) {
     showToast("Este dispositivo ya está en la lista de comparación", "#e74c3c", "info");
     return;
   }
 
-  selectedDevices.push({ id, nombre, imagen: imagenes?.split(',')[0] });
+  selectedDevices.push({ id, name, image: image?.split(',')[0] });
   updateSelectedDevicesDisplay();
 }
 
 function removeDeviceFromComparison(deviceId) {
   selectedDevices = selectedDevices.filter(d => d.id !== deviceId);
-  excludedMovilIds = selectedDevices.map(d => d.movil_id);
+  excludedMobileIds = selectedDevices.map(d => d.mobileId);
 
   updateSelectedDevicesDisplay();
 
@@ -125,10 +125,10 @@ function removeDeviceFromComparison(deviceId) {
 }
   
 function updateSelectedDevicesDisplay() {
-  selectedDevicesContainer.innerHTML = selectedDevices.map(({ id, nombre, imagen }) => `
+  selectedDevicesContainer.innerHTML = selectedDevices.map(({ id, name, image }) => `
     <div class="selected-device">
-      <img src="${imagen}" alt="${nombre}">
-      <span>${nombre}</span>
+      <img src="${image}" alt="${name}">
+      <span>${name}</span>
       <i class="bi bi-trash remove-device" data-id="${id}"></i>
     </div>
   `).join('');
@@ -180,7 +180,7 @@ comparisonForm.addEventListener('submit', async function(e) {
     
     displayComparisonResults(data.devices);
     
-    excludedMovilIds = data.excludedMovilIds || [];
+    excludedMobileIds = data.excludedMobileIds || [];
   } catch (error) {
     console.error('Error:', error);
     showToast("Error al comparar dispositivos", "#e74c3c", "info");
@@ -203,71 +203,71 @@ function displayComparisonResults(devices) {
     deviceCard.className = 'device-card';
 
     deviceCard.innerHTML = `
-      <h2 class="tittle2-comparison">${safe(device.nombre)}</h2>
+      <h2 class="tittle2-comparison">${safe(device.name)}</h2>
       <div class="device-image">
-        <img class="img-comparison" src="${safe(device.imagen)}" alt="${safe(device.nombre)}">
+        <img class="img-comparison" src="${safe(device.image)}" alt="${safe(device.name)}">
       </div>
       
       <div class="search-result-item">
         <div class="product-price"> $${formatPrice(calc.finalPrice)}
-          ${device.descuento > 0 ? `<del class="product-old-price">$${formatPrice(calc.originalPrice)}</del>` : ''}
+          ${device.discount > 0 ? `<del class="product-old-price">$${formatPrice(calc.originalPrice)}</del>` : ''}
         </div>
       </div>
       
       <div class="specs-grid">
         <div class="spec-item spec-header">Pantalla:</div>
         <div class="spec-item spec-value">
-          ${safe(device.pantalla_tamaño)}" ${safe(device.pantalla_tipo)}<br>
-          ${safe(device.pantalla_resolucion)}<br>
-          ${safe(device.pantalla_frecuencia)}Hz
+          ${safe(device.screen_size)}" ${safe(device.screen_type)}<br>
+          ${safe(device.screen_resolution)}<br>
+          ${safe(device.screen_refresh_rate)}Hz
         </div>
         
         <div class="spec-item spec-header">Procesador:</div>
         <div class="spec-item spec-value">
-          ${safe(device.cpu_nombre)}<br>
-          ${safe(device.cpu_nucleos)} núcleos<br>
-          ${safe(device.cpu_velocidad)}
+          ${safe(device.processor_name)}<br>
+          ${safe(device.processor_cores)} núcleos<br>
+          ${safe(device.processor_speed)}
         </div>
         
         <div class="spec-item spec-header">GPU:</div>
         <div class="spec-item spec-value">
-          ${safe(device.gpu_modelo)}<br>
-          ${safe(device.gpu_nucleos)} núcleos
+          ${safe(device.gpu_model)}<br>
+          ${safe(device.gpu_cores)} núcleos
         </div>
         
         <div class="spec-item spec-header">RAM:</div>
-        <div class="spec-item spec-value">${safe(device.ram_capacidades)}</div>
+        <div class="spec-item spec-value">${safe(device.ram_capacities)}</div>
         
         <div class="spec-item spec-header">Almacenamiento:</div>
-        <div class="spec-item spec-value">${safe(device.almacenamiento_capacidades)}</div>
+        <div class="spec-item spec-value">${safe(device.storage_capacities)}</div>
         
         <div class="spec-item spec-header">Cámara:</div>
         <div class="spec-item spec-value">
-          Principal: ${safe(device.camara_principal)}<br>
-          Selfie: ${safe(device.camara_selfie)}<br>
-          Video: ${safe(device.camara_video)}
+          Principal: ${safe(device.main_camera)}<br>
+          Frontal: ${safe(device.selfie_camera)}<br>
+          Video: ${safe(device.video_recording)}
         </div>
         
         <div class="spec-item spec-header">Batería:</div>
         <div class="spec-item spec-value">
-          ${safe(device.bateria_capacidad)} mAh<br>
-          ${safe(device.bateria_tipo)}<br>
-          ${device.bateria_carga_rapida ? 'Carga rápida: ' + safe(device.bateria_carga_rapida) : ''}
-          ${device.bateria_carga_inalambrica ? '<br>Carga inalámbrica' : ''}
+          ${safe(device.battery_capacity)} mAh<br>
+          ${safe(device.battery_type)}<br>
+          ${device.fast_charging ? 'Carga rápida: ' + safe(device.fast_charging) : ''}
+          ${device.wireless_charging ? '<br>Carga inalámbrica' : ''}
         </div>
         
         <div class="spec-item spec-header">Conectividad:</div>
         <div class="spec-item spec-value">
-          ${safe(device.conectividad_red)}<br>
-          WiFi: ${safe(device.conectividad_wifi)}<br>
-          Bluetooth: ${safe(device.conectividad_bluetooth)}
-          ${device.conectividad_nfc ? '<br>NFC' : ''}
+          ${safe(device.network)}<br>
+          WiFi: ${safe(device.wifi)}<br>
+          Bluetooth: ${safe(device.bluetooth)}
+          ${device.nfc ? '<br>NFC' : ''}
         </div>
         
         <div class="spec-item spec-header">Dimensiones:</div>
         <div class="spec-item spec-value">
-          ${safe(device.dimensiones_altura)} x ${safe(device.dimensiones_anchura)} x ${safe(device.dimensiones_grosor)} mm<br>
-          Peso: ${safe(device.dimensiones_peso)} 
+          ${safe(device.height)} x ${safe(device.width)} x ${safe(device.thickness)} mm<br>
+          Peso: ${safe(device.weight)} g
         </div>
       </div>
       
@@ -275,7 +275,7 @@ function displayComparisonResults(devices) {
         Ver Producto
       </button>
     `;
-
+    
     wrapper.appendChild(deviceCard);
   });
     
