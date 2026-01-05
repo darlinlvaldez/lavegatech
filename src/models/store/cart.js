@@ -91,10 +91,10 @@ cart.getCartToPay = async (userId) => {
   const [rows] = await db.query(
     `SELECT 
       c.id AS cartid,
-      c.producto_id AS productoId,
+      c.producto_id AS productId,
       c.cantidad AS quantity,
       p.nombre AS name,
-      p.precio AS precioOriginal,
+      p.precio AS originalPrice,
       p.impuesto AS tax,
       p.descuento AS discount,
       p.categoria_id AS categoryId,

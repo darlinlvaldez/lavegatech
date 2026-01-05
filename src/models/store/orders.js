@@ -2,7 +2,7 @@ import db from "../../database/mobiles.js";
 
 const orders = {};
 
-orders.createOrder = async (orderData, items, costoEnvio) => {
+orders.createOrder = async (orderData, items, shippingCost) => {
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
@@ -13,53 +13,53 @@ orders.createOrder = async (orderData, items, costoEnvio) => {
         ciudad_envio_costo, envio_diferente) 
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
-        orderData.usuario_id,
-        orderData.nombre,
-        orderData.apellido,
+        orderData.userId,
+        orderData.name,
+        orderData.lastName,
         orderData.email,
-        orderData.direccion,
-        orderData.distrito,
-        orderData.telefono,
+        orderData.address,
+        orderData.district,
+        orderData.tel,
         orderData.total,
-        orderData.estado,
-        orderData.ciudad_envio_id,
-        orderData.ciudad_envio_nombre,
-        orderData.ciudad_envio_costo,
-        orderData.envio_diferente || 0  
+        orderData.state,
+        orderData.shippingCityId,
+        orderData.shippingCityName,
+        orderData.shippingCityCost,
+        orderData.differentShipping || 0  
       ]
     );
 
-    const pedido_id = orderResult.insertId;
+    const orderId = orderResult.insertId;
 
     for (const item of items) {
       await conn.query(
         `INSERT INTO detalles_pedido 
           (pedido_id, producto_id, nombre_producto, ram, almacenamiento, 
-          taxRate, cantidad, precio_unitario, impuesto, descuento, subtotal) 
+          colorSeleccionado, cantidad, precio_unitario, impuesto, descuento, subtotal) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
-          pedido_id,
-          item.producto_id,
-          item.nombre_producto,
+          orderId,
+          item.productId,
+          item.productName,
           item.ram,
-          item.almacenamiento,
-          item.taxRate,
-          item.cantidad,
-          item.precio_unitario,
-          item.impuesto || 0,
-          item.descuento || 0,
+          item.storage,
+          item.selectedColor,
+          item.quantity,
+          item.unitPrice,
+          item.tax || 0,
+          item.discount || 0,
           item.subtotal 
         ]
       );
     }
 
-    await orders.createShipping(conn, pedido_id, {
-      estado_envio: "pendiente",
-      costo_envio: costoEnvio,
+    await orders.createShipping(conn, orderId, {
+      shippingStatus: "pendiente",
+      shippingCost: shippingCost,
     });
 
     await conn.commit();
-    return pedido_id;
+    return orderId;
   } catch (error) {
     await conn.rollback();
     throw error;
@@ -68,32 +68,33 @@ orders.createOrder = async (orderData, items, costoEnvio) => {
   }
 };
 
-orders.getCityId = async (ciudad_envio_id) => {
+orders.getCityId = async (shippingCityId) => {
   const [result] = await db.query(
-    "SELECT id, nombre, costo_envio FROM ciudades_envio WHERE id = ?",
-    [ciudad_envio_id]
+    "SELECT id, nombre AS name, costo_envio AS shippingCost FROM ciudades_envio WHERE id = ?",
+    [shippingCityId]
   );
   return result.length ? result[0] : null;
 };
 
 orders.listCities = async function () {
-  const [ciudades] = await db.query("SELECT id, nombre, costo_envio FROM ciudades_envio WHERE activo = 1;");
-  return ciudades;
+  const [cities] = await db.query("SELECT id, nombre AS name, costo_envio AS shippingCost FROM ciudades_envio WHERE activo = 1;");
+  return cities;
 }
 
-orders.createShipping = async (conn, pedido_id, envioData) => {
-  const {estado_envio = 'pendiente', costo_envio = 0.00 } = envioData;
+orders.createShipping = async (conn, orderId, shippingData) => {
+  const {shippingStatus = 'pendiente', shippingCost = 0.00 } = shippingData;
 
   await conn.query(`
     INSERT INTO envios (pedido_id, estado_envio, costo_envio)
     VALUES (?, ?, ?)`,
-    [pedido_id, estado_envio, costo_envio]
+    [orderId, shippingStatus, shippingCost]
   );
 };
 
 orders.getLastOrderByUserId = async (userId) => {
   const [rows] = await db.query(
-    `SELECT nombre, apellido, email, direccion, distrito, telefono, envio_diferente 
+    `SELECT nombre AS name, apellido AS lastName, email, direccion AS address, 
+    distrito AS district, telefono AS tel, envio_diferente AS differentShipping 
      FROM pedidos 
      WHERE usuario_id = ? 
      ORDER BY fecha_creacion DESC 
@@ -103,18 +104,18 @@ orders.getLastOrderByUserId = async (userId) => {
   return rows.length ? rows[0] : null;
 };
 
-orders.updateStock = async (pedido_id, userId) => {
-  const { items } = await orders.getOrderById(pedido_id, userId) || {};
+orders.updateStock = async (orderId, userId) => {
+  const { items } = await orders.getOrderById(orderId, userId) || {};
   if (!items) throw new Error(`Orden no encontrada`);
 
-  await Promise.all(items.map(async ({ cantidad, producto_id, taxRate, nombre_producto }) => {
+  await Promise.all(items.map(async ({ quantity, productId, selectedColor, productName }) => {
     const [result] = await db.query(
       `UPDATE p_variantes SET stock = stock - ? 
-       WHERE producto_id = ? ${taxRate ? 'AND color = ?' : ''} AND stock >= ?`,
-      [cantidad, producto_id, ...(taxRate ? [taxRate] : []), cantidad]
+       WHERE producto_id = ? ${selectedColor ? 'AND color = ?' : ''} AND stock >= ?`,
+      [quantity, productId, ...(selectedColor ? [selectedColor] : []), quantity]
     );
-    if (!result.affectedRows) throw new Error(`Stock insuficiente: ${nombre_producto}
-      ${taxRate ? ` (${taxRate})` : ''}`);
+    if (!result.affectedRows) throw new Error(`Stock insuficiente: ${productName}
+      ${selectedColor ? ` (${selectedColor})` : ''}`);
   }));
 };
 
@@ -124,15 +125,15 @@ orders.checkStock = async (items) => {
   await Promise.all(items.map(async (item) => {
     const [stock] = await db.query(
       `SELECT stock FROM p_variantes 
-       WHERE producto_id = ? ${item.taxRate ? 'AND color = ?' : ''}`,
-      [item.producto_id, ...(item.taxRate ? [item.taxRate] : [])]
+       WHERE producto_id = ? ${item.selectedColor ? 'AND color = ?' : ''}`,
+      [item.productId, ...(item.selectedColor ? [item.selectedColor] : [])]
     );
   
-    if (stock.length === 0 || stock[0].stock < item.cantidad) {
-      stockItems.push({id: item.producto_id,
-        name: item.nombre,
-        color: item.taxRate,
-        requested: item.cantidad,
+    if (stock.length === 0 || stock[0].stock < item.quantity) {
+      stockItems.push({id: item.productId,
+        name: item.name,
+        color: item.selectedColor,
+        requested: item.quantity,
         available: stock.length > 0 ? stock[0].stock : 0
       });
     }
@@ -145,23 +146,46 @@ orders.checkStock = async (items) => {
   }
 };
 
-orders.getOrderById = async (pedido_id, userId) => {
+orders.getOrderById = async (orderId, userId) => {
   const [order] = await db.query(
-    `SELECT p.*, p.ciudad_envio_nombre, p.ciudad_envio_costo, e.estado_envio
+    `SELECT p.id,
+    p.usuario_id AS userId,
+    p.nombre AS name, 
+    p.apellido AS lastName, 
+    p.email,
+    p.direccion AS address, 
+    p.distrito AS district, 
+    p.telefono AS tel,
+    p.total,
+    p.estado AS state, 
+    p.fecha_creacion AS creationDate, 
+    p.envio_diferente AS differentShipping, 
+    p.ciudad_envio_nombre AS shippingCityName, 
+    p.ciudad_envio_costo AS shippingCityCost, 
+    e.estado_envio AS shippingStatus
      FROM pedidos p
      LEFT JOIN envios e ON p.id = e.pedido_id
      WHERE p.id = ? AND p.usuario_id = ?`,
-    [pedido_id, userId]
+    [orderId, userId]
   );
 
   if (order.length === 0) return null;
 
   const [items] = await db.query(
-    `SELECT dp.*, 
+    `SELECT dp.id,
+    dp.pedido_id AS orderId,
+    dp.producto_id AS productId,
+    dp.nombre_producto AS productName,
+    dp.cantidad AS quantity,
+    dp.precio_unitario AS unitPrice,
+    dp.impuesto AS tax,
+    dp.descuento AS discount,
+    dp.subtotal,
+    dp.colorSeleccionado AS selectedColor,     
      CONCAT(dp.ram, '+', dp.almacenamiento) AS specs
      FROM detalles_pedido dp
      WHERE pedido_id = ?`,
-    [pedido_id]
+    [orderId]
   );
 
   return {
@@ -172,7 +196,14 @@ orders.getOrderById = async (pedido_id, userId) => {
 
 orders.getUserOrders = async (userId) => {
   const [orders] = await db.query(
-    `SELECT p.*, p.ciudad_envio_nombre, e.estado_envio
+    `SELECT p.id,
+    p.nombre AS name, 
+    p.direccion AS address,
+    p.total, 
+    p.estado AS state, 
+    p.fecha_creacion AS creationDate, 
+    p.ciudad_envio_nombre AS shippingCityName, 
+    e.estado_envio AS shippingStatus
      FROM pedidos p
      LEFT JOIN envios e ON p.id = e.pedido_id
      WHERE p.usuario_id = ?
@@ -182,7 +213,7 @@ orders.getUserOrders = async (userId) => {
   return orders;
 };
 
-orders.createPayment = async (pedido_id, paymentData) => {
+orders.createPayment = async (orderId, paymentData) => {
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
@@ -191,7 +222,7 @@ orders.createPayment = async (pedido_id, paymentData) => {
       `INSERT INTO pagos 
       (pedido_id, metodo_pago, estado_pago, paypal_order_id) 
       VALUES (?, ?, ?, ?)`,
-      [pedido_id, paymentData.paymentMethod, "completado", paymentData.paymentId]
+      [orderId, paymentData.paymentMethod, "completado", paymentData.paymentId]
     );
 
     await conn.commit();

@@ -6,71 +6,67 @@ const orderController = {};
 
 orderController.createOrder = async (req, res) => {
   try {
+     console.log("Datos recibidos en createOrder:", req.body); // ← Añade esto
+    console.log("Headers:", req.headers); 
     const userId = req.session.user.id;
-    const { nombre, apellido, email, direccion, distrito, telefono, ciudad_envio_id, envio_diferente } = req.body;
+    const { name, lastName, email, address, district, tel, shippingCityId, differentShipping } = req.body;
 
     const cartItems = await cart.getCartToPay(userId);
     if (cartItems.length === 0) {
       return res.status(400).json({ success: false, message: 'El carrito está vacío' });
     }
 
-    const ciudadData = await orders.getCityId(ciudad_envio_id);
-    if (!ciudadData) {
+    const cityData = await orders.getCityId(shippingCityId);
+    if (!cityData) {
       return res.status(400).json({ success: false, message: 'Ciudad de envío no válida' });
     }
 
-    const costoEnvio = parseFloat(ciudadData.costo_envio);
+    const shippingCost = parseFloat(cityData.shippingCost);
 
     const orderItems = cartItems.map(item => {
-      const precioBase = Number(item.precioOriginal) || 0; 
-      const impuesto = Number(item.impuesto) || 0;
-      const descuento = Number(item.descuento) || 0;
+      const basePrice = Number(item.originalPrice) || 0; 
+      const tax = Number(item.tax) || 0;
+      const discount = Number(item.discount) || 0;
 
-      const subtotal = precioBase * item.cantidad * (1 + impuesto / 100) * (1 - descuento / 100);
+      const subtotal = basePrice * item.quantity * (1 + tax / 100) * (1 - discount / 100);
 
       return {
-        producto_id: item.producto_id,
-        nombre_producto: item.nombre,
+        productId: item.productId,
+        productName: item.name,
         ram: item.ram,
-        almacenamiento: item.almacenamiento,
+        storage: item.storage,
         selectedColor: item.selectedColor,
-        cantidad: item.cantidad,
-        precio_unitario: precioBase,
-        impuesto,
-        descuento,
+        quantity: item.quantity,
+        unitPrice: basePrice,
+        tax,
+        discount,
         subtotal
       };
     });
 
-    const totalPesos = orderItems.reduce((sum, item) => sum + item.subtotal, 0) + costoEnvio;
+    const totalLocal = orderItems.reduce((sum, item) => sum + item.subtotal, 0) + shippingCost;
 
-    const tasaCambio = await getExchangeRate();
+    const exchangeRate = await getExchangeRate();
 
-    const totalEnDolares = (totalPesos * tasaCambio).toFixed(2);
+    const totalUSD = (totalLocal * exchangeRate).toFixed(2);
 
     const orderData = {
-      usuario_id: userId,
-      nombre,
-      apellido,
+      userId,
+      name,
+      lastName,
       email,
-      direccion,
-      distrito,
-      telefono,
-      total: totalPesos,
-      ciudad_envio_id,
-      ciudad_envio_nombre: ciudadData.nombre,
-      ciudad_envio_costo: costoEnvio,
-      envio_diferente,
+      address,
+      district,
+      tel,
+      total: totalLocal,
+      shippingCityId,
+      shippingCityName: cityData.name,
+      shippingCityCost: shippingCost,
+      differentShipping,
     };
 
-    res.json({
-      success: true,
-      orderData,
-      orderItems,
-      totalPesos,
-      totalEnDolares,
-      tasaCambio
-    });
+    res.json({success: true, orderData, orderItems, 
+      totalLocal, totalUSD, exchangeRate });
 
   } catch (error) {
     console.error('Error al crear orden:', error);
@@ -80,8 +76,8 @@ orderController.createOrder = async (req, res) => {
 
 orderController.getCities = async function (req, res) {
   try {
-    const ciudades = await orders.listCities();
-    res.json({ success: true, ciudades });
+    const cities = await orders.listCities();
+    res.json({ success: true, cities });
   } catch (error) {
     console.error('Error al cargar ciudades:', error);
     res.status(500).json({ success: false, message: 'Error al cargar ciudades' });
@@ -91,7 +87,7 @@ orderController.getCities = async function (req, res) {
 orderController.processPayment = async (req, res) => {
   try {
     console.log("BODY RECIBIDO EN /api/order/payment:", req.body);
-    const { orderData, orderItems, paymentDetails, payerId, paymentId, pagadoDolares } = req.body;
+    const { orderData, orderItems, paymentDetails, payerId, paymentId, paidUSD } = req.body;
 
     if (!req.session.user) {
       return res.status(401).json({ success: false, message: 'No autorizado' });
@@ -104,58 +100,51 @@ orderController.processPayment = async (req, res) => {
       return res.status(400).json({ success: false, message: 'El carrito está vacío' });
     }
 
-    const ciudadData = await orders.getCityId(orderData.ciudad_envio_id);
-    if (!ciudadData) {
+    const cityData = await orders.getCityId(orderData.shippingCityId);
+    if (!cityData) {
       return res.status(400).json({ success: false, message: 'Ciudad de envío no válida' });
     }
 
-    const costoEnvio = parseFloat(ciudadData.costo_envio);
+    const shippingCost = parseFloat(cityData.shippingCost);
 
-    const subtotalProductos = cartItems.reduce((sum, item) => {
-      const precioBase = Number(item.precioOriginal) || 0;
-      const descuento = Number(item.descuento) || 0;
-      const impuesto = Number(item.impuesto) || 0;
+    const subtotalProducts = cartItems.reduce((sum, item) => {
+      const basePrice = Number(item.originalPrice) || 0;
+      const discount = Number(item.discount) || 0;
+      const tax = Number(item.tax) || 0;
 
-      const finalPrice = precioBase * (1 - descuento / 100) * (1 + impuesto / 100);
-      return sum + (finalPrice * item.cantidad);
+      const finalPrice = basePrice * (1 - discount / 100) * (1 + tax / 100);
+      return sum + (finalPrice * item.quantity);
     }, 0);
 
-    const totalPesos = subtotalProductos + costoEnvio;
+    const totalLocal = subtotalProducts + shippingCost;
 
-    const tasaCambio = orderData.tasaCambio || await getExchangeRate();
+    const exchangeRate = orderData.exchangeRate || await getExchangeRate();
 
-    const pagadoPesos = totalPesos; 
-    console.log("DEBUG pago =>", { subtotalProductos, costoEnvio, 
-      totalPesos, pagadoDolares, tasaCambio, pagadoPesos });
+    const paidLocal = totalLocal; 
+    console.log("DEBUG pago =>", { subtotalProducts, shippingCost, 
+      totalLocal, paidUSD, exchangeRate, paidLocal });
 
-    if (Math.abs(pagadoPesos - totalPesos) > 50) { 
-      return res.status(400).json({
-        success: false,
-        message: 'Monto pagado no coincide con el total real de la orden'
-      });
+    if (Math.abs(paidLocal - totalLocal) > 50) { 
+      return res.status(400).json({success: false,
+        message: 'Monto pagado no coincide con el total real de la orden'});
     }
 
     await orders.checkStock(cartItems);
 
-    const pedido_id = await orders.createOrder(
-      {...orderData, estado: "pagado", total: totalPesos,
-        ciudad_envio_id: ciudadData.id}, 
-        orderItems,costoEnvio);
+    const orderId = await orders.createOrder(
+      {...orderData, state: "pagado", total: totalLocal,
+        shippingCityId: cityData.id}, 
+        orderItems,shippingCost);
 
-    await orders.createPayment(pedido_id, {
-      paymentMethod: 'paypal',
-      paymentId,
-      payerId
-    });
+    await orders.createPayment(orderId, {
+      paymentMethod: 'paypal', paymentId, payerId});
 
-    await orders.updateStock(pedido_id, userId);
+    await orders.updateStock(orderId, userId);
     await cart.clearCart(userId);
 
-    res.json({
-      success: true,
-      message: 'Pago procesado correctamente',
-      pedido_id,
-      redirectUrl: `/api/order/orderDetails/${pedido_id}`
+    res.json({success: true,
+      message: 'Pago procesado correctamente', orderId, 
+      redirectUrl: `/api/order/orderDetails/${orderId}`
     });
 
   } catch (error) {
@@ -169,8 +158,7 @@ orderController.processPayment = async (req, res) => {
       });
     }
 
-    res.status(500).json({
-      success: false,
+    res.status(500).json({success: false,
       message: 'Error al procesar el pago',
       error: error.message
     });
@@ -221,7 +209,7 @@ orderController.showUserOrders = async (req, res) => {
 
 orderController.showOrderDetails = async (req, res) => {
   try {
-    const order = await orders.getOrderById(req.params.pedido_id, req.session.user.id);
+    const order = await orders.getOrderById(req.params.orderId, req.session.user.id);
 
     if (!order) {
       return res.status(404).render('error', { message: 'Pedido no encontrado' });

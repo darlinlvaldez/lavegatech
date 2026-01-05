@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const stockInfo = stockData.stocks;
 
     const validItems = cartData.items.filter(item => {
-      const key = `${item.producto_id}_${item.selectedColor}`;
+      const key = `${item.productId}_${item.selectedColor}`;
       const stock = stockInfo[key] ?? 0;
       return stock > 0;
     });
@@ -41,12 +41,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     orderProducts.innerHTML = "";
 
     validItems.forEach((item) => {
-      const subtotal = item.precio * item.cantidad;
+      const subtotal = item.price * item.quantity;
       total += subtotal;
 
       orderProducts.innerHTML += `
         <div class="order-col">
-          <div>${item.cantidad}x ${item.nombre} ${item.specs || ""} ${item.selectedColor.toUpperCase()}</div>
+          <div>${item.quantity}x ${item.name} ${item.specs || ""} ${item.selectedColor.toUpperCase()}</div>
           <div>$${formatPrice(subtotal)}</div>
         </div>`;
     });
@@ -61,29 +61,29 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 });
 
-  const mostrarToast = (texto, tipo = "info") => {
-    const colores = {
+  const toastify = (text, tipo = "info") => {
+    const colors = {
       info: "#0d6efd",
       error: "#dc3545",
       success: "#198754",
       warning: "#ffc107",
     };
 
-    const iconos = {
+    const icons = {
       info: "info",
       error: "x-circle",
       success: "check-circle",
       warning: "alert-triangle",
     };
 
-    const color = colores[tipo] || colores.info;
-    const icon = iconos[tipo] || iconos.info;
+    const color = colors[tipo] || colors.info;
+    const icon = icons[tipo] || icons.info;
 
-    showToast(texto, color, icon);
+    showToast(text, color, icon);
   };
 
   const getFormData = () => {
-  const usarOtraDireccion = document.getElementById("shiping-address")?.checked;
+  const useDifferentAddress = document.getElementById("shiping-address")?.checked;
 
   const getValue = (name, isAlt = false) => {
     const prefix = isAlt ? "alt-" : "";
@@ -97,23 +97,23 @@ document.addEventListener("DOMContentLoaded", async function () {
     return input?.value.replace(/\D/g, "") || "";
   };
 
-  const getCiudad = (isAlt = false) => {
+  const getCity = (isAlt = false) => {
     const id = isAlt ? "alt-city-select" : "city-select";
     const select = document.getElementById(id);
     return select?.value || "";
   };
 
-  const alt = usarOtraDireccion;
+  const alt = useDifferentAddress;
 
   return {
-    nombre: getValue("first-name", alt),
-    apellido: getValue("last-name", alt),
+    name: getValue("first-name", alt),
+    lastName: getValue("last-name", alt),
     email: getValue("email", alt),
-    direccion: getValue("address", alt),
-    ciudad_envio_id: getCiudad(alt),
-    distrito: getValue("district", alt),
-    telefono: getTel(alt),
-    envio_diferente: usarOtraDireccion ? 1 : 0
+    address: getValue("address", alt),
+    shippingCityId: getCity(alt),
+    district: getValue("district", alt),
+    tel: getTel(alt),
+    differentShipping: useDifferentAddress ? 1 : 0
   };
 };
 
@@ -130,8 +130,8 @@ const clearErrors = () => {
 
 const setupInputErrorClearing = () => {
   const inputNames = [
-    "first-name", "last-name", "email", "address", "district", "tel", "ciudad_envio_id",
-    "alt-first-name", "alt-last-name", "alt-email", "alt-address", "alt-district", "alt-tel", "alt-ciudad_envio_id"
+    "first-name", "last-name", "email", "address", "district", "tel", "shipping-city-id",
+    "alt-first-name", "alt-last-name", "alt-email", "alt-address", "alt-district", "alt-tel", "alt-shipping-city-id"
   ];
 
   inputNames.forEach(name => {
@@ -185,7 +185,7 @@ altTelInput?.addEventListener("input", (e) => {
   const validateConditions = () => {
      clearErrors();
     if (!document.getElementById("terms").checked) {
-      mostrarToast("Debe aceptar los Políticas y condiciones", "warning");
+      toastify("Debe aceptar los Políticas y condiciones", "warning");
       return false;
     }
 
@@ -193,24 +193,24 @@ altTelInput?.addEventListener("input", (e) => {
   };
 
   const showValidation = (errores) => {
-  const usarOtraDireccion = document.getElementById("shiping-address")?.checked;
+  const useDifferentAddress = document.getElementById("shiping-address")?.checked;
 
   const pathToInputName = {
-    nombre: "first-name",
-    apellido: "last-name",
+    name: "first-name",
+    lastName: "last-name",
     email: "email",
-    direccion: "address",
-    ciudad_envio_id: "ciudad_envio_id",
-    distrito: "district",
-    telefono: "tel",
+    address: "address",
+    shippingCityId: "shipping-city-id",
+    district: "district",
+    tel: "tel",
   };
 
   errores.forEach((error) => {
     const baseName = pathToInputName[error.path];
-    const inputName = usarOtraDireccion ? `alt-${baseName}` : baseName;
+    const inputName = useDifferentAddress ? `alt-${baseName}` : baseName;
 
     const input = document.querySelector(`input[name="${inputName}"], select[name="${inputName}"]`);
-    const errorFieldName = usarOtraDireccion ? `alt-${baseName}` : baseName;
+    const errorFieldName = useDifferentAddress ? `alt-${baseName}` : baseName;
     const errorContainer = document.querySelector(`.error-text[data-error-for="${errorFieldName}"]`);
 
     if (input) {
@@ -231,7 +231,7 @@ altTelInput?.addEventListener("input", (e) => {
       if (data.validationError && data.errors) {
         showValidation(data.errors);
       } else {
-        mostrarToast(data.error || "Error en la solicitud", "error");
+        toastify(data.error || "Error en la solicitud", "error");
       }
       throw new Error(data.error || "Error en la solicitud");
     }
@@ -250,7 +250,7 @@ altTelInput?.addEventListener("input", (e) => {
 
           const subtotal = parseFloat(orderTotal.dataset.subtotal || "0");
           if (subtotal === 0) {
-            mostrarToast("No hay productos seleccionados en tu carrito", "error");
+            toastify("No hay productos seleccionados en tu carrito", "error");
             return Promise.reject();
           }
 
@@ -271,15 +271,15 @@ altTelInput?.addEventListener("input", (e) => {
               orderItems: data.orderItems,
             };
 
-            const tasaCambio = await fetch('/api/order/exchange-rate').then(res => res.json()).then(data => data.rate);
+            const exchangeRate = await fetch('/api/order/exchange-rate').then(res => res.json()).then(data => data.rate);
 
-            const totalEnDolares = (data.totalPesos * tasaCambio).toFixed(2);
+            const totalUSD = (data.totalLocal * exchangeRate).toFixed(2);
 
             return actions.order.create({
               purchase_units: [
                 {
                   amount: {
-                    value: totalEnDolares,
+                    value: totalUSD,
                     currency_code: "USD",
                   },
                   description: "Compra en tu tienda",
@@ -302,24 +302,24 @@ altTelInput?.addEventListener("input", (e) => {
               paymentDetails: details,
               payerId: details.payer.payer_id,
               paymentId: details.id,
-              pagadoDolares: parseFloat(details.purchase_units[0].amount.value)}),
+              paidUSD: parseFloat(details.purchase_units[0].amount.value)}),
             })
           )
           .then(handleApiError).then((data) => {
             if (!data.success) throw new Error(data.message);
-            mostrarToast("¡Pago completado con éxito!", "success");
+            toastify("¡Pago completado con éxito!", "success");
             clearErrors();
 
             setTimeout( () => (window.location.href = data.redirectUrl), 3000);
           })
           .catch((error) => {
             console.error("Error:", error);
-            mostrarToast(`Error: ${error.message}`, "error");
+            toastify(`Error: ${error.message}`, "error");
           }), 
         
           onError: (err) => {
           console.error("Error en el pago con PayPal:", err);
-          mostrarToast("Ocurrió un error al procesar el pago con PayPal", "error");
+          toastify("Ocurrió un error al procesar el pago con PayPal", "error");
           },
         }).render("#paypal-button-container");
 
@@ -328,8 +328,8 @@ altTelInput?.addEventListener("input", (e) => {
   });
 });
 
-let ciudades = [];
-let costoEnvio = 0;
+let cities = [];
+let shippingCost = 0;
 
 const citySelect = document.getElementById("city-select");
 const orderTotal = document.querySelector(".order-total");
@@ -342,13 +342,13 @@ async function loadCities() {
     const data = await res.json();
     if (!data.success) return;
 
-    ciudades = data.ciudades;
+    cities = data.cities;
 
-    ciudades.forEach((ciudad) => {
+    cities.forEach((city) => {
       const option = document.createElement("option");
-      option.value = ciudad.id;
-      option.textContent = `${ciudad.nombre} (+$${ciudad.costo_envio})`;
-      option.dataset.costo = ciudad.costo_envio;
+      option.value = city.id;
+      option.textContent = `${city.name} (+$${city.shippingCost})`;
+      option.dataset.cost = city.shippingCost;
 
       citySelect?.appendChild(option.cloneNode(true));
       altCitySelect?.appendChild(option.cloneNode(true));
@@ -358,11 +358,11 @@ async function loadCities() {
   }
 }
 
-ciudades.forEach((ciudad) => {
+cities.forEach((city) => {
   const option = document.createElement("option");
-  option.value = ciudad.id;
-  option.textContent = `${ciudad.nombre} (+$${ciudad.costo_envio})`;
-  option.dataset.costo = ciudad.costo_envio;
+  option.value = city.id;
+  option.textContent = `${city.name} (+$${city.shippingCost})`;
+  option.dataset.cost = city.shippingCost;
 
   citySelect?.appendChild(option.cloneNode(true));
   altCitySelect?.appendChild(option);
@@ -370,19 +370,19 @@ ciudades.forEach((ciudad) => {
 
 citySelect?.addEventListener("change", () => {
   const selectedOption = citySelect.options[citySelect.selectedIndex];
-  costoEnvio = parseFloat(selectedOption.dataset.costo || "0");
+  shippingCost = parseFloat(selectedOption.dataset.cost || "0");
 
   if (shippingCostEl) {
-    shippingCostEl.textContent = `$${formatPrice(costoEnvio)}`;
+    shippingCostEl.textContent = `$${formatPrice(shippingCost)}`;
   }
 
-  actualizarTotalConEnvio();
+  updateTotalShipping();
 });
 
-function actualizarTotalConEnvio() {
+function updateTotalShipping() {
   const subtotal = parseFloat(orderTotal.dataset.subtotal || "0");
-  const totalConEnvio = subtotal + costoEnvio;
-  orderTotal.textContent = `$${formatPrice(totalConEnvio)}`;
+  const totalWithShipping = subtotal + shippingCost;
+  orderTotal.textContent = `$${formatPrice(totalWithShipping)}`;
 }
 
 citySelect?.addEventListener("change", handleCityChange);
@@ -390,11 +390,11 @@ altCitySelect?.addEventListener("change", handleCityChange);
 
 function handleCityChange(e) {
   const selectedOption = e.target.options[e.target.selectedIndex];
-  costoEnvio = parseFloat(selectedOption.dataset.costo || "0");
+  shippingCost = parseFloat(selectedOption.dataset.cost || "0");
   if (shippingCostEl) {
-    shippingCostEl.textContent = `$${formatPrice(costoEnvio)}`;
+    shippingCostEl.textContent = `$${formatPrice(shippingCost)}`;
   }
-  actualizarTotalConEnvio();
+  updateTotalShipping();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -403,9 +403,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const billing = document.querySelector(".billing-details");
 
   const toggleForms = () => {
-    const mostrarAlt = checkbox.checked;
-    caption.style.display = mostrarAlt ? "block" : "none";
-    billing.style.display = mostrarAlt ? "none" : "block";
+    const showAlt = checkbox.checked;
+    caption.style.display = showAlt ? "block" : "none";
+    billing.style.display = showAlt ? "none" : "block";
   };
 
   checkbox?.addEventListener("change", toggleForms);
@@ -430,16 +430,16 @@ async function lastOrder() {
         if (input) input.value = value || "";
       };
 
-      setInputValue("first-name", lastOrder.nombre);
-      setInputValue("last-name", lastOrder.apellido);
+      setInputValue("first-name", lastOrder.name);
+      setInputValue("last-name", lastOrder.lastName);
       setInputValue("email", lastOrder.email);
-      setInputValue("address", lastOrder.direccion);
-      setInputValue("district", lastOrder.distrito);
-      setInputValue("tel", lastOrder.telefono);
+      setInputValue("address", lastOrder.address);
+      setInputValue("district", lastOrder.district);
+      setInputValue("tel", lastOrder.tel);
 
       const citySelect = document.getElementById("city-select");
       if (citySelect) {
-        citySelect.value = lastOrder.ciudad_envio_id || "";
+        citySelect.value = lastOrder.shippingCityId || "";
         citySelect.dispatchEvent(new Event("change"));
       }
     }

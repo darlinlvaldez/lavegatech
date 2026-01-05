@@ -4,14 +4,14 @@ import { ERROR_ZOD } from "../../utils/error.js";
 const request = {} 
 
 request.order = z.object({
-  nombre: z
+  name: z
     .string()
     .trim()
     .min(1, { message: ERROR_ZOD.FIELD_REQUIRED })
     .max(40, { message: ERROR_ZOD.USERNAME_MAX })
     .refine(val => val.trim().length > 0, {
       message: ERROR_ZOD.FIELD_REQUIRED}),
-  apellido: z
+  lastName: z
     .string()
     .min(1, { message: ERROR_ZOD.FIELD_REQUIRED}),
   email: z
@@ -20,20 +20,20 @@ request.order = z.object({
   .email({ message: ERROR_ZOD.EMAIL_INVALID })
   .refine(val => val.endsWith('@gmail.com'), {
     message: ERROR_ZOD.EMAIL_DOMAIN}),
-  direccion: z
+  address: z
     .string()
     .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
-  ciudad_envio_id: z.coerce
+  shippingCityId: z.coerce
   .number()
   .int()
   .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
-  distrito: z
+  district: z
     .string()
     .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
-  telefono: z
+  tel: z
     .string()
     .length(10, { message: ERROR_ZOD.NUMBER_MIN }),
-  envio_diferente: z
+  differentShipping: z
     .number()
     .int()
     .min(0)

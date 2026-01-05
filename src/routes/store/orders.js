@@ -13,7 +13,7 @@ router.get("/last", orders.getLastOrder);
 router.post('/', validate(request.order), orders.createOrder);
 router.post('/payment', orders.processPayment); 
 router.get('/showOrders', orders.showUserOrders);
-router.get('/orderDetails/:pedido_id', orders.showOrderDetails);
+router.get('/orderDetails/:orderId', orders.showOrderDetails);
 router.get('/exchange-rate', orders.getExchange);
 
 export default router;
