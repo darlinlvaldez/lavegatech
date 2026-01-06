@@ -271,20 +271,15 @@ altTelInput?.addEventListener("input", (e) => {
               orderItems: data.orderItems,
             };
 
-            const exchangeRate = await fetch('/api/order/exchange-rate').then(res => res.json()).then(data => data.rate);
-
-            const totalUSD = (data.totalLocal * exchangeRate).toFixed(2);
+            const totalUSD = data.totalUSD;
 
             return actions.order.create({
-              purchase_units: [
-                {
-                  amount: {
-                    value: totalUSD,
-                    currency_code: "USD",
-                  },
-                  description: "Compra en tu tienda",
-                },
-              ],
+              purchase_units: [{
+                amount: {
+                  value: totalUSD,
+                  currency_code: "USD"
+                }
+              }]
             });
           });
         },

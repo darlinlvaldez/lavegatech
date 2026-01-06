@@ -110,6 +110,82 @@
   font-weight: normal;
 }
 
+.devices-grid-comparison {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  max-width: 1200px; /* ancho máximo para que no toque los bordes */
+  margin: 0 auto;    /* centra el grid horizontalmente */
+  padding: 0 16px;   /* espacio a los lados */
+}
+
+
+.more-devices-comparison {
+  margin-top: 64px;
+}
+
+.more-devices-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 32px;
+  color: #111827;
+}
+
+.device-select-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 0 rgba(0,0,0,.04), 0 0 8px rgba(17,17,26,.08);
+  transition: transform .25s ease, box-shadow .25s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.device-select-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(0,0,0,.1);
+}
+
+.device-select-card img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  margin-bottom: 16px;
+}
+
+.device-select-card h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #1f2937;
+}
+
+.device-select-card .price {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.device-select-card button {
+  padding: 10px 20px;
+  border-radius: 9999px;
+  border: none;
+  background: #1f2937;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .25s ease, transform .2s ease;
+}
+
+.device-select-card button:hover {
+  background: #111827;
+  transform: scale(1.05);
+}
+
 @media (min-width: 640px) {
     .body-comparison {
         padding: 24px;
@@ -122,6 +198,10 @@
     .tittle-comparison {
         font-size: 2.5rem;
     }
+    
+    .devices-grid-comparison {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (min-width: 768px) {
@@ -139,6 +219,10 @@
         flex: 1 1 calc(50% - 24px);
         max-width: calc(50% - 24px);
     }
+
+    .devices-grid-comparison {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (min-width: 1024px) {
@@ -178,4 +262,7 @@
     .vs-separator-small-comparison {
         display: none;
     }
+    .devices-grid-comparison {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

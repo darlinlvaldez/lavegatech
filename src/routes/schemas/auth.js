@@ -79,7 +79,7 @@ request.forgotPassword = z.object({
 }).strict();
 
 request.formEmail = z.object({
-  nombre: z
+  name: z
     .string()
     .min(1, { message: ERROR_ZOD.FIELD_REQUIRED }),
   email: z
@@ -89,10 +89,10 @@ request.formEmail = z.object({
     .refine(val => val.endsWith('@gmail.com'), {
     message: ERROR_ZOD.EMAIL_DOMAIN
   }),
-  asunto: z
+  affair: z
     .string()
     .min(10, { message: ERROR_ZOD.AFFAIR_MIN }),
-  mensaje: z
+  message: z
     .string()
     .min(10, { message: ERROR_ZOD.MESSAGE_MIN }),
 }).strict();

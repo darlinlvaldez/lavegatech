@@ -187,6 +187,48 @@ comparisonForm.addEventListener('submit', async function(e) {
   }
 });
 
+async function loadSelectableDevices() {
+  try {
+    const res = await fetch('/comparison/list');
+    if (!res.ok) throw new Error('Error al cargar dispositivos');
+
+    const devices = await res.json();
+    renderSelectableDevices(devices);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function renderSelectableDevices(devices) {
+  const grid = document.getElementById('devices-grid');
+  if (!grid) return;
+
+  grid.innerHTML = '';
+
+  devices.forEach(device => {
+    const calc = calculateItem(device);
+
+    const card = document.createElement('div');
+    card.className = 'device-select-card';
+
+    card.innerHTML = `
+      <img src="${device.image?.split(',')[0]}" alt="${device.name}">
+      <h3>${device.name}</h3>
+      <div class="price">$${formatPrice(calc.finalPrice)}</div>
+      <button>Agregar a comparación</button>
+    `;
+
+    card.querySelector('button').addEventListener('click', () => {
+      addDeviceToComparison(device);
+      showToast("Dispositivo agregado a la comparación", "#16a34a", "success");
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+loadSelectableDevices();
+
 function safe(value) {
   return value ?? ''; 
 }

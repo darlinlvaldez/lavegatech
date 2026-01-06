@@ -7,4 +7,6 @@ router.get('/searchMobiles', comparison.searchMobiles)
 
 router.get('/compare', comparison.comparer)
 
+router.get('/list', comparison.listMobiles);
+
 export default router;

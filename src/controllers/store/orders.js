@@ -1,12 +1,13 @@
 import orders from '../../models/store/orders.js';
 import cart from '../../models/store/cart.js';
 import { getExchangeRate } from '../../services/exchange.js';
+import { calculateItemSubtotal } from '../../utils/orderPrices.js';
 
 const orderController = {};
 
 orderController.createOrder = async (req, res) => {
   try {
-     console.log("Datos recibidos en createOrder:", req.body); // ← Añade esto
+     console.log("Datos recibidos en createOrder:", req.body);
     console.log("Headers:", req.headers); 
     const userId = req.session.user.id;
     const { name, lastName, email, address, district, tel, shippingCityId, differentShipping } = req.body;
@@ -23,32 +24,33 @@ orderController.createOrder = async (req, res) => {
 
     const shippingCost = parseFloat(cityData.shippingCost);
 
-    const orderItems = cartItems.map(item => {
-      const basePrice = Number(item.originalPrice) || 0; 
-      const tax = Number(item.tax) || 0;
-      const discount = Number(item.discount) || 0;
+      const orderItems = cartItems.map((item) => {
+        const subtotal = calculateItemSubtotal({
+          price: item.originalPrice,
+          quantity: item.quantity,
+          tax: item.tax,
+          discount: item.discount,
+        });
 
-      const subtotal = basePrice * item.quantity * (1 + tax / 100) * (1 - discount / 100);
-
-      return {
-        productId: item.productId,
-        productName: item.name,
-        ram: item.ram,
-        storage: item.storage,
-        selectedColor: item.selectedColor,
-        quantity: item.quantity,
-        unitPrice: basePrice,
-        tax,
-        discount,
-        subtotal
-      };
-    });
+        return {
+          productId: item.productId,
+          productName: item.name,
+          ram: item.ram,
+          storage: item.storage,
+          selectedColor: item.selectedColor,
+          quantity: item.quantity,
+          unitPrice: Number(item.originalPrice),
+          tax: Number(item.tax),
+          discount: Number(item.discount),
+          subtotal,
+        };
+      });
 
     const totalLocal = orderItems.reduce((sum, item) => sum + item.subtotal, 0) + shippingCost;
 
     const exchangeRate = await getExchangeRate();
 
-    const totalUSD = (totalLocal * exchangeRate).toFixed(2);
+    const totalUSD = (totalLocal * exchangeRate).toFixed(2);  
 
     const orderData = {
       userId,
@@ -64,6 +66,10 @@ orderController.createOrder = async (req, res) => {
       shippingCityCost: shippingCost,
       differentShipping,
     };
+
+    console.log("TOTAL LOCAL:", totalLocal);
+    console.log("EXCHANGE RATE:", exchangeRate);
+    console.log("TOTAL USD:", totalUSD);
 
     res.json({success: true, orderData, orderItems, 
       totalLocal, totalUSD, exchangeRate });
@@ -108,25 +114,26 @@ orderController.processPayment = async (req, res) => {
     const shippingCost = parseFloat(cityData.shippingCost);
 
     const subtotalProducts = cartItems.reduce((sum, item) => {
-      const basePrice = Number(item.originalPrice) || 0;
-      const discount = Number(item.discount) || 0;
-      const tax = Number(item.tax) || 0;
-
-      const finalPrice = basePrice * (1 - discount / 100) * (1 + tax / 100);
-      return sum + (finalPrice * item.quantity);
+      return ( sum + calculateItemSubtotal({
+          price: item.originalPrice,
+          quantity: item.quantity,
+          tax: item.tax,
+          discount: item.discount,
+        })
+      );
     }, 0);
 
     const totalLocal = subtotalProducts + shippingCost;
 
     const exchangeRate = orderData.exchangeRate || await getExchangeRate();
 
-    const paidLocal = totalLocal; 
-    console.log("DEBUG pago =>", { subtotalProducts, shippingCost, 
-      totalLocal, paidUSD, exchangeRate, paidLocal });
+    const paidLocal = paidUSD / exchangeRate;
 
-    if (Math.abs(paidLocal - totalLocal) > 50) { 
-      return res.status(400).json({success: false,
-        message: 'Monto pagado no coincide con el total real de la orden'});
+    if (Math.abs(paidLocal - totalLocal) > 50) {
+      return res.status(400).json({
+        success: false,
+        message: 'Monto pagado no coincide con el total real de la orden'
+      });
     }
 
     await orders.checkStock(cartItems);

@@ -279,23 +279,23 @@ auth.logout = (req, res) => {
 };
 
 auth.formEmail = async (req, res) => {
-  const { nombre, email, asunto, mensaje } = req.body;
+  const { name, email, affair, message } = req.body;
 
   if (req.validationError) {
-    return renderError(res, 'store/clients/contact', null, {
-      nombre, email, asunto, mensaje, success: false,
+    return renderError(res, 'store/information/contact', null, {
+      name, email, affair, message, success: false,
       validationErrors: req.validationError.fields
     });
   }
 
   try {
-    await emailService.sendEmail(config.EMAIL_SENDER, asunto, `Mensaje de ${nombre} <${email}>:\n\n${mensaje}`);
-      res.render('store/clients/contact', {nombre: '', email: '', asunto: '', mensaje: '', 
+    await emailService.sendEmail(config.EMAIL_SENDER, affair, `Mensaje de ${name} <${email}>:\n\n${message}`);
+      res.render('store/information/contact', {name: '', email: '', affair: '', message: '', 
         success: true , error: null, validationErrors: {} });
   } catch (error) {
     console.error('Error al enviar correo:', error);
-    return renderError(res, 'store/clients/contact', ERROR_MESSAGES.EMAIL_SEND_ERROR, {
-      nombre, email, asunto, mensaje, validationErrors: {} });
+    return renderError(res, 'store/information/contact', ERROR_MESSAGES.EMAIL_SEND_ERROR, {
+      name, email, affair, message, success: false, validationErrors: {} });
   }
 };
 

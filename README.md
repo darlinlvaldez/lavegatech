@@ -7,3 +7,6 @@ Hacer una reseña si se compró el producto.
 Optimizar codigo en reportes de excel.
 Mensaje de error con zod en cuentas admin.
 Agregar productos al comparador.
+Decidir que es mejor para agregar productos.
+Hacer que los mensajes de toastify se muestren luego de renderizar.
+Que todas las librerias del front esten en local.

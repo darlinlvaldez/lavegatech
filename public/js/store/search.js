@@ -28,14 +28,14 @@ document.addEventListener('DOMContentLoaded', function() {
       productElement.className = 'search-result-item';
       productElement.innerHTML = `
         <a href="/product/${product.id}${product.colores ? `?color=${encodeURIComponent(product.colores.split(',')[0])}` : ''}">
-          <img src="${product.imagen?.split(',')[0]}" alt="${product.nombre}">
+          <img src="${product.image?.split(',')[0]}" alt="${product.name}">
           <div class="product-info">
-            <h4>${product.nombre} ${product.specs || ""}</h4>
-            <p>${product.categoria === 'moviles' ? 'Móviles' : product.categoria.charAt(0).toUpperCase() + product.categoria.slice(1)}</p>
+            <h4>${product.name} ${product.specs || ""}</h4>
+            <p>${product.category === 'moviles' ? 'Móviles' : product.category.charAt(0).toUpperCase() + product.category.slice(1)}</p>
           </div>
           <div class="product-price">
-            $${formatPrice(Number(product.precio))}
-            ${product.descuento > 0 ? `<del class="product-old-price">$${formatPrice(Number(product.precio) / (1 - product.descuento / 100))}</del>` : ''}
+            $${formatPrice(Number(product.price))}
+            ${product.discount > 0 ? `<del class="product-old-price">$${formatPrice(Number(product.price) / (1 - product.discount / 100))}</del>` : ''}
           </div>
         </a>
       `;

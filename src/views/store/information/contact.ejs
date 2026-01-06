@@ -48,12 +48,12 @@
             <div class="fila-campos">
                 <div class="campo-formulario">
                     <label for="nombre">Nombre</label>
-                    <input type="text" class="entrada-texto <%= validationErrors?.nombre ? 'input-error' : '' %>" 
-                    id="nombre" name="nombre" placeholder="Introduce el nombre" value="<%= nombre || '' %>">
-                    <% if (validationErrors?.nombre) { %>
+                    <input type="text" class="entrada-texto <%= validationErrors?.name ? 'input-error' : '' %>" 
+                    id="name" name="name" placeholder="Introduce el nombre" value="<%= name || '' %>">
+                    <% if (validationErrors?.name) { %>
                         <p class="field-error">
                         <i class="fa-solid fa-circle-exclamation"></i>
-                        <%= validationErrors.nombre %></p>
+                        <%= validationErrors.name %></p>
                     <% } %>
                 </div>
                 <div class="campo-formulario">
@@ -69,21 +69,21 @@
             </div>
             <div class="campo-formulario">
                 <label for="asunto">Asunto</label>
-                <input type="text" class="entrada-texto <%= validationErrors?.asunto ? 'input-error' : '' %>" 
-                id="asunto" name="asunto" placeholder="Introduce el asunto" value="<%= asunto || '' %>">
-                <% if (validationErrors?.asunto) { %>
+                <input type="text" class="entrada-texto <%= validationErrors?.affair ? 'input-error' : '' %>" 
+                id="affair" name="affair" placeholder="Introduce el asunto" value="<%= affair || '' %>">
+                <% if (validationErrors?.affair) { %>
                     <p class="field-error">
                     <i class="fa-solid fa-circle-exclamation"></i>
-                    <%= validationErrors.asunto %></p>
+                    <%= validationErrors.affair %></p>
                 <% } %>
             </div>
             <div class="campo-formulario">
                 <label for="mensaje" style="margin-top: 20px; display: block;">Mensaje</label>
                 <textarea class="entrada-texto <%= validationErrors?.mensaje ? 'input-error' : '' %>" 
-                id="mensaje" name="mensaje" placeholder="Escribe tu mensaje..." rows="8"><%= mensaje || '' %></textarea>
-                <% if (validationErrors?.mensaje) { %>
+                id="message" name="message" placeholder="Escribe tu mensaje..." rows="8"><%= message || '' %></textarea>
+                <% if (validationErrors?.message) { %>
                     <p class="field-error"><i class="fa-solid fa-circle-exclamation"></i>
-                    <%= validationErrors.mensaje %></p>
+                    <%= validationErrors.message %></p>
                 <% } %>
             </div>
             

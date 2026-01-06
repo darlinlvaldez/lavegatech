@@ -105,7 +105,7 @@ app.get('/verify', (req, res) => {
 });
 
 app.get('/contact', (req, res) => {
-  res.render('store/information/contact', {nombre: '', email: '', mensaje: '', asunto: '', 
+  res.render('store/information/contact', {name: '', email: '', message: '', affair: '', 
     error: [], success: false, validationErrors: {}, query: req.query});
 });
 

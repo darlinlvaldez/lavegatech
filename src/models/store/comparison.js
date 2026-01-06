@@ -36,6 +36,34 @@ comparison.searchDevice = async (query, excludeMobileIds = []) => {
   }
 };
 
+comparison.getSelectableDevices = async () => {
+  const query = `
+    SELECT 
+      p.id,
+      p.movil_id AS mobileId,
+      p.nombre AS name,
+      p.precio AS price,
+      p.impuesto AS tax,
+      p.descuento AS discount,
+      v.img AS image
+    FROM productos p
+    LEFT JOIN p_variantes v ON p.id = v.producto_id AND v.activo = 1
+    JOIN categorias c ON p.categoria_id = c.id
+    WHERE c.categoria = 'moviles'
+      AND p.activo = 1
+    GROUP BY p.movil_id
+    ORDER BY p.id DESC
+    LIMIT 12
+  `;
+
+  try {
+    const [rows] = await db.query(query);
+    return applyTaxDiscount(rows);
+  } catch (err) {
+    throw new Error("Error al listar dispositivos: " + err.message);
+  }
+};
+
 comparison.getProductMobileIds = async (productIds) => {
   try {
     const [mobileIds] = await db.query(
