@@ -114,22 +114,32 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
-  max-width: 1200px; /* ancho máximo para que no toque los bordes */
-  margin: 0 auto;    /* centra el grid horizontalmente */
-  padding: 0 16px;   /* espacio a los lados */
+  max-width: 1200px;
+  margin: 0 auto;   
+  padding: 0 16px; 
 }
 
+/* additional content */
 
 .more-devices-comparison {
   margin-top: 64px;
 }
 
 .more-devices-title {
-  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   font-weight: 700;
-  text-align: center;
-  margin-bottom: 32px;
-  color: #111827;
+  font-size: 2.4rem;
+}
+
+.top-sold-title i {
+  color: #f97316;
+}
+
+.top-rated-title i {
+  color: #facc15;
 }
 
 .device-select-card {
@@ -158,16 +168,10 @@
 }
 
 .device-select-card h3 {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 8px;
   color: #1f2937;
-}
-
-.device-select-card .price {
-  font-size: 1.3rem;
-  font-weight: 700;
-  margin-bottom: 16px;
 }
 
 .device-select-card button {

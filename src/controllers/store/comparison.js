@@ -16,9 +16,18 @@ comparisonController.searchMobiles = async (req, res) => {
   }
 };
 
-comparisonController.listMobiles = async (req, res) => {
+comparisonController.topSoldMobiles = async (req, res) => {
   try {
-    const devices = await comparison.getSelectableDevices();
+    const devices = await comparison.getTopSoldMobiles(6);
+    res.json(devices);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+comparisonController.topRatedMobiles = async (req, res) => {
+  try {
+    const devices = await comparison.getTopRatedMobiles(6);
     res.json(devices);
   } catch (err) {
     res.status(500).json({ error: err.message });

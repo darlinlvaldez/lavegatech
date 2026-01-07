@@ -187,20 +187,65 @@ comparisonForm.addEventListener('submit', async function(e) {
   }
 });
 
-async function loadSelectableDevices() {
-  try {
-    const res = await fetch('/comparison/list');
-    if (!res.ok) throw new Error('Error al cargar dispositivos');
+function renderSectionTitle(sectionId, titleHTML) {
+  const section = document.getElementById(sectionId);
+  if (!section) return;
 
-    const devices = await res.json();
-    renderSelectableDevices(devices);
-  } catch (err) {
-    console.error(err);
-  }
+  if (section.querySelector('h2')) return;
+
+  const title = document.createElement('h2');
+  title.className = 'more-devices-title';
+  title.innerHTML = titleHTML;
+
+  section.prepend(title);
 }
 
-function renderSelectableDevices(devices) {
-  const grid = document.getElementById('devices-grid');
+async function loadTopSoldDevices() {
+  const res = await fetch('/comparison/top-sold');
+  const devices = await res.json();
+
+  if (!devices.length) return;
+
+  renderSectionTitle(
+    'top-sold-section',
+    `<i class="fa-solid fa-fire" style="color:#f97316"></i> Top productos más vendidos`
+  );
+
+  renderSelectableDevices(devices, 'top-sold-grid');
+}
+
+async function loadTopRatedDevices() {
+  const res = await fetch('/comparison/top-rated');
+  const devices = await res.json();
+
+  if (!devices.length) return;
+
+  renderSectionTitle(
+    'top-rated-section',
+    `<i class="fa-solid fa-star" style="color:#facc15"></i> Mejor calificados por los usuarios`
+  );
+
+  renderSelectableDevices(devices, 'top-rated-grid');
+}
+
+function renderStars(rating = 0) {
+  let starsHTML = '';
+
+  for (let i = 1; i <= 5; i++) {
+    if (i <= Math.floor(rating)) {
+      starsHTML += `<i class="fa-solid fa-star"></i>`;
+    } else if (i - rating < 1 && i > rating) {
+      starsHTML += `<i class="fa-regular fa-star-half-stroke"></i>`;
+    } else {
+      starsHTML += `<i class="fa-regular fa-star"></i>`;
+    }
+  }
+
+  return `<div class="product-rating">${starsHTML}</div>`;
+}
+
+function renderSelectableDevices(devices, gridId = 'devices-grid') {
+  const grid = document.getElementById(gridId);
   if (!grid) return;
 
   grid.innerHTML = '';
@@ -214,7 +259,13 @@ function renderSelectableDevices(devices) {
     card.innerHTML = `
       <img src="${device.image?.split(',')[0]}" alt="${device.name}">
       <h3>${device.name}</h3>
-      <div class="price">$${formatPrice(calc.finalPrice)}</div>
+      <div class="search-result-item">
+        <div class="product-price"> $${formatPrice(calc.finalPrice)}
+          ${device.discount > 0 ? `<del class="product-old-price">$${formatPrice(calc.originalPrice)}</del>` : ''}
+        </div>
+      </div>
+      ${device.rating ? renderStars(device.rating) : ''}
+
       <button>Agregar a comparación</button>
     `;
 
@@ -226,8 +277,6 @@ function renderSelectableDevices(devices) {
     grid.appendChild(card);
   });
 }
-
-loadSelectableDevices();
 
 function safe(value) {
   return value ?? ''; 
@@ -323,5 +372,8 @@ function displayComparisonResults(devices) {
     
   comparisonResults.appendChild(wrapper);
 }
-  loadDevicesURL();
+
+loadDevicesURL();
+loadTopSoldDevices();
+loadTopRatedDevices();
 });

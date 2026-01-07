@@ -7,6 +7,7 @@ router.get('/searchMobiles', comparison.searchMobiles)
 
 router.get('/compare', comparison.comparer)
 
-router.get('/list', comparison.listMobiles);
+router.get('/top-sold', comparison.topSoldMobiles);
+router.get('/top-rated', comparison.topRatedMobiles);
 
 export default router;

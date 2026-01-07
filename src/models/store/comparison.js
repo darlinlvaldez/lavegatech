@@ -36,7 +36,7 @@ comparison.searchDevice = async (query, excludeMobileIds = []) => {
   }
 };
 
-comparison.getSelectableDevices = async () => {
+comparison.getTopSoldMobiles = async (limit = 6) => {
   const query = `
     SELECT 
       p.id,
@@ -45,23 +45,52 @@ comparison.getSelectableDevices = async () => {
       p.precio AS price,
       p.impuesto AS tax,
       p.descuento AS discount,
-      v.img AS image
-    FROM productos p
+      v.img AS image,
+      SUM(dp.cantidad) AS total_vendidos
+    FROM detalles_pedido dp
+    JOIN pedidos pe ON dp.pedido_id = pe.id
+    JOIN productos p ON dp.producto_id = p.id
     LEFT JOIN p_variantes v ON p.id = v.producto_id AND v.activo = 1
     JOIN categorias c ON p.categoria_id = c.id
     WHERE c.categoria = 'moviles'
       AND p.activo = 1
+      AND pe.estado IN ('pagado', 'completado')
     GROUP BY p.movil_id
-    ORDER BY p.id DESC
-    LIMIT 12
+    ORDER BY total_vendidos DESC
+    LIMIT ?
   `;
 
-  try {
-    const [rows] = await db.query(query);
-    return applyTaxDiscount(rows);
-  } catch (err) {
-    throw new Error("Error al listar dispositivos: " + err.message);
-  }
+  const [rows] = await db.query(query, [limit]);
+  return applyTaxDiscount(rows);
+};
+
+comparison.getTopRatedMobiles = async (limit = 6) => {
+  const query = `
+    SELECT 
+      p.id,
+      p.movil_id AS mobileId,
+      p.nombre AS name,
+      p.precio AS price,
+      p.impuesto AS tax,
+      p.descuento AS discount,
+      v.img AS image,
+      ROUND(AVG(c.calificacion), 1) AS rating,
+      COUNT(c.id) AS total_reviews
+    FROM clasificacion c
+    JOIN productos p ON c.producto_id = p.id
+    LEFT JOIN p_variantes v ON p.id = v.producto_id AND v.activo = 1
+    JOIN categorias cat ON p.categoria_id = cat.id
+    WHERE cat.categoria = 'moviles'
+      AND p.activo = 1
+      AND c.calificacion IS NOT NULL
+    GROUP BY p.movil_id
+    HAVING total_reviews >= 2
+    ORDER BY rating DESC, total_reviews DESC
+    LIMIT ?
+  `;
+
+  const [rows] = await db.query(query, [limit]);
+  return applyTaxDiscount(rows);
 };
 
 comparison.getProductMobileIds = async (productIds) => {
