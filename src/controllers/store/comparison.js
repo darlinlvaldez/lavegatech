@@ -34,6 +34,23 @@ comparisonController.topRatedMobiles = async (req, res) => {
   }
 };
 
+comparisonController.ratingBreakdown = async (req, res) => {
+  try {
+    const productId = parseInt(req.params.id);
+
+    if (!productId) {
+      return res.status(400).json({ error: "ID de producto inválido" });
+    }
+
+    const breakdown = await comparison.getRatingBreakdown(productId);
+
+    res.json(breakdown);
+  } catch (err) {
+    console.error("Error en rating breakdown:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
 comparisonController.comparer = async (req, res) => {
   try {
     const ids = req.query.ids?.split(",").map((id) => parseInt(id)).filter((id) => !isNaN(id));

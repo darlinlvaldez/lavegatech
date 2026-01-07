@@ -105,9 +105,16 @@
     background-color: #111827;
 }
 
-.product-old-price{
+.item-price {
+  font-weight: bold;
+  color: #D10024;
+  font-size: 1.5rem;
+}
+
+.item-old-price{
   color: #8D99AE;
   font-weight: normal;
+  font-size: 1.3rem;
 }
 
 .devices-grid-comparison {
@@ -132,14 +139,7 @@
   gap: 10px;
   font-weight: 700;
   font-size: 2.4rem;
-}
-
-.top-sold-title i {
-  color: #f97316;
-}
-
-.top-rated-title i {
-  color: #facc15;
+  margin-bottom: 32px;
 }
 
 .device-select-card {
@@ -170,7 +170,7 @@
 .device-select-card h3 {
   font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
   color: #1f2937;
 }
 
@@ -188,6 +188,49 @@
 .device-select-card button:hover {
   background: #111827;
   transform: scale(1.05);
+}
+
+.custom-star {
+  color: #FFD700; 
+  margin-right: 4px; 
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.product-rating {
+  position: relative;
+  cursor: pointer;
+}
+
+.rating-tooltip {
+  position: absolute;
+  top: 120%;
+  left: 0;
+  width: 220px;
+  background: #ffffff;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
+  z-index: 10;
+}
+
+.rating-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.bar {
+  flex: 1;
+  height: 6px;
+  background: #333;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  background: #facc15;
 }
 
 @media (min-width: 640px) {

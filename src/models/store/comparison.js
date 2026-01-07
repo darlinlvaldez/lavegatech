@@ -80,9 +80,7 @@ comparison.getTopRatedMobiles = async (limit = 6) => {
     JOIN productos p ON c.producto_id = p.id
     LEFT JOIN p_variantes v ON p.id = v.producto_id AND v.activo = 1
     JOIN categorias cat ON p.categoria_id = cat.id
-    WHERE cat.categoria = 'moviles'
-      AND p.activo = 1
-      AND c.calificacion IS NOT NULL
+    WHERE cat.categoria = 'moviles' AND p.activo = 1 AND c.calificacion IS NOT NULL
     GROUP BY p.movil_id
     HAVING total_reviews >= 2
     ORDER BY rating DESC, total_reviews DESC
@@ -91,6 +89,24 @@ comparison.getTopRatedMobiles = async (limit = 6) => {
 
   const [rows] = await db.query(query, [limit]);
   return applyTaxDiscount(rows);
+};
+
+comparison.getRatingBreakdown = async (productId) => {
+  const query = `
+    SELECT 
+      calificacion AS stars,
+      COUNT(*) AS total
+    FROM clasificacion
+    WHERE producto_id = ?
+    GROUP BY calificacion
+  `;
+
+  try {
+    const [rows] = await db.query(query, [productId]);
+    return rows;
+  } catch (err) {
+    throw new Error("Error al obtener distribución de calificaciones: " + err.message);
+  }
 };
 
 comparison.getProductMobileIds = async (productIds) => {
@@ -141,7 +157,9 @@ comparison.getDevice = async (productIds) => {
       dim.grosor AS thickness,
       dim.peso AS weight,
       GROUP_CONCAT(DISTINCT ram.capacidad ORDER BY ram.capacidad SEPARATOR ' / ') AS ram_capacities,
-      GROUP_CONCAT(DISTINCT alm.capacidad ORDER BY alm.capacidad SEPARATOR ' / ') AS storage_capacities
+      GROUP_CONCAT(DISTINCT alm.capacidad ORDER BY alm.capacidad SEPARATOR ' / ') AS storage_capacities,
+      ROUND(AVG(cla.calificacion), 1) AS rating,
+      COUNT(cla.id) AS total_reviews
     FROM productos p
     JOIN moviles m ON p.movil_id = m.id
     LEFT JOIN p_variantes v ON p.id = v.producto_id AND v.activo = 1
@@ -156,6 +174,7 @@ comparison.getDevice = async (productIds) => {
     LEFT JOIN ram ON vr.ram_id = ram.id
     LEFT JOIN variantes_almacenamiento va ON m.id = va.movil_id
     LEFT JOIN almacenamiento alm ON va.almacenamiento_id = alm.id
+    LEFT JOIN clasificacion cla ON p.id = cla.producto_id 
     JOIN p_marcas ma ON p.marca_id = ma.id AND ma.activo = 1
     JOIN categorias c ON p.categoria_id = c.id AND c.activo = 1
     WHERE p.id IN (?) AND p.activo = 1

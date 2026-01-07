@@ -8,6 +8,9 @@ router.get('/searchMobiles', comparison.searchMobiles)
 router.get('/compare', comparison.comparer)
 
 router.get('/top-sold', comparison.topSoldMobiles);
+
 router.get('/top-rated', comparison.topRatedMobiles);
+
+router.get( '/product/:id/rating-breakdown', comparison.ratingBreakdown);
 
 export default router;

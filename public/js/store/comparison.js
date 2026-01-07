@@ -82,9 +82,9 @@ function displaySearchResults(products) {
       <img src="${product.image?.split(',')[0]}" alt="${product.name}">
       <div class="product-info">
         <h4>${product.name}</h4>
-        <div class="product-price">
+        <div class="item-price">
         $${formatPrice(calc.finalPrice)}
-          ${product.discount > 0 ? `<del class="product-old-price">$${formatPrice(calc.originalPrice)}</del>` : ''}
+          ${product.discount > 0 ? `<del class="item-old-price">$${formatPrice(calc.originalPrice)}</del>` : ''}
       </div>
       </div>
     `;
@@ -208,7 +208,7 @@ async function loadTopSoldDevices() {
 
   renderSectionTitle(
     'top-sold-section',
-    `<i class="fa-solid fa-fire" style="color:#f97316"></i> Top productos más vendidos`
+    `Top Ventas`
   );
 
   renderSelectableDevices(devices, 'top-sold-grid');
@@ -222,26 +222,31 @@ async function loadTopRatedDevices() {
 
   renderSectionTitle(
     'top-rated-section',
-    `<i class="fa-solid fa-star" style="color:#facc15"></i> Mejor calificados por los usuarios`
+    `Lo Más Gustados`
   );
 
   renderSelectableDevices(devices, 'top-rated-grid');
 }
 
-function renderStars(rating = 0) {
+function renderStars(rating = 0, productId) {
   let starsHTML = '';
 
   for (let i = 1; i <= 5; i++) {
     if (i <= Math.floor(rating)) {
-      starsHTML += `<i class="fa-solid fa-star"></i>`;
+      starsHTML += `<i class="custom-star fa-solid fa-star"></i>`;
     } else if (i - rating < 1 && i > rating) {
-      starsHTML += `<i class="fa-regular fa-star-half-stroke"></i>`;
+      starsHTML += `<i class="custom-star fa-regular fa-star-half-stroke"></i>`;
     } else {
-      starsHTML += `<i class="fa-regular fa-star"></i>`;
+      starsHTML += `<i class="custom-star fa-regular fa-star"></i>`;
     }
   }
 
-  return `<div class="product-rating">${starsHTML}</div>`;
+  return `
+    <div class="product-rating" data-product-id="${productId}">
+      ${starsHTML}
+      <div class="rating-tooltip hidden"></div>
+    </div>
+  `;
 }
 
 function renderSelectableDevices(devices, gridId = 'devices-grid') {
@@ -256,17 +261,19 @@ function renderSelectableDevices(devices, gridId = 'devices-grid') {
     const card = document.createElement('div');
     card.className = 'device-select-card';
 
-    card.innerHTML = `
-      <img src="${device.image?.split(',')[0]}" alt="${device.name}">
-      <h3>${device.name}</h3>
-      <div class="search-result-item">
-        <div class="product-price"> $${formatPrice(calc.finalPrice)}
-          ${device.discount > 0 ? `<del class="product-old-price">$${formatPrice(calc.originalPrice)}</del>` : ''}
+    card.innerHTML = `  
+      <a href="/product/${device.id}">
+        <img src="${device.image?.split(",")[0]}" alt="${device.name}">
+      </a>
+      <div class="search-result">
+        <div class="item-price"> $${formatPrice(calc.finalPrice)}
+          ${device.discount > 0 ? `<del class="item-old-price">$
+            ${formatPrice(calc.originalPrice )}</del>`: "" }
         </div>
       </div>
-      ${device.rating ? renderStars(device.rating) : ''}
+      ${device.rating ? renderStars(device.rating, device.id) : ""}
 
-      <button>Agregar a comparación</button>
+      <button>Comparar</button>
     `;
 
     card.querySelector('button').addEventListener('click', () => {
@@ -276,6 +283,46 @@ function renderSelectableDevices(devices, gridId = 'devices-grid') {
 
     grid.appendChild(card);
   });
+}
+
+document.addEventListener('mouseover', async (e) => {
+  const ratingEl = e.target.closest('.product-rating');
+  if (!ratingEl) return;
+
+  const tooltip = ratingEl.querySelector('.rating-tooltip');
+  if (!tooltip || tooltip.dataset.loaded) return;
+
+  const productId = ratingEl.dataset.productId;
+  if (!productId) return;
+
+  const res = await fetch(`/comparison/product/${productId}/rating-breakdown`);
+  if (!res.ok) return;
+
+  const data = await res.json();
+
+  const totalReviews = data.reduce((sum, r) => sum + r.total, 0);
+
+  tooltip.innerHTML = renderRatingBars(data, totalReviews);
+  tooltip.dataset.loaded = "true";
+  tooltip.classList.remove('hidden');
+});
+
+function renderRatingBars(data, totalReviews) {
+  return data
+    .sort((a, b) => b.stars - a.stars)
+    .map(row => {
+      const percent = Math.round((row.total / totalReviews) * 100);
+
+      return `
+        <div class="rating-row">
+          <span>${row.stars}★</span>
+          <div class="bar">
+            <div class="fill" style="width:${percent}%"></div>
+          </div>
+          <span>${percent}%</span>
+        </div>
+      `;
+    }).join('');
 }
 
 function safe(value) {
@@ -298,10 +345,15 @@ function displayComparisonResults(devices) {
       <div class="device-image">
         <img class="img-comparison" src="${safe(device.image)}" alt="${safe(device.name)}">
       </div>
+
+      ${device.rating ? `<div class="product-rating-container">
+      ${renderStars(device.rating, device.id)}
+      <span class="total-reviews">(${device.total_reviews || 0} reseñas)</span>
+    </div>` : ''}
       
-      <div class="search-result-item">
-        <div class="product-price"> $${formatPrice(calc.finalPrice)}
-          ${device.discount > 0 ? `<del class="product-old-price">$${formatPrice(calc.originalPrice)}</del>` : ''}
+      <div class="search-result">
+        <div class="item-price"> $${formatPrice(calc.finalPrice)}
+          ${device.discount > 0 ? `<del class="item-old-price">$${formatPrice(calc.originalPrice)}</del>` : ''}
         </div>
       </div>
       
