@@ -1,4 +1,5 @@
 import { fetchCartItems } from '../../utils/apis.js';
+import { renderCart } from '../../store/cart/cartPreview.js';
 
 async function loadCartPreview() {
     const carrito = await fetchCartItems();
@@ -10,5 +11,9 @@ async function loadCartPreview() {
 
     renderCart(carrito, cartList, carritoCount, cartSummary, cartSubtotal);
 }
+
+window.addEventListener('DOMContentLoaded', async () => {
+    await loadCartPreview();
+});
 
 export { loadCartPreview };

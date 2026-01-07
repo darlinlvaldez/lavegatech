@@ -1,9 +1,7 @@
 import { checkAuth } from "../../utils/utils.js";
 import { loadCartPage } from "./cartView.js";
-import { loadCartPreview } from "./cartPreview.js";
+import { loadCartPreview } from "./loadCartPreview.js";
 import { showToast } from "../../utils/toastify.js";
-
-window.deleteProduct = deleteProduct;
 
 async function fetchCart(action, data = {}) {
   const options = {
@@ -35,8 +33,7 @@ async function addToCart(product) {
     }
 
     if (stockReal <= 0) {
-      showToast("Este producto está agotado. Haz clic para ver otras variantes disponibles.",
-        "#e74c3c", "info");
+      showToast("Este producto está agotado", "#e74c3c", "info");
       return;
     }
 
@@ -102,44 +99,6 @@ window.addEventListener("load", async () => {
 
   loadCartPreview();
 });
-
-async function deleteProduct(id, color) {
-  const itemElement = document.querySelector(
-    `.cart-item[data-id="${id}"][data-color="${color}"]`
-  );
-  if (itemElement) {
-    itemElement.remove();
-  }
-
-  const countElement = document.querySelector(".qty-cart");
-  if (countElement) {
-    countElement.textContent = parseInt(countElement.textContent) - 1;
-  }
-
-  try {
-    const { authenticated } = await checkAuth();
-
-    if (!authenticated) {
-      let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-      carrito = carrito.filter(
-        (item) => !(item.productId === id && item.selectedColor === color)
-      );
-      localStorage.setItem("carrito", JSON.stringify(carrito));
-    } else {
-      await fetch("/cart/remove-item", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: id, selectedColor: color }),
-        credentials: "include",
-      });
-    }
-
-    await loadCartPreview();
-  } catch (err) {
-    console.error("Error al eliminar producto:", err);
-  }
-  loadCartPage();
-}
 
 document.addEventListener("DOMContentLoaded", function () {
   loadCartPreview();

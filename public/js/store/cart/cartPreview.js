@@ -1,7 +1,4 @@
-import { loadCartPreview } from '../cart/loadCartPreview.js';
 import { calculateItem } from '../../utils/calculateItem.js'; 
-
-window.renderCart = renderCart;
 
 function renderCart(cart, cartList, cartCount, cartSummary, cartSubtotal) {
     
@@ -47,4 +44,4 @@ function renderCart(cart, cartList, cartCount, cartSummary, cartSubtotal) {
     if (cartSubtotal) cartSubtotal.textContent = `SUBTOTAL: $${formatPrice(total)}`;
 }
 
-export { loadCartPreview, calculateItem };
+export {calculateItem, renderCart };
