@@ -157,7 +157,6 @@
 
 .device-select-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 10px 25px rgba(0,0,0,.1);
 }
 
 .device-select-card img {
@@ -191,7 +190,7 @@
 }
 
 .custom-star {
-  color: #FFD700; 
+  color: #ef233c; 
   margin-right: 4px; 
   transition: transform 0.25s ease, filter 0.25s ease;
 }
@@ -241,7 +240,7 @@
 
 .fill {
   height: 100%;
-  background: #facc15;
+  background: #ef233c;
 }
 
 @media (min-width: 640px) {

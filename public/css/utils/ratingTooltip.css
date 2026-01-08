@@ -1,0 +1,26 @@
+.product-rating {
+  position: relative;
+  cursor: pointer;
+}
+
+.rating-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 220px;
+  background: #ffffff;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.rating-tooltip.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}

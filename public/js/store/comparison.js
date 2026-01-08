@@ -105,11 +105,12 @@ function displaySearchResults(products) {
 function addDeviceToComparison({ id, name, image }) {
   if (selectedDevices.some(d => d.id === id)) {
     showToast("Este dispositivo ya está en la lista de comparación", "#e74c3c", "info");
-    return;
+    return false;
   }
 
   selectedDevices.push({ id, name, image: image?.split(',')[0] });
   updateSelectedDevicesDisplay();
+  return true; 
 }
 
 function removeDeviceFromComparison(deviceId) {
@@ -244,7 +245,9 @@ function renderStars(rating = 0, productId) {
 
   return `
     <div class="product-rating" data-product-id="${productId}">
-      ${starsHTML}
+      <a href="/product/${productId}#tab3" class="rating-link">
+        ${starsHTML}
+      </a>
       <div class="rating-tooltip hidden"></div>
     </div>
   `;
@@ -266,20 +269,31 @@ function renderSelectableDevices(devices, gridId = 'devices-grid') {
       <a href="/product/${device.id}">
         <img src="${device.image?.split(",")[0]}" alt="${device.name}">
       </a>
+
       <div class="search-result">
-        <div class="item-price"> $${formatPrice(calc.finalPrice)}
-          ${device.discount > 0 ? `<del class="item-old-price">$
-            ${formatPrice(calc.originalPrice )}</del>`: "" }
+        <div class="item-price">
+          $${formatPrice(calc.finalPrice)}
+          ${
+            device.discount > 0
+              ? `<del class="item-old-price">$${formatPrice(calc.originalPrice)}</del>`
+              : ""
+          }
         </div>
       </div>
+
       ${device.rating ? renderStars(device.rating, device.id) : ""}
 
       <button>Comparar</button>
     `;
 
-    card.querySelector('button').addEventListener('click', () => {
-      addDeviceToComparison(device);
-      showToast("Dispositivo agregado a la comparación", "#16a34a", "success");
+    const compareBtn = card.querySelector('button');
+
+    compareBtn.addEventListener('click', () => {
+      const added = addDeviceToComparison(device);
+
+      if (added) {
+        showToast("Dispositivo agregado a la comparación", "#16a34a", "success");
+      }
     });
 
     grid.appendChild(card);
@@ -308,7 +322,7 @@ document.addEventListener('mouseover', async (e) => {
       const data = await res.json();
       const totalReviews = data.reduce((sum, r) => sum + r.total, 0);
 
-      tooltip.innerHTML = renderRatingBars(data, totalReviews);
+      tooltip.innerHTML = renderRatingBars(data, totalReviews, productId);
       tooltip.dataset.loaded = "true";
     } catch (error) {
       console.error("Error cargando reseñas:", error);
@@ -332,7 +346,7 @@ document.addEventListener('mouseout', (e) => {
   }, 100);
 });
 
-function renderRatingBars(data, totalReviews) {
+function renderRatingBars(data, totalReviews, productId) {
   const rows = data
     .sort((a, b) => b.stars - a.stars)
     .map(row => {
@@ -351,9 +365,9 @@ function renderRatingBars(data, totalReviews) {
     .join('');
 
   return `
-    <div class="rating-box">
+    <a href="/product/${productId}#tab3" class="rating-box">
       ${rows}
-    </div>
+    </a>
   `;
 }
 
