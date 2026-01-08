@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   let selectedDevices = [];
   let excludedMobileIds = [];
+  let ratingTimeout;
 
 async function searchMobiles(query) {
   if (query.length < 2) {
@@ -290,39 +291,70 @@ document.addEventListener('mouseover', async (e) => {
   if (!ratingEl) return;
 
   const tooltip = ratingEl.querySelector('.rating-tooltip');
-  if (!tooltip || tooltip.dataset.loaded) return;
+  if (!tooltip) return;
 
-  const productId = ratingEl.dataset.productId;
-  if (!productId) return;
+  clearTimeout(ratingTimeout);
 
-  const res = await fetch(`/comparison/product/${productId}/rating-breakdown`);
-  if (!res.ok) return;
-
-  const data = await res.json();
-
-  const totalReviews = data.reduce((sum, r) => sum + r.total, 0);
-
-  tooltip.innerHTML = renderRatingBars(data, totalReviews);
-  tooltip.dataset.loaded = "true";
+  tooltip.classList.add('active');
   tooltip.classList.remove('hidden');
+
+  if (!tooltip.dataset.loaded) {
+    const productId = ratingEl.dataset.productId;
+    if (!productId) return;
+
+    try {
+      const res = await fetch(`/comparison/product/${productId}/rating-breakdown`);
+      if (!res.ok) return;
+      const data = await res.json();
+      const totalReviews = data.reduce((sum, r) => sum + r.total, 0);
+
+      tooltip.innerHTML = renderRatingBars(data, totalReviews);
+      tooltip.dataset.loaded = "true";
+    } catch (error) {
+      console.error("Error cargando reseñas:", error);
+    }
+  }
+});
+
+document.addEventListener('mouseout', (e) => {
+  const ratingEl = e.target.closest('.product-rating');
+  if (!ratingEl) return;
+
+  const tooltip = ratingEl.querySelector('.rating-tooltip');
+  
+  ratingTimeout = setTimeout(() => {
+    if (tooltip) {
+      tooltip.classList.remove('active');
+      setTimeout(() => {
+        if(!tooltip.classList.contains('active')) tooltip.classList.add('hidden');
+      }, 300); 
+    }
+  }, 100);
 });
 
 function renderRatingBars(data, totalReviews) {
-  return data
+  const rows = data
     .sort((a, b) => b.stars - a.stars)
     .map(row => {
       const percent = Math.round((row.total / totalReviews) * 100);
 
       return `
         <div class="rating-row">
-          <span>${row.stars}★</span>
+          <span class="stars">${row.stars}★</span>
           <div class="bar">
             <div class="fill" style="width:${percent}%"></div>
           </div>
-          <span>${percent}%</span>
+          <span class="percent">${percent}%</span>
         </div>
       `;
-    }).join('');
+    })
+    .join('');
+
+  return `
+    <div class="rating-box">
+      ${rows}
+    </div>
+  `;
 }
 
 function safe(value) {

@@ -159,7 +159,7 @@ comparison.getDevice = async (productIds) => {
       GROUP_CONCAT(DISTINCT ram.capacidad ORDER BY ram.capacidad SEPARATOR ' / ') AS ram_capacities,
       GROUP_CONCAT(DISTINCT alm.capacidad ORDER BY alm.capacidad SEPARATOR ' / ') AS storage_capacities,
       ROUND(AVG(cla.calificacion), 1) AS rating,
-      COUNT(cla.id) AS total_reviews
+      COUNT(DISTINCT cla.id) AS total_reviews
     FROM productos p
     JOIN moviles m ON p.movil_id = m.id
     LEFT JOIN p_variantes v ON p.id = v.producto_id AND v.activo = 1
