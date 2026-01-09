@@ -3,11 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
-
--- Tiempo de generación: 30-12-2025 a las 18:57:05
-
--- Tiempo de generación: 31-12-2025 a las 03:34:03
-
+-- Tiempo de generación: 09-01-2026 a las 15:34:00
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -176,6 +172,13 @@ CREATE TABLE `carrito` (
   `variante_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `carrito`
+--
+
+INSERT INTO `carrito` (`id`, `usuario_id`, `producto_id`, `cantidad`, `fecha_agregado`, `variante_id`) VALUES
+(273, 98, 7, 1, '2026-01-05 20:20:56', 395);
+
 -- --------------------------------------------------------
 
 --
@@ -265,6 +268,13 @@ CREATE TABLE `clasificacion` (
   `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
   `fecha_actualizacion` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `clasificacion`
+--
+
+INSERT INTO `clasificacion` (`id`, `producto_id`, `usuario_id`, `calificacion`, `comentario`, `fecha_creacion`, `fecha_actualizacion`) VALUES
+(48, 1, 98, 3, 'claros!', '2026-01-04 20:51:02', '2026-01-04 22:01:58');
 
 -- --------------------------------------------------------
 
@@ -378,7 +388,13 @@ INSERT INTO `detalles_pedido` (`id`, `pedido_id`, `producto_id`, `nombre_product
 (257, 234, 138, 'BEATS SOLO 4', 2, 8495.00, 18.00, 0.00, 20048.20, 'blanco', NULL, NULL),
 (258, 235, 20, 'iPhone 14 Pro ', 2, 34495.00, 18.00, 0.00, 81408.20, 'negro', '6GB', '128GB'),
 (259, 236, 21, 'iPhone 14 Pro', 3, 36495.00, 18.00, 0.00, 129192.30, 'blanco', '6GB', '256GB'),
-(260, 237, 62, 'INFINIX SMART 8', 1, 4995.00, 18.00, 0.00, 5894.10, 'Negro', '4GB', '128GB');
+(260, 237, 62, 'INFINIX SMART 8', 1, 4995.00, 18.00, 0.00, 5894.10, 'Negro', '4GB', '128GB'),
+(261, 238, 1, 'iPhone 12', 1, 15995.00, 18.00, 20.00, 15099.28, 'negro', '4GB', '64GB'),
+(262, 238, 1, 'iPhone 12', 1, 15995.00, 18.00, 20.00, 15099.28, 'blanco', '4GB', '64GB'),
+(263, 239, 1, 'iPhone 12', 2, 15995.00, 18.00, 20.00, 30198.56, 'verde', '4GB', '64GB'),
+(264, 239, 1, 'iPhone 12', 1, 15995.00, 18.00, 20.00, 15099.28, 'negro', '4GB', '64GB'),
+(265, 240, 7, 'iPhone 12 Pro Max', 2, 0.00, 18.00, 0.00, 0.00, 'azul', '6GB', NULL),
+(266, 241, 16, 'iPhone 14', 1, 26495.00, 18.00, 0.00, 31264.10, 'blanco', '4GB', NULL);
 
 -- --------------------------------------------------------
 
@@ -456,7 +472,11 @@ INSERT INTO `envios` (`id`, `pedido_id`, `estado_envio`, `costo_envio`, `fecha_e
 (68, 234, 'pendiente', 50.00, NULL, NULL, NULL),
 (69, 235, 'pendiente', 50.00, NULL, NULL, NULL),
 (70, 236, 'pendiente', 50.00, NULL, NULL, NULL),
-(71, 237, 'pendiente', 50.00, NULL, NULL, NULL);
+(71, 237, 'pendiente', 50.00, NULL, NULL, NULL),
+(72, 238, 'pendiente', 50.00, NULL, NULL, NULL),
+(73, 239, 'entregado', 50.00, NULL, '2026-01-05 14:07:21', NULL),
+(74, 240, 'pendiente', 50.00, NULL, NULL, NULL),
+(75, 241, 'pendiente', 50.00, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -471,6 +491,13 @@ CREATE TABLE `fav` (
   `fecha_agregado` timestamp NOT NULL DEFAULT current_timestamp(),
   `variante_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `fav`
+--
+
+INSERT INTO `fav` (`id`, `usuario_id`, `producto_id`, `fecha_agregado`, `variante_id`) VALUES
+(821, 98, 7, '2026-01-04 18:13:12', 396);
 
 -- --------------------------------------------------------
 
@@ -652,7 +679,11 @@ INSERT INTO `pagos` (`id`, `pedido_id`, `metodo_pago`, `estado_pago`, `paypal_or
 (145, 234, 'paypal', 'completado', '68037426LW1597640', '2025-12-11 13:48:01'),
 (146, 235, 'paypal', 'completado', '9U916185JC615113E', '2025-12-11 13:48:55'),
 (147, 236, 'paypal', 'completado', '8X447422PC6073849', '2025-12-12 13:06:58'),
-(148, 237, 'paypal', 'completado', '3JC657285H428651U', '2025-12-14 17:35:05');
+(148, 237, 'paypal', 'completado', '3JC657285H428651U', '2025-12-14 17:35:05'),
+(149, 238, 'paypal', 'completado', '9NE88941WR378690D', '2026-01-02 14:38:24'),
+(150, 239, 'paypal', 'completado', '8EP26379F1542943T', '2026-01-03 13:55:34'),
+(151, 240, 'paypal', 'completado', '7TT77825H8160112B', '2026-01-05 15:52:37'),
+(152, 241, 'paypal', 'completado', '0E814210P2147701W', '2026-01-05 16:03:28');
 
 -- --------------------------------------------------------
 
@@ -741,7 +772,11 @@ INSERT INTO `pedidos` (`id`, `usuario_id`, `nombre`, `apellido`, `email`, `direc
 (234, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295524400', 79086.40, 'pagado', '2025-12-11 13:48:01', 0, 1, 'La Vega', 50.00),
 (235, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295524400', 81458.20, 'pagado', '2025-12-11 13:48:55', 0, 1, 'La Vega', 50.00),
 (236, 79, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295524400', 129242.30, 'pagado', '2025-12-12 13:06:58', 0, 1, 'La Vega', 50.00),
-(237, 98, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 5944.10, 'pagado', '2025-12-14 17:35:05', 0, 1, 'La Vega', 50.00);
+(237, 98, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 5944.10, 'pagado', '2025-12-14 17:35:05', 0, 1, 'La Vega', 50.00),
+(238, 98, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 30248.56, 'pagado', '2026-01-02 14:38:24', 0, 1, 'La Vega', 50.00),
+(239, 98, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 45347.84, 'pagado', '2026-01-03 13:55:34', 0, 1, 'La Vega', 50.00),
+(240, 98, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 50.00, 'pagado', '2026-01-05 15:52:37', 0, 1, 'La Vega', 50.00),
+(241, 98, 'Darlin', 'L.V', 'darlinlvaldez@gmail.com', 'La Vega', 'LA VEGA', '8295542244', 31314.10, 'pagado', '2026-01-05 16:03:28', 0, 1, 'La Vega', 50.00);
 
 -- --------------------------------------------------------
 
@@ -771,7 +806,7 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `categoria_id`, `descuento`, `fecha`, `fecha_publicacion`, `marca_id`, `ram_id`, `almacenamiento_id`, `activo`, `impuesto`) VALUES
-(1, 1, 'iPhone 12', 'El iPhone 12 combina potencia, elegancia y rendimiento en un diseño icónico. Este dispositivo se encuentra en condición Doble A (AA), lo que significa que luce casi como nuevo, con un funcionamiento impecable y solo ligeros signos de uso apenas perceptibles. Su pantalla Super Retina XDR ofrece colores vibrantes y una nitidez excepcional, mientras que el chip A14 Bionic garantiza un rendimiento rápido y fluido. Ideal para quienes buscan la calidad y experiencia premium de Apple a un precio más accesible.', 15995.00, 1, 20.00, '2025-08-05 23:06:00', '2025-10-23 00:39:00', 1, 1, 1, 1, 18.00),
+(1, 1, 'iPhone 12', 'El iPhone 12 combina potencia, elegancia y rendimiento en un diseño icónico. Este dispositivo se encuentra en condición Doble A (AA), lo que significa que luce casi como nuevo, con un funcionamiento impecable y solo ligeros signos de uso apenas perceptibles. Su pantalla Super Retina XDR ofrece colores vibrantes y una nitidez excepcional, mientras que el chip A14 Bionic garantiza un rendimiento rápido y fluido. Ideal para quienes buscan la calidad y experiencia premium de Apple a un precio más accesible.', 15995.00, 1, 20.00, '2025-08-05 23:06:00', '2025-12-23 00:39:00', 1, 1, 1, 1, 18.00),
 (2, 1, 'iPhone 12', 'El iPhone 12 combina potencia, elegancia y rendimiento en un diseño icónico. Este dispositivo se encuentra en condición Doble A (AA), lo que significa que luce casi como nuevo, con un funcionamiento impecable y solo ligeros signos de uso apenas perceptibles. Su pantalla Super Retina XDR ofrece colores vibrantes y una nitidez excepcional, mientras que el chip A14 Bionic garantiza un rendimiento rápido y fluido. Ideal para quienes buscan la calidad y experiencia premium de Apple a un precio más accesible.', 17995.00, 1, 10.00, '2025-08-02 00:00:00', NULL, 1, 1, 2, 1, 18.00),
 (3, 1, 'iPhone 12', 'El iPhone 12 combina potencia, elegancia y rendimiento en un diseño icónico. Este dispositivo se encuentra en condición Doble A (AA), lo que significa que luce casi como nuevo, con un funcionamiento impecable y solo ligeros signos de uso apenas perceptibles. Su pantalla Super Retina XDR ofrece colores vibrantes y una nitidez excepcional, mientras que el chip A14 Bionic garantiza un rendimiento rápido y fluido. Ideal para quienes buscan la calidad y experiencia premium de Apple a un precio más accesible.', 19495.00, 1, 0.00, '2025-08-02 04:00:00', NULL, 1, 1, 3, 1, 18.00),
 (4, 2, 'iPhone 12 Pro', 'Este iPhone 12 Pro se presenta en condición \"Doble A\" (AA) o \"Triple A\" (AAA) — es decir, casi nuevo — sin rayones visibles en la pantalla ni en el chasis de acero inoxidable, cristal trasero intacto, sin abolladuras ni signos de uso intensivo. Su batería mantiene una salud alta (idealmente por encima del 85 %), y todos sus componentes — cámara, lector LiDAR, conexiones 5G, carga MagSafe, resistencia IP68 — funcionan perfectamente. En resumen: un dispositivo que luce y rinde como nuevo, aún cuando su fecha de fabricación ya tenga algunos años.', 21995.00, 1, 0.00, '2025-08-02 00:00:00', NULL, 1, 2, 2, 1, 18.00),
@@ -855,7 +890,7 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (86, NULL, 'VORTEX T10 PRO MAX 64GB ', 'está en condición \"Doble A (AA)\", mostrando un estado físico muy bien conservado con señales mínimas de uso. Su pantalla de 10 pulgadas luce limpia, sin rayaduras visibles y con buena calidad para estudiar, ver contenido, leer o realizar tareas diarias. La carcasa mantiene un aspecto sólido, sin golpes ni desgastes relevantes, ofreciendo una sensación robusta y bien cuidada. En rendimiento, cumple de manera eficiente con tareas básicas gracias a su configuración ligera, ideal para clases en línea, navegación, apps esenciales y entretenimiento general. La batería conserva una autonomía estable, y todos sus componentes —botones, cámaras, parlantes, micrófono y puerto de carga— han sido probados y funcionan correctamente. En conjunto, es una tablet práctica, accesible y en muy buen estado para el uso cotidiano.', 3995.00, 5, 0.00, '2023-01-01 08:00:00', NULL, 6, NULL, NULL, 1, 18.00),
 (87, NULL, 'SKYPAD 10 32GB ', 'se encuentra en condición \"Doble A (AA)\", presentando un estado físico muy bien cuidado con apenas señales leves de uso. Su pantalla de 10 pulgadas se mantiene limpia y sin rayaduras visibles, ideal para estudiar, ver videos, leer o realizar actividades cotidianas. La carcasa luce sólida y sin golpes, conservando una apariencia general muy buena. En cuanto al rendimiento, ofrece lo necesario para tareas básicas como navegación, aplicaciones ligeras, clases en línea y entretenimiento sencillo, gracias a su configuración eficiente. La batería mantiene un desempeño estable, y todos sus componentes —botones, cámaras, parlantes, micrófono y puerto de carga— funcionan correctamente tras las pruebas realizadas. En resumen, es una tablet práctica, económica y en muy buen estado para el uso diario.', 3495.00, 5, 0.00, '2023-01-01 08:00:00', NULL, 7, NULL, NULL, 1, 18.00),
 (88, NULL, 'SKYPAD 10 PRO MAX 64GB ', 'está en condición \"Doble A (AA)\", mostrando un estado muy bien conservado con señales mínimas de uso. Su pantalla de 10 pulgadas se mantiene nítida, limpia y sin rayaduras visibles, perfecta para estudiar, ver contenido multimedia, leer o trabajar de manera ligera. La carcasa conserva un aspecto sólido y sin golpes, lo que refleja un cuidado adecuado del dispositivo. En rendimiento, ofrece fluidez suficiente para tareas cotidianas como navegación, aplicaciones esenciales, videollamadas y clases en línea, gracias a su configuración eficiente. La batería mantiene una autonomía estable, y todos sus componentes —botones, cámaras, parlantes, micrófono y puerto de carga— han sido verificados y funcionan correctamente. En conjunto, es una tablet práctica, accesible y en muy buen estado para el uso diario.', 3995.00, 5, 0.00, '2023-01-01 08:00:00', NULL, 7, NULL, NULL, 1, 18.00),
-(89, NULL, 'Macbook Pro 13-Inch 2020 i5-8ram 512GB', 'con procesador Intel Core i5, 8GB de RAM y 512GB de almacenamiento SSD se encuentra en condición \"Doble A (AA)\", mostrando un estado físico muy bien cuidado con señales mínimas de uso. Su pantalla Retina mantiene una nitidez impecable, sin rayaduras visibles, y el cuerpo de aluminio luce limpio, sin abolladuras ni marcas relevantes. En rendimiento, sigue siendo una máquina muy capaz para productividad, estudios, diseño ligero, edición básica y multitarea fluida gracias a su procesador Intel y su SSD rápido. El teclado, trackpad y parlantes funcionan perfectamente, al igual que los puertos Thunderbolt. La batería conserva un desempeño sólido, y todas sus funciones han sido verificadas. En resumen, es un portátil potente, elegante y en excelente estado, ideal para trabajo diario y uso profesional ligero.', 31995.00, 3, 0.00, '2023-01-01 08:00:00', NULL, 1, NULL, NULL, 1, 18.00),
+(89, NULL, 'Macbook Pro 13-Inch 2020 i5-8ram 512GB', 'con procesador Intel Core i5, 8GB de RAM y 512GB de almacenamiento SSD se encuentra en condición \"Doble A (AA)\", mostrando un estado físico muy bien cuidado con señales mínimas de uso. Su pantalla Retina mantiene una nitidez impecable, sin rayaduras visibles, y el cuerpo de aluminio luce limpio, sin abolladuras ni marcas relevantes. En rendimiento, sigue siendo una máquina muy capaz para productividad, estudios, diseño ligero, edición básica y multitarea fluida gracias a su procesador Intel y su SSD rápido. El teclado, trackpad y parlantes funcionan perfectamente, al igual que los puertos Thunderbolt. La batería conserva un desempeño sólido, y todas sus funciones han sido verificadas. En resumen, es un portátil potente, elegante y en excelente estado, ideal para trabajo diario y uso profesional ligero.', 31995.00, 3, 0.00, '2023-01-01 08:00:00', '2025-12-23 14:55:25', 1, NULL, NULL, 1, 18.00),
 (91, NULL, 'Macbook Pro 16-Inch 2019 i7-16ram 512GB', 'con procesador Intel Core i7, 16GB de RAM y 512GB SSD se encuentra en condición \"Doble A (AA)\", conservando un estado físico muy bien mantenido con señales mínimas de uso. Su amplia pantalla Retina de 16\" ofrece una calidad impecable, libre de rayaduras visibles, mientras que el cuerpo de aluminio luce sólido y sin abolladuras. En rendimiento, sigue siendo una máquina extremadamente potente, ideal para edición de video, diseño, producción musical, multitarea exigente y trabajo profesional avanzado, gracias a su procesador Intel de alto desempeño y su memoria de 16GB. El teclado, trackpad, parlantes y puertos funcionan a la perfección, y la batería mantiene un desempeño estable. En conjunto, es un portátil profesional de gran potencia, pantalla amplia y excelente estado, ideal para usuarios que requieren capacidad y calidad en su día a día.', 34995.00, 3, 0.00, '2023-01-01 08:00:00', NULL, 1, NULL, NULL, 1, 18.00),
 (92, NULL, 'Macbook Pro 16-Inch 2019 i9-32Ram 512GB', 'está en condición \"Doble A (AA)\", mostrando un estado físico muy bien conservado con apenas señales leves de uso. Su enorme pantalla Retina de 16\" se mantiene impecable, sin rayaduras visibles, ofreciendo una calidad visual profesional. El chasis de aluminio luce sólido, sin golpes ni desgastes relevantes. En rendimiento, es una máquina de alta gama diseñada para tareas exigentes como edición de video 4K, proyectos de audio profesionales, diseño avanzado, programación pesada y multitarea intensiva. Su procesador i9 junto con los 32GB de RAM garantizan potencia y fluidez incluso en cargas de trabajo muy altas. Todos sus componentes —teclado, trackpad, altavoces y puertos— funcionan correctamente, y la batería conserva un desempeño estable. En resumen, es un equipo profesional de máximo rendimiento, con una construcción premium y en excelente estado, ideal para quienes necesitan potencia real en su flujo de trabajo', 39995.00, 3, 0.00, '2023-01-01 08:00:00', NULL, 1, NULL, NULL, 1, 18.00),
 (93, NULL, 'Macbook Pro 16-Inch 2019 i9-16Ram 1TB', 'se encuentra en condición \"Doble A (AA)\", mostrando un estado físico muy bien cuidado con señales mínimas de uso. Su amplia pantalla Retina de 16\" se mantiene impecable, sin rayaduras visibles, y el cuerpo de aluminio conserva una apariencia sólida y profesional, libre de golpes o marcas importantes. En cuanto al rendimiento, es una máquina de alto nivel orientada a trabajos exigentes como edición de video, diseño, producción musical, animación, programación avanzada y multitarea pesada. Su procesador i9 y el generoso almacenamiento de 1TB SSD garantizan fluidez, rapidez y excelente capacidad para proyectos grandes. Todos sus elementos —teclado, trackpad, parlantes de alta fidelidad y puertos— funcionan perfectamente, y la batería mantiene un desempeño estable. En conjunto, es un portátil profesional potente, elegante y en excelente estado, ideal para quienes requieren desempeño serio y almacenamiento amplio en su día a día.', 41995.00, 3, 0.00, '2023-01-01 08:00:00', NULL, 1, NULL, NULL, 1, 18.00),
@@ -873,7 +908,7 @@ INSERT INTO `productos` (`id`, `movil_id`, `nombre`, `descripcion`, `precio`, `c
 (132, NULL, 'Lenovo i3-12GEN 8+256GB ', 'Este portátil se presenta en una condición de calidad Doble A (AA). Esto significa que está en un estado excelente, ha sido completamente revisado y certificado para tener una funcionalidad perfecta, con signos de uso muy leves que no afectan en absoluto su rendimiento ni su estética general. Es una solución de alta calidad y económica que brinda la durabilidad y el diseño práctico característico de Lenovo, listo para asumir tus tareas diarias desde el primer momento.', 21495.00, 3, 0.00, '2023-01-01 08:00:00', NULL, 10, NULL, NULL, 1, 18.00),
 (133, NULL, 'SAMSUNG WATCH 6 CLASSIC', 'condición de calidad Triple A (AAA), lo que significa que está prácticamente nuevo, con una estética impecable y una funcionalidad del 100%. Ha sido verificado para garantizar que todos sus sensores, la corona giratoria y la batería funcionen de manera óptima. Adquirir el Watch 6 Classic es elegir un dispositivo de máxima calidad que equilibra perfectamente el estilo de un reloj clásico con las capacidades inteligentes de un wearable moderno de primer nivel.', 12995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, 2, NULL, NULL, 1, 18.00),
 (134, NULL, 'SAMSUNG WATCH 6', 'Este reloj inteligente se encuentra en una condición de calidad Triple A (AAA). Esto certifica que está en un estado impecable, casi nuevo, libre de rasguños visibles en la caja o el cristal, y con una salud de batería verificada como óptima. Ha sido sometido a rigurosas pruebas para asegurar que cada sensor y función operen con precisión de fábrica. Al elegir el Galaxy Watch 6 en esta condición, estás invirtiendo en un dispositivo de máxima calidad que combina funcionalidad de primer nivel y un estilo minimalista y sofisticado.', 11995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, 2, NULL, NULL, 1, 18.00),
-(135, NULL, 'SAMSUNG WATCH 7', 'Este dispositivo se ofrece en la condición de calidad Triple A (AAA), lo que en el caso de un modelo tan reciente, significa que es un artículo prácticamente nuevo o en condición de exhibición impecable. Está certificado para operar al 100% de su capacidad, con su cristal de zafiro (o material similar de alta resistencia) libre de imperfecciones y un rendimiento de batería óptimo. El Watch 7 combina un diseño elegante con la máxima durabilidad (certificación 5 ATM e IP68), siendo la opción definitiva de máxima calidad para aquellos que desean lo último en tecnología wearable de Samsung.', 15995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, 2, NULL, NULL, 1, 18.00),
+(135, NULL, 'SAMSUNG WATCH 7', 'Este dispositivo se ofrece en la condición de calidad Triple A (AAA), lo que en el caso de un modelo tan reciente, significa que es un artículo prácticamente nuevo o en condición de exhibición impecable. Está certificado para operar al 100% de su capacidad, con su cristal de zafiro (o material similar de alta resistencia) libre de imperfecciones y un rendimiento de batería óptimo. El Watch 7 combina un diseño elegante con la máxima durabilidad (certificación 5 ATM e IP68), siendo la opción definitiva de máxima calidad para aquellos que desean lo último en tecnología wearable de Samsung.', 15995.00, 6, 0.00, '2023-01-01 08:00:00', '2025-12-31 14:54:38', 2, NULL, NULL, 1, 18.00),
 (136, NULL, 'Samsung Galaxy Buds 3', 'Dado que este es un modelo reciente, ofrecemos los Galaxy Buds 3 en una condición de calidad Triple A (AAA). Esto certifica que están en un estado prácticamente nuevo, con el estuche de carga y los auriculares libres de marcas notables. La funcionalidad está garantizada al 100%, incluyendo la duración óptima de la batería, la conectividad y la calidad del micrófono. Adquirir estos Buds 3 es invertir en el pináculo de la calidad de audio inalámbrico de Samsung, con la certeza de recibir un producto en condiciones inmejorables.', 8495.00, 6, 0.00, '2023-01-01 08:00:00', NULL, 2, NULL, NULL, 1, 18.00),
 (137, NULL, 'Samsung Galaxy Buds 2', 'Dado que este es un modelo reciente, ofrecemos los Galaxy Buds 3 en una condición de calidad Triple A (AAA). Esto certifica que están en un estado prácticamente nuevo, con el estuche de carga y los auriculares libres de marcas notables. La funcionalidad está garantizada al 100%, incluyendo la duración óptima de la batería, la conectividad y la calidad del micrófono. Adquirir estos Buds 3 es invertir en el pináculo de la calidad de audio inalámbrico de Samsung, con la certeza de recibir un producto en condiciones inmejorables.', 5995.00, 6, 0.00, '2023-01-01 08:00:00', NULL, 2, NULL, NULL, 1, 18.00),
 (138, NULL, 'BEATS SOLO 4', '', 8495.00, 6, 0.00, '2023-01-01 08:00:00', NULL, NULL, NULL, NULL, 1, 18.00),
@@ -1008,9 +1043,9 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`, `activo
 (375, 24, 'purpura', 3, 'https://i.ebayimg.com/images/g/Yu0AAOSwG0hkW5uL/s-l1600.webp', 1),
 (376, 24, 'blanco', 4, 'https://i.ebayimg.com/images/g/b~YAAOSwNzNkW5tc/s-l1600.webp', 1),
 (377, 25, 'dorado', 4, 'https://i.ebayimg.com/images/g/0MgAAOSwWIpkW5u-/s-l1600.webp', 1),
-(382, 1, 'blanco', 1, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg', 1),
-(383, 1, 'negro', 4, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/a75941f0-0032-4680-bda0-ba070e5f9982.jpg', 1),
-(384, 1, 'verde', 2, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg', 1),
+(382, 1, 'blanco', 0, 'https://tecfys.com/290-medium_default/iphone-12-reacondicionado-128-gb-blanco.jpg', 1),
+(383, 1, 'negro', 2, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/a75941f0-0032-4680-bda0-ba070e5f9982.jpg', 1),
+(384, 1, 'verde', 0, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg', 1),
 (385, 2, 'verde', 2, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/ac2bc9ad-acf2-445a-bb14-9ae431b02d5b.jpg', 1),
 (386, 2, 'pupura', 2, 'https://s3-eu-west-1.amazonaws.com/images.linnlive.com/3e753e1fb0e87cd42082ba1ad4cd117e/b01801bc-4c3c-411e-9ff0-dac6b4e34a87.jpg', 1),
 (387, 3, 'blanco', 3, 'https://i.ebayimg.com/images/g/PfsAAOSwAuBlaMk9/s-l400.jpg', 1),
@@ -1022,7 +1057,7 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`, `activo
 (393, 6, 'gris', 4, 'https://i.ebayimg.com/images/g/QVEAAOSwbWdhQfcN/s-l1600.webp', 1),
 (394, 6, 'oro', 4, 'https://i.ebayimg.com/images/g/l8AAAOSwrQlhQfcU/s-l1600.webp', 1),
 (395, 7, 'blanco', 2, 'https://i.ebayimg.com/images/g/Yj4AAOSwmb5hQfca/s-l1600.webp', 1),
-(396, 7, 'azul', 4, 'https://i.ebayimg.com/images/g/YZsAAOSwntxhQfch/s-l1600.webp', 1),
+(396, 7, 'azul', 2, 'https://i.ebayimg.com/images/g/YZsAAOSwntxhQfch/s-l1600.webp', 1),
 (397, 8, 'Azul pacifico', 2, 'https://www.lacuracao.pe/media/catalog/product/o/r/orig_celr055azul-512gb__56549.jpg?quality=80&bg-color=255,255,255&fit=bounds&height=400&width=400&canvas=400:400', 1),
 (398, 9, 'Verde', 1, 'https://itpro.com.uy/wp-content/uploads/2024/04/wooc-454.jpeg', 1),
 (399, 9, 'Azul', 4, 'https://covercompany.com.uy/cdn/shop/files/2-2513_7996_1.jpg?v=1734027637&width=400', 1),
@@ -1038,7 +1073,7 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`, `activo
 (411, 15, 'blanco', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Silver.jpg', 1),
 (412, 15, 'verde', 4, 'https://s3.amazonaws.com/iwm-ebay/images/products/iPhone+13+Pro+Max/iPhone+13+Pro+Max+Green.jpg', 1),
 (413, 16, 'negro', 2, 'https://i.ebayimg.com/images/g/AKQAAOSwn51oE~FN/s-l1600.webp', 1),
-(414, 16, 'blanco', 4, '/uploads/1761357162243_iPhone_14_Starlight_PDP_Image_Position-1A_COES_7e10f08c-1fb7-436c-988c-b60ed9e536e4-convertido-a-400x400.jpeg', 1),
+(414, 16, 'blanco', 3, '/uploads/1761357162243_iPhone_14_Starlight_PDP_Image_Position-1A_COES_7e10f08c-1fb7-436c-988c-b60ed9e536e4-convertido-a-400x400.jpeg', 1),
 (415, 17, 'Rojo', 4, 'https://i.ebayimg.com/images/g/pcQAAeSwYfpozHz8/s-l400.jpg', 1),
 (416, 17, 'azul', 4, 'https://www.mylar.es/37903-medium_default/SMARTPHONE-APPLE-IPHONE-14-PRO-256GB-BLUE-MPWP3QL-A.jpg', 1),
 (417, 18, 'amarillo', 4, 'https://geeky.sfo2.cdn.digitaloceanspaces.com/geekydrop_production/thumbnail--V33EemrL0m.webp', 1),
@@ -1221,7 +1256,6 @@ INSERT INTO `p_variantes` (`id`, `producto_id`, `color`, `stock`, `img`, `activo
 (613, 96, 'Negro', 2, 'https://5.imimg.com/data5/ANDROID/Default/2025/2/487652080/GA/JV/TB/234503777/product-jpeg-500x500.jpg', 1),
 (614, 174, 'Negro', 2, 'https://hisense.com.pe/static/1fee299aec5f19ca4ecea543fbc6bb4f/cd18a/75Q6.jpg', 1),
 (615, 175, 'Negro', 2, 'https://www.megaaudio.com.mx/cdn/shop/files/Pantalla-Hisense-85A7H_01.jpg?v=1736465649&width=416', 1),
-(623, 1, 'Rojo', 2, 'https://target.scene7.com/is/image/Target/GUEST_58d0978e-bfe1-4ad0-b2bf-e3b5f49546f9', 0);
 (623, 1, 'Rojo', 2, 'https://target.scene7.com/is/image/Target/GUEST_58d0978e-bfe1-4ad0-b2bf-e3b5f49546f9', 1);
 
 -- --------------------------------------------------------
@@ -1272,8 +1306,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('CJ8bOS5KNRVcN5e3jzDQxbKF4a4D8EME', 1767119960, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-12-30T17:39:30.743Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":81,\"username\":\"darlin\",\"rol\":\"superadmin\"}}'),
-('D3ZBxKb6WbzxSicRrc8iQtaoSYDigjBL', 1767120783, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2025-12-30T18:39:50.516Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":81,\"username\":\"darlin\",\"rol\":\"superadmin\"}}');
+('8mfHfiSaBz__OagMxYu1E9DPLlwlHFRG', 1767971916, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2026-01-09T14:22:57.895Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"user\":{\"id\":98,\"email\":\"darlinlvaldez@gmail.com\",\"username\":\"darlin\"}}'),
+('vWPN82NigsLefGZNrs7sPgLNbGUU6nsK', 1767971371, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2026-01-09T14:46:42.966Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\",\"sameSite\":\"strict\"},\"admin\":{\"id\":81,\"username\":\"darlin\",\"rol\":\"superadmin\"}}');
 
 -- --------------------------------------------------------
 
@@ -1665,7 +1699,7 @@ ALTER TABLE `camara`
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=258;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=274;
 
 --
 -- AUTO_INCREMENT de la tabla `categorias`
@@ -1683,7 +1717,7 @@ ALTER TABLE `ciudades_envio`
 -- AUTO_INCREMENT de la tabla `clasificacion`
 --
 ALTER TABLE `clasificacion`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT de la tabla `conectividad`
@@ -1701,7 +1735,7 @@ ALTER TABLE `cpu`
 -- AUTO_INCREMENT de la tabla `detalles_pedido`
 --
 ALTER TABLE `detalles_pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=261;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=267;
 
 --
 -- AUTO_INCREMENT de la tabla `dimensionespeso`
@@ -1713,13 +1747,13 @@ ALTER TABLE `dimensionespeso`
 -- AUTO_INCREMENT de la tabla `envios`
 --
 ALTER TABLE `envios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT de la tabla `fav`
 --
 ALTER TABLE `fav`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=806;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=831;
 
 --
 -- AUTO_INCREMENT de la tabla `gpu`
@@ -1737,7 +1771,7 @@ ALTER TABLE `moviles`
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
 
 --
 -- AUTO_INCREMENT de la tabla `pantalla`
@@ -1749,7 +1783,7 @@ ALTER TABLE `pantalla`
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=238;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=242;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
