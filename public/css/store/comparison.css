@@ -269,3 +269,7 @@
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+body, html {
+  overflow-x: hidden;
+}
