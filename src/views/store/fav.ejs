@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/utils/toastify.css">
     <link rel="stylesheet" href="/css/utils/sweetalert2.css">
     <link rel="stylesheet" href="/css/store/fav.css">
+    <link rel="stylesheet" href="/css/utils/ratingTooltip.css">
 
 </head>
 
@@ -72,6 +73,26 @@
 										<del class="product-old-price">$<%= Number(product.price / (1 - product.discount / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></del>
 									<% } %>
                                     </h4></a>
+                                    <div class="product-rating clickable-rating" data-product-id="<%= product.id %>">
+                                        <% for (let i = 1; i <= 5; i++) { %>
+                                            <% if (i <= Math.floor(product.averageRating)) { %>
+                                                <i class="fa-solid fa-star"></i>
+                                            <% } else if (i - product.averageRating < 1 && i > product.averageRating) { %>
+                                                <i class="fa-regular fa-star-half-stroke"></i>
+                                            <% } else { %>
+                                                <i class="fa-regular fa-star"></i>
+                                            <% } %>
+                                        <% } %>
+                                        <div class="rating-tooltip"></div>
+                                    </div>
+                                    <div class="product-btns">
+                                        <% if (product.itsMobile) { %>
+                                            <button class="add-to-compare" data-id="<%= product.id %>">
+                                                <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                                                <span class="tooltipp">Comparar</span>
+                                            </button>
+                                        <% } %>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -88,8 +109,11 @@
     <%- include('../partials/footer.ejs') %>
     
 </body>
+    <script src="/js/utils/ratingTab.js" type="module"></script>
+    <script src="/js/utils/ratingTooltip.js" type="module"></script>
     <script src="/js/store/fav/favView.js" type="module"></script>
     <script src="/js/store/cart/cart.js" type="module"></script>
+    <script src="/js/utils/buttonComparison.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 	<script src="https://unpkg.com/feather-icons"></script>
