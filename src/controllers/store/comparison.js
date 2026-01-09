@@ -16,19 +16,14 @@ comparisonController.searchMobiles = async (req, res) => {
   }
 };
 
-comparisonController.topSoldMobiles = async (req, res) => {
+comparisonController.mobiles = async (req, res) => {
   try {
-    const devices = await comparison.getTopSoldMobiles(6);
-    res.json(devices);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+    const [topSold, topRated] = await Promise.all([
+      comparison.getTopSoldMobiles(6),
+      comparison.getTopRatedMobiles(6) 
+    ]);
 
-comparisonController.topRatedMobiles = async (req, res) => {
-  try {
-    const devices = await comparison.getTopRatedMobiles(6);
-    res.json(devices);
+    res.json({topSold, topRated});
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

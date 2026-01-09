@@ -1125,6 +1125,10 @@ textarea.input {
   color: #ef233c;
 }
 
+.product-rating i {
+  color: #ef233c;
+}
+
 .product .product-body .product-rating:after {
   content: "";
   position: absolute;

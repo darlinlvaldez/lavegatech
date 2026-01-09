@@ -1,4 +1,5 @@
 import { showToast } from "../utils/toastify.js";
+import { renderStars } from "../utils/starRating.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("reviewForm");
@@ -150,18 +151,6 @@ function renderReviewsList(reviews) {
   }).join('');
 
   return `<ul class="reviews">${listItems}</ul>`;
-}
-
-function renderStars(rating) {
-  return Array.from({ length: 5 }, (_, i) => {
-    if (i + 1 <= Math.floor(rating)) {
-      return `<i class="fa-solid fa-star"></i>`;
-    } else if (i < rating) {
-      return `<i class="fa-regular fa-star-half-stroke"></i>`; 
-    } else {
-      return `<i class="fa-regular fa-star"></i>`;
-    }
-  }).join('');
 }
 
 function renderPagination(currentPage, totalPages) {

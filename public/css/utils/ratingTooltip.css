@@ -3,6 +3,16 @@
   cursor: pointer;
 }
 
+.product-rating i {
+  float: none !important;
+}
+
+.rating-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .rating-tooltip {
   position: absolute;
   top: 100%;
@@ -12,15 +22,47 @@
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #d1d5db;
-  z-index: 10;
+  z-index: 20;
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
   transform: translateY(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 .rating-tooltip.active {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
   transform: translateY(0);
+}
+
+.rating-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.rating-row .stars {
+  width: 30px;
+}
+
+.rating-row .bar {
+  flex: 1;
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.rating-row .fill {
+  height: 100%;
+  background: #ef233c;
+}
+
+.rating-row .percent {
+  width: 30px;
+  text-align: right;
 }

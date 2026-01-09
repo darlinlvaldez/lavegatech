@@ -2,6 +2,8 @@
 
   <link rel="stylesheet" href="/css/utils/toastify.css">
 
+  <link rel="stylesheet" href="/css/utils/ratingTooltip.css">
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
 <script>
@@ -186,16 +188,17 @@
 															<% } %>
 															</h4>
 															</a>
-															<div class="product-rating">
+															 <div class="product-rating clickable-rating" data-product-id="<%= product.id %>">
 															<% for (let i = 1; i <= 5; i++) { %>
-                                                        	<% if (i <= Math.floor(product.averageRating)) { %>
-                                                            <i class="fa-solid fa-star"></i>
-                                                       		<% } else if (i - product.averageRating < 1 && i > product.averageRating) { %>
-                                                            <i class="fa-regular fa-star-half-stroke"></i>
-                                                      		<% } else { %>
-                                                            <i class="fa-regular fa-star"></i>
-                                                       		<% } %>
+																<% if (i <= Math.floor(product.averageRating)) { %>
+																	<i class="custom-star fa-solid fa-star"></i>
+																<% } else if (i - product.averageRating < 1 && i > product.averageRating) { %>
+																	<i class="custom-star fa-regular fa-star-half-stroke"></i>
+																<% } else { %>
+																	<i class="custom-star fa-regular fa-star"></i>
+																<% } %>
 															<% } %>
+															<div class="rating-tooltip"></div>
 															</div>
 															<div class="product-btns">
 																<button class="add-to-wishlist" 
@@ -281,6 +284,8 @@
 
 	</body>
 	
+	<script src="/js/utils/ratingTooltip.js" type="module"></script>
+	<script src="/js/utils/ratingTab.js" type="module"></script>
 	<script src="/js/utils/buttonComparison.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 	<script src="https://unpkg.com/feather-icons"></script>

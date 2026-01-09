@@ -1,5 +1,6 @@
 import { calculateItem } from "../utils/calculateItem.js";
 import { showToast } from "../utils/toastify.js";
+import { renderStars } from "../utils/starRating.js";
 
 document.addEventListener('DOMContentLoaded', function() {
   const comparisonForm = document.getElementById('comparison-form');
@@ -11,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
   
   let selectedDevices = [];
   let excludedMobileIds = [];
-  let ratingTimeout;
 
 async function searchMobiles(query) {
   if (query.length < 2) {
@@ -202,56 +202,28 @@ function renderSectionTitle(sectionId, titleHTML) {
   section.prepend(title);
 }
 
-async function loadTopSoldDevices() {
-  const res = await fetch('/comparison/top-sold');
-  const devices = await res.json();
+async function loadTopDevices() {
+  try {
+    const res = await fetch('/comparison/mobiles');
+    const { topSold, topRated } = await res.json();
 
-  if (!devices.length) return;
-
-  renderSectionTitle(
-    'top-sold-section',
-    `Top Ventas`
-  );
-
-  renderSelectableDevices(devices, 'top-sold-grid');
-}
-
-async function loadTopRatedDevices() {
-  const res = await fetch('/comparison/top-rated');
-  const devices = await res.json();
-
-  if (!devices.length) return;
-
-  renderSectionTitle(
-    'top-rated-section',
-    `Lo Más Gustados`
-  );
-
-  renderSelectableDevices(devices, 'top-rated-grid');
-}
-
-function renderStars(rating = 0, productId) {
-  let starsHTML = '';
-
-  for (let i = 1; i <= 5; i++) {
-    if (i <= Math.floor(rating)) {
-      starsHTML += `<i class="custom-star fa-solid fa-star"></i>`;
-    } else if (i - rating < 1 && i > rating) {
-      starsHTML += `<i class="custom-star fa-regular fa-star-half-stroke"></i>`;
-    } else {
-      starsHTML += `<i class="custom-star fa-regular fa-star"></i>`;
+    if (topSold?.length) {
+      renderSectionTitle('top-sold-section', 'Top Ventas');
+      renderSelectableDevices(topSold, 'top-sold-grid');
     }
-  }
 
-  return `
-    <div class="product-rating" data-product-id="${productId}">
-      <a href="/product/${productId}#tab3" class="rating-link">
-        ${starsHTML}
-      </a>
-      <div class="rating-tooltip hidden"></div>
-    </div>
-  `;
+    if (topRated?.length) {
+      renderSectionTitle('top-rated-section', 'Lo Más Gustados');
+      renderSelectableDevices(topRated, 'top-rated-grid');
+    }
+
+  } catch (err) {
+    console.error('Error al cargar top devices:', err);
+  }
 }
+
+
+
 
 function renderSelectableDevices(devices, gridId = 'devices-grid') {
   const grid = document.getElementById(gridId);
@@ -273,15 +245,16 @@ function renderSelectableDevices(devices, gridId = 'devices-grid') {
       <div class="search-result">
         <div class="item-price">
           $${formatPrice(calc.finalPrice)}
-          ${
-            device.discount > 0
-              ? `<del class="item-old-price">$${formatPrice(calc.originalPrice)}</del>`
-              : ""
-          }
+          ${device.discount > 0 ? `<del class="item-old-price">
+            $${formatPrice(calc.originalPrice)}</del>` : "" }
         </div>
       </div>
 
-      ${device.rating ? renderStars(device.rating, device.id) : ""}
+      ${device.rating ? renderStars(device.rating, { 
+        productId: device.id, 
+        withLink: true, 
+        withTooltip: true 
+      }) : ""}
 
       <button>Comparar</button>
     `;
@@ -300,76 +273,6 @@ function renderSelectableDevices(devices, gridId = 'devices-grid') {
   });
 }
 
-document.addEventListener('mouseover', async (e) => {
-  const ratingEl = e.target.closest('.product-rating');
-  if (!ratingEl) return;
-
-  const tooltip = ratingEl.querySelector('.rating-tooltip');
-  if (!tooltip) return;
-
-  clearTimeout(ratingTimeout);
-
-  tooltip.classList.add('active');
-  tooltip.classList.remove('hidden');
-
-  if (!tooltip.dataset.loaded) {
-    const productId = ratingEl.dataset.productId;
-    if (!productId) return;
-
-    try {
-      const res = await fetch(`/comparison/product/${productId}/rating-breakdown`);
-      if (!res.ok) return;
-      const data = await res.json();
-      const totalReviews = data.reduce((sum, r) => sum + r.total, 0);
-
-      tooltip.innerHTML = renderRatingBars(data, totalReviews, productId);
-      tooltip.dataset.loaded = "true";
-    } catch (error) {
-      console.error("Error cargando reseñas:", error);
-    }
-  }
-});
-
-document.addEventListener('mouseout', (e) => {
-  const ratingEl = e.target.closest('.product-rating');
-  if (!ratingEl) return;
-
-  const tooltip = ratingEl.querySelector('.rating-tooltip');
-  
-  ratingTimeout = setTimeout(() => {
-    if (tooltip) {
-      tooltip.classList.remove('active');
-      setTimeout(() => {
-        if(!tooltip.classList.contains('active')) tooltip.classList.add('hidden');
-      }, 300); 
-    }
-  }, 100);
-});
-
-function renderRatingBars(data, totalReviews, productId) {
-  const rows = data
-    .sort((a, b) => b.stars - a.stars)
-    .map(row => {
-      const percent = Math.round((row.total / totalReviews) * 100);
-
-      return `
-        <div class="rating-row">
-          <span class="stars">${row.stars}★</span>
-          <div class="bar">
-            <div class="fill" style="width:${percent}%"></div>
-          </div>
-          <span class="percent">${percent}%</span>
-        </div>
-      `;
-    })
-    .join('');
-
-  return `
-    <a href="/product/${productId}#tab3" class="rating-box">
-      ${rows}
-    </a>
-  `;
-}
 
 function safe(value) {
   return value ?? ''; 
@@ -393,13 +296,18 @@ function displayComparisonResults(devices) {
       </div>
 
       ${device.rating ? `<div class="product-rating-container">
-      ${renderStars(device.rating, device.id)}
+      ${device.rating ? renderStars(device.rating, { 
+        productId: device.id, 
+        withLink: true, 
+        withTooltip: true 
+      }) : ""}
       <span class="total-reviews">(${device.total_reviews || 0} reseñas)</span>
     </div>` : ''}
       
       <div class="search-result">
         <div class="item-price"> $${formatPrice(calc.finalPrice)}
-          ${device.discount > 0 ? `<del class="item-old-price">$${formatPrice(calc.originalPrice)}</del>` : ''}
+          ${device.discount > 0 ? `<del class="item-old-price">
+            $${formatPrice(calc.originalPrice)}</del>` : ''}
         </div>
       </div>
       
@@ -472,6 +380,5 @@ function displayComparisonResults(devices) {
 }
 
 loadDevicesURL();
-loadTopSoldDevices();
-loadTopRatedDevices();
+loadTopDevices();
 });
