@@ -61,8 +61,10 @@ fav.getByUserId = async (userId) => {
         a.capacidad AS storage,
         CONCAT(r.capacidad, '+', a.capacidad) AS specs
         FROM fav f
-        JOIN productos p ON f.producto_id = p.id
-        LEFT JOIN p_variantes v ON f.variante_id = v.id
+        JOIN productos p ON f.producto_id = p.id AND p.activo = 1
+        JOIN p_variantes v ON f.variante_id = v.id AND v.activo = 1
+        JOIN p_marcas m ON p.marca_id = m.id AND m.activo = 1
+        JOIN categorias cat ON p.categoria_id = cat.id AND cat.activo = 1
         LEFT JOIN ram r ON p.ram_id = r.id
         LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
         WHERE f.usuario_id = ? AND p.activo = 1

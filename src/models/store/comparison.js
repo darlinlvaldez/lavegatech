@@ -1,4 +1,5 @@
 import db from "../../database/mobiles.js";
+import productsBase from "./utils/getProducts.js";
 import {applyTaxDiscount} from "../../utils/applyRate.js";
 
 const comparison = {};
@@ -15,9 +16,7 @@ comparison.searchDevice = async (query, excludeMobileIds = []) => {
       c.categoria AS category,
       v.img AS image
     FROM productos p
-    JOIN p_marcas ma ON p.marca_id = ma.id AND ma.activo = 1
-    JOIN categorias c ON p.categoria_id = c.id AND c.activo = 1
-    LEFT JOIN p_variantes v ON p.id = v.producto_id AND v.activo = 1
+    ${productsBase.getActiveJoins()}
     WHERE c.categoria = 'moviles' AND p.activo = 1 AND p.nombre LIKE ?
       ${excludeMobileIds.length > 0 ? "AND p.movil_id NOT IN (" + excludeMobileIds.map(() => "?").join(",") + ")" : ""}
     GROUP BY p.movil_id
@@ -50,8 +49,7 @@ comparison.getTopSoldMobiles = async (limit = 6) => {
     FROM detalles_pedido dp
     JOIN pedidos pe ON dp.pedido_id = pe.id
     JOIN productos p ON dp.producto_id = p.id
-    LEFT JOIN p_variantes v ON p.id = v.producto_id AND v.activo = 1
-    JOIN categorias c ON p.categoria_id = c.id
+    ${productsBase.getActiveJoins()}
     WHERE c.categoria = 'moviles'
       AND p.activo = 1
       AND pe.estado IN ('pagado', 'completado')
@@ -78,8 +76,7 @@ comparison.getTopRatedMobiles = async (limit = 6) => {
       COUNT(c.id) AS total_reviews
     FROM clasificacion c
     JOIN productos p ON c.producto_id = p.id
-    LEFT JOIN p_variantes v ON p.id = v.producto_id AND v.activo = 1
-    JOIN categorias cat ON p.categoria_id = cat.id
+    ${productsBase.getActiveJoins()}
     WHERE cat.categoria = 'moviles' AND p.activo = 1 AND c.calificacion IS NOT NULL
     GROUP BY p.movil_id
     HAVING total_reviews >= 2
@@ -161,22 +158,20 @@ comparison.getDevice = async (productIds) => {
       ROUND(AVG(cla.calificacion), 1) AS rating,
       COUNT(DISTINCT cla.id) AS total_reviews
     FROM productos p
-    JOIN moviles m ON p.movil_id = m.id
-    LEFT JOIN p_variantes v ON p.id = v.producto_id AND v.activo = 1
-    LEFT JOIN cpu ON m.cpu_id = cpu.id
-    LEFT JOIN gpu ON m.gpu_id = gpu.id
-    LEFT JOIN camara cam ON m.camara_id = cam.id
-    LEFT JOIN baterias bat ON m.bateria_id = bat.id
-    LEFT JOIN conectividad con ON m.conectividad_id = con.id
-    LEFT JOIN dimensionespeso dim ON m.dimensionespeso_id = dim.id
-    LEFT JOIN pantalla pant ON m.pantalla_id = pant.id
-    LEFT JOIN variantes_ram vr ON m.id = vr.movil_id
+    JOIN moviles mo ON p.movil_id = mo.id
+    LEFT JOIN cpu ON mo.cpu_id = cpu.id
+    LEFT JOIN gpu ON mo.gpu_id = gpu.id
+    LEFT JOIN camara cam ON mo.camara_id = cam.id
+    LEFT JOIN baterias bat ON mo.bateria_id = bat.id
+    LEFT JOIN conectividad con ON mo.conectividad_id = con.id
+    LEFT JOIN dimensionespeso dim ON mo.dimensionespeso_id = dim.id
+    LEFT JOIN pantalla pant ON mo.pantalla_id = pant.id
+    LEFT JOIN variantes_ram vr ON mo.id = vr.movil_id
     LEFT JOIN ram ON vr.ram_id = ram.id
-    LEFT JOIN variantes_almacenamiento va ON m.id = va.movil_id
+    LEFT JOIN variantes_almacenamiento va ON mo.id = va.movil_id
     LEFT JOIN almacenamiento alm ON va.almacenamiento_id = alm.id
     LEFT JOIN clasificacion cla ON p.id = cla.producto_id 
-    JOIN p_marcas ma ON p.marca_id = ma.id AND ma.activo = 1
-    JOIN categorias c ON p.categoria_id = c.id AND c.activo = 1
+    ${productsBase.getActiveJoins()}
     WHERE p.id IN (?) AND p.activo = 1
     GROUP BY p.id
   `;

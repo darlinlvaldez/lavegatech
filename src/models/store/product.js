@@ -24,9 +24,7 @@ productDetails.getProductDetails = async (id) => {
     a.capacidad AS storage,
     CONCAT(r.capacidad, '+', a.capacidad) AS specs
   FROM productos p
-  JOIN categorias c ON p.categoria_id = c.id AND c.activo = 1
-  JOIN p_marcas m ON p.marca_id = m.id AND m.activo = 1
-  LEFT JOIN p_variantes v ON p.id = v.producto_id AND v.activo = 1 
+  ${productsBase.getActiveJoins()}
   LEFT JOIN ram r ON p.ram_id = r.id
   LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
   WHERE p.id = ? AND p.activo = 1`;
