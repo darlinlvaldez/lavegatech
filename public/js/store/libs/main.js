@@ -49,6 +49,22 @@ import { checkFavorites } from "../fav/fav.js";
     });
   });
 
+  $(".products-widget-slick").each(function () {
+    var $this = $(this),
+      $nav = $this.attr("data-nav");
+
+    $this.slick({
+      autoplay: true,
+      infinite: true,
+      speed: 300,
+      dots: false,
+      arrows: true,
+      appendArrows: $nav ? $nav : false,
+      slidesToShow: 1,
+      slidesToScroll: 1
+    });
+  });
+
   /////////////////////////////////////////
 
   function handleColorChange(event, slick, currentSlide) {

@@ -126,6 +126,12 @@
   padding: 0 16px; 
 }
 
+.rating-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 3%;
+}
+
 /* additional content */
 
 .more-devices-comparison {
@@ -187,6 +193,12 @@
 .device-select-card button:hover {
   background: #111827;
   transform: scale(1.05);
+}
+
+.device-name {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #151
 }
 
 @media (min-width: 640px) {

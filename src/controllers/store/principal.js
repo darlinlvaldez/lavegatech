@@ -1,4 +1,5 @@
 import principal from '../../models/store/principal.js';
+import comparison from '../../models/store/comparison.js';
 import { itsNewProduct } from '../../utils/filterRecent.js';
 
 principal.productsController = async (req, res) => {
@@ -8,6 +9,7 @@ principal.productsController = async (req, res) => {
     const products = await principal.getProducts(category);
     const categories = await principal.getCategories();
     const recommended = await principal.getRecommended();
+    const topSelling = await comparison.getTopSoldProducts({limit: 18});
 
     const normalize = (list) => {
       list.forEach(p => {
@@ -21,7 +23,7 @@ principal.productsController = async (req, res) => {
 
     const recentProduct = products.filter(p => p.itsNew);
 
-    res.render("index", { products: recentProduct, categories, recommended });
+    res.render("index", { products: recentProduct, categories, topSelling, recommended });
   } catch (err) {
     console.error("Error al obtener datos", err);
     res.status(500).send("Error al cargar los datos.");

@@ -19,7 +19,7 @@ comparisonController.searchMobiles = async (req, res) => {
 comparisonController.mobiles = async (req, res) => {
   try {
     const [topSold, topRated] = await Promise.all([
-      comparison.getTopSoldMobiles(6),
+      comparison.getTopSoldProducts({limit: 6, category: "moviles", onlyMobiles: true}),
       comparison.getTopRatedMobiles(6) 
     ]);
 

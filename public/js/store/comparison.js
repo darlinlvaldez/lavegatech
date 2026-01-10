@@ -208,12 +208,12 @@ async function loadTopDevices() {
     const { topSold, topRated } = await res.json();
 
     if (topSold?.length) {
-      renderSectionTitle('top-sold-section', 'Top Ventas');
+      renderSectionTitle('top-sold-section', 'Los Más Vendidos');
       renderSelectableDevices(topSold, 'top-sold-grid');
     }
 
     if (topRated?.length) {
-      renderSectionTitle('top-rated-section', 'Lo Más Gustados');
+      renderSectionTitle('top-rated-section', 'Mejor Valorados');
       renderSelectableDevices(topRated, 'top-rated-grid');
     }
 
@@ -221,9 +221,6 @@ async function loadTopDevices() {
     console.error('Error al cargar top devices:', err);
   }
 }
-
-
-
 
 function renderSelectableDevices(devices, gridId = 'devices-grid') {
   const grid = document.getElementById(gridId);
@@ -240,6 +237,7 @@ function renderSelectableDevices(devices, gridId = 'devices-grid') {
     card.innerHTML = `  
       <a href="/product/${device.id}">
         <img src="${device.image?.split(",")[0]}" alt="${device.name}">
+      <h4 class="device-name">${device.name}</h4>
       </a>
 
       <div class="search-result">
@@ -250,11 +248,13 @@ function renderSelectableDevices(devices, gridId = 'devices-grid') {
         </div>
       </div>
 
+      <div class="rating-wrapper">
       ${device.rating ? renderStars(device.rating, { 
         productId: device.id, 
         withLink: true, 
         withTooltip: true 
       }) : ""}
+      </div>
 
       <button>Comparar</button>
     `;
