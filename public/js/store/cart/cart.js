@@ -15,7 +15,7 @@ async function fetchCart(action, data = {}) {
 }
 
 async function addToCart(product) {
-  const { id, variantId, color, quantity = 1, name, price, image, ram, storage, discount, tax } = product;
+  const { id, variantId, color, quantity = 1, name, price, image, specs, discount, tax } = product;
 
   try {
     const { authenticated } = await checkAuth();
@@ -41,7 +41,7 @@ async function addToCart(product) {
 
     const cartItem = { productId: id, variantId, selectedColor: color, 
       quantity: safeQty, name, price, tax: tax || 0, 
-      discount: discount || 0, image, ram, storage };
+      discount: discount || 0, image, specs };
 
     if (!authenticated) {
       const localCart = JSON.parse(localStorage.getItem("carrito")) || [];
@@ -120,8 +120,7 @@ document.addEventListener("click", async (e) => {
   await addToCart({
     id: btn.dataset.id,
     variantId: btn.dataset.variantId,
-    ram: btn.dataset.ram,
-    storage: btn.dataset.storage,
+    specs: btn.dataset.specs,
     quantity: document.getElementById("quantity")?.value || 1,
     color: btn.dataset.color,
     stock: parseInt(btn.dataset.stock) || 0,

@@ -7,11 +7,11 @@ async function deleteProduct(id, color) {
     const { authenticated } = await checkAuth();
 
     if (!authenticated) {
-      let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-      carrito = carrito.filter(
+      let cart = JSON.parse(localStorage.getItem("carrito")) || [];
+      cart = cart.filter(
         item => !(item.productId === id && item.selectedColor === color)
       );
-      localStorage.setItem("carrito", JSON.stringify(carrito));
+      localStorage.setItem("carrito", JSON.stringify(cart));
     } else {
       await fetch("/cart/remove-item", {
         method: "POST",

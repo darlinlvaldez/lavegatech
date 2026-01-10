@@ -45,12 +45,6 @@ cartController.syncCart = async (req, res) => {
           productId: item.productId,
           variantId: variantId,
           quantity: finalQuantity,
-          discount: item.discount,
-          price: item.price,
-          image: item.image,
-          name: item.name,
-          ram: item.ram,
-          storage: item.storage
         });
       }
     }

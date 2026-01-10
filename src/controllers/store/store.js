@@ -1,4 +1,5 @@
 import store from '../../models/store/store.js';
+import comparison from '../../models/store/comparison.js';
 import { itsNewProduct } from "../../utils/filterRecent.js";
 
 store.storeController = async (req, res) => {
@@ -20,11 +21,12 @@ store.storeController = async (req, res) => {
 
     const filteredBrands = brands.filter(brand => compatibleBrandsIds.includes(brand));
 
-    const [products, totalProduct, categoryCount, brandCount] = await Promise.all([
+    const [products, totalProduct, categoryCount, brandCount, topSelling] = await Promise.all([
       store.getStore(page, limit, sortBy, categories, filteredBrands, minPrice, maxPrice),
       store.totalProducts(categories, filteredBrands, minPrice, maxPrice),
       store.categoriesQuantity(),
-      store.brandsQuantity(categories)
+      store.brandsQuantity(categories),
+      comparison.getTopSoldProducts({limit: 3})
     ]);
 
     products.forEach((p) => {
@@ -33,7 +35,7 @@ store.storeController = async (req, res) => {
     });
 
     res.render("store/store", {products, totalProduct, limit, page, sortBy, categories,
-      brands: filteredBrands, filteredBrands, categoryCount, brandCount, minPrice,
+      brands: filteredBrands, filteredBrands, categoryCount, brandCount, topSelling, minPrice,
       maxPrice, defaultMin, defaultMax, req
     });
   } catch (err) {

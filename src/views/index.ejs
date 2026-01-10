@@ -455,7 +455,7 @@ document.querySelector(".tablink").click();
                                  <a href="/product/<%= product.id %>">
                                 <div class="product-img">
                                     <img src="<%= product.image %>" alt="<%= product.name %>">
-                                </div></a>
+                                </div>
                                 <div class="product-body">
                                     <p class="product-category"><%= product.category %></p>
                                     <h3 class="product-name">
@@ -468,7 +468,7 @@ document.querySelector(".tablink").click();
                                                 $<%= Number(product.price / (1 - product.discount / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                             </del>
                                         <% } %>
-                                    </h4>
+                                    </h4></a>
                                 </div>
                             </div>
                         <% } %>
@@ -482,7 +482,7 @@ document.querySelector(".tablink").click();
                                  <a href="/product/<%= product.id %>">
                                 <div class="product-img">
                                     <img src="<%= product.image %>" alt="<%= product.name %>">
-                                </div></a>
+                                </div>
                                 <div class="product-body">
                                     <p class="product-category"><%= product.category %></p>
                                     <h3 class="product-name">
@@ -495,7 +495,7 @@ document.querySelector(".tablink").click();
                                                 $<%= Number(product.price / (1 - product.discount / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                             </del>
                                         <% } %>
-                                    </h4>
+                                    </h4></a>
                                 </div>
                             </div>
                         <% } %>
@@ -519,7 +519,7 @@ document.querySelector(".tablink").click();
                                  <a href="/product/<%= product.id %>">
                                 <div class="product-img">
                                     <img src="<%= product.image %>" alt="<%= product.name %>">
-                                </div></a>
+                                </div>
                                 <div class="product-body">
                                     <p class="product-category"><%= product.category %></p>
                                     <h3 class="product-name">
@@ -532,7 +532,7 @@ document.querySelector(".tablink").click();
                                                 $<%= Number(product.price / (1 - product.discount / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                             </del>
                                         <% } %>
-                                    </h4>
+                                    </h4></a>
                                 </div>
                             </div>
                         <% } %>
@@ -546,7 +546,7 @@ document.querySelector(".tablink").click();
                                  <a href="/product/<%= product.id %>">
                                 <div class="product-img">
                                     <img src="<%= product.image %>" alt="<%= product.name %>">
-                                </div></a>
+                                </div>
                                 <div class="product-body">
                                     <p class="product-category"><%= product.category %></p>
                                     <h3 class="product-name">
@@ -559,7 +559,7 @@ document.querySelector(".tablink").click();
                                                 $<%= Number(product.price / (1 - product.discount / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                             </del>
                                         <% } %>
-                                    </h4>
+                                    </h4></a>
                                 </div>
                             </div>
                         <% } %>
@@ -584,7 +584,7 @@ document.querySelector(".tablink").click();
                                  <a href="/product/<%= product.id %>">
                                 <div class="product-img">
                                     <img src="<%= product.image %>" alt="<%= product.name %>">
-                                </div></a>
+                                </div>
                                 <div class="product-body">
                                     <p class="product-category"><%= product.category %></p>
                                     <h3 class="product-name">
@@ -597,7 +597,7 @@ document.querySelector(".tablink").click();
                                                 $<%= Number(product.price / (1 - product.discount / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                             </del>
                                         <% } %>
-                                    </h4>
+                                    </h4></a>
                                 </div>
                             </div>
                         <% } %>
@@ -611,7 +611,7 @@ document.querySelector(".tablink").click();
                                  <a href="/product/<%= product.id %>">
                                 <div class="product-img">
                                     <img src="<%= product.image %>" alt="<%= product.name %>">
-                                </div></a>
+                                </div>
                                 <div class="product-body">
                                     <p class="product-category"><%= product.category %></p>
                                     <h3 class="product-name">
@@ -624,7 +624,7 @@ document.querySelector(".tablink").click();
                                                 $<%= Number(product.price / (1 - product.discount / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                                             </del>
                                         <% } %>
-                                    </h4>
+                                    </h4></a>
                                 </div>
                             </div>
                         <% } %>
@@ -646,7 +646,6 @@ document.querySelector(".tablink").click();
                     <h3 class="title">Descubre más opciones</h3>
                 </div>
             </div>
-
             <% if (recommended && recommended.length > 0) { %>
                 <% recommended.forEach(product => { %>
                     <!-- product -->
@@ -664,7 +663,6 @@ document.querySelector(".tablink").click();
                                             <% } %>
                                     </div>
                             </div>
-
                             <div class="product-body">
                                 <p class="product-category"><%= product.category || 'Sin categoría' %></p>
                                 <h3 class="product-name"><%= product.name %> <%= product.specs %></h3>
@@ -677,7 +675,6 @@ document.querySelector(".tablink").click();
                                         </del>
                                     <% } %>
                                 </h4></a>
-                                
                                 <div class="product-rating clickable-rating" data-product-id="<%= product.id %>">
                                     <% for (let i = 1; i <= 5; i++) { %>
                                     <% if (i <= Math.floor(product.averageRating)) { %>
@@ -690,7 +687,6 @@ document.querySelector(".tablink").click();
                                     <% } %>
                                 <div class="rating-tooltip"></div>
                                 </div>
-
                                 <div class="product-btns">
                                     <button class="add-to-wishlist" 
                                             data-product-id="<%= product.id %>" 
@@ -698,7 +694,6 @@ document.querySelector(".tablink").click();
                                         <i class="fa-regular fa-heart"></i>  
                                         <span class="tooltipp">Favoritos</span>
                                     </button>
-
                                     <% if (product.itsMobile) { %>
                                         <button class="add-to-compare" data-id="<%= product.id %>">
                                             <i class="fa-solid fa-arrow-right-arrow-left"></i>

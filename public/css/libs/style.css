@@ -714,24 +714,6 @@ textarea.input {
   margin-bottom: 10px;
 }
 
-.product-precios, .product-nombres{
-  position: relative;
-  font-weight: bold;
-  top: -20px;
-  margin-left: 10%;
-}
-
-.product-nombres{
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 16px;
-}
-
-.product-precios{
-  font-size: 14px;
-}
-
 .cart-dropdown .cart-list .product-widget .product-img {
   width: 70px;
   height: 70px;
@@ -755,7 +737,7 @@ textarea.input {
   justify-content: flex-end;
 }
 
-.cart-dropdown .cart-list .product-widget .product-body .product-precios {
+.cart-dropdown .cart-list .product-widget .product-body .product-price {
   color: #D10024;
 }
 
@@ -1257,12 +1239,12 @@ textarea.input {
 }
 
 .product-widget+.product-widget {
-  margin: 30px 0px;
+  margin: 40px 0px;
 }
 
 .product-widget .product-img {
   position: absolute;
-  left: 0px;
+  left: -10px;
   top: 10px;
   width: 70px;
 }
@@ -1277,7 +1259,7 @@ textarea.input {
 
 .product-widget .product-body {
   padding-left: 110px;
-  min-height: 90px;
+  min-height: 65px;
 }
 
 .product-widget .product-body .product-category {
@@ -1288,6 +1270,9 @@ textarea.input {
 
 .product-widget .product-body .product-name, .product-color {
   text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 14px;
 }
 
