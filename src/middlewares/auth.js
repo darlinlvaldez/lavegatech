@@ -1,7 +1,5 @@
 export function isAuth({ redirect = false } = {}) {
   return function (req, res, next) {
-      console.log('SESSION:', req.session);
-  console.log('USER:', req.session?.user);
     const Logged = !!req.session.user;
 
     if (redirect && Logged) {

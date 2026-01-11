@@ -61,8 +61,8 @@
             <ul class="header-links pull-right">
                 <li><a href="#"><i class="fa fa-dollar"></i>RD</a></li>
                 <li><a href="/api/order/showOrders" class="orders-button"><i class="fa-solid fa-box-archive"></i> Mis pedidos</a></li>
-                <% if (usuario) { %>
-                    <li><a href="/account"><i class="fa-solid fa-user"></i>Hola, <%= usuario.username.toUpperCase() %></a></li>
+                <% if (user) { %>
+                    <li><a href="/account"><i class="fa-solid fa-user"></i>Hola, <%= user.username.toUpperCase() %></a></li>
                 <li>
                 <form id="logout-form" action="/api/auth/logout" method="POST" style="display: none;"></form>
                 <a href="#" onclick="document.getElementById('logout-form').submit();">

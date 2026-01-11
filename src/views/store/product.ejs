@@ -9,33 +9,29 @@
 <div class="section">
 	<!-- container -->
 	<div class="container">
-		<div id="product-root" 
-			data-product-stocks='<%- JSON.stringify(stockByColor) %>'
-			data-product-variants='<%- JSON.stringify(variantsByColor) %>'
-			data-product-id="<%= product.id %>">
+		<div id="product-root"
+  			data-variants='<%- JSON.stringify(product.variants) %>'>
 			<!-- row -->
 			<div class="row">
 				<!-- Product main img -->
 				<div class="col-md-5 col-md-push-2">
 					<div id="product-main-img">
-						<% if (imagesByColor) { for (const [color, image] of Object.entries(imagesByColor)) { %>
-							<div class="product-preview">
-								<img src="<%= image %>" alt="<%= color %>" class="product-img">
-							</div>
-						<% } } %>
+						<% product.variants.forEach(v => { %>
+						<div class="product-preview">
+							<img src="<%= v.image %>" alt="<%= v.color %>" class="product-img">
+						</div>
+						<% }) %>
 					</div>
 				</div>
-
 			<!-- Product thumb imgs -->
 			<div class="col-md-2 col-md-pull-5">
 				<div id="product-imgs">
-					<% for (const [color, image] of Object.entries(imagesByColor)) { %>
-						<div class="product-preview"
-							onclick="changeColor({ value: '<%= color %>' }, '<%= product.id %>')"
-							data-product-id="<%= product.id %>">
-							<img src="<%= image %>" alt="<%= color %>" class="product-img">
-						</div>
-						<% } %>
+					<% product.variants.forEach(v => { %>
+					<div class="product-preview"
+						onclick="changeVariantById('<%= v.id %>')">
+						<img src="<%= v.image %>" alt="<%= v.color %>" class="product-img">
+					</div>
+					<% }) %>
 					</div>
 				</div>
 
@@ -70,24 +66,23 @@
 				</h3>
 				<span class="product-available">
 					<p id="stockDisponible">
-						Cantidad disponible: <% if (stockByColor) { %>
-						<%= stockByColor %>
-					<% } else { %>0<% } %>
+						Cantidad disponible: <%= currentVariant.stock %>
 					</p>
 				</span>
 			</div>
 			<!-- Product options -->
-			<% if (colors && colors.length> 0) { %>
+			<% if (product.variants.length > 1) { %>
+
 				<div class="product-options">
 					<label>
 						Color
-						<select class="input-select" id="selectedColor"
-							onchange="changeColor(this, '<%= product.id %>')">
-							<% colors.forEach(color=> { %>
-								<option value="<%= color %>" <%=color===selectedColor ? 'selected' : '' %>>
-									<%= color %>
-								</option>
-							<% }); %>
+						<select class="input-select" id="variantSelect" onchange="changeVariant(this)">
+						<% product.variants.forEach(v => { %>
+							<option value="<%= v.id %>"
+							<%= v.id === product.variantId ? 'selected' : '' %>>
+							<%= v.color %>
+							</option>
+						<% }) %>
 						</select>
 					</label>
 				</div>
@@ -97,11 +92,9 @@
 						Cantidad
 						<div class="input-number product-quantity">
 							<select class="input-select" id="productQuantity">
-								<% for(let i=1; i <=stockByColor; i++) { %>
-									<option value="<%= i %>">
-										<%= i %>
-									</option>
-								<% } %>
+							<% for(let i = 1; i <= currentVariant.stock; i++) { %>
+								<option value="<%= i %>"><%= i %></option>
+							<% } %>
 							</select>
 						</div>
 					</div>
@@ -109,7 +102,7 @@
 					<div class="add-to-cart">
 						<button class="add-to-cart-btn" id="add-to-cart-btn" 
 						data-id="<%= product.id %>"
-						data-variantId="<%= product.variantId %>"
+						data-variant-id="<%= currentVariant.id %>"
 						data-color="<%= product.color %>"
 						data-ram="<%= product.ram %>"
 						data-specs="<%= product.specs %>"

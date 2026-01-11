@@ -9,27 +9,24 @@ const productController = {};
 productController.productDetails = async (req, res) => {
   try {
     const { id } = req.params;
-    const { color, pageReviews = 1, limitReviews = 3 } = req.query;
+    const { variant, pageReviews = 1, limitReviews = 3 } = req.query;
 
     const product = await productDetails.getProductDetails(id);
-
-    if (!product) {
+    if (!product || !product.variants.length) {
       return res.status(404).render("error", { message: "Producto no encontrado" });
     }
 
     const categories = await principal.getCategories();
 
-    const currentColor =
-      color && product.imagesByColor[decodeURIComponent(color)]
-        ? decodeURIComponent(color) : product.colors[0];
+    const currentVariant =
+      product.variants.find(v => v.id == variant)
+      || product.variants[0];
 
-    if (!color && product.colors.length > 0) {
+    if (!variant) {
       return res.redirect(
-        `/product/${id}?color=${encodeURIComponent(currentColor)}`
+        `/product/${id}?variant=${currentVariant.id}`
       );
     }
-
-    const currentVariant = product.variantsByColor[currentColor];
 
     const [totalReviews, reviews, averageRating, ratingDistribution,
       productRelated, devices] = await Promise.all
@@ -58,7 +55,7 @@ productController.productDetails = async (req, res) => {
       product: {
         ...product,
         categories,
-        variantId: currentVariant,
+        currentVariant,
         reviews,
         averageRating: Number(averageRating) || 0,
         ratingDistribution,
@@ -70,11 +67,9 @@ productController.productDetails = async (req, res) => {
       devices,
       productRelated,
       imagesByColor: product.imagesByColor,
-      selectedColor: currentColor,
-      stockByColor: product.stockByColor,
-      variantsByColor: product.variantsByColor,
+       variantId: currentVariant.id,
+        currentVariant,
       currentUrl: req.originalUrl,
-      colors: product.colors,
       user: req.session.user || null,
     });
   } catch (error) {

@@ -11,10 +11,10 @@ cart.addItem = async ({ userId, productId, variantId, quantity }) => {
   );
 };
 
-cart.getVariant = async (productId, color) => {
+cart.getVariantById = async (variantId) => {
   const [rows] = await db.query(
-    `SELECT id, stock FROM p_variantes WHERE producto_id = ? AND color = ?`,
-    [productId, color]
+    `SELECT id, producto_id, stock FROM p_variantes WHERE id = ?`,
+    [variantId]
   );
   return rows[0] || null;
 };
@@ -37,12 +37,12 @@ cart.clearCart = async (userId) => {
   await db.query("DELETE FROM carrito WHERE usuario_id = ?", [userId]);
 };
 
-cart.itemExists = async (userId, productId, variantId) => {
-  const [rows] = await db.query( 
+cart.itemExists = async (userId, variantId) => {
+  const [rows] = await db.query(
     `SELECT id, cantidad AS quantity 
-    FROM carrito 
-    WHERE usuario_id = ? AND producto_id = ? AND variante_id = ?`,
-    [userId, productId, variantId]
+     FROM carrito 
+     WHERE usuario_id = ? AND variante_id = ?`,
+    [userId, variantId]
   );
   return rows[0] || null;
 };

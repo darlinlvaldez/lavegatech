@@ -35,21 +35,18 @@ productDetails.getProductDetails = async (id) => {
   const finalProduct = applyTaxDiscount([results[0]])[0];
 
   const product = {
-    ...finalProduct,
-    stockByColor: {},
-    imagesByColor: {},
-    colors: [],
-    variantsByColor: {}  
-  };
+  ...finalProduct,
+  variants: []
+};
 
-  results.forEach(({ color, stock, image, variantId }) => {
-    if (color) {
-      product.stockByColor[color] = stock;
-      product.imagesByColor[color] = image;
-      product.colors.push(color);
-      product.variantsByColor[color] = variantId; 
-    }
+results.forEach(row => {
+  product.variants.push({
+    id: row.variantId,
+    color: row.color,
+    stock: row.stock,
+    image: row.image
   });
+});
 
   return product;
 };

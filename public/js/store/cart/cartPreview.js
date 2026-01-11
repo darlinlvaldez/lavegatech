@@ -32,7 +32,7 @@ function renderCart(cart, cartList, cartCount, cartSummary, cartSubtotal) {
                 </h4>
             </div>
             </a>
-            <button class="delete" onclick="deleteProduct('${data.productId}', '${data.color}')">
+            <button class="delete" onclick="deleteProduct('${data.variantId}')">
                 <i class="fa fa-close"></i>
             </button>
         </div>`;

@@ -1,5 +1,7 @@
 import { checkFavorites } from "../fav/fav.js";
 
+window.syncingFromSlick = false;
+
 (function ($) {
   "use strict";
 
@@ -67,25 +69,6 @@ import { checkFavorites } from "../fav/fav.js";
 
   /////////////////////////////////////////
 
-  function handleColorChange(event, slick, currentSlide) {
-    var currentSlideElement = $(
-      "#product-imgs .slick-slide:not(.slick-cloned)"
-    ).eq(currentSlide);
-    var imgElement = currentSlideElement.find("img");
-    var color = imgElement.attr("alt");
-    var productId = "<%= producto.id %>";
-
-    if (color && productId) {
-      $("#selectedColor").val(color).trigger("change");
-
-      document.querySelectorAll(".add-to-wishlist").forEach((button) => {
-        button.dataset.productColor = color;
-      });
-
-      checkFavorites();
-    }
-  }
-
   // Product Main img Slick
   $("#product-main-img").slick({
     infinite: true,
@@ -138,7 +121,14 @@ import { checkFavorites } from "../fav/fav.js";
 
   $productImgs.slick(slickOptions);
 
-  $productImgs.on("afterChange", handleColorChange);
+  $productImgs.on("afterChange", function (event, slick, currentSlide) {
+  if (syncingFromSlick) return;
+
+  const variant = window.productData.variants[currentSlide];
+  if (!variant) return;
+
+  changeVariantById(variant.id);
+});
 
   /////////////////////////////////////////
 

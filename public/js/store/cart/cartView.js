@@ -2,62 +2,49 @@ import { checkAuth, getRealStock } from '../../utils/utils.js';
 import { loadCartPreview } from './loadCartPreview.js';
 import { fetchCartItems } from '../../utils/apis.js';
 import { calculateItem } from '../../utils/calculateItem.js'; 
-import { showToast } from '../../utils/toastify.js';
 import { sweetAlert } from '../../utils/sweetAlert2.js';
 
-window.updateQuantity = async function(element, change, productId, color) {
+window.updateQuantity = async function(element, change, variantId) {
   try {
-    const stockReal = await getRealStock(productId, color);
-
     const newQuantity = element.tagName === 'SELECT'
-      ? parseInt(element.value) : Math.max(1, parseInt(element.value) + change);
-    const finalQuantity = Math.min(newQuantity, stockReal);
-    const isRemove = finalQuantity <= 0;
+      ? parseInt(element.value) 
+      : Math.max(1, parseInt(element.value) + change);
+
+    if (!variantId || newQuantity < 1) return;
 
     const authData = await checkAuth();
-    let cart = JSON.parse(localStorage.getItem('carrito')) || [];
-    const itemIndex = cart.findIndex(item => item.selectedColor === color && item.productId === productId);
-
-    if (itemIndex >= 0) {
-      isRemove ? cart.splice(itemIndex, 1) : cart[itemIndex].quantity = finalQuantity;
-    }
-
-    if (!authData.authenticated) {
-      localStorage.setItem('carrito', JSON.stringify(cart));
-    }
 
     if (authData.authenticated) {
-      const action = isRemove ? 'remove-item' : 'update-quantity';
-      const body = { productId, selectedColor: color,
-        ...(action === 'update-quantity' && { quantity: finalQuantity })
-      };
-
-      const response = await fetch(`/cart/${action}`, {
+      const body = { variantId, quantity: newQuantity };
+      const response = await fetch('/cart/update-quantity', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
         credentials: 'include'
       });
 
-      if (!response.ok) throw new Error(`Error al ${action} item`);
+      if (!response.ok) throw new Error('Error al actualizar cantidad');
+
+      const data = await response.json();
+      console.log(data);
+    } else {
+      let cart = JSON.parse(localStorage.getItem('carrito')) || [];
+      const itemIndex = cart.findIndex(item => item.variantId === variantId);
+      if (itemIndex >= 0) cart[itemIndex].quantity = newQuantity;
+      localStorage.setItem('carrito', JSON.stringify(cart));
     }
 
-    if (element) {
-      isRemove ? element.closest('.cart-item')?.remove() : totalForItem(productId, color);
-    }
-
+    totalForItem(variantId);
     totalCart();
     await loadCartPreview();
 
   } catch (error) {
     console.error('Error en updateQuantity:', error);
-    showToast("Error al actualizar la cantidad. Intente nuevamente.", "#e74c3c", "alert-circle");
-    loadCartPage();
   }
 };
 
-window.totalForItem = function (id, color) {
-  const itemElement = document.querySelector(`.cart-item[data-id="${id}"][data-color="${color}"]`);
+window.totalForItem = function (variantId) {
+  const itemElement = document.querySelector(`.cart-item[data-variant-id="${variantId}"]`);
   if (!itemElement) return;
 
   const priceText = itemElement.querySelector('.product-price b')?.textContent || '';
@@ -148,7 +135,7 @@ async function loadCartPage() {
         totalItems += data.quantity;
     
       html += `
-      <div class="cart-item" data-id="${data.productId}" data-color="${data.color}">
+      <div class="cart-item" data-variant-id="${data.variantId}">
       <a href="/product/${data.productId}${data.color ? `?color=${encodeURIComponent(data.color)}` : ''}">
         <img src="${item.image}" alt="${item.name}" class="product-image">
         <div class="product-info">
@@ -177,7 +164,7 @@ async function loadCartPage() {
             <span>Cantidad</span>
             <div class="input-number product-quantity">
               <select class="input-select" 
-                onchange="updateQuantity(this, 0, '${data.productId}', '${data.color}')">
+                onchange="updateQuantity(this, 0, '${data.variantId}')">
                 ${Array.from({length: Math.min(stock, 20)}, (_, i) =>
                   `<option value="${i+1}" ${i+1 === data.quantity ? 'selected' : ''}>${i+1}</option>`
               ).join('')}
@@ -186,7 +173,7 @@ async function loadCartPage() {
           </div>
         </div>
         <div class="col-md-1">
-          <i class="bi bi-trash remove-btn" onclick="deleteProduct('${data.productId}', '${data.color}')"></i>
+          <i class="bi bi-trash remove-btn" onclick="deleteProduct('${data.variantId}')"></i>
         </div>
       </div>`;
     }
