@@ -1,4 +1,4 @@
-import { fetchCartItems } from '../../utils/apis.js';
+import { fetchCartItems } from './cartApi.js';
 import { renderCart } from '../../store/cart/cartPreview.js';
 
 async function loadCartPreview() {

@@ -28,7 +28,7 @@ favController.addToFav = async (req, res) => {
     const exists = await fav.itemExists(userId, productId, variantId);
 
     if (!exists) {
-      await fav.addToFav({ userId, productId, variantId });
+      await fav.addItem({ userId, productId, variantId });
     }
 
     res.json({success: true,

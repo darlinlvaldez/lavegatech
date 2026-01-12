@@ -10,38 +10,33 @@ cartController.syncCart = async (req, res) => {
     const userId = req.session.user.id;
     const localItems = Array.isArray(req.body.items) ? req.body.items : [];
 
-    if (localItems.length === 0) {
-      return res.json({ success: true, count: await cart.getCount(userId) });
-    }
-
     for (const item of localItems) {
       const variantId = Number(item.variantId);
-      const productId = Number(item.productId);
       const quantity = Number(item.quantity);
 
-      if (!variantId || !quantity || quantity < 1) continue;
+      if (!variantId || !quantity) continue;
 
       const variant = await variantModel.getById(variantId);
-      if (!variant || variant.stock <= 0) continue;
+      if (!variant) continue; 
 
-      const existingItem = await cart.itemExists(userId, productId, variantId);
+      const existingItem = await cart.itemExists(userId, variantId);
 
       if (existingItem) {
-        const newQuantity = Math.min(
-          existingItem.quantity + quantity, variant.stock);
+        const newQuantity = variant.stock > 0 
+          ? Math.min(existingItem.quantity + quantity, variant.stock)
+          : existingItem.quantity; 
           
         await cart.updateQuantity(existingItem.id, userId, newQuantity);
       } else {
-        const finalQuantity = Math.min(quantity, variant.stock);
+        const finalQuantity = variant.stock > 0 ? Math.min(quantity, variant.stock) : quantity;
         await cart.addItem({
           userId,
-          productId: variant.producto_id,
+          productId: variant.productId,
           variantId,
           quantity: finalQuantity,
         });
       }
     }
-
     res.json({ success: true, count: await cart.getCount(userId) });
   } catch (err) {
     console.error("Error en syncCart:", err);
@@ -55,38 +50,36 @@ cartController.addToCart = async (req, res) => {
     const variantId = Number(req.body.variantId);
     const quantity = Number(req.body.quantity || 1);
 
-    if (!Number.isInteger(variantId) || quantity < 1) {
-      return res.status(400).json({ success: false, message: "Datos inválidos" });
-    }
-
     const variant = await variantModel.getById(variantId);
-    if (!variant || variant.stock <= 0) {
-      return res.status(400).json({ success: false, message: "Producto agotado" });
-    }
+    if (!variant)
+      return res.status(404).json({ success: false, message: "No existe" });
 
+    const productId = variant.productId;
     const existingItem = await cart.itemExists(userId, variantId);
-    const finalQuantity = Math.min(
-      existingItem ? existingItem.quantity + quantity : quantity,
-      variant.stock
-    );
+
+    let finalQuantity;
+    if (variant.stock > 0) {
+      finalQuantity = Math.min(existingItem ? 
+        existingItem.quantity + quantity : quantity, variant.stock
+      );
+    } else {
+      finalQuantity = existingItem ? existingItem.quantity : quantity;
+    }
 
     if (existingItem) {
       await cart.updateQuantity(existingItem.id, userId, finalQuantity);
     } else {
       await cart.addItem({
         userId,
-        productId: variant.producto_id,
+        productId,
         variantId,
-        quantity: finalQuantity
+        quantity: finalQuantity,
       });
     }
 
-    res.json({success: true,
-      count: await cart.getCount(userId)
-    });
+    res.json({ success: true, count: await cart.getCount(userId) });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Error al añadir al carrito" });
+    res.status(500).json({ success: false });
   }
 };
 
@@ -116,7 +109,7 @@ cartController.updateQuantity = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Variant no encontrada' });
     }
 
-    const item = await cart.itemExists(userId, variant.producto_id, variantId);
+    const item = await cart.itemExists(userId, variantId);
     if (!item) {
       return res.status(404).json({ success: false, message: 'Producto no encontrado en carrito' });
     }
@@ -136,14 +129,14 @@ cartController.updateQuantity = async (req, res) => {
 
 cartController.removeItem = async (req, res) => {
   try {
-    const { variantId } = req.body;
+    const { variantId} = req.body;
     const userId = req.session.user.id;
 
     if (!variantId) {
       return res.status(400).json({ success: false, message: 'Datos inválidos' });
     }
 
-    const item = await cart.itemExists(userId, variant.producto_id, variantId);
+    const item = await cart.itemExists(userId, variantId);
     if (item) {
       await cart.removeItem(item.id, userId);
     }

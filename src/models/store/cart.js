@@ -29,12 +29,12 @@ cart.clearCart = async (userId) => {
   await db.query("DELETE FROM carrito WHERE usuario_id = ?", [userId]);
 };
 
-cart.itemExists = async (userId, productId, variantId) => {
+cart.itemExists = async (userId, variantId) => {
   const [rows] = await db.query(
     `SELECT id, cantidad AS quantity 
      FROM carrito 
-     WHERE usuario_id = ? AND producto_id = ? AND variante_id = ?`,
-    [userId, productId, variantId]
+     WHERE usuario_id = ? AND variante_id = ?`,
+    [userId, variantId]
   );
   return rows[0] || null;
 };
@@ -106,7 +106,7 @@ cart.getCartToPay = async (userId) => {
     JOIN categorias cat ON p.categoria_id = cat.id AND cat.activo = 1
     LEFT JOIN ram r ON p.ram_id = r.id
     LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
-    WHERE c.usuario_id = ? AND p.activo = 1
+    WHERE c.usuario_id = ? AND c.cantidad > 0 AND v.stock > 0 AND p.activo = 1
     ORDER BY c.fecha_agregado DESC`,
     [userId]
   );
@@ -122,13 +122,6 @@ cart.getCount = async (userId) => {
     WHERE c.usuario_id = ? AND p.activo = 1`,
     [userId]);
   return rows[0].count;
-};
-
-cart.getRealStock = async (productId, color) => {
-  const [rows] = await db.query(
-    "SELECT stock FROM p_variantes WHERE producto_id = ? AND color = ?",
-    [productId, color]);
-  return rows[0]?.stock || 0;
 };
 
 export default cart;

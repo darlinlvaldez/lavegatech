@@ -1,4 +1,4 @@
-import { getAuthStatus } from '../store/fav/apiFav.js';
+import { getAuthStatus } from '../fav/apiFav.js';
 
 async function fetchCartItems() {
     let cart = [];
@@ -17,7 +17,7 @@ async function fetchCartItems() {
             if (res.ok) {
                 const data = await res.json();
                 if (data.success && Array.isArray(data.items)) {
-                    cart = data.items.filter(item => Number(item.quantity) > 0);
+                    cart = data.items;
                 }
             } else {
                 console.error('Error al obtener carrito del servidor');

@@ -4,7 +4,7 @@ const variant = {};
 
 variant.getById = async (variantId, productId = null) => {
   let sql = `
-    SELECT id, producto_id, stock, activo
+    SELECT id, producto_id AS productId, stock, activo
     FROM p_variantes
     WHERE id = ?
   `;

@@ -3,7 +3,7 @@ import {applyTaxDiscount} from "../../utils/applyRate.js";
 
 const fav = {};
 
-fav.addToFav = async ({userId, productId, variantId}) => {
+fav.addItem = async ({userId, productId, variantId}) => {
     await db.query(
         `INSERT INTO fav (usuario_id, producto_id, variante_id) 
          VALUES (?, ?, ?)`,

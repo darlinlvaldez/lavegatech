@@ -1,37 +1,14 @@
 import { showToast } from "../utils/toastify.js";
+import { fetchCartItems } from '../../cart/cartApi.js';
 
 document.addEventListener("DOMContentLoaded", async function () {
   const orderProducts = document.querySelector(".order-products");
   const orderTotal = document.querySelector(".order-total");
 
   try {
-    const cartRes = await fetch("/cart/items", { credentials: "include" });
-    const cartData = await cartRes.json();
+    const cartItems = await fetchCartItems();
 
-    if (!cartData.success || !cartData.items || cartData.items.length === 0) {
-      orderProducts.innerHTML = "<p>No hay productos disponibles en tu orden.</p>";
-      orderTotal.textContent = "$0.00";
-      return;
-    }
-
-    const stockRes = await fetch("/cart/stock?bulk=true", { credentials: "include" });
-    const stockData = await stockRes.json();
-
-    if (!stockData.success || !stockData.stocks) {
-      orderProducts.innerHTML = "<p>Error al validar el stock.</p>";
-      orderTotal.textContent = "$0.00";
-      return;
-    }
-
-    const stockInfo = stockData.stocks;
-
-    const validItems = cartData.items.filter(item => {
-      const key = `${item.productId}_${item.selectedColor}`;
-      const stock = stockInfo[key] ?? 0;
-      return stock > 0;
-    });
-
-    if (validItems.length === 0) {
+    if (!cartItems || cartItems.length === 0) {
       orderProducts.innerHTML = "<p>No hay productos disponibles en tu orden.</p>";
       orderTotal.textContent = "$0.00";
       return;
@@ -40,13 +17,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     let total = 0;
     orderProducts.innerHTML = "";
 
-    validItems.forEach((item) => {
+    cartItems.forEach(item => {
       const subtotal = item.price * item.quantity;
       total += subtotal;
 
       orderProducts.innerHTML += `
         <div class="order-col">
-          <div>${item.quantity}x ${item.name} ${item.specs || ""} ${item.selectedColor.toUpperCase()}</div>
+          <div>${item.quantity}x ${item.name} ${item.specs || ""} ${item.selectedColor?.toUpperCase() || ""}</div>
           <div>$${formatPrice(subtotal)}</div>
         </div>`;
     });
@@ -56,7 +33,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   } catch (error) {
     console.error("Error al cargar el carrito:", error);
-    orderProducts.innerHTML = "<p>Error al cargar los productos. Por favor intenta nuevamente.</p>";
+    orderProducts.innerHTML = "<p>Error al cargar los productos.</p>";
     orderTotal.textContent = "$0.00";
   }
 });

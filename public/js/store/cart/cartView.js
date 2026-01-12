@@ -1,7 +1,7 @@
 import { getRealStock } from '../../utils/utils.js';
 import { getAuthStatus } from '../../store/fav/apiFav.js';
 import { loadCartPreview } from './loadCartPreview.js';
-import { fetchCartItems } from '../../utils/apis.js';
+import { fetchCartItems } from './cartApi.js';
 import { calculateItem } from '../../utils/calculateItem.js'; 
 import { sweetAlert } from '../../utils/sweetAlert2.js';
 
@@ -33,6 +33,19 @@ window.updateQuantity = async function(element, change, variantId) {
       const itemIndex = cart.findIndex(item => item.variantId === variantId);
       if (itemIndex >= 0) cart[itemIndex].quantity = newQuantity;
       localStorage.setItem('carrito', JSON.stringify(cart));
+    }
+
+    const countElement = document.getElementById("cart-items-count");
+    if (countElement) {
+      let totalItems = 0;
+
+      document.querySelectorAll(".cart-item select").forEach((select) => {
+        totalItems += parseInt(select.value) || 0;
+      });
+
+      countElement.textContent = `${totalItems} ${
+        totalItems === 1 ? "producto" : "productos"
+      }`;
     }
 
     totalForItem(variantId);
@@ -114,28 +127,29 @@ async function handleClearCart() {
 }
 
 async function loadCartPage() {
-    const cart = await fetchCartItems();
+  const cart = await fetchCartItems();
 
-    const container = document.getElementById('cart-items-container');
-    const countElement = document.getElementById('cart-items-count');
-    const totalElement = document.getElementById('cart-total');
+  const container = document.getElementById("cart-items-container");
+  const countElement = document.getElementById("cart-items-count");
+  const totalElement = document.getElementById("cart-total");
 
-    if (!container || !countElement || !totalElement) return;
+  if (!container || !countElement || !totalElement) return;
 
-    let html = '';
-    let total = 0;
-    let totalItems = 0;
+  let html = "";
+  let total = 0;
+  let totalItems = 0;
 
-    for (const item of cart) {
-        const stock = await getRealStock(item.variantId);
-        if (stock <= 0) continue;
+  for (const item of cart) {
+    const stock = await getRealStock(item.variantId);
 
-        const data = calculateItem(item, stock);
+    const data = calculateItem(item, stock);
 
-        total += data.total;
-        totalItems += data.quantity;
-    
-      html += `
+    if (stock > 0) {
+      total += data.total;
+      totalItems += data.quantity;
+    }
+
+    html += `
       <div class="cart-item" data-variant-id="${data.variantId}">
       <a href="/product/${data.productId}?variant=${data.variantId}">
         <img src="${item.image}" alt="${item.name}" class="product-image">
@@ -145,58 +159,65 @@ async function loadCartPage() {
           <span class="product-price">
             <b>$${formatPrice(data.finalPrice)}</b>
             ${data.discount > 0 ? `
-            <del class="product-old-price">$${formatPrice(data.originalPrice)}</del>
-            <span class="sale">-${data.discount.toFixed(2)}%</span>` : ''}
-        </span>
+            <del class="product-old-price">
+            $${formatPrice(data.originalPrice)}</del>
+            <span class="sale">-${data.discount.toFixed(2)}%</span>` : ""} </span>
           <div class="item-total">
             <span><strong>Total:</strong></span>
             $${formatPrice(data.total)}
-          </div>
-          </a>
+          </div></a>
         </div>
         <div class="product-items">
           <span class="label">Color</span>
           <div class="color-item">
-            ${data.color ? `<span>${data.color}</span>` : '<span>No disponible</span>'}
+            ${data.color ? `<span>${data.color}</span>`
+                : "<span>No disponible</span>"}
           </div>
         </div>
         <div data-id="${data.productId}" data-color="${data.color}">
           <div class="qty-cantidad">
             <span>Cantidad</span>
             <div class="input-number product-quantity">
-              <select class="input-select" 
-                onchange="updateQuantity(this, 0, '${data.variantId}')">
-                ${Array.from({length: Math.min(stock, 20)}, (_, i) =>
-                  `<option value="${i+1}" ${i+1 === data.quantity ? 'selected' : ''}>${i+1}</option>`
-              ).join('')}
-              </select>
+              ${stock > 0 ? `
+            <select class="input-select" 
+            onchange="updateQuantity(this, 0, '${data.variantId}')">
+              ${Array.from({ length: Math.min(stock, 20) },
+                (_, i) =>`<option value="${i + 1}" 
+                ${i + 1 === data.quantity ? "selected" : ""}>${i + 1}</option>`
+              ).join("")}
+            </select>
+            ` : `<span class="badge bg-danger">AGOTADO</span>`}
             </div>
           </div>
         </div>
         <div class="col-md-1">
-          <i class="bi bi-trash remove-btn" onclick="deleteProduct('${data.variantId}')"></i>
+          <i class="bi bi-trash remove-btn" 
+          onclick="deleteProduct('${data.variantId}')"></i>
         </div>
       </div>`;
     }
 
-  container.innerHTML = html || '<p>No hay productos disponibles en el carrito.</p>';
-  countElement.textContent = `${totalItems} ${totalItems === 1 ? 'producto' : 'productos'}`;
+  container.innerHTML =
+    html || "<p>No hay productos disponibles en el carrito.</p>";
+  countElement.textContent = `${totalItems} ${
+    totalItems === 1 ? "producto" : "productos"
+  }`;
   totalElement.textContent = `$${formatPrice(total)}`;
 
-  const clearCartContainer = document.getElementById('clear-cart-container');
-    if (clearCartContainer) {
-        if (totalItems > 0) {
-            clearCartContainer.innerHTML = `
-                <button id="clear-cart-btn" class="btn btn-danger">
-                    <i class="bi bi-trash"></i> Vaciar
-                </button>`;
-            clearCartContainer.style.display = 'block';
-            document.getElementById('clear-cart-btn').addEventListener('click', handleClearCart);
-        } else {
-            clearCartContainer.innerHTML = '';
-            clearCartContainer.style.display = 'none';
-        }
+  const clearCartContainer = document.getElementById("clear-cart-container");
+  if (clearCartContainer) {
+    if (totalItems > 0) {
+      clearCartContainer.innerHTML = `
+        <button id="clear-cart-btn" class="btn btn-danger">
+            <i class="bi bi-trash"></i> Vaciar
+        </button>`;
+      clearCartContainer.style.display = "block";
+      document.getElementById("clear-cart-btn").addEventListener("click", handleClearCart);
+    } else {
+      clearCartContainer.innerHTML = "";
+      clearCartContainer.style.display = "none";
     }
+  }
 }
 
 export { loadCartPage };
