@@ -1,59 +1,69 @@
 import fav from "../../models/store/fav.js"
 import product from "../../models/store/product.js";
+import variantModel from "../../models/store/utils/getVariant.js";
 import { itsNewProduct } from "../../utils/filterRecent.js";
 
 const favController = {};
 
 favController.addToFav = async (req, res) => {
-    try {
-        const userId = req.session.user.id;
-        const { productId, selectedColor } = req.body;
-
-        if (!productId || !selectedColor) {
-            return res.status(400).json({ 
-                success: false, message: 'Datos inválidos'
-            });
-        }
-
-        const variant = await fav.getVariant(productId, selectedColor);
-        const variantId = variant ? variant.id : null;
-
-        if (!variantId) {
-            return res.status(400).json({success: false,
-                message: 'Variante no encontrada para el color seleccionado'
-            });
-        }
-
-        const existingItem = await fav.itemExists(userId, productId, variantId);
-
-        if (!existingItem) {
-            await fav.addItem({userId: userId, 
-              productId, variantId
-            });
-        }
-
-        res.json({success: true, 
-          count: await fav.getCount(userId)
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({success: false,
-            message: 'Error al agregar a favoritos'
-        });
-    }
-};
-
-favController.removeFromFav = async (req, res) => {
   try {
     const userId = req.session.user.id;
-    const { productId, variantId } = req.body; 
+    const productId = Number(req.body.productId);
+    const variantId = Number(req.body.variantId);
 
-    await fav.removeItem(userId, productId, variantId); 
-    
-    res.json({success: true, count: await fav.getCount(userId) });
+    if (!Number.isInteger(productId) || !Number.isInteger(variantId)
+    ) {return res.status(400).json({
+        success: false,
+        message: 'IDs inválidos'
+      });
+    }
+
+    const variant = await variantModel.getById(variantId, productId);
+    if (!variant) {
+      return res.status(404).json({success: false,
+        message: 'Variante no encontrada'
+      });
+    }
+
+    const exists = await fav.itemExists(userId, productId, variantId);
+
+    if (!exists) {
+      await fav.addToFav({ userId, productId, variantId });
+    }
+
+    res.json({success: true,
+      count: await fav.getCount(userId)
+    });
+
   } catch (error) {
     console.error(error);
-    res.status(500).json({success: false, message: 'Error al eliminar de favoritos'});
+    res.status(500).json({
+      success: false,
+      message: 'Error al agregar a favoritos'
+    });
+  }
+};
+
+favController.removeItem = async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+    const productId = Number(req.body.productId);
+    const variantId = Number(req.body.variantId);
+
+    if (!Number.isInteger(productId) || !Number.isInteger(variantId)) { 
+      return res.status(400).json({ success: false, message: 'IDs inválidos' });
+    }
+
+    await fav.removeItem(userId, productId, variantId);
+
+    res.json({success: true,
+      count: await fav.getCount(userId)
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({success: false,
+      message: 'Error al eliminar de favoritos'
+    });
   }
 };
 

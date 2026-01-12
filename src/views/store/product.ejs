@@ -103,7 +103,8 @@
 						<button class="add-to-cart-btn" id="add-to-cart-btn" 
 						data-id="<%= product.id %>"
 						data-variant-id="<%= currentVariant.id %>"
-						data-color="<%= product.color %>"
+						data-color="<%= currentVariant.color %>"
+						data-stock="<%= currentVariant.stock %>"
 						data-ram="<%= product.ram %>"
 						data-specs="<%= product.specs %>"
 						data-name="<%= product.name %>"
@@ -118,10 +119,9 @@
 				<ul class="product-btns">
 				<li>
 				<a role="button" class="add-to-wishlist" 
-				data-product-id="<%= product.id %>" 
-                data-product-color="<%= product.color %>">
+					data-product-id="<%= product.id %>" 
+					data-variant-id="<%= product.variantId %>">
 				<i class="fa fa-heart-o"></i> Favoritos</a></li>
-
 				<% if (product.itsMobile) { %>
 				<li><a href="#" class="add-to-compare" data-id="<%= product.id %>">
 					<i class="fa-solid fa-arrow-right-arrow-left"></i> Comparar</a></li>

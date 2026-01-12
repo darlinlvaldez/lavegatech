@@ -18,20 +18,21 @@ function changeVariant(select) {
   $("#product-main-img").slick("slickGoTo", index);
   syncingFromSlick = false;
 
-  // stock
   document.getElementById("stockDisponible").textContent =
     `Cantidad disponible: ${variants[index].stock}`;
 
-  // cantidad
   const qty = document.getElementById("productQuantity");
   qty.innerHTML = "";
   for (let i = 1; i <= variants[index].stock; i++) {
     qty.append(new Option(i, i));
   }
 
-  document.getElementById("add-to-cart-btn").dataset.variantId = variantId;
+  const btn = document.getElementById("add-to-cart-btn");
+  btn.dataset.variantId = variantId;
+  btn.dataset.stock = variants[index].stock;
+  btn.dataset.color = variants[index].color;
 
-  const productId = document.getElementById("add-to-cart-btn").dataset.id;
+  const productId = btn.dataset.id;
   history.replaceState(null, "", `/product/${productId}?variant=${variantId}`);
 }
 
@@ -42,4 +43,17 @@ document.addEventListener("DOMContentLoaded", () => {
   window.productData = {
     variants: JSON.parse(productRoot.dataset.variants),
   };
+
+  const params = new URLSearchParams(window.location.search);
+  const variantId = params.get("variant");
+
+  if (variantId) {
+    setTimeout(() => {
+      const select = document.getElementById("variantSelect");
+      if (!select) return;
+
+      select.value = variantId;
+      changeVariant(select);
+    }, 0);
+  }
 });

@@ -1,4 +1,5 @@
-import { checkAuth, getRealStock } from '../../utils/utils.js';
+import { getRealStock } from '../../utils/utils.js';
+import { getAuthStatus } from '../../store/fav/apiFav.js';
 import { loadCartPreview } from './loadCartPreview.js';
 import { fetchCartItems } from '../../utils/apis.js';
 import { calculateItem } from '../../utils/calculateItem.js'; 
@@ -12,7 +13,7 @@ window.updateQuantity = async function(element, change, variantId) {
 
     if (!variantId || newQuantity < 1) return;
 
-    const authData = await checkAuth();
+    const authData = await getAuthStatus();
 
     if (authData.authenticated) {
       const body = { variantId, quantity: newQuantity };
@@ -85,7 +86,7 @@ async function handleClearCart() {
   if (!confirmed) return;
 
   try {
-    const authData = await checkAuth();
+    const authData = await getAuthStatus();
     
     if (!authData.authenticated) {
       localStorage.removeItem('carrito');
@@ -126,7 +127,7 @@ async function loadCartPage() {
     let totalItems = 0;
 
     for (const item of cart) {
-        const stock = await getRealStock(item.id || item.productId, item.selectedColor);
+        const stock = await getRealStock(item.variantId);
         if (stock <= 0) continue;
 
         const data = calculateItem(item, stock);
@@ -136,7 +137,7 @@ async function loadCartPage() {
     
       html += `
       <div class="cart-item" data-variant-id="${data.variantId}">
-      <a href="/product/${data.productId}${data.color ? `?color=${encodeURIComponent(data.color)}` : ''}">
+      <a href="/product/${data.productId}?variant=${data.variantId}">
         <img src="${item.image}" alt="${item.name}" class="product-image">
         <div class="product-info">
           <h5>${item.name} ${data.specs}</h5>

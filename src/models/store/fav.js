@@ -3,21 +3,12 @@ import {applyTaxDiscount} from "../../utils/applyRate.js";
 
 const fav = {};
 
-fav.addItem = async ({userId, productId, variantId}) => {
+fav.addToFav = async ({userId, productId, variantId}) => {
     await db.query(
         `INSERT INTO fav (usuario_id, producto_id, variante_id) 
          VALUES (?, ?, ?)`,
         [userId, productId, variantId]
     );
-};
-
-fav.getVariant = async (productId, selectedColor) => {
-    const [rows] = await db.query(
-        `SELECT id FROM p_variantes 
-         WHERE producto_id = ? AND color = ?`,
-        [productId, selectedColor]
-    );
-    return rows[0] || null;
 };
 
 fav.removeItem = async (userId, productId, variantId) => {

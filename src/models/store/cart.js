@@ -11,14 +11,6 @@ cart.addItem = async ({ userId, productId, variantId, quantity }) => {
   );
 };
 
-cart.getVariantById = async (variantId) => {
-  const [rows] = await db.query(
-    `SELECT id, producto_id, stock FROM p_variantes WHERE id = ?`,
-    [variantId]
-  );
-  return rows[0] || null;
-};
-
 cart.updateQuantity = async (identifier, userId, value) => {
   if (typeof identifier === 'number') {
     await db.query(

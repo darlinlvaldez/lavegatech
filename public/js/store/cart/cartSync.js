@@ -1,5 +1,5 @@
 import { loadCartPreview } from "./loadCartPreview.js";
-import { checkAuth } from "../../utils/utils.js";
+import { getAuthStatus } from '../../store/fav/apiFav.js';
 import { fetchCart } from "./cart.js";
 
 window.addEventListener("load", async () => {
@@ -7,7 +7,7 @@ window.addEventListener("load", async () => {
   if (!localCart.length) return;
 
   try {
-    const { authenticated } = await checkAuth();
+    const { authenticated } = await getAuthStatus();
     if (!authenticated) return;
 
     const res = await fetchCart("sync", { items: localCart }); 

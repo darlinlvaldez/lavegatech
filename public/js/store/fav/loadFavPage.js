@@ -1,4 +1,5 @@
-import { fetchFav, checkAuth, updateFavCount } from "../../utils/utils.js";
+import { apiFetch, getAuthStatus } from '../../store/fav/apiFav.js';
+import { updateFavCount } from '../../store/fav/fav.js';
 
 async function loadFavPage() {
     const container = document.getElementById('fav-items-container');
@@ -6,11 +7,11 @@ async function loadFavPage() {
     if (!container || !countElement) return;
 
     let favs = [];
-    const authData = await checkAuth();
+    const authData = await getAuthStatus();
 
     if (authData.authenticated) {
       try {
-        const serverData = await fetchFav("/fav/items");
+        const serverData = await apiFetch("/fav/items");
         if (serverData.success && serverData.items) favs = serverData.items;
       } catch (error) {
         console.error("Error al obtener favoritos:", error);

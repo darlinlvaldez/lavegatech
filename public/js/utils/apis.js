@@ -1,10 +1,10 @@
-import { checkAuth } from './utils.js';
+import { getAuthStatus } from '../store/fav/apiFav.js';
 
 async function fetchCartItems() {
     let cart = [];
 
     try {
-        const authData = await checkAuth();
+        const authData = await getAuthStatus();
 
         if (authData.authenticated) {
             localStorage.removeItem('carrito');

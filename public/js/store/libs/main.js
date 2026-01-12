@@ -5,13 +5,11 @@ window.syncingFromSlick = false;
 (function ($) {
   "use strict";
 
-  // Mobile Nav toggle
   $(".menu-toggle > a").on("click", function (e) {
     e.preventDefault();
     $("#responsive-nav").toggleClass("active");
   });
 
-  // Fix cart dropdown from closing
   $(".cart-dropdown").on("click", function (e) {
     e.stopPropagation();
   });
@@ -128,6 +126,12 @@ window.syncingFromSlick = false;
   if (!variant) return;
 
   changeVariantById(variant.id);
+
+  const favBtn = document.querySelector('.add-to-wishlist');
+  if (favBtn) {
+    favBtn.dataset.variantId = variant.id;
+    checkFavorites();
+  }
 });
 
   /////////////////////////////////////////

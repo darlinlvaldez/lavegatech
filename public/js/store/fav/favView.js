@@ -1,4 +1,4 @@
-import {fetchFav, checkAuth} from '../../utils/utils.js';
+import { apiFetch, getAuthStatus } from '../../store/fav/apiFav.js';
 import {loadFavPage} from './loadFavPage.js';
 import {calculateItem} from '../../utils/calculateItem.js'; 
 import {sweetAlert} from '../../utils/sweetAlert2.js';
@@ -15,14 +15,14 @@ async function handleClearFav() {
   if (!confirmed) return;
 
   try {
-    const authData = await checkAuth();
+    const authData = await getAuthStatus();
 
     if (!authData.authenticated) {
       await loadCartPreview();
       return;
     }
 
-    const data = await fetchFav("/fav/clear", {
+    const data = await apiFetch("/fav/clear", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
     });
@@ -71,7 +71,7 @@ function generateFavItemHTML(item) {
   
   return ` 
   <div class="fav-item" data-id="${data.productId}" data-color="${data.color}">
-        <a href="/product/${data.productId}${data.color ? `?color=${encodeURIComponent(data.color)}` : ''}">
+        <a href="/product/${data.productId}?variant=${data.variantId}">
             <img src="${item.image}" alt="${item.name}" class="product-image">
             <div class="product-info">
                 <h5>${item.name} ${data.specs}</h5>
@@ -92,21 +92,20 @@ function generateFavItemHTML(item) {
         </div>
         <div class="action-buttons">
             <button class="add-to-cart-btn"
-            data-id="${data.productId}"
-            data-variante-id="${data.variantId}"
-            data-color="${data.color}"
-            data-ram="${item.ram || ''}"
-            data-storage="${item.storage || ''}"
-            data-stock="${item.quantity || 0}"
-            data-name="${item.name}"
-            data-price="${item.price || 0}"
-            data-discount="${item.discount || 0}"
-            data-tax="${item.tax || 0}"
-            data-image="${item.image || ''}">
-            <i class="fa fa-shopping-cart"></i> Añadir al carrito
-        </button>
+              data-id="${data.productId}"
+              data-variant-id="${data.variantId}"
+              data-color="${data.color}"
+              data-stock="${item.stockByColor || 0}"
+              data-specs="${item.specs || ''}"
+              data-name="${item.name}"
+              data-price="${item.price}"
+              data-tax="${item.tax}"
+              data-discount="${item.discount}"
+              data-image="${item.image}">
+              <i class="fa fa-shopping-cart"></i> Añadir al carrito
+            </button>
         </div>
-          <i class="bi bi-trash remove-btn" onclick="removeFromFav('${data.productId}', '${data.color}', '${data.variantId}')"></i>
+          <i class="bi bi-trash remove-btn" onclick="removeFromFav(${data.productId}, ${data.variantId})"></i>
       </div>`;
     }
 

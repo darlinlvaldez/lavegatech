@@ -20,7 +20,7 @@ function renderCart(cart, cartList, cartCount, cartSummary, cartSubtotal) {
 
         html += `
         <div class="product-widget">
-            <a href="/product/${data.productId}${data.color ? `?color=${encodeURIComponent(data.color)}` : ''}">
+            <a href="/product/${data.productId}?variant=${data.variantId}">
                 <div class="product-img">
                     <img src="${item.image}" alt="${item.name}">
                 </div>

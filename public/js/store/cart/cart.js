@@ -1,4 +1,4 @@
-import { checkAuth } from "../../utils/utils.js";
+import { getAuthStatus } from '../../store/fav/apiFav.js';
 import { loadCartPage } from "./cartView.js";
 import { loadCartPreview } from "./loadCartPreview.js";
 import { showToast } from "../../utils/toastify.js";
@@ -18,12 +18,12 @@ async function addToCart(product) {
   const { id, variantId, color, quantity = 1, name, price, image, specs, discount, tax } = product;
 
   try {
-    const { authenticated } = await checkAuth();
+    const { authenticated } = await getAuthStatus();
     let stockReal;
 
     if (authenticated) {
       const stockResponse = await fetch(
-        `/cart/stock?id=${id}&color=${encodeURIComponent(color)}`
+        `/cart/stock?variantId=${variantId}`
       );
       if (!stockResponse.ok) throw new Error();
       stockReal = (await stockResponse.json()).stock || 0;
@@ -46,7 +46,7 @@ async function addToCart(product) {
     if (!authenticated) {
       const localCart = JSON.parse(localStorage.getItem("carrito")) || [];
       const existingIndex = localCart.findIndex(
-        (item) => item.productId === id && item.selectedColor === color
+        (item) => item.productId === id && item.variantId === variantId
       );
 
       if (existingIndex !== -1) {
@@ -101,7 +101,7 @@ document.addEventListener("click", async (e) => {
     id: btn.dataset.id,
     variantId: btn.dataset.variantId,
     specs: btn.dataset.specs,
-    quantity: document.getElementById("quantity")?.value || 1,
+    quantity: document.getElementById("productQuantity")?.value || 1,
     color: btn.dataset.color,
     stock: parseInt(btn.dataset.stock) || 0,
     name: btn.dataset.name,

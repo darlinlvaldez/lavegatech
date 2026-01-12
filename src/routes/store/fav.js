@@ -5,7 +5,7 @@ import {isAuth} from '../../middlewares/auth.js';
 const router = express.Router();
 
 router.post('/add', isAuth(), fav.addToFav);
-router.post('/remove', isAuth(), fav.removeFromFav);
+router.post('/remove', isAuth(), fav.removeItem);
 router.post('/clear', isAuth(), fav.clearAllFav);
 router.get('/items', isAuth(), fav.getFavItems);
 router.get('/', isAuth(), fav.getFavPage);

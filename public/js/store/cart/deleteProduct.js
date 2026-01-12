@@ -1,10 +1,10 @@
-import { checkAuth } from '../../utils/utils.js';
+import { getAuthStatus } from '../../store/fav/apiFav.js';
 import { loadCartPreview } from './loadCartPreview.js';
 import { loadCartPage } from './cartView.js';
 
 async function deleteProduct(variantId) {
   try {
-    const { authenticated } = await checkAuth();
+    const { authenticated } = await getAuthStatus();
 
     if (!authenticated) {
       let cart = JSON.parse(localStorage.getItem("carrito")) || [];

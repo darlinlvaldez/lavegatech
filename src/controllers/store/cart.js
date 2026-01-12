@@ -1,5 +1,6 @@
 import cart from '../../models/store/cart.js';
 import product from "../../models/store/product.js";
+import variantModel from "../../models/store/utils/getVariant.js";
 import { itsNewProduct } from "../../utils/filterRecent.js";
 
 const cartController = {};
@@ -26,7 +27,7 @@ cartController.syncCart = async (req, res) => {
         continue;
       }
 
-      const variant = await cart.getVariantById(variantId);
+      const variant = await variantModel.getById(variantId);
       if (!variant || variant.stock <= 0) continue;
 
       const finalQuantity = Math.min(quantity, variant.stock);
@@ -61,7 +62,7 @@ cartController.addToCart = async (req, res) => {
       return res.status(400).json({ success: false, message: "Datos inválidos" });
     }
 
-    const variant = await cart.getVariantById(variantId);
+    const variant = await variantModel.getById(variantId);
     if (!variant || variant.stock <= 0) {
       return res.status(400).json({ success: false, message: "Producto agotado" });
     }
@@ -83,8 +84,7 @@ cartController.addToCart = async (req, res) => {
       });
     }
 
-    res.json({
-      success: true,
+    res.json({success: true,
       count: await cart.getCount(userId)
     });
   } catch (err) {
@@ -114,7 +114,7 @@ cartController.updateQuantity = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Datos inválidos' });
     }
 
-    const variant = await cart.getVariantById(variantId);
+    const variant = await variantModel.getById(variantId);
     if (!variant) {
       return res.status(404).json({ success: false, message: 'Variant no encontrada' });
     }
@@ -162,6 +162,7 @@ cartController.clearAllCart = async (req, res) => {
   try {
     const userId = req.session.user.id;
     await cart.clearCart(userId);
+    
     res.json({ success: true, count: 0 });
   } catch (error) {
     console.error(error);
@@ -171,31 +172,31 @@ cartController.clearAllCart = async (req, res) => {
 
 cartController.getStock = async (req, res) => {
   try {
-    const { id, color, bulk } = req.query;
-    const userId = req.session.user?.id;
+    const { variantId } = req.query;
 
-    if (bulk === 'true' && userId) {
-      const items = await cart.getByUserId(userId);
-      const stockInfo = {};
-      
-      for (const item of items) {
-        const stock = await cart.getRealStock(item.productId, item.selectedColor);
-        stockInfo[`${item.productId}_${item.selectedColor}`] = stock;
-      }
-      
-      return res.json({ success: true, stocks: stockInfo });
-    }
-
-    if (!id || !color) {
+    if (!variantId) {
       return res.status(400).json({
-        success: false, message: "Se requieren los parámetros id y color"});
+        success: false,
+        message: "variantId es requerido"
+      });
     }
 
-    const stock = await cart.getRealStock(id, color);
-    res.json({ success: true, stock });
+    const variant = await variantModel.getById(Number(variantId));
+    if (!variant) {
+      return res.status(404).json({success: false,
+        message: "Variante no encontrada"
+      });
+    }
+
+    res.json({success: true,
+      stock: variant.stock
+    });
   } catch (error) {
     console.error("Error al consultar stock:", error);
-    res.status(500).json({ success: false, message: "Error al consultar stock" });
+    res.status(500).json({
+      success: false,
+      message: "Error al consultar stock"
+    });
   }
 };
 

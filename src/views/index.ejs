@@ -62,7 +62,7 @@ document.querySelector(".tablink").click();
                                 <% const productsMoviles = products.filter(p => p.category === 'moviles'); %>
                                     <% productsMoviles.forEach(product => { %>
                                 <div class="product" data-category="<%= product.category %>">
-                                    <div class="product-img"> <a href="/product/<%= product.id %>?color=<%= product.color %>">
+                                    <div class="product-img"> <a href="/product/<%= product.id %>?variant=<%= product.variantId %>">
                                         <img src="<%= product.image %>" alt="<%= product.name %>">
                                         <div class="product-label">
                                             <% if (product.discount > 0) { %>
@@ -104,10 +104,10 @@ document.querySelector(".tablink").click();
                                         <div class="product-btns">
                                             <button class="add-to-wishlist" 
                                                 data-product-id="<%= product.id %>" 
-                                                data-product-color="<%= product.color %>">
-                                                <i class="fa-regular fa-heart"></i>  
-                                                <span class="tooltipp">Favoritos</span>
-                                            </button>
+                                                data-variant-id="<%= product.variantId %>">
+                                            <i class="fa-regular fa-heart"></i>  
+                                            <span class="tooltipp">Favoritos</span>
+                                        </button>
                                                 <% if (product.itsMobile) { %>
                                                 <button class="add-to-compare" data-id="<%= product.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
                                                 <span class="tooltipp">Comparar</span></button>
@@ -125,7 +125,7 @@ document.querySelector(".tablink").click();
                                 <% const productsSmarttv = products.filter(p => p.category === 'smarttv'); %>
                                     <% productsSmarttv.forEach(product => { %>
                                 <div class="product" data-category="<%= product.category %>">
-                                    <div class="product-img"> <a href="/product/<%= product.id %>?color=<%= product.color %>">
+                                    <div class="product-img"> <a href="/product/<%= product.id %>?variant=<%= product.variantId %>">
                                         <img src="<%= product.image %>" alt="<%= product.name %>">
                                         <div class="product-label">
                                             <% if (product.discount > 0) { %>
@@ -166,11 +166,10 @@ document.querySelector(".tablink").click();
                                         <div class="product-btns">
                                             <button class="add-to-wishlist" 
                                                 data-product-id="<%= product.id %>" 
-                                                data-product-color="<%= product.color %>">
-                                                <i class="fa-regular fa-heart"></i>  
-                                                <span class="tooltipp">Favoritos</span>
+                                                data-variant-id="<%= product.variantId %>">
+                                            <i class="fa-regular fa-heart"></i>  
+                                            <span class="tooltipp">Favoritos</span>
                                             </button>
-
                                                 <% if (product.itsMobile) { %>
                                                 <button class="add-to-compare" data-id="<%= product.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
                                                 <span class="tooltipp">Comparar</span></button>
@@ -189,7 +188,7 @@ document.querySelector(".tablink").click();
                                 <% const productsLaptops = products.filter(p => p.category === 'laptops'); %>
                                     <% productsLaptops.forEach(product => { %>
                                 <div class="product" data-category="<%= product.category %>"> 
-                                    <div class="product-img"> <a href="/product/<%= product.id %>?color=<%= product.color %>">
+                                    <div class="product-img"> <a href="/product/<%= product.id %>?variant=<%= product.variantId %>">
                                         <img src="<%= product.image %>" alt="<%= product.name %>">
                                         <div class="product-label">
                                             <% if (product.discount > 0) { %>
@@ -230,11 +229,10 @@ document.querySelector(".tablink").click();
                                         <div class="product-btns"> 
                                             <button class="add-to-wishlist" 
                                                 data-product-id="<%= product.id %>" 
-                                                data-product-color="<%= product.color %>">
-                                                <i class="fa-regular fa-heart"></i>  
-                                                <span class="tooltipp">Favoritos</span>
+                                                data-variant-id="<%= product.variantId %>">
+                                            <i class="fa-regular fa-heart"></i>  
+                                            <span class="tooltipp">Favoritos</span>
                                             </button>
-                                                
                                                 <% if (product.itsMobile) { %>
                                                 <button class="add-to-compare" data-id="<%= product.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
                                                 <span class="tooltipp">Comparar</span></button>
@@ -252,7 +250,7 @@ document.querySelector(".tablink").click();
 								<% const productsConsolas = products.filter(p => p.category === 'consolas'); %>
                                     <% productsConsolas.forEach(product => { %>
                                 <div class="product" data-category="<%= product.category %>">
-                                    <div class="product-img"> <a href="/product/<%= product.id %>?color=<%= product.color %>">
+                                    <div class="product-img"> <a href="/product/<%= product.id %>?variant=<%= product.variantId %>">
                                         <img src="<%= product.image %>" alt="<%= product.name %>">
                                         <div class="product-label">
                                             <% if (product.discount > 0) { %>
@@ -293,11 +291,10 @@ document.querySelector(".tablink").click();
                                         <div class="product-btns">
                                             <button class="add-to-wishlist" 
                                                 data-product-id="<%= product.id %>" 
-                                                data-product-color="<%= product.color %>">
-                                                <i class="fa-regular fa-heart"></i>  
-                                                <span class="tooltipp">Favoritos</span>
+                                                data-variant-id="<%= product.variantId %>">
+                                            <i class="fa-regular fa-heart"></i>  
+                                            <span class="tooltipp">Favoritos</span>
                                             </button>
-
                                                 <% if (product.itsMobile) { %>
                                                 <button class="add-to-compare" data-id="<%= product.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
                                                 <span class="tooltipp">Comparar</span></button>
@@ -315,7 +312,7 @@ document.querySelector(".tablink").click();
 								<% const productsTablets = products.filter(p => p.category === 'tablets'); %>
                                     <% productsTablets.forEach(product => { %>
                                 <div class="product" data-category="<%= product.category %>">
-                                    <div class="product-img"> <a href="/product/<%= product.id %>?color=<%= product.color %>">
+                                    <div class="product-img"> <a href="/product/<%= product.id %>?variant=<%= product.variantId %>">
                                         <img src="<%= product.image %>" alt="<%= product.name %>">                                    
                                         <div class="product-label">
                                             <% if (product.discount > 0) { %>
@@ -356,11 +353,10 @@ document.querySelector(".tablink").click();
                                         <div class="product-btns">
                                             <button class="add-to-wishlist" 
                                                 data-product-id="<%= product.id %>" 
-                                                data-product-color="<%= product.color %>">
-                                                <i class="fa-regular fa-heart"></i>  
-                                                <span class="tooltipp">Favoritos</span>
+                                                data-variant-id="<%= product.variantId %>">
+                                            <i class="fa-regular fa-heart"></i>  
+                                            <span class="tooltipp">Favoritos</span>
                                             </button>
-
                                                 <% if (product.itsMobile) { %>
                                                 <button class="add-to-compare" data-id="<%= product.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
                                                 <span class="tooltipp">Comparar</span></button>
@@ -652,7 +648,7 @@ document.querySelector(".tablink").click();
                     <div class="col-md-3 col-xs-6">
                         <div class="product">
                             <div class="product-img">
-                                <a href="/product/<%= product.id %>?color=<%= product.color %>">
+                                <a href="/product/<%= product.id %>?variant=<%= product.variantId %>">
                                     <img src="<%= product.image %>" alt="<%= product.name %>">
                                     <div class="product-label">
                                         <% if (product.discount > 0) { %>
@@ -689,11 +685,11 @@ document.querySelector(".tablink").click();
                                 </div>
                                 <div class="product-btns">
                                     <button class="add-to-wishlist" 
-                                            data-product-id="<%= product.id %>" 
-                                            data-product-color="<%= product.color %>">
-                                        <i class="fa-regular fa-heart"></i>  
-                                        <span class="tooltipp">Favoritos</span>
-                                    </button>
+                                        data-product-id="<%= product.id %>" 
+                                        data-variant-id="<%= product.variantId %>">
+                                    <i class="fa-regular fa-heart"></i>  
+                                    <span class="tooltipp">Favoritos</span>
+                                </button>
                                     <% if (product.itsMobile) { %>
                                         <button class="add-to-compare" data-id="<%= product.id %>">
                                             <i class="fa-solid fa-arrow-right-arrow-left"></i>

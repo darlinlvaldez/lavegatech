@@ -1,7 +1,8 @@
-import { fetchFav, checkAuth, updateFavCount } from '../../utils/utils.js';
+import { apiFetch, getAuthStatus } from '../../store/fav/apiFav.js';
 import { loadFavPage } from './loadFavPage.js';
 
 window.removeFromFav = removeFromFav;
+window.toggleFavorite = toggleFavorite;
 
 const setButtonState = (button, isFavorite) => {
     const iconClass = isFavorite ? 'fa-solid' : 'fa-regular';
@@ -17,109 +18,83 @@ const setButtonState = (button, isFavorite) => {
 };
 
 async function toggleFavorite(button) {
-    if (button.disabled) return;
-    button.disabled = true;
+  if (button.disabled) return;
+  button.disabled = true;
 
-    try {
-        const productId = button.dataset.productId;
-        const color = button.dataset.productColor;
-        const isAlreadyAdded = button.classList.contains('added');
+  try {
+    const productId = Number(button.dataset.productId);
+    const variantId = Number(button.dataset.variantId);
+    const isAlreadyAdded = button.classList.contains('added');
 
-        const authData = await checkAuth();
-        if (!authData.authenticated) {
-            window.location.href = "/login"; 
-            return;
-        }
-
-        const data = await fetchFav('/fav/items');
-        const favs = data.success && data.items ? data.items : [];
-
-        const favItem = favs.find(item => item.productId == productId && item.selectedColor == color);
-        const variantId = favItem ? favItem.variantId : null;
-
-        if (isAlreadyAdded && variantId) {
-            await removeFromFav(productId, color, variantId);
-            setButtonState(button, false);
-        } else if (!isAlreadyAdded) {
-            await fetchFav('/fav/add', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    productId: productId,
-                    selectedColor: color
-                })
-            });
-            setButtonState(button, true);
-        }
-
-        await checkFavorites();
-    } catch (error) {
-        console.error('Error en toggleFavorite:', error);
-    } finally {
-        button.disabled = false;
+    if (!Number.isInteger(productId) || !Number.isInteger(variantId)) {
+      return;
     }
+
+    const authData = await getAuthStatus();
+    if (!authData.authenticated) {
+      window.location.href = "/login";
+      return;
+    }
+
+    if (isAlreadyAdded) {
+      await removeFromFav(productId, variantId);
+      setButtonState(button, false);
+    } else {
+      await apiFetch('/fav/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId, variantId })
+      });
+      setButtonState(button, true);
+    }
+
+    await checkFavorites();
+  } catch (error) {
+    console.error('Error en toggleFavorite:', error);
+  } finally {
+    button.disabled = false;
+  }
 }
 
 async function checkFavorites() {
-    try {
-        const authData = await checkAuth();
-        let favorites = [];
-        if (authData.authenticated) {
-            const data = await fetchFav('/fav/items');
-            if (data.success && data.items) favorites = data.items;
-        }
-        
-        document.querySelectorAll('.add-to-wishlist').forEach(button => {
-            const productId = button.dataset.productId;
-            const currentColor = button.dataset.productColor;
-            const isFav = favorites.some(item => 
-                item.productId == productId && item.selectedColor == currentColor
-            );
-            setButtonState(button, isFav);
-        });
-        
-        updateFavCount(favorites.length);
-    } catch (error) {
-        console.error("Error al verificar favoritos:", error);
-        updateFavCount(0);
-    }
-}
+  try {
+    const authData = await getAuthStatus();
+    let favorites = [];
 
-function setupEventListeners() {
-    document.querySelectorAll('[name="color"], .color-option, #selectedColor').forEach(element => {
-        element.addEventListener('change', function() {
-            const selectedColor = this.dataset.color;
-            document.querySelectorAll('.add-to-wishlist').forEach(button => {
-                button.dataset.productColor = selectedColor;
-            });
-            checkFavorites();
-        });
-    });
+    if (authData.authenticated) {
+      const data = await apiFetch('/fav/items');
+      if (data.success && data.items) {
+        favorites = data.items;
+      }
+    }
 
     document.querySelectorAll('.add-to-wishlist').forEach(button => {
-        button.addEventListener('click', () => toggleFavorite(button));
+      const productId = Number(button.dataset.productId);
+      const variantId = Number(button.dataset.variantId);
+
+      const isFav = favorites.some(item =>
+        item.productId === productId && item.variantId === variantId
+      );
+
+      setButtonState(button, isFav);
     });
+
+    updateFavCount(favorites.length);
+  } catch (error) {
+    console.error("Error al verificar favoritos:", error);
+    updateFavCount(0);
+  }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    setupEventListeners();
-    loadFavPage();
-    checkFavorites();
-});
-
-async function removeFromFav(productId, color, variantId) {
-  const authData = await checkAuth();
+async function removeFromFav(productId, variantId) {
+  const authData = await getAuthStatus();
   if (!authData.authenticated) return;
 
   try {
-    const data = await fetchFav('/fav/remove', {
+    const data = await apiFetch('/fav/remove', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        productId: productId, 
-        selectedColor: color,
-        variantId: variantId
-      })
+      body: JSON.stringify({ productId, variantId })
     });
 
     if (data.success) {
@@ -129,6 +104,19 @@ async function removeFromFav(productId, color, variantId) {
   } catch (error) {
     console.error('Error al eliminar de favoritos:', error);
   }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadFavPage();
+  checkFavorites();
+
+  document.querySelectorAll('.add-to-wishlist').forEach(button => {
+    button.addEventListener('click', () => toggleFavorite(button));
+  });
+});
+
+export function updateFavCount(count) {
+    document.querySelectorAll('.qty-fav').forEach(el => el.textContent = count);
 }
 
 export { checkFavorites };
