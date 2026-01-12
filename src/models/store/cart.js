@@ -29,12 +29,12 @@ cart.clearCart = async (userId) => {
   await db.query("DELETE FROM carrito WHERE usuario_id = ?", [userId]);
 };
 
-cart.itemExists = async (userId, variantId) => {
+cart.itemExists = async (userId, productId, variantId) => {
   const [rows] = await db.query(
     `SELECT id, cantidad AS quantity 
      FROM carrito 
-     WHERE usuario_id = ? AND variante_id = ?`,
-    [userId, variantId]
+     WHERE usuario_id = ? AND producto_id = ? AND variante_id = ?`,
+    [userId, productId, variantId]
   );
   return rows[0] || null;
 };

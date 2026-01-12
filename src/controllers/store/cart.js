@@ -10,45 +10,42 @@ cartController.syncCart = async (req, res) => {
     const userId = req.session.user.id;
     const localItems = Array.isArray(req.body.items) ? req.body.items : [];
 
-    const dbItems = await cart.getByUserId(userId);
-
-    for (const dbItem of dbItems) {
-      const exists = localItems.some(i => i.variantId === dbItem.variantId);
-      if (!exists) {
-        await cart.removeItem(dbItem.cartId, userId);
-      }
+    if (localItems.length === 0) {
+      return res.json({ success: true, count: await cart.getCount(userId) });
     }
 
     for (const item of localItems) {
       const variantId = Number(item.variantId);
+      const productId = Number(item.productId);
       const quantity = Number(item.quantity);
 
-      if (!Number.isInteger(variantId) || !Number.isInteger(quantity) || quantity < 1) {
-        continue;
-      }
+      if (!variantId || !quantity || quantity < 1) continue;
 
       const variant = await variantModel.getById(variantId);
       if (!variant || variant.stock <= 0) continue;
 
-      const finalQuantity = Math.min(quantity, variant.stock);
-      const existingItem = await cart.itemExists(userId, variantId);
+      const existingItem = await cart.itemExists(userId, productId, variantId);
 
       if (existingItem) {
-        await cart.updateQuantity(existingItem.id, userId, finalQuantity);
+        const newQuantity = Math.min(
+          existingItem.quantity + quantity, variant.stock);
+          
+        await cart.updateQuantity(existingItem.id, userId, newQuantity);
       } else {
+        const finalQuantity = Math.min(quantity, variant.stock);
         await cart.addItem({
           userId,
           productId: variant.producto_id,
           variantId,
-          quantity: finalQuantity
+          quantity: finalQuantity,
         });
       }
     }
 
     res.json({ success: true, count: await cart.getCount(userId) });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Error al sincronizar carrito" });
+    console.error("Error en syncCart:", err);
+    res.status(500).json({ success: false, message: "Error al sincronizar" });
   }
 };
 
@@ -119,7 +116,7 @@ cartController.updateQuantity = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Variant no encontrada' });
     }
 
-    const item = await cart.itemExists(userId, variantId);
+    const item = await cart.itemExists(userId, variant.producto_id, variantId);
     if (!item) {
       return res.status(404).json({ success: false, message: 'Producto no encontrado en carrito' });
     }
@@ -146,7 +143,7 @@ cartController.removeItem = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Datos inválidos' });
     }
 
-    const item = await cart.itemExists(userId, variantId);
+    const item = await cart.itemExists(userId, variant.producto_id, variantId);
     if (item) {
       await cart.removeItem(item.id, userId);
     }
@@ -172,31 +169,34 @@ cartController.clearAllCart = async (req, res) => {
 
 cartController.getStock = async (req, res) => {
   try {
-    const { variantId } = req.query;
+    const { variantId, bulk } = req.query;
+
+    if (bulk === 'true' && req.session.user) {
+      const userId = req.session.user.id;
+      const items = await cart.getCartToPay(userId);
+      
+      const stocks = {};
+      items.forEach(item => {
+        const key = `${item.productId}_${item.selectedColor}`;
+        stocks[key] = item.stock; 
+      });
+
+      return res.json({ success: true, stocks });
+    }
 
     if (!variantId) {
-      return res.status(400).json({
-        success: false,
-        message: "variantId es requerido"
-      });
+      return res.status(400).json({ success: false, message: "variantId es requerido" });
     }
 
     const variant = await variantModel.getById(Number(variantId));
     if (!variant) {
-      return res.status(404).json({success: false,
-        message: "Variante no encontrada"
-      });
+      return res.status(404).json({ success: false, message: "Variante no encontrada" });
     }
 
-    res.json({success: true,
-      stock: variant.stock
-    });
+    res.json({ success: true, stock: variant.stock });
   } catch (error) {
     console.error("Error al consultar stock:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error al consultar stock"
-    });
+    res.status(500).json({ success: false, message: "Error al consultar stock" });
   }
 };
 
