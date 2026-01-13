@@ -91,7 +91,7 @@
                     <% order.items.forEach(item => { %>
                         <tr>
                             <td><%= item.nombre_producto %> <%= item.specs %></td>
-                            <td><%= item.selectedColor.toUpperCase() %></td>
+                            <td><%= item.colorSeleccionado?.toUpperCase() || '' %></td>
                             <td><%= item.cantidad %></td>
                             <td>$<%= Number(item.precio_unitario).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></td>
                             <td>$<%= (item.precio_unitario * item.cantidad * (item.impuesto / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></td>

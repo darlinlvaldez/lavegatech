@@ -1,6 +1,7 @@
 import cart from '../../models/store/cart.js';
 import product from "../../models/store/product.js";
 import variantModel from "../../models/store/utils/getVariant.js";
+import cartService from "../../services/cart.js";
 import { itsNewProduct } from "../../utils/filterRecent.js";
 
 const cartController = {};
@@ -8,36 +9,19 @@ const cartController = {};
 cartController.syncCart = async (req, res) => {
   try {
     const userId = req.session.user.id;
-    const localItems = Array.isArray(req.body.items) ? req.body.items : [];
+    const items = Array.isArray(req.body.items) ? req.body.items : [];
 
-    for (const item of localItems) {
-      const variantId = Number(item.variantId);
-      const quantity = Number(item.quantity);
-
-      if (!variantId || !quantity) continue;
-
-      const variant = await variantModel.getById(variantId);
-      if (!variant) continue; 
-
-      const existingItem = await cart.itemExists(userId, variantId);
-
-      if (existingItem) {
-        const newQuantity = variant.stock > 0 
-          ? Math.min(existingItem.quantity + quantity, variant.stock)
-          : existingItem.quantity; 
-          
-        await cart.updateQuantity(existingItem.id, userId, newQuantity);
-      } else {
-        const finalQuantity = variant.stock > 0 ? Math.min(quantity, variant.stock) : quantity;
-        await cart.addItem({
-          userId,
-          productId: variant.productId,
-          variantId,
-          quantity: finalQuantity,
-        });
-      }
+    for (const item of items) {
+      await cartService.addOrUpdateItem({
+        userId,
+        variantId: item.variantId,
+        quantity: item.quantity,
+      });
     }
-    res.json({ success: true, count: await cart.getCount(userId) });
+
+    res.json({success: true,
+      count: await cart.getCount(userId),
+    });
   } catch (err) {
     console.error("Error en syncCart:", err);
     res.status(500).json({ success: false, message: "Error al sincronizar" });
@@ -47,38 +31,22 @@ cartController.syncCart = async (req, res) => {
 cartController.addToCart = async (req, res) => {
   try {
     const userId = req.session.user.id;
-    const variantId = Number(req.body.variantId);
-    const quantity = Number(req.body.quantity || 1);
+    const { variantId, quantity } = req.body;
 
-    const variant = await variantModel.getById(variantId);
-    if (!variant)
+    const result = await cartService.addOrUpdateItem({
+      userId,
+      variantId,
+      quantity: quantity || 1,
+    });
+
+    if (!result)
       return res.status(404).json({ success: false, message: "No existe" });
 
-    const productId = variant.productId;
-    const existingItem = await cart.itemExists(userId, variantId);
-
-    let finalQuantity;
-    if (variant.stock > 0) {
-      finalQuantity = Math.min(existingItem ? 
-        existingItem.quantity + quantity : quantity, variant.stock
-      );
-    } else {
-      finalQuantity = existingItem ? existingItem.quantity : quantity;
-    }
-
-    if (existingItem) {
-      await cart.updateQuantity(existingItem.id, userId, finalQuantity);
-    } else {
-      await cart.addItem({
-        userId,
-        productId,
-        variantId,
-        quantity: finalQuantity,
-      });
-    }
-
-    res.json({ success: true, count: await cart.getCount(userId) });
+    res.json({success: true,
+      count: await cart.getCount(userId),
+    });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ success: false });
   }
 };

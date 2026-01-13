@@ -1,5 +1,5 @@
 import { showToast } from "../utils/toastify.js";
-import { fetchCartItems } from '../../cart/cartApi.js';
+import { fetchCartItems } from '../../js/store/cart/cartApi.js';
 
 document.addEventListener("DOMContentLoaded", async function () {
   const orderProducts = document.querySelector(".order-products");
