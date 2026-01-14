@@ -11,7 +11,7 @@ async function deleteProduct(variantId) {
       cart = cart.filter(item => item.variantId !== variantId);
       localStorage.setItem("carrito", JSON.stringify(cart));
     } else {
-      await fetch("/cart/remove-item", {
+      await fetch("/api/cart/remove-item", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ variantId }),

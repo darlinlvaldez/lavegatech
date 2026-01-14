@@ -22,7 +22,7 @@ async function handleClearFav() {
       return;
     }
 
-    const data = await apiFetch("/fav/clear", {
+    const data = await apiFetch("/api/fav/clear", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
     });

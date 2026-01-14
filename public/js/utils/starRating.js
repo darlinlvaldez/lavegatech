@@ -1,4 +1,3 @@
-
 export function renderStars(rating = 0, options = {}) {
   const {
     productId = null,

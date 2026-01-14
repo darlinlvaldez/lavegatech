@@ -17,7 +17,7 @@ window.updateQuantity = async function(element, change, variantId) {
 
     if (authData.authenticated) {
       const body = { variantId, quantity: newQuantity };
-      const response = await fetch('/cart/update-quantity', {
+      const response = await fetch('/api/cart/update-quantity', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -108,7 +108,7 @@ async function handleClearCart() {
       return;
     }
 
-    const res = await fetch('/cart/clear', {
+    const res = await fetch('/api/cart/clear', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'

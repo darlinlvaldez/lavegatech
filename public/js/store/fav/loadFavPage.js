@@ -11,7 +11,7 @@ async function loadFavPage() {
 
     if (authData.authenticated) {
       try {
-        const serverData = await apiFetch("/fav/items");
+        const serverData = await apiFetch("/api/fav/items");
         if (serverData.success && serverData.items) favs = serverData.items;
       } catch (error) {
         console.error("Error al obtener favoritos:", error);

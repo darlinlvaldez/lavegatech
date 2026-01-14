@@ -11,7 +11,7 @@ export async function fetchCart(action, data = {}) {
     body: JSON.stringify(data),
   };
 
-  return await fetch(`/cart/${action}`, options);
+  return await fetch(`/api/cart/${action}`, options);
 }
 
 async function addToCart(product) {
@@ -22,9 +22,7 @@ async function addToCart(product) {
     let stockReal;
 
     if (authenticated) {
-      const stockResponse = await fetch(
-        `/cart/stock?variantId=${variantId}`
-      );
+      const stockResponse = await fetch(`/api/cart/stock?variantId=${variantId}`);
       if (!stockResponse.ok) throw new Error();
       stockReal = (await stockResponse.json()).stock || 0;
     } else {
@@ -71,7 +69,7 @@ async function addToCart(product) {
     }
 
     showToast("Producto agregado al carrito.", "#27ae60", "check-circle");
-    setTimeout(() => (window.location.href = "/cart"), 1000);
+    setTimeout(() => (window.location.href = "/api/cart"), 1000);
   } catch (error) {
     console.error("Error al agregar al carrito:", error);
     showToast( "Ocurrió un error al procesar tu solicitud. Intenta de nuevo.",

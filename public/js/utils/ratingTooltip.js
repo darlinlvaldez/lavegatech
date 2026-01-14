@@ -15,7 +15,7 @@ export async function showRatingTooltip(ratingEl) {
   if (!productId) return;
 
   try {
-    const res = await fetch(`/comparison/product/${productId}/rating-breakdown`);
+    const res = await fetch(`/api/comparison/product/${productId}/rating-breakdown`);
     if (!res.ok) return;
 
     const data = await res.json();

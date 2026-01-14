@@ -9,7 +9,7 @@ async function fetchCartItems() {
         if (authData.authenticated) {
             localStorage.removeItem('carrito');
 
-            const res = await fetch('/cart/items', {
+            const res = await fetch('/api/cart/items', {
                 credentials: 'include',
                 headers: { 'Accept': 'application/json' }
             });

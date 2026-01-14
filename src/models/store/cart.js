@@ -94,7 +94,7 @@ cart.getCartToPay = async (userId) => {
       p.categoria_id AS categoryId,
       c.fecha_agregado,
       r.capacidad AS ram,
-      a.capacidad AS almacenamiento,
+      a.capacidad AS storage,
       CONCAT(r.capacidad, '+', a.capacidad) AS specs,
       v.color AS selectedColor,
       v.img AS image,

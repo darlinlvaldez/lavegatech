@@ -21,7 +21,7 @@ async function searchMobiles(query) {
   
   try {
     const response = await fetch(
-      `/comparison/searchMobiles?q=${encodeURIComponent(query)}` + 
+      `/api/comparison/searchMobiles?q=${encodeURIComponent(query)}` + 
       (excludedMobileIds.length > 0 ? `&exclude=${excludedMobileIds.join(',')}` : '')
     );
     if (!response.ok) throw new Error('Error en la búsqueda');
@@ -41,7 +41,7 @@ function loadDevicesURL() {
 
   if (!idList.length) return;
 
-  fetch(`/comparison/compare?ids=${idList.join(',')}`)
+  fetch(`/api/comparison/compare?ids=${idList.join(',')}`)
     .then(res => res.json())
     .then(({ devices = [], excludedMobileIds: excluded = [] }) => {
       excludedMobileIds = excluded;
@@ -176,7 +176,7 @@ comparisonForm.addEventListener('submit', async function(e) {
   window.history.pushState({}, '', `/comparison?ids=${ids}`);
 
   try {
-    const response = await fetch(`/comparison/compare?ids=${ids}`);
+    const response = await fetch(`/api/comparison/compare?ids=${ids}`);
     if (!response.ok) throw new Error('Error al comparar dispositivos');
     const data = await response.json();
     
@@ -204,7 +204,7 @@ function renderSectionTitle(sectionId, titleHTML) {
 
 async function loadTopDevices() {
   try {
-    const res = await fetch('/comparison/mobiles');
+    const res = await fetch('/api/comparison/mobiles');
     const { topSold, topRated } = await res.json();
 
     if (topSold?.length) {

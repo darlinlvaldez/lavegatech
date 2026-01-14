@@ -40,7 +40,7 @@ async function toggleFavorite(button) {
       await removeFromFav(productId, variantId);
       setButtonState(button, false);
     } else {
-      await apiFetch('/fav/add', {
+      await apiFetch('/api/fav/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productId, variantId })
@@ -62,7 +62,7 @@ async function checkFavorites() {
     let favorites = [];
 
     if (authData.authenticated) {
-      const data = await apiFetch('/fav/items');
+      const data = await apiFetch('/api/fav/items');
       if (data.success && data.items) {
         favorites = data.items;
       }
@@ -91,7 +91,7 @@ async function removeFromFav(productId, variantId) {
   if (!authData.authenticated) return;
 
   try {
-    const data = await apiFetch('/fav/remove', {
+    const data = await apiFetch('/api/fav/remove', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ productId, variantId })

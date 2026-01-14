@@ -49,7 +49,7 @@ const formTemplates = {
 
 const titles = {username: 'Editar Nombre', email: 'Editar Correo', password: 'Editar Contraseña', 'verify-email': 'Verificar Código'};
 
-const urls = {username: '/user/update-username', email: '/user/update-email', password: '/user/update-password', 'verify-email': '/user/verify-email-code'};
+const urls = {username: '/api/user/update-username', email: '/user/update-email', password: '/api/user/update-password', 'verify-email': '/api/user/verify-email-code'};
 
 function openModal(type) {
   const modal = document.getElementById('modal');
@@ -90,7 +90,7 @@ async function openCodeModal(newEmail) {
   resendBtn.style.display = "block";
 
   const timerResponse = await fetch(
-    `/user/resend-email-timer?email=${encodeURIComponent(newEmail)}`
+    `/api/user/resend-email-timer?email=${encodeURIComponent(newEmail)}`
   );
   const { resendTimer } = await timerResponse.json();
 
@@ -98,7 +98,7 @@ async function openCodeModal(newEmail) {
     disableResendButton(resendBtn, resendTimer);
   } else {
     try {
-      const response = await fetch("/user/resend-email-code", {
+      const response = await fetch("/api/user/resend-email-code", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: newEmail, type: "profile" }),
@@ -120,7 +120,7 @@ async function openCodeModal(newEmail) {
   resendBtn.onclick = async () => {
     try {
       if (type === "email") {
-        const timerCheck = await fetch(`/user/resend-email-timer?email=${encodeURIComponent(data.newEmail)}`);
+        const timerCheck = await fetch(`/api/user/resend-email-timer?email=${encodeURIComponent(data.newEmail)}`);
         const { resendTimer } = await timerCheck.json();
 
         if (resendTimer > 0) {

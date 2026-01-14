@@ -95,13 +95,13 @@ body, html {
 }
 
 .icono-servicio:hover {
-    color: #D10024;
+    color: #ffffff;
     background-color: #15161D; 
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .icono-servicio:hover .texto-exito {
-    color: #D10024;
+    color: #ffffff;
 }
 
 .texto-exito {

@@ -19,7 +19,7 @@ export async function apiFetch(url, options = {}) {
 
 async function getRealStock(variantId) {
   try {
-    const response = await fetch(`/cart/stock?variantId=${variantId}`);
+    const response = await fetch(`/api/cart/stock?variantId=${variantId}`);
     if (!response.ok) throw new Error('Error al verificar stock');
 
     const { stock = 0 } = await response.json();

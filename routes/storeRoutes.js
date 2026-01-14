@@ -1,7 +1,6 @@
 import express from 'express';
 import { isAuth } from '../src/middlewares/auth.js';
 
-// APIs tienda
 import store from '../src/routes/store/product.js';
 import auth from '../src/routes/store/auth.js';
 import userProfile from '../src/routes/store/userProfile.js';
@@ -14,9 +13,9 @@ import comparison from '../src/routes/store/comparison.js';
 const router = express.Router();
 
 router.use('/api/auth', auth);
-router.use('/user', userProfile); 
-router.use('/cart', cart);
-router.use('/fav', fav);
+router.use('/api/user', userProfile); 
+router.use('/api/cart', cart);
+router.use('/api/fav', fav);
 router.use('/api/order', orders);
 router.use('/api/ratings', rating);
 router.use('/api/comparison', comparison);
