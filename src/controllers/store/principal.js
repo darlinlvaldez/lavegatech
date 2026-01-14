@@ -5,7 +5,7 @@ import { itsNewProduct } from '../../utils/filterRecent.js';
 principal.productsController = async (req, res) => {
   try {
     const { category } = req.query;
-    
+
     const products = await principal.getProducts(category);
     const categories = await principal.getCategories();
     const recommended = await principal.getRecommended();
@@ -23,7 +23,15 @@ principal.productsController = async (req, res) => {
 
     const recentProduct = products.filter(p => p.itsNew);
 
-    res.render("index", { products: recentProduct, categories, topSelling, recommended });
+    const categoriesWithProducts = {};
+
+    recentProduct.forEach(p => {
+      categoriesWithProducts[p.category] = 
+        (categoriesWithProducts[p.category] || 0) + 1;
+    });
+
+    res.render("index", { products: recentProduct, categories, 
+      topSelling, recommended, categoriesWithProducts });
   } catch (err) {
     console.error("Error al obtener datos", err);
     res.status(500).send("Error al cargar los datos.");

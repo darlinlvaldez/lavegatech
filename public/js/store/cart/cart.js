@@ -31,7 +31,7 @@ async function addToCart(product) {
     }
 
     if (stockReal <= 0) {
-      showToast("Este producto está agotado", "#e74c3c", "info");
+      showToast("Producto agotado", "info");
       return;
     }
 
@@ -68,12 +68,19 @@ async function addToCart(product) {
       if (!data.success) throw new Error(data.message);
     }
 
-    showToast("Producto agregado al carrito.", "#27ae60", "check-circle");
-    setTimeout(() => (window.location.href = "/api/cart"), 1000);
+    sessionStorage.setItem(
+      "toastSuccess",
+      JSON.stringify({
+        message: "Agregado al carrito"
+      })
+    );
+
+    window.location.href = "/api/cart";
+
   } catch (error) {
     console.error("Error al agregar al carrito:", error);
-    showToast( "Ocurrió un error al procesar tu solicitud. Intenta de nuevo.",
-      "#e74c3c", "alert-circle"
+    showToast( "ha ocurrido un error. Intentelo de nuevo.",
+      "error",
     );
   }
 }

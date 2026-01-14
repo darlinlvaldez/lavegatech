@@ -22,7 +22,7 @@ ratingController.submitReview = async (req, res) => {
     const hasReviewed = await ratingModel.userHasReviewed(productId, userId);
 
     if (hasReviewed) {
-      return res.status(400).json({ error: 'Ya has enviado una reseña para este producto' });
+      return res.status(400).json({ error: 'Ya has enviado una reseña' });
     }
 
     await ratingModel.create({ productId, userId, rating, review });

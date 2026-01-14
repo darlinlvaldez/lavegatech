@@ -40,7 +40,7 @@ async function handleFormSubmit(e) {
   const formData = new FormData(form);
 
   const reviewId = formData.get("reviewId");
-  const data = {review: formData.get("review"),
+  const data = { review: formData.get("review"),
     rating: parseInt(formData.get("rating")),
   };
 
@@ -49,7 +49,7 @@ async function handleFormSubmit(e) {
     const url = reviewId ? `/api/ratings/${reviewId}` : "/api/ratings";
 
     if (!data.review || data.rating < 1 || data.rating > 5) {
-      showToast("Datos inválidos", "#e74c3c", "alert-circle");
+      showToast("Datos inválidos", "error", "alert-circle", "#e74c3c");
       return;
     }
 
@@ -65,15 +65,16 @@ async function handleFormSubmit(e) {
     const result = await response.json();
 
     if (response.ok) {
-      showToast(reviewId ? "Reseña actualizada con éxito" : "Reseña enviada con éxito.",
-        "#27ae60", "check-circle");
+      showToast( reviewId ? "Reseña actualizada con éxito" : "Reseña enviada con éxito.",
+        "success"
+      );
       setTimeout(() => location.reload(), 1500);
     } else {
-      showToast(result.error || "Error al enviar", "#e74c3c", "alert-circle");
+      showToast(result.error || "Error al enviar", "error", "error");
     }
   } catch (error) {
     console.error("Error:", error);
-    showToast("Error al enviar la reseña", "#e74c3c", "alert-circle");
+    showToast("Error al enviar la reseña", "error");
   }
 }
 
@@ -119,7 +120,7 @@ function handleEditReview(reviewId) {
   document.getElementById("reviewInput").value = review.trim();
   document.getElementById("ratingInput").value = rating;
 
-  showToast("Editando reseña...", "#f39c12", "edit");
+  showToast("Editando reseña...", "warning", "edit", "#f39c12");
 
   document.getElementById("reviewForm").scrollIntoView({ behavior: "smooth" });
 }

@@ -30,6 +30,7 @@ document.querySelector(".tablink").click();
 </script>
 <!-- /HTML TAB -->
  
+<% if (products && products.length > 0) { %>
 	<!-- SECTION -->
     <div class="section">
         <!-- container -->
@@ -42,16 +43,47 @@ document.querySelector(".tablink").click();
                         <h3 class="title">Lo más reciente</h3>
                         <div class="section-nav">
                             <ul class="section-tab-nav tab-nav">
-                                <li><a class="tablink active" data-toggle="tab" role="button" onclick="openCategory(event, 'moviles')">Móviles</a></li>
-                                <li><a class="tablink" data-toggle="tab" role="button" onclick="openCategory(event, 'smarttv')">SmartTV</a></li>
-                                <li><a class="tablink" data-toggle="tab" role="button" onclick="openCategory(event, 'laptops')">Laptops</a></li>
-                                <li><a class="tablink" data-toggle="tab" role="button" onclick="openCategory(event, 'consolas')">Consolas</a></li>
-                                <li><a class="tablink" data-toggle="tab" role="button" onclick="openCategory(event, 'tablets')">Tablets</a></li>
+                                <% if (categoriesWithProducts.moviles) { %>
+                                    <li>
+                                    <a class="tablink active"data-toggle="tab" role="button" onclick="openCategory(event, 'moviles')">Móviles</a>
+                                    </li>
+                                <% } %>
+
+                                <% if (categoriesWithProducts.smarttv) { %>
+                                    <li>
+                                    <a class="tablink" data-toggle="tab" role="button" onclick="openCategory(event, 'smarttv')">SmartTV</a>
+                                    </li>
+                                <% } %>
+
+                                <% if (categoriesWithProducts.laptops) { %>
+                                    <li>
+                                    <a class="tablink" data-toggle="tab" role="button" onclick="openCategory(event, 'laptops')">Laptops</a>
+                                    </li>
+                                <% } %>
+
+                                <% if (categoriesWithProducts.consolas) { %>
+                                    <li>
+                                    <a class="tablink" data-toggle="tab" role="button" onclick="openCategory(event, 'consolas')">Consolas</a>
+                                    </li>
+                                <% } %>
+
+                                <% if (categoriesWithProducts.tablets) { %>
+                                    <li>
+                                    <a class="tablink" data-toggle="tab" role="button" onclick="openCategory(event, 'tablets')">Tablets</a>
+                                    </li>
+                                <% } %>
+
+                                <% if (categoriesWithProducts.otros) { %>
+                                    <li>
+                                    <a class="tablink" data-toggle="tab" role="button" onclick="openCategory(event, 'otros')">Otros</a>
+                                    </li>
+                                <% } %>
                             </ul>
                         </div>
                     </div>
                 </div>
             <!-- /section title -->
+            <% } %>
 
             <!-- Products tab & slick -->
             <div class="col-md-12">
@@ -368,6 +400,68 @@ document.querySelector(".tablink").click();
                             </div>
                               <div id="slick-nav-tablets" class="products-slick-nav"></div>
                         </div>
+
+                        <div id="otros" class="tabcontent">
+                            <div class="products-slick" data-nav="#slick-nav-otros" id="product-list-otros">
+                                <% const productsOtros = products.filter(p => p.category === 'otros'); %>
+                                    <% productsOtros.forEach(product => { %>
+                                <div class="product" data-category="<%= product.category %>">
+                                    <div class="product-img"> <a href="/product/<%= product.id %>?variant=<%= product.variantId %>">
+                                        <img src="<%= product.image %>" alt="<%= product.name %>">
+                                        <div class="product-label">
+                                            <% if (product.discount > 0) { %>
+                                            <span class="sale">-<%= product.discount %>%</span>
+                                            <% } %>
+                                            <% if (product.itsNew) { %>
+                                            <span class="new">Nuevo</span>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <div class="product-body">
+                                        <p class="product-category">
+                                            <%= product.category === 'otros' ? 'Otros' : product.category.charAt(0).toUpperCase() + product.category.slice(1) %>
+                                        </p>
+                                        <h3 class="product-name">
+                                                <%= product.name %><%= product.specs %>
+                                            </h3>
+                                            <h4 class="product-price">
+                                            $<%= Number(product.price).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                            <% if (product.discount > 0) { %>
+                                                <del class="product-old-price">
+                                                    $<%= Number(product.price / (1 - product.discount / 100)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
+                                                </del>
+                                            <% } %>
+                                        </h4></a>
+                                         <div class="product-rating clickable-rating" data-product-id="<%= product.id %>">
+                                        <% for (let i = 1; i <= 5; i++) { %>
+                                            <% if (i <= Math.floor(product.averageRating)) { %>
+                                                <i class="custom-star fa-solid fa-star"></i>
+                                            <% } else if (i - product.averageRating < 1 && i > product.averageRating) { %>
+                                                <i class="custom-star fa-regular fa-star-half-stroke"></i>
+                                            <% } else { %>
+                                                <i class="custom-star fa-regular fa-star"></i>
+                                            <% } %>
+                                        <% } %>
+                                        <div class="rating-tooltip"></div>
+                                        </div>
+                                        <div class="product-btns">
+                                            <button class="add-to-wishlist" 
+                                                data-product-id="<%= product.id %>" 
+                                                data-variant-id="<%= product.variantId %>">
+                                            <i class="fa-regular fa-heart"></i>  
+                                            <span class="tooltipp">Favoritos</span>
+                                            </button>
+                                                <% if (product.itsMobile) { %>
+                                                <button class="add-to-compare" data-id="<%= product.id %>"><i class="fa-solid fa-arrow-right-arrow-left"></i>
+                                                <span class="tooltipp">Comparar</span></button>
+                                                <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% }); %>
+                            </div>
+                              <div id="slick-nav-otros" class="products-slick-nav"></div>
+                        </div>    
                     </div>
                 </div>
             </div>

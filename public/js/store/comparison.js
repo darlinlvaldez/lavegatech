@@ -265,14 +265,13 @@ function renderSelectableDevices(devices, gridId = 'devices-grid') {
       const added = addDeviceToComparison(device);
 
       if (added) {
-        showToast("Dispositivo agregado a la comparación", "#16a34a", "success");
+        showToast("Dispositivo agregado");
       }
     });
 
     grid.appendChild(card);
   });
 }
-
 
 function safe(value) {
   return value ?? ''; 

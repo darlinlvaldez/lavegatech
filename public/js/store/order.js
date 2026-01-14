@@ -38,27 +38,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 });
 
-  const toastify = (text, tipo = "info") => {
-    const colors = {
-      info: "#0d6efd",
-      error: "#dc3545",
-      success: "#198754",
-      warning: "#ffc107",
-    };
-
-    const icons = {
-      info: "info",
-      error: "x-circle",
-      success: "check-circle",
-      warning: "alert-triangle",
-    };
-
-    const color = colors[tipo] || colors.info;
-    const icon = icons[tipo] || icons.info;
-
-    showToast(text, color, icon);
-  };
-
   const getFormData = () => {
   const useDifferentAddress = document.getElementById("shiping-address")?.checked;
 
@@ -162,7 +141,7 @@ altTelInput?.addEventListener("input", (e) => {
   const validateConditions = () => {
      clearErrors();
     if (!document.getElementById("terms").checked) {
-      toastify("Debe aceptar los Políticas y condiciones", "warning");
+      showToast("Debe aceptar los Políticas y condiciones", "warning");
       return false;
     }
 
@@ -208,7 +187,7 @@ altTelInput?.addEventListener("input", (e) => {
       if (data.validationError && data.errors) {
         showValidation(data.errors);
       } else {
-        toastify(data.error || "Error en la solicitud", "error");
+        showToast(data.error || "Error en la solicitud", "error");
       }
       throw new Error(data.error || "Error en la solicitud");
     }
@@ -227,7 +206,7 @@ altTelInput?.addEventListener("input", (e) => {
 
           const subtotal = parseFloat(orderTotal.dataset.subtotal || "0");
           if (subtotal === 0) {
-            toastify("No hay productos seleccionados en tu carrito", "error");
+            showToast("No hay productos seleccionados en tu carrito", "error");
             return Promise.reject();
           }
 
@@ -279,19 +258,25 @@ altTelInput?.addEventListener("input", (e) => {
           )
           .then(handleApiError).then((data) => {
             if (!data.success) throw new Error(data.message);
-            toastify("¡Pago completado con éxito!", "success");
-            clearErrors();
 
-            setTimeout( () => (window.location.href = data.redirectUrl), 3000);
+            sessionStorage.setItem(
+              "toastSuccess",
+              JSON.stringify({
+                message: "¡Pago completado con éxito!",
+                type: "success"
+              })
+            );
+
+            window.location.href = data.redirectUrl;
           })
           .catch((error) => {
             console.error("Error:", error);
-            toastify(`Error: ${error.message}`, "error");
+            showToast(`Error: ${error.message}`, "error");
           }), 
         
           onError: (err) => {
           console.error("Error en el pago con PayPal:", err);
-          toastify("Ocurrió un error al procesar el pago con PayPal", "error");
+          showToast("Ocurrió un error al procesar el pago con PayPal", "error");
           },
         }).render("#paypal-button-container");
 

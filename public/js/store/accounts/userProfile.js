@@ -4,10 +4,8 @@ import { showValidation, clearError } from '../../utils/showValidation.js';
 window.openModal = openModal;
 window.closeModal = closeModal;
 
-function showNotification(message, isSuccess) {
-  const color = isSuccess ? "#4CAF50" : "#f44336";
-  const icon = isSuccess ? "check-circle" : "x-circle";
-  showToast(message, color, icon);
+function showNotification(message, type = "success") {
+  showToast(message, type);
 }
 
 const formTemplates = {
@@ -201,7 +199,7 @@ document.getElementById("modal-form").addEventListener("submit", async (e) => {
         return;
       }
 
-      showNotification(responseData.message || "Actualizado con éxito", true);
+      showNotification("Actualizado con éxito", "success");
       setTimeout(() => {closeModal();
         window.location.href = responseData.redirectUrl || "/account";
       }, 2000);

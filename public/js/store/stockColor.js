@@ -45,8 +45,6 @@ function changeVariant(select) {
   btn.dataset.stock = stock;
   btn.dataset.color = variants[index].color;
 
-  btn.disabled = stock <= 0;
-
   const productId = btn.dataset.id;
   history.replaceState(null, "", `/product/${productId}?variant=${variantId}`);
 }

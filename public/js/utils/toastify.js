@@ -1,15 +1,24 @@
-export function showToast(message, Color = "#27ae60", icon = "check-circle") {
+export function showToast(message, type = "success", customIcon = null) {
+  if (typeof Toastify === "undefined") return;
+
+  const icons = {
+    success: "check-circle",
+    error: "alert-circle",
+    info: "info",
+    warning: "alert-triangle",
+  };
+
+  const icon = customIcon || icons[type] || "info";
+
   Toastify({
-    text: `<i data-feather="${icon}" style="vertical-align: middle; margin-right: 8px;"></i> ${message}`,
+    text: `<i data-feather="${icon}" style="margin-right:8px;"></i> ${message}`,
     duration: 3000,
+    close: true,
     gravity: "top",
     position: "right",
-    style: { background: Color },
     escapeMarkup: false,
-    className: "toast-notification",
+    className: `toast-notification toast-${type}`,
   }).showToast();
 
-setTimeout(() => {
-    feather.replace();
-  }, 100);
+  setTimeout(() => feather.replace(), 0);
 }
