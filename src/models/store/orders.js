@@ -2,7 +2,7 @@ import db from "../../database/mobiles.js";
 
 const orders = {};
 
-orders.createOrder = async (orderData, items, shippingCost) => {
+orders.createOrder = async (orderData, items, shippingCost, cartItems) => {
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
@@ -58,6 +58,8 @@ orders.createOrder = async (orderData, items, shippingCost) => {
       shippingCost: shippingCost,
     });
 
+    await orders.updateStock(cartItems, conn);
+
     await conn.commit();
     return orderId;
   } catch (error) {
@@ -104,45 +106,19 @@ orders.getLastOrderByUserId = async (userId) => {
   return rows.length ? rows[0] : null;
 };
 
-orders.updateStock = async (orderId, userId) => {
-  const { items } = await orders.getOrderById(orderId, userId) || {};
-  if (!items) throw new Error(`Orden no encontrada`);
-
-  await Promise.all(items.map(async ({ quantity, productId, selectedColor, productName }) => {
-    const [result] = await db.query(
-      `UPDATE p_variantes SET stock = stock - ? 
-       WHERE producto_id = ? ${selectedColor ? 'AND color = ?' : ''} AND stock >= ?`,
-      [quantity, productId, ...(selectedColor ? [selectedColor] : []), quantity]
+orders.updateStock = async (items, conn) => {
+  for (const item of items) {
+    const [res] = await conn.query(
+      `UPDATE p_variantes
+       SET stock = stock - ?
+       WHERE id = ?
+       AND stock >= ?`,
+      [item.quantity, item.varianteId, item.quantity]
     );
-    if (!result.affectedRows) throw new Error(`Stock insuficiente: ${productName}
-      ${selectedColor ? ` (${selectedColor})` : ''}`);
-  }));
-};
 
-orders.checkStock = async (items) => {
-  const stockItems = [];
-  
-  await Promise.all(items.map(async (item) => {
-    const [stock] = await db.query(
-      `SELECT stock FROM p_variantes 
-       WHERE producto_id = ? ${item.selectedColor ? 'AND color = ?' : ''}`,
-      [item.productId, ...(item.selectedColor ? [item.selectedColor] : [])]
-    );
-  
-    if (stock.length === 0 || stock[0].stock < item.quantity) {
-      stockItems.push({id: item.productId,
-        name: item.name,
-        color: item.selectedColor,
-        requested: item.quantity,
-        available: stock.length > 0 ? stock[0].stock : 0
-      });
+    if (!res.affectedRows) {
+      throw new Error(`Stock insuficiente: ${item.name}`);
     }
-  }));
-
-  if (stockItems.length > 0) {
-    const error = new Error('Stock insuficiente para algunos productos');
-    error.stockItems = stockItems;
-    throw error;
   }
 };
 

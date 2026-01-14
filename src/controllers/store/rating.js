@@ -7,11 +7,20 @@ ratingController.submitReview = async (req, res) => {
     const { productId, rating, review } = req.body;
     const userId = req.session.user.id; 
 
+    const hasPurchased = await ratingModel.userHasPurchased(userId, productId);
+
+    if (!hasPurchased) {
+      return res.status(403).json({
+        error: 'Solo puedes reseñar productos que hayas comprado'
+      });
+    }
+
     if (!productId || !rating || rating < 1 || rating > 5) {
       return res.status(400).json({ error: 'Datos de reseña inválidos' });
     }
 
     const hasReviewed = await ratingModel.userHasReviewed(productId, userId);
+
     if (hasReviewed) {
       return res.status(400).json({ error: 'Ya has enviado una reseña para este producto' });
     }

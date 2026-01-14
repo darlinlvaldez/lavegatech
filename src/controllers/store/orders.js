@@ -136,17 +136,13 @@ orderController.processPayment = async (req, res) => {
       });
     }
 
-    await orders.checkStock(cartItems);
-
     const orderId = await orders.createOrder(
-      {...orderData, state: "pagado", total: totalLocal,
-        shippingCityId: cityData.id}, 
-        orderItems,shippingCost);
+      {...orderData, state: "pagado", total: totalLocal, shippingCityId: cityData.id}, 
+        orderItems, shippingCost, cartItems);
 
     await orders.createPayment(orderId, {
       paymentMethod: 'paypal', paymentId, payerId});
 
-    await orders.updateStock(orderId, userId);
     await cart.clearCart(userId);
 
     res.json({success: true,

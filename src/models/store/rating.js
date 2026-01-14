@@ -10,6 +10,20 @@ rating.create = async ({productId, userId, rating, review}) => {
   return result;
 };
 
+rating.userHasPurchased = async (userId, productId) => {
+  const [rows] = await db.execute(`
+    SELECT 1
+    FROM pedidos p
+    JOIN detalles_pedido dp ON dp.pedido_id = p.id
+    WHERE p.usuario_id = ?
+      AND dp.producto_id = ?
+      AND p.estado IN ('pagado', 'completado', 'entregado')
+    LIMIT 1
+  `, [userId, productId]);
+
+  return rows.length > 0;
+};
+
 rating.findByProductId = async (productId, page = 1, limit = 3, userId = null) => {
   const offset = (page - 1) * limit;
 

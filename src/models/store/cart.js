@@ -88,6 +88,7 @@ cart.getCartToPay = async (userId) => {
       c.producto_id AS productId,
       c.cantidad AS quantity,
       p.nombre AS name,
+      v.id AS varianteId,
       p.precio AS originalPrice,
       p.impuesto AS tax,
       p.descuento AS discount,

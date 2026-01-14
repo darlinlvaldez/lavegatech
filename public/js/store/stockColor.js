@@ -18,19 +18,34 @@ function changeVariant(select) {
   $("#product-main-img").slick("slickGoTo", index);
   syncingFromSlick = false;
 
-  document.getElementById("stockDisponible").textContent =
-    `Cantidad disponible: ${variants[index].stock}`;
+  const stock = variants[index].stock;
 
-  const qty = document.getElementById("productQuantity");
-  qty.innerHTML = "";
-  for (let i = 1; i <= variants[index].stock; i++) {
-    qty.append(new Option(i, i));
+  document.getElementById("stockDisponible").textContent =
+    `Cantidad disponible: ${stock}`;
+
+  const qtySelect = document.getElementById("productQuantity");
+  const outLabel = document.getElementById("outOfStockLabel");
+
+  qtySelect.innerHTML = "";
+
+  if (stock > 0) {
+    qtySelect.style.display = "block";
+    outLabel.style.display = "none";
+
+    for (let i = 1; i <= stock; i++) {
+      qtySelect.append(new Option(i, i));
+    }
+  } else {
+    qtySelect.style.display = "none";
+    outLabel.style.display = "inline-block";
   }
 
   const btn = document.getElementById("add-to-cart-btn");
   btn.dataset.variantId = variantId;
-  btn.dataset.stock = variants[index].stock;
+  btn.dataset.stock = stock;
   btn.dataset.color = variants[index].color;
+
+  btn.disabled = stock <= 0;
 
   const productId = btn.dataset.id;
   history.replaceState(null, "", `/product/${productId}?variant=${variantId}`);
