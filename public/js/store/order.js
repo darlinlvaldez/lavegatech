@@ -141,7 +141,7 @@ altTelInput?.addEventListener("input", (e) => {
   const validateConditions = () => {
      clearErrors();
     if (!document.getElementById("terms").checked) {
-      showToast("Debe aceptar los Políticas y condiciones", "warning");
+      showToast("Acepte las Políticas y condiciones", "warning");
       return false;
     }
 

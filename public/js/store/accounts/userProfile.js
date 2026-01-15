@@ -47,7 +47,7 @@ const formTemplates = {
 
 const titles = {username: 'Editar Nombre', email: 'Editar Correo', password: 'Editar Contraseña', 'verify-email': 'Verificar Código'};
 
-const urls = {username: '/api/user/update-username', email: '/user/update-email', password: '/api/user/update-password', 'verify-email': '/api/user/verify-email-code'};
+const urls = {username: '/api/user/update-username', email: '/api/user/update-email', password: '/api/user/update-password', 'verify-email': '/api/user/verify-email-code'};
 
 function openModal(type) {
   const modal = document.getElementById('modal');
@@ -105,13 +105,13 @@ async function openCodeModal(newEmail) {
       const result = await response.json();
 
       if (response.ok) {
-        showNotification("Código enviado exitosamente", true);
+        showNotification("Código enviado exitosamente", "success", true);
         disableResendButton(resendBtn, result.resendTimer);
       } else {
-        showNotification(result.error || "Error al enviar el código", false);
+        showNotification(result.error || "Error al enviar el código", "error", false);
       }
     } catch (error) {
-      showNotification("Error de red al enviar código", false);
+      showNotification("Error de red al enviar código", "error", false);
     }
   }
 
@@ -122,7 +122,7 @@ async function openCodeModal(newEmail) {
         const { resendTimer } = await timerCheck.json();
 
         if (resendTimer > 0) {
-          showNotification(`Ya se envió un código. Espera ${resendTimer} segundos.`, false);
+          showNotification(`Ya se envió un código. Espera ${resendTimer} segundos.`, "info", false);
           openCodeModal(data.newEmail); 
           return;
         }
@@ -130,14 +130,14 @@ async function openCodeModal(newEmail) {
       const result = await response.json();
 
       if (response.ok) {
-        showNotification("Código reenviado exitosamente", true);
+        showNotification("Código reenviado exitosamente", "success", true);
         verificationMsg.innerHTML = `Te hemos enviado un nuevo código de verificación a <strong>${newEmail}</strong>`;
         disableResendButton(resendBtn, result.resendTimer);
       } else {
-        showNotification(result.error || "Error al reenviar el código", false);
+        showNotification(result.error || "Error al reenviar el código", "error", false);
       }
     } catch (error) {
-      showNotification("Error de red: " + error.message, false);
+      showNotification("Error de red: "  + error.message, "error", false);
     }
   };
 
@@ -199,16 +199,15 @@ document.getElementById("modal-form").addEventListener("submit", async (e) => {
         return;
       }
 
-      showNotification("Actualizado con éxito", "success");
-      setTimeout(() => {closeModal();
-        window.location.href = responseData.redirectUrl || "/account";
-      }, 2000);
+      sessionStorage.setItem("toastSuccess",
+        JSON.stringify({ message: "Actualizado con éxito", type: "success" })
+      );
+      window.location.reload();
     } else {
       if (responseData.validationError && Array.isArray(responseData.errors)) {
         showValidation(responseData.errors, "#modal-form");
       } else {
-        showNotification(
-          responseData.error || responseData.message || "Error desconocido",
+        showNotification(responseData.error || responseData.message || "Error desconocido", "error",
           false);
       }
       if (
@@ -218,7 +217,7 @@ document.getElementById("modal-form").addEventListener("submit", async (e) => {
       }
     }
   } catch (error) {
-    showNotification(error.message || "Error de red", false);
+    showNotification(error.message || "Error de red", "error", false);
     closeModal();
   }
 });

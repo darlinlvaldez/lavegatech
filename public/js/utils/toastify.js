@@ -1,4 +1,4 @@
-export function showToast(message, type = "success", customIcon = null) {
+export function showToast(message, type = "success", customIcon = null, duration = 3000) {
   if (typeof Toastify === "undefined") return;
 
   const icons = {
@@ -11,8 +11,10 @@ export function showToast(message, type = "success", customIcon = null) {
   const icon = customIcon || icons[type] || "info";
 
   Toastify({
-    text: `<i data-feather="${icon}" style="margin-right:8px;"></i> ${message}`,
-    duration: 3000,
+    node: undefined,
+    text: `<i data-feather="${icon}" style="margin-right:8px;"></i> ${message}
+    <div class="toast-progress" style="animation-duration: ${duration}ms;"></div>`,
+    duration: duration,
     close: true,
     gravity: "top",
     position: "right",

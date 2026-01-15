@@ -104,7 +104,7 @@ function displaySearchResults(products) {
   
 function addDeviceToComparison({ id, name, image }) {
   if (selectedDevices.some(d => d.id === id)) {
-    showToast("Este dispositivo ya está en la lista de comparación", "#e74c3c", "info");
+    showToast("Ya está en la lista", "info");
     return false;
   }
 
@@ -168,7 +168,7 @@ comparisonForm.addEventListener('submit', async function(e) {
   e.preventDefault();
   
   if (selectedDevices.length < 2) {
-    showToast("Selecciona al menos 2 dispositivos para comparar.", "#e74c3c", "info");
+    showToast("Selecciona 2 o más.", "info");
     return;
   }
 
@@ -185,7 +185,7 @@ comparisonForm.addEventListener('submit', async function(e) {
     excludedMobileIds = data.excludedMobileIds || [];
   } catch (error) {
     console.error('Error:', error);
-    showToast("Error al comparar dispositivos", "#e74c3c", "info");
+    showToast("Error al comparar dispositivos", "error");
   }
 });
 

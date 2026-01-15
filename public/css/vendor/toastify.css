@@ -3,7 +3,6 @@
     color: #fff;
     display: inline-block;
     box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.12), 0 10px 36px -4px rgba(77, 96, 232, 0.3);
-    position: fixed;
     opacity: 0;
     transform: translateY(-50px);
     transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -22,7 +21,7 @@
 .toast-close {
     background: transparent;
     border: 0;
-    color: white;
+    color: #555;
     cursor: pointer;
     font-family: inherit;
     font-size: 1em;
@@ -36,43 +35,47 @@
 .toastify-bottom { bottom: -150px; }
 .toastify-rounded { border-radius: 25px; }
 
-.toastify-avatar {
-    width: 1.5em;
-    height: 1.5em;
-    margin: -7px 5px;
-    border-radius: 2px;
-}
-
-.toastify-center {
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    right: 0;
-    max-width: fit-content;
-    max-width: -moz-fit-content;
-}
-
 .toast-notification {
+  position: fixed;
   display: flex;
   align-items: center;
-  gap: 8px;            
-  color: #fff;
-  font-family: "Segoe UI", sans-serif;
-  font-weight: bold;
-  font-size: 16px;
-  border-radius: 4px;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  gap: 10px;
   padding: 12px 20px;
-  max-width: calc(50% - 20px);
+  font-family: "Segoe UI", sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  color: #555; 
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   cursor: pointer;
 }
 
-.toast-success { background: #27ae60 !important; }
-.toast-error   { background: #e74c3c !important; }
-.toast-info    { background: #3498db !important; }
-.toast-warning { background: #f39c12 !important; }
+.toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  border-radius: 0 0 8px 8px;
+  animation: progressBar linear forwards;
+}
 
-/* === Responsive === */
+.toast-success .toast-progress { background-color: #27ae60 !important; }
+.toast-error .toast-progress   { background-color: #e74c3c !important; }
+.toast-info .toast-progress    { background-color: #3498db !important; }
+.toast-warning .toast-progress { background-color: #f39c12 !important; }
+
+.toast-success svg { stroke: #27ae60; }
+.toast-error svg   { stroke: #e74c3c; }
+.toast-info svg    { stroke: #3498db; }
+.toast-warning svg { stroke: #f39c12; }
+
+@keyframes progressBar {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
 @media only screen and (max-width: 480px) {
     .toast-notification {
         font-size: 14px;
