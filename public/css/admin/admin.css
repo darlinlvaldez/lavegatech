@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
     background-color: #f3f4f6;
     margin: 0;
     padding: 0;
@@ -23,6 +24,7 @@ body {
     flex-shrink: 0;
     height: 97vh;
     overflow: hidden;
+    font-weight: bold;
 }
 
 .sidebar-content {

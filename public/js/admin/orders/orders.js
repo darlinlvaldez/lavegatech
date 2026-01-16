@@ -45,9 +45,9 @@ document.querySelectorAll(".estado-envio-select").forEach((select) => {
 
       this.closest(".list-group-product").dataset.envio = nuevoEstado;
 
-      showToast("Estado actualizado.", "#27ae60", "check-circle");
+      showToast("Estado actualizado.", "success");
     } catch (err) {
-      showToast("Error al actualizar el estado.", "#e74c3c", "alert-circle");
+      showToast("Error al actualizar el estado.", "error");
     }
   });
 });

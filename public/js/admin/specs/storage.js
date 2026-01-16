@@ -84,16 +84,16 @@ almacenamientoForm.addEventListener("submit", async (e) => {
       if (data.validationError && Array.isArray(data.errors)) {
         showValidation(data.errors, "#almacenamientoForm");
       } else {
-        showToast(data.error || "Error al guardar el almacenamiento.", "#e74c3c", "alert-circle");
+        showToast(data.error || "Error al guardar el almacenamiento.", "error");
       }
       return;
     }
 
-    showToast(id ? "Almacenamiento actualizado." : "Almacenamiento agregado.", "#27ae60", "check-circle");
+    showToast(id ? "Almacenamiento actualizado." : "Almacenamiento agregado.", "success");
     almacenamientoModal.classList.remove("visible");
     fetchAlmacenamientos();
   } catch (err) {
-    showToast("Error inesperado.", "#e74c3c", "alert-circle");
+    showToast("Error inesperado.", "error");
   }
 });
 
@@ -121,9 +121,9 @@ window.deleteAlmacenamiento = async function (id) {
     const res = await fetch(`/api/specs/almacenamiento/${id}`, { method: "DELETE" });
     if (!res.ok) throw new Error();
     await fetchAlmacenamientos();
-    showToast("Almacenamiento eliminado con éxito.", "#27ae60", "check-circle");
+    showToast("Almacenamiento eliminado con éxito.", "success");
   } catch (err) {
-    showToast("Error al eliminar el almacenamiento.", "#e74c3c", "alert-circle");
+    showToast("Error al eliminar el almacenamiento.", "error");
   }
 };
 
@@ -133,7 +133,7 @@ async function fetchAlmacenamientos() {
     almacenamientos = await res.json();
     renderAlmacenamientos();
   } catch (err) {
-    showToast("Error al cargar los almacenamientos.", "#e74c3c", "alert-circle");
+    showToast("Error al cargar los almacenamientos.", "error");
   }
 }
 

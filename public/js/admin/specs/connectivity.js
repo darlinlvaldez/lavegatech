@@ -94,16 +94,16 @@ conectividadForm.addEventListener("submit", async (e) => {
       if (data.validationError && Array.isArray(data.errors)) {
         showValidation(data.errors, "#conectividadForm");
       } else {
-        showToast(data.error || "Error al guardar la conectividad.", "#e74c3c", "alert-circle");
+        showToast(data.error || "Error al guardar la conectividad.", "error");
       }
       return;
     }
 
-    showToast(id ? "Conectividad actualizada." : "Conectividad agregada.", "#27ae60", "check-circle");
+    showToast(id ? "Conectividad actualizada." : "Conectividad agregada.", "success");
     conectividadModal.classList.remove("visible");
     fetchConectividades();
   } catch (err) {
-    showToast("Error inesperado.", "#e74c3c", "alert-circle");
+    showToast("Error inesperado.", "error");
   }
 });
 
@@ -133,9 +133,9 @@ window.deleteConectividad = async function (id) {
     const res = await fetch(`/api/specs/conectividades/${id}`, { method: "DELETE" });
     if (!res.ok) throw new Error();
     await fetchConectividades();
-    showToast("Conectividad eliminada con éxito.", "#27ae60", "check-circle");
+    showToast("Conectividad eliminada con éxito.", "success");
   } catch (err) {
-    showToast("Error al eliminar la conectividad.", "#e74c3c", "alert-circle");
+    showToast("Error al eliminar la conectividad.", "error");
   }
 };
 
@@ -145,7 +145,7 @@ async function fetchConectividades() {
     conectividades = await res.json();
     renderConectividades();
   } catch (err) {
-    showToast("Error al cargar la conectividad.", "#e74c3c", "alert-circle");
+    showToast("Error al cargar la conectividad.", "error");
   }
 }
 

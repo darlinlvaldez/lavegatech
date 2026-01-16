@@ -84,16 +84,16 @@ ramForm.addEventListener("submit", async (e) => {
       if (data.validationError && Array.isArray(data.errors)) {
         showValidation(data.errors, "#ramForm");
       } else {
-        showToast(data.error || "Error al guardar la RAM.", "#e74c3c", "alert-circle");
+        showToast(data.error || "Error al guardar la RAM.", "error");
       }
       return;
     }
 
-    showToast(id ? "RAM actualizada." : "RAM agregada.", "#27ae60", "check-circle");
+    showToast(id ? "RAM actualizada." : "RAM agregada.", "success");
     ramModal.classList.remove("visible");
     fetchRAMs();
   } catch (err) {
-    showToast("Error inesperado.", "#e74c3c", "alert-circle");
+    showToast("Error inesperado.", "error");
   }
 });
 
@@ -121,9 +121,9 @@ window.deleteRAM = async function (id) {
     const res = await fetch(`/api/specs/ram/${id}`, { method: "DELETE" });
     if (!res.ok) throw new Error();
     await fetchRAMs();
-    showToast("RAM eliminada con éxito.", "#27ae60", "check-circle");
+    showToast("RAM eliminada con éxito.", "success");
   } catch (err) {
-    showToast("Error al eliminar la RAM.", "#e74c3c", "alert-circle");
+    showToast("Error al eliminar la RAM.", "error");
   }
 };
 
@@ -133,7 +133,7 @@ async function fetchRAMs() {
     rams = await res.json();
     renderRAMs();
   } catch (err) {
-    showToast("Error al cargar las RAMs.", "#e74c3c", "alert-circle");
+    showToast("Error al cargar las RAMs.", "error");
   }
 }
 

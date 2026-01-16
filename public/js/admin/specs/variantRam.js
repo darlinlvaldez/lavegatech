@@ -146,7 +146,7 @@ async function fetchMovilesDisponibles() {
     setupRAMAutocomplete();
   } catch (err) {
     console.error(err);
-    showToast("Error al cargar móviles disponibles.", "#e74c3c", "alert-circle");
+    showToast("Error al cargar móviles disponibles.", "error");
   }
 }
 
@@ -156,7 +156,7 @@ async function fetchRAMsDisponibles() {
     ramsDisponibles = await res.json();
     setupRAMAutocomplete(); 
   } catch (err) {
-    showToast("Error al cargar RAMs disponibles.", "#e74c3c", "alert-circle");
+    showToast("Error al cargar RAMs disponibles.", "error");
   }
 }
 
@@ -176,7 +176,7 @@ varianteRAMForm.addEventListener("submit", async (e) => {
 const ramId = parseInt(document.getElementById("ramIdInput").dataset.id);
 
 if (!movilId || !ramId) {
-  showToast("Debes seleccionar un móvil y una RAM válidos.", "#e74c3c", "alert-circle");
+  showToast("Debes seleccionar un móvil y una RAM válidos.", "error");
   return;
 }
 
@@ -204,17 +204,17 @@ if (!movilId || !ramId) {
     const data = await res.json();
 
     if (!res.ok) {
-  showToast(data.error || "Error al guardar el producto.", "#e74c3c", "alert-circle");
+  showToast(data.error || "Error al guardar el producto.", "error");
   return;
 }
     
-    showToast(isEditing ? "Variante RAM actualizada." : "Variante RAM agregada.", "#27ae60", "check-circle");
+    showToast(isEditing ? "Variante RAM actualizada." : "Variante RAM agregada.", "success");
     varianteRAMModal.classList.remove("visible");
     varianteRAMForm.removeAttribute("data-original-movil");
     varianteRAMForm.removeAttribute("data-original-ram");
     fetchVariantesRAM();
   } catch (err) {
-    showToast("Error inesperado.", "#e74c3c", "alert-circle");
+    showToast("Error inesperado.", "error");
   }
 });
 
@@ -226,7 +226,7 @@ window.editVarianteRAM = async function(movil_id, ram_id) {
   const ram = ramsDisponibles.find(r => r.id === ram_id);
 
   if (!movil || !ram) {
-    showToast("No se encontró el móvil o la RAM.", "#e74c3c", "alert-circle");
+    showToast("No se encontró el móvil o la RAM.", "error");
     return;
   }
 
@@ -260,9 +260,9 @@ window.deleteVarianteRAM = async function(movil_id, ram_id) {
 
     if (!res.ok) throw new Error();
     await fetchVariantesRAM();
-    showToast("Variante RAM eliminada con éxito.", "#27ae60", "check-circle");
+    showToast("Variante RAM eliminada con éxito.", "success");
   } catch (err) {
-    showToast("Error al eliminar la variante.", "#e74c3c", "alert-circle");
+    showToast("Error al eliminar la variante.", "error");
   }
 };
 
@@ -272,7 +272,7 @@ async function fetchVariantesRAM() {
     variantesRAM = await res.json();
     renderVariantesRAM();
   } catch (err) {
-    showToast("Error al cargar las variantes RAM.", "#e74c3c", "alert-circle");
+    showToast("Error al cargar las variantes RAM.", "error");
   }
 }
 

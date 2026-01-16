@@ -88,16 +88,16 @@ camaraForm.addEventListener("submit", async (e) => {
       if (data.validationError && Array.isArray(data.errors)) {
         showValidation(data.errors, "#camaraForm");
       } else {
-        showToast(data.error || "Error al guardar la cámara.", "#e74c3c", "alert-circle");
+        showToast(data.error || "Error al guardar la cámara.", "error");
       }
       return;
     }
 
-    showToast(id ? "Cámara actualizada." : "Cámara agregada.", "#27ae60", "check-circle");
+    showToast(id ? "Cámara actualizada." : "Cámara agregada.", "success");
     camaraModal.classList.remove("visible");
     fetchCamaras();
   } catch (err) {
-    showToast("Error inesperado.", "#e74c3c", "alert-circle");
+    showToast("Error inesperado.", "error");
   }
 });
 
@@ -126,9 +126,9 @@ window.deleteCamara = async function (id) {
     const res = await fetch(`/api/specs/camaras/${id}`, { method: "DELETE" });
     if (!res.ok) throw new Error();
     await fetchCamaras();
-    showToast("Cámara eliminada con éxito.", "#27ae60", "check-circle");
+    showToast("Cámara eliminada con éxito.", "success");
   } catch (err) {
-    showToast("Error al eliminar la cámara.", "#e74c3c", "alert-circle");
+    showToast("Error al eliminar la cámara.", "error");
   }
 };
 
@@ -138,7 +138,7 @@ async function fetchCamaras() {
     camaras = await res.json();
     renderCamaras();
   } catch (err) {
-    showToast("Error al cargar las cámaras.", "#e74c3c", "alert-circle");
+    showToast("Error al cargar las cámaras.", "error");
   }
 }
 

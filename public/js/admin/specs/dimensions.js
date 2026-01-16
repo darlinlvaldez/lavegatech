@@ -92,16 +92,16 @@ dimensionesForm.addEventListener("submit", async (e) => {
       if (data.validationError && Array.isArray(data.errors)) {
         showValidation(data.errors, "#dimensionesForm");
       } else {
-        showToast(data.error || "Error al guardar la dimensión.", "#e74c3c", "alert-circle");
+        showToast(data.error || "Error al guardar la dimensión.", "error");
       }
       return;
     }
 
-    showToast(id ? "Dimensión actualizada." : "Dimensión agregada.", "#27ae60", "check-circle");
+    showToast(id ? "Dimensión actualizada." : "Dimensión agregada.", "success");
     dimensionesModal.classList.remove("visible");
     fetchDimensiones();
   } catch (err) {
-    showToast("Error inesperado.", "#e74c3c", "alert-circle");
+    showToast("Error inesperado.", "error");
   }
 });
 
@@ -131,9 +131,9 @@ window.deleteDimensiones = async function (id) {
     const res = await fetch(`/api/specs/dimensionespeso/${id}`, { method: "DELETE" });
     if (!res.ok) throw new Error();
     await fetchDimensiones();
-    showToast("Dimensión eliminada con éxito.", "#27ae60", "check-circle");
+    showToast("Dimensión eliminada con éxito.", "success");
   } catch (err) {
-    showToast("Error al eliminar la dimensión.", "#e74c3c", "alert-circle");
+    showToast("Error al eliminar la dimensión.", "error");
   }
 };
 
@@ -143,7 +143,7 @@ async function fetchDimensiones() {
     dimensiones = await res.json();
     renderDimensiones();
   } catch (err) {
-    showToast("Error al cargar las dimensiones.", "#e74c3c", "alert-circle");
+    showToast("Error al cargar las dimensiones.", "error");
   }
 }
 

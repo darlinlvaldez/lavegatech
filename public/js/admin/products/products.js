@@ -136,17 +136,17 @@ productForm.addEventListener("submit", async (e) => {
       if (data.validationError && Array.isArray(data.errors)) {
         showValidation(data.errors, "#productForm");
       } else {
-        showToast(data.error || "Error al guardar el producto.", "#e74c3c", "alert-circle");
+        showToast(data.error || "Error al guardar el producto.", "error");
       }
       return;
     }
 
-    showToast(id ? "Producto actualizado con éxito." : "Producto agregado con éxito.", "#27ae60", "check-circle");
+    showToast(id ? "Producto actualizado con éxito." : "Producto agregado con éxito.", "success");
     productModal.classList.remove("visible");
     fetchProducts();
 
   } catch (err) {
-    showToast("Error inesperado al guardar el producto.", "#e74c3c", "alert-circle");
+    showToast("Error inesperado al guardar el producto.", "error");
   }
 });
 
@@ -274,10 +274,10 @@ window.deleteProduct = async function(id) {
     if (!res.ok) throw new Error();
     
     await fetchProducts();
-    showToast("Producto eliminado con éxito.", "#27ae60", "check-circle");
+    showToast("Producto eliminado con éxito.", "success");
 
   } catch (err) {
-    showToast("Error al eliminar el producto.", "#e74c3c", "alert-circle");
+    showToast("Error al eliminar el producto.", "error");
   }
 }
 

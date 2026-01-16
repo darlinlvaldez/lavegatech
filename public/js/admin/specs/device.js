@@ -48,7 +48,7 @@ async function fetchAndSet(url, setTo) {
     setTo.push(...data);
   } catch (err) {
     console.error(`Error en fetch ${url}:`, err);
-    showToast(`Error al cargar ${url}`, "#e74c3c", "alert-circle");
+    showToast(`Error al cargar ${url}`, "error");
   }
 }
 
@@ -71,7 +71,7 @@ async function fetchTodosProductos() {
     return await res.json();
   } catch (err) {
     console.error('Error al cargar todos los productos:', err);
-    showToast("Error al cargar productos", "#e74c3c", "alert-circle");
+    showToast("Error al cargar productos", "error");
     return [];
   }
 }
@@ -160,7 +160,7 @@ async function fetchDispositivos() {
     if (!res.ok) {
       const text = await res.text();
       console.error('Error API moviles:', res.status, text);
-      showToast("Error al cargar los dispositivos.", "#e74c3c", "alert-circle");
+      showToast("Error al cargar los dispositivos.", "error");
       return;
     }
     dispositivos = await res.json();
@@ -169,7 +169,7 @@ async function fetchDispositivos() {
     renderMobiles();
   } catch (err) {
     console.error('Error en fetchDispositivos:', err);
-    showToast("Error al cargar los dispositivos.", "#e74c3c", "alert-circle");
+    showToast("Error al cargar los dispositivos.", "error");
   }
 }
 
@@ -371,7 +371,7 @@ deviceForm.addEventListener("submit", async (e) => {
   const movilId = deviceIdInput.dataset.movilId;
 
   if (productoId && !movilId) {
-    showToast("No se encontró el dispositivo móvil asociado", "#e74c3c", "alert-circle");
+    showToast("No se encontró el dispositivo móvil asociado", "error");
     return;
   }
 
@@ -415,17 +415,17 @@ deviceForm.addEventListener("submit", async (e) => {
     if (data.validationError && Array.isArray(data.errors)) {
       showValidation(data.errors, "#deviceForm");
     } else {
-      showToast(data.message || "Error al guardar el dispositivo.", "#e74c3c", "alert-circle");
+      showToast(data.message || "Error al guardar el dispositivo.", "error");
     }
     return;
   }
 
-  showToast(id ? "Dispositivo actualizado con éxito." : "Dispositivo agregado con éxito.", "#27ae60", "check-circle");
+  showToast(id ? "Dispositivo actualizado con éxito." : "Dispositivo agregado con éxito.", "success");
   deviceModal.classList.remove("visible");
   await fetchDispositivos();
 
   } catch (err) {
-    showToast("Error inesperado al guardar el dispositivo.", "#e74c3c", "alert-circle");
+    showToast("Error inesperado al guardar el dispositivo.", "error");
   }
 });
 
@@ -443,9 +443,9 @@ window.deleteDispositivo = async function (id) {
     if (!res.ok) throw new Error();
 
     await fetchDispositivos();
-    showToast("Dispositivo eliminado con éxito.", "#27ae60", "check-circle");
+    showToast("Dispositivo eliminado con éxito.", "success");
   } catch (err) {
-    showToast("Error al eliminar el dispositivo.", "#e74c3c", "alert-circle");
+    showToast("Error al eliminar el dispositivo.", "error");
   }
 };
 

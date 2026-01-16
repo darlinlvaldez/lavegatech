@@ -122,17 +122,17 @@ categoryForm.addEventListener("submit", async (e) => {
       if (data.validationError && Array.isArray(data.errors)) {
         showValidation(data.errors, "#categoryForm");
       } else {
-        showToast(data.error || "Error al guardar la categoría.", "#e74c3c", "alert-circle");
+        showToast(data.error || "Error al guardar la categoría.", "error");
       }
       return;
     }
 
-    showToast(id ? "Categoría actualizada con éxito." : "Categoría agregada con éxito.", "#27ae60", "check-circle");
+    showToast(id ? "Categoría actualizada con éxito." : "Categoría agregada con éxito.", "success");
     categoryModal.classList.remove("visible");
     fetchCategories();
 
   } catch (err) {
-    showToast("Error inesperado al guardar la categoría.", "#e74c3c", "alert-circle");
+    showToast("Error inesperado al guardar la categoría.", "error");
   }
 });
 
@@ -267,17 +267,17 @@ brandForm.addEventListener("submit", async (e) => {
       if (data.validationError && Array.isArray(data.errors)) {
         showValidation(data.errors, "#brandForm");
       } else {
-        showToast(data.error || "Error al guardar la marca.", "#e74c3c", "alert-circle");
+        showToast(data.error || "Error al guardar la marca.", "error");
       }
       return;
     }
 
-    showToast(id ? "Marca actualizada con éxito." : "Marca agregada con éxito.", "#27ae60", "check-circle");
+    showToast(id ? "Marca actualizada con éxito." : "Marca agregada con éxito.", "success");
     brandModal.classList.remove("visible");
     fetchBrands();
 
   } catch (err) {
-    showToast("Error inesperado al guardar la marca.", "#e74c3c", "alert-circle");
+    showToast("Error inesperado al guardar la marca.", "error");
   }
 });
 

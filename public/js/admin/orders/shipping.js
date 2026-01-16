@@ -97,17 +97,17 @@ cityForm.addEventListener("submit", async (e) => {
       if (data.validationError && Array.isArray(data.errors)) {
         showValidation(data.errors, "#cityForm");
       } else {
-        showToast(data.error || "Error al guardar la ciudad.", "#e74c3c", "alert-circle");
+        showToast(data.error || "Error al guardar la ciudad.", "error");
       }
       return;
     }
 
-    showToast(id ? "Ciudad actualizada con éxito." : "Ciudad agregada con éxito.", "#27ae60", "check-circle");
+    showToast(id ? "Ciudad actualizada con éxito." : "Ciudad agregada con éxito.", "success");
     cityModal.classList.remove("visible");
     fetchCities();
 
   } catch (err) {
-    showToast("Error inesperado al guardar la ciudad.", "#e74c3c", "alert-circle");
+    showToast("Error inesperado al guardar la ciudad.", "error");
   }
 });
 

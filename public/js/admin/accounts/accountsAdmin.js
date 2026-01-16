@@ -12,7 +12,7 @@ async function fetchAdmins() {
   const data = await res.json();
 
   if (!res.ok) {
-    showToast(data.error || "Error al obtener administradores", "#e74c3c", "alert-circle");
+    showToast(data.error || "Error al obtener administradores", "error");
     admins = []; 
     renderAdmins(); 
     return;
@@ -78,10 +78,10 @@ window.deleteAdmin = async function (id) {
     if (!res.ok) throw new Error()
 
     await fetchAdmins();
-    showToast("Administrador eliminado con éxito.", "#27ae60", "check-circle");
+    showToast("Administrador eliminado con éxito.", "success");
 
   } catch (err) {
-    showToast(err.message, "#e74c3c", "alert-circle");
+    showToast(err.message, "error");
   }
 }
 
@@ -185,19 +185,19 @@ userForm.addEventListener("submit", async (event) => {
 
         showValidation(errors, "#userForm");
       } else {
-        showToast(data.error || "Error al guardar los datos", "#e74c3c", "alert-circle");
+        showToast(data.error || "Error al guardar los datos", "error");
       }
       return;
     }
 
     showToast(id ? "Actualizado con éxito." : 
-      "Administrador creado con éxito.", "#27ae60", "check-circle");
+      "Administrador creado con éxito.", "success");
 
     closeModal();
     fetchAdmins();
 
   } catch (err) {
-    showToast(err.message || "Error al guardar los datos.", "#e74c3c", "alert-circle");
+    showToast(err.message || "Error al guardar los datos.", "error");
   }
 });
 

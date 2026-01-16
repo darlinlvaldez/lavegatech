@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8">
@@ -8,52 +8,82 @@
     <link rel="icon" type="image/png" href="/img/lavegatech-logo.png">
     <link type="text/css" rel="stylesheet" href="/css/admin/auth.css" />
     <link type="text/css" rel="stylesheet" href="/css/utils/error.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/vendor/all.css">
 </head>
 
 <body>
+    <div class="background-image"></div>
+    <div class="overlay"></div>
 
-  <div class="login-container">
-    <h2>Iniciar Sesión</h2>
+    <div class="login-card">
+        <div class="logo-container">
+            <img src="/img/lavegatech-logo.png" alt="LaVegaTech">
+        </div>
 
-    <form action="/api/adminAuth/login" method="POST">
-      <label for="email">Nombre de usuario:</label>
-      <input type="text" name="username" value="<%= username || '' %>" placeholder="ejemplo" required
-        class="<%= validationErrors?.username ? 'input-error' : '' %>">
+        <div class="header">
+            <h2>Acceso Admin</h2>
+            <p>Introduce tus credenciales para continuar</p>
+        </div>
 
-      <% if (validationErrors?.username) { %>
-        <p class="field-error">
-          <i class="fa-solid fa-circle-exclamation"></i>
-          <%= validationErrors.username %>
-        </p>
+        <% if (error && !validationErrors) { %>
+            <div class="general-error">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <%= error %>
+            </div>
         <% } %>
 
-        <label for="password">Contraseña:</label>
-        <div class="password-wrapper">
-          <input type="password" name="password" id="passwordInput" placeholder="Introduce la contraseña" required
-            class="password-input <%= validationErrors?.password ? 'input-error' : '' %>">
+        <form action="/api/adminAuth/login" method="POST">
+            <div class="form-group">
+                <label for="username">Usuario</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-user field-icon"></i>
+                    <input type="text" 
+                           name="username" 
+                           value="<%= username || '' %>" 
+                           placeholder="ejemplo" 
+                           required
+                           class="<%= validationErrors?.username ? 'input-error' : '' %>">
+                </div>
+                <% if (validationErrors?.username) { %>
+                    <p class="field-error">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <%= validationErrors.username %>
+                    </p>
+                <% } %>
+            </div>
 
-            <span onclick="togglePassword('password')" class="toggle-password">
-          <i id="eyeIconPassword" class="fas fa-eye-slash"></i>
-        </span>
-      </div>
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-lock field-icon"></i>
+                    <input type="password" 
+                           name="password" 
+                           id="passwordInput" 
+                           placeholder="********" 
+                           required
+                           class="password-input <%= validationErrors?.password ? 'input-error' : '' %>">
+                    
+                    <span onclick="togglePassword('password')" class="toggle-password">
+                      <i id="eyeIconPassword" class="fas fa-eye-slash"></i>
+                    </span>
+                </div>
+                <% if (validationErrors?.password) { %>
+                    <p class="field-error">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <%= validationErrors.password %>
+                    </p>
+                <% } %>
+            </div>
 
-      <% if (validationErrors?.password) { %>
-        <p class="field-error">
-          <i class="fa-solid fa-circle-exclamation"></i>
-          <%= validationErrors.password %>
-        </p>
-      <% } %>
+            <button type="submit" class="btn-submit">
+                Entrar al Panel
+            </button>
+        </form>
 
-      <% if (error && !validationErrors) { %>
-        <p class="general-error">
-          <%= error %>
-        </p>
-      <% } %>
-
-      <button type="submit">Entrar</button>
-    </form>
-  </div>
+        <div class="footer-info">
+            &copy; 2024 LaVegaTech &bull; Seguridad Certificada
+        </div>
+    </div>
 
 </body>
 

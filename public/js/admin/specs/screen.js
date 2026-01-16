@@ -96,16 +96,16 @@ pantallaForm.addEventListener("submit", async (e) => {
       if (data.validationError && Array.isArray(data.errors)) {
         showValidation(data.errors, "#pantallaForm");
       } else {
-        showToast(data.error || "Error al guardar la pantalla.", "#e74c3c", "alert-circle");
+        showToast(data.error || "Error al guardar la pantalla.", "error");
       }
       return;
     }
 
-    showToast(id ? "Pantalla actualizada." : "Pantalla agregada.", "#27ae60", "check-circle");
+    showToast(id ? "Pantalla actualizada." : "Pantalla agregada.", "success");
     pantallaModal.classList.remove("visible");
     fetchPantallas();
   } catch (err) {
-    showToast("Error inesperado.", "#e74c3c", "alert-circle");
+    showToast("Error inesperado.", "error");
   }
 });
 
@@ -136,9 +136,9 @@ window.deletePantalla = async function (id) {
     const res = await fetch(`/api/specs/pantalla/${id}`, { method: "DELETE" });
     if (!res.ok) throw new Error();
     await fetchPantallas();
-    showToast("Pantalla eliminada con éxito.", "#27ae60", "check-circle");
+    showToast("Pantalla eliminada con éxito.", "success");
   } catch (err) {
-    showToast("Error al eliminar la pantalla.", "#e74c3c", "alert-circle");
+    showToast("Error al eliminar la pantalla.", "error");
   }
 };
 

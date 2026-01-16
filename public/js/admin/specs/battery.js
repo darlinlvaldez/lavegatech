@@ -94,16 +94,16 @@ bateriaForm.addEventListener("submit", async (e) => {
       if (data.validationError && Array.isArray(data.errors)) {
         showValidation(data.errors, "#bateriaForm");
       } else {
-        showToast(data.error || "Error al guardar la batería.", "#e74c3c", "alert-circle");
+        showToast(data.error || "Error al guardar la batería.", "error");
       }
       return;
     }
 
-    showToast(id ? "Batería actualizada." : "Batería agregada.", "#27ae60", "check-circle");
+    showToast(id ? "Batería actualizada." : "Batería agregada.", "success");
     bateriaModal.classList.remove("visible");
     fetchBaterias();
   } catch (err) {
-    showToast("Error inesperado.", "#e74c3c", "alert-circle");
+    showToast("Error inesperado.", "error");
   }
 });
 
@@ -133,9 +133,9 @@ window.deleteBateria = async function (id) {
     const res = await fetch(`/api/specs/baterias/${id}`, { method: "DELETE" });
     if (!res.ok) throw new Error();
     await fetchBaterias();
-    showToast("Batería eliminada con éxito.", "#27ae60", "check-circle");
+    showToast("Batería eliminada con éxito.", "success");
   } catch (err) {
-    showToast("Error al eliminar la batería.", "#e74c3c", "alert-circle");
+    showToast("Error al eliminar la batería.", "error");
   }
 };
 
@@ -145,7 +145,7 @@ async function fetchBaterias() {
     baterias = await res.json();
     renderBaterias();
   } catch (err) {
-    showToast("Error al cargar las baterías.", "#e74c3c", "alert-circle");
+    showToast("Error al cargar las baterías.", "error");
   }
 }
 

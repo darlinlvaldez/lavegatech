@@ -88,16 +88,16 @@ cpuForm.addEventListener("submit", async (e) => {
       if (data.validationError && Array.isArray(data.errors)) {
         showValidation(data.errors, "#cpuForm");
       } else {
-        showToast(data.error || "Error al guardar la CPU.", "#e74c3c", "alert-circle");
+        showToast(data.error || "Error al guardar la CPU.", "error");
       }
       return;
     }
 
-    showToast(id ? "CPU actualizada." : "CPU agregada.", "#27ae60", "check-circle");
+    showToast(id ? "CPU actualizada." : "CPU agregada.", "success");
     cpuModal.classList.remove("visible");
     fetchCPUs();
   } catch (err) {
-    showToast("Error inesperado.", "#e74c3c", "alert-circle");
+    showToast("Error inesperado.", "error");
   }
 });
 
@@ -126,9 +126,9 @@ window.deleteCPU = async function (id) {
     const res = await fetch(`/api/specs/cpu/${id}`, { method: "DELETE" });
     if (!res.ok) throw new Error();
     await fetchCPUs();
-    showToast("CPU eliminada con éxito.", "#27ae60", "check-circle");
+    showToast("CPU eliminada con éxito.", "success");
   } catch (err) {
-    showToast("Error al eliminar la CPU.", "#e74c3c", "alert-circle");
+    showToast("Error al eliminar la CPU.", "error");
   }
 };
 
@@ -138,7 +138,7 @@ async function fetchCPUs() {
     cpus = await res.json();
     renderCPUs();
   } catch (err) {
-    showToast("Error al cargar las CPUs.", "#e74c3c", "alert-circle");
+    showToast("Error al cargar las CPUs.", "error");
   }
 }
 

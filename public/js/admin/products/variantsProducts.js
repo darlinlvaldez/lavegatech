@@ -170,14 +170,14 @@ variantForm.addEventListener("submit", async (e) => {
       const uploadData = await uploadRes.json();
 
       if (!uploadRes.ok) {
-        showToast(uploadData.error || "Error al subir la imagen.", "#e74c3c", "alert-circle");
+        showToast(uploadData.error || "Error al subir la imagen.", "error");
         return;
       }
 
       imgPath = uploadData.path;
 
     } catch {
-      showToast("Error inesperado al subir la imagen.", "#e74c3c", "alert-circle");
+      showToast("Error inesperado al subir la imagen.", "error");
       return;
     }
   }
@@ -201,16 +201,16 @@ variantForm.addEventListener("submit", async (e) => {
     const data = await res.json();
 
     if (!res.ok) {
-      showToast(data.error || "Error al guardar la variante.", "#e74c3c", "alert-circle");
+      showToast(data.error || "Error al guardar la variante.", "error");
       return;
     }
 
-    showToast(id ? "Variante actualizada con éxito." : "Variante agregada con éxito.", "#27ae60", "check-circle");
+    showToast(id ? "Variante actualizada con éxito." : "Variante agregada con éxito.", "success");
     variantModal.classList.remove("visible");
     fetchVariants();
 
   } catch (err) {
-    showToast("Error inesperado al guardar la variante.", "#e74c3c", "alert-circle");
+    showToast("Error inesperado al guardar la variante.", "error");
   }
 });
 
@@ -279,10 +279,10 @@ window.deleteVariant = async function(id) {
     if (!res.ok) throw new Error();
 
     await fetchVariants();
-    showToast("Variante eliminada con éxito.", "#27ae60", "check-circle");
+    showToast("Variante eliminada con éxito.", "success");
 
   } catch (err) {
-    showToast("Error al eliminar la variante.", "#e74c3c", "alert-circle");
+    showToast("Error al eliminar la variante.", "error");
   }
 }
 

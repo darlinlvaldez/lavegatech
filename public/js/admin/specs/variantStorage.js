@@ -131,7 +131,7 @@ async function fetchMovilesDisponibles() {
     setupAlmAutocomplete();
   } catch (err) {
     console.error(err);
-    showToast("Error al cargar móviles disponibles.", "#e74c3c", "alert-circle");
+    showToast("Error al cargar móviles disponibles.", "error");
   }
 }
 
@@ -141,7 +141,7 @@ async function fetchAlmacenamientosDisponibles() {
     almacenamientosDisponibles = await res.json();
     setupAlmAutocomplete();
   } catch (err) {
-    showToast("Error al cargar almacenamientos disponibles.", "#e74c3c", "alert-circle");
+    showToast("Error al cargar almacenamientos disponibles.", "error");
   }
 }
 
@@ -152,7 +152,7 @@ varianteAlmForm.addEventListener("submit", async (e) => {
   const almacenamientoId = parseInt(almacenamientoIdInput.dataset.id);
 
   if (!movilId || !almacenamientoId) {
-    showToast("Debes seleccionar un móvil y un almacenamiento válidos.", "#e74c3c", "alert-circle");
+    showToast("Debes seleccionar un móvil y un almacenamiento válidos.", "error");
     return;
   }
 
@@ -180,18 +180,18 @@ varianteAlmForm.addEventListener("submit", async (e) => {
     const data = await res.json();
 
     if (!res.ok) {
-      showToast(data.error || "Error al guardar la variante.", "#e74c3c", "alert-circle");
+      showToast(data.error || "Error al guardar la variante.", "error");
       return;
     }
 
-    showToast(isEditing ? "Variante de almacenamiento actualizada." : "Variante de almacenamiento agregada.", "#27ae60", "check-circle");
+    showToast(isEditing ? "Variante de almacenamiento actualizada." : "Variante de almacenamiento agregada.", "success");
 
     varianteAlmModal.classList.remove("visible");
     varianteAlmForm.removeAttribute("data-original-movil");
     varianteAlmForm.removeAttribute("data-original-almacenamiento");
     fetchVariantesAlm();
   } catch (err) {
-    showToast("Error inesperado.", "#e74c3c", "alert-circle");
+    showToast("Error inesperado.", "error");
   }
 });
 
@@ -203,7 +203,7 @@ window.editVarianteAlm = async function(movil_id, almacenamiento_id) {
   const alm = almacenamientosDisponibles.find(a => a.id === almacenamiento_id);
 
   if (!movil || !alm) {
-    showToast("No se encontró el móvil o el almacenamiento.", "#e74c3c", "alert-circle");
+    showToast("No se encontró el móvil o el almacenamiento.", "error");
     return;
   }
 
@@ -255,9 +255,9 @@ window.deleteVarianteAlm = async function(movil_id, almacenamiento_id) {
 
     if (!res.ok) throw new Error();
     await fetchVariantesAlm();
-    showToast("Variante de almacenamiento eliminada con éxito.", "#27ae60", "check-circle");
+    showToast("Variante de almacenamiento eliminada con éxito.", "success");
   } catch (err) {
-    showToast("Error al eliminar la variante.", "#e74c3c", "alert-circle");
+    showToast("Error al eliminar la variante.", "error");
   }
 };
 
@@ -267,7 +267,7 @@ async function fetchVariantesAlm() {
     variantesAlm = await res.json();
     renderVariantesAlm();
   } catch (err) {
-    showToast("Error al cargar las variantes de almacenamiento.", "#e74c3c", "alert-circle");
+    showToast("Error al cargar las variantes de almacenamiento.", "error");
   }
 }
 

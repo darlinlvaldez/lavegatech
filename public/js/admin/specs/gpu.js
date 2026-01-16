@@ -84,16 +84,16 @@ gpuForm.addEventListener("submit", async (e) => {
       if (data.validationError && Array.isArray(data.errors)) {
         showValidation(data.errors, "#gpuForm");
       } else {
-        showToast(data.error || "Error al guardar la GPU.", "#e74c3c", "alert-circle");
+        showToast(data.error || "Error al guardar la GPU.", "error");
       }
       return;
     }
 
-    showToast(id ? "GPU actualizada." : "GPU agregada.", "#27ae60", "check-circle");
+    showToast(id ? "GPU actualizada." : "GPU agregada.", "success");
     gpuModal.classList.remove("visible");
     fetchGPUs();
   } catch (err) {
-    showToast("Error inesperado.", "#e74c3c", "alert-circle");
+    showToast("Error inesperado.", "error");
   }
 });
 
@@ -121,9 +121,9 @@ window.deleteGPU = async function (id) {
     const res = await fetch(`/api/specs/gpu/${id}`, { method: "DELETE" });
     if (!res.ok) throw new Error();
     await fetchGPUs();
-    showToast("GPU eliminada con éxito.", "#27ae60", "check-circle");
+    showToast("GPU eliminada con éxito.", "success");
   } catch (err) {
-    showToast("Error al eliminar la GPU.", "#e74c3c", "alert-circle");
+    showToast("Error al eliminar la GPU.", "error");
   }
 };
 
@@ -133,7 +133,7 @@ async function fetchGPUs() {
     gpus = await res.json();
     renderGPUs();
   } catch (err) {
-    showToast("Error al cargar las GPUs.", "#e74c3c", "alert-circle");
+    showToast("Error al cargar las GPUs.", "error");
   }
 }
 

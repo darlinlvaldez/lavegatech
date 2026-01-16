@@ -29,6 +29,6 @@ export async function changeEntityStatus({
 
     render();
   } catch (err) {
-    showToast(errorMessage, "#e74c3c", "alert-circle");
+    showToast(errorMessage, "error");
   }
 }
