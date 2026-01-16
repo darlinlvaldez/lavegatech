@@ -1333,7 +1333,7 @@ CREATE TABLE `usuarios` (
   `username` varchar(100) NOT NULL,
   `email` varchar(255) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
-  `rol` enum('cliente','superadmin','admin','ventas','transportista','soporte','editor') NOT NULL DEFAULT current_timestamp(),
+  `rol` enum('cliente','superadmin','admin','ventas','transportista','soporte','editor') NOT NULL DEFAULT 'cliente',
   `activo` tinyint(1) DEFAULT 0,
   `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
