@@ -35,17 +35,17 @@ rating.findByProductId = async (productId, page = 1, limit = 3, userId = null) =
     c.fecha_creacion,
     c.fecha_actualizacion,
     u.username,
-    CASE WHEN c.usuario_id = ? THEN 0 ELSE 1 END as orden_personal,
-    c.usuario_id = ? as isAuthor
+    CASE WHEN c.usuario_id = ? THEN 0 ELSE 1 END AS orden_personal,
+    c.usuario_id = ? AS isAuthor
     FROM clasificacion c
     JOIN usuarios u ON c.usuario_id = u.id
     WHERE c.producto_id = ?
     ORDER BY orden_personal, c.fecha_creacion DESC
-    LIMIT ? OFFSET ?
-    `;
+    LIMIT ${limit} OFFSET ${offset}
+  `;
 
   const [rows] = await db.execute(query, [
-    userId ?? -1, userId ?? -1, productId, limit, offset]);
+    userId ?? -1, userId ?? -1, productId]);
 
   return rows;
 };
