@@ -51,6 +51,11 @@
   cursor: pointer;
 }
 
+.toast-notification i {
+  font-size: 20px;  
+  line-height: 1;
+}
+
 .toast-progress {
   position: absolute;
   bottom: 0;
@@ -65,11 +70,13 @@
 .toast-error .toast-progress   { background-color: #e74c3c !important; }
 .toast-info .toast-progress    { background-color: #3498db !important; }
 .toast-warning .toast-progress { background-color: #f39c12 !important; }
+.toast-edit .toast-progress { background-color: #b4ae00 !important; }
 
-.toast-success svg { stroke: #27ae60; }
-.toast-error svg   { stroke: #e74c3c; }
-.toast-info svg    { stroke: #3498db; }
-.toast-warning svg { stroke: #f39c12; }
+.toast-success i { color: #27ae60; }
+.toast-error i   { color: #e74c3c; }
+.toast-info i    { color: #3498db; }
+.toast-warning i { color: #f39c12; }
+.toast-edit i    { color: #b4ae00; }
 
 @keyframes progressBar {
   from { width: 100%; }

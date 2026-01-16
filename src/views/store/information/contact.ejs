@@ -1,10 +1,8 @@
 <%- include('../../partials/header.ejs') %>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
-<link rel="stylesheet" href="/js/vendor/toastify.js/src/toastify.min.css">
+<link rel="stylesheet" href="/css/vendor/leaflet.css"/>
+<link rel="stylesheet" href="/css/vendor/toastify.css">
 <link type="text/css" rel="stylesheet" href="/css/store/contact.css"/>
-<link rel="stylesheet" href="/css/vendor/toastify.css"
-<link rel="stylesheet" href="/css/vendor/sweetalert2css">">
 
 <body class="body-contact">
 <div class="contactos-page">
@@ -21,27 +19,6 @@
 </div>
 
 <div id="mapid"></div>
-
-<!-- Start map -->
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-<script>
-    var mymap = L.map('mapid').setView([19.222076, -70.529688], 15);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(mymap);
-
-    L.marker([19.222076, -70.529688]).addTo(mymap)
-        .bindPopup("<b>Ubicación</b><br />Calle Libertad, La Vega 41000.").openPopup();
-
-    mymap.scrollWheelZoom.disable();
-    mymap.touchZoom.disable();
-
-    setTimeout(() => {
-        mymap.invalidateSize();
-    }, 500);
-</script>
-<!-- End Map -->
 
 <div class="input-principal">
     <div class="fila-formulario">
@@ -106,31 +83,23 @@
 </div>
 
 <% if (success) { %>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      Toastify({
-        text: `<i data-feather="check-circle" style="vertical-align: middle; margin-right: 8px;"></i> Mensaje enviado correctamente`,
-        duration: 3000,
-        gravity: "top",
-        position: "right",
-        stopOnFocus: true,
-        backgroundColor: "#4CAF50",
-        escapeMarkup: false,
-        className: "toast-notification"
-      }).showToast();
-
-      setTimeout(() => {
-        feather.replace();
-      }, 50);
-    });
-  </script>
+<script>
+  sessionStorage.setItem("toastSuccess", JSON.stringify({
+    message: "Mensaje enviado correctamente",
+    type: "success",
+    icon: "check-circle"
+  }));
+</script>
 <% } %>
   
   <%- include('../../partials/footer.ejs') %>
 
 </body>
 
+<script src="/js/vendor/leaflet.min.js"></script>
 <script src="/js/vendor/toastify.js"></script>
-<script src="https://unpkg.com/feather-icons"></script>
+
+<script src="/js/vendor/map.js"></script>
+<script src="/js/utils/flashToast.js" type="module"></script>
 
 </html>

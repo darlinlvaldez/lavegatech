@@ -10,3 +10,4 @@ Decidir que es mejor para agregar productos.
 Hacer que los mensajes de toastify se muestren luego de renderizar.
 Que todas las librerias del front esten en local.
 Decidir que hacer con los productos cuando no hay stock.
+Implementar el buscador en pedidos store.

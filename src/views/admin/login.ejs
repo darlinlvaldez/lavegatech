@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LaVegaTech - Admin</title>
     <link rel="icon" type="image/png" href="/img/lavegatech-logo.png">
-    <link type="text/css" rel="stylesheet" href="/css/admin/auth.css" />
+    <link type="text/css" rel="stylesheet" href="/css/admin/login.css" />
     <link type="text/css" rel="stylesheet" href="/css/utils/error.css" />
     <link rel="stylesheet" href="/css/vendor/all.css">
 </head>
@@ -37,12 +37,8 @@
                 <label for="username">Usuario</label>
                 <div class="input-wrapper">
                     <i class="fa-solid fa-user field-icon"></i>
-                    <input type="text" 
-                           name="username" 
-                           value="<%= username || '' %>" 
-                           placeholder="ejemplo" 
-                           required
-                           class="<%= validationErrors?.username ? 'input-error' : '' %>">
+                    <input type="text" name="username" value="<%= username || '' %>" 
+                           placeholder="ejemplo" class="<%= validationErrors?.username ? 'input-error' : '' %>">
                 </div>
                 <% if (validationErrors?.username) { %>
                     <p class="field-error">
@@ -56,11 +52,7 @@
                 <label for="password">Contraseña</label>
                 <div class="input-wrapper">
                     <i class="fa-solid fa-lock field-icon"></i>
-                    <input type="password" 
-                           name="password" 
-                           id="passwordInput" 
-                           placeholder="********" 
-                           required
+                    <input type="password" name="password" id="passwordInput" placeholder="Introducir contraseña" 
                            class="password-input <%= validationErrors?.password ? 'input-error' : '' %>">
                     
                     <span onclick="togglePassword('password')" class="toggle-password">
@@ -76,7 +68,7 @@
             </div>
 
             <button type="submit" class="btn-submit">
-                Entrar al Panel
+                Iniciar sesión
             </button>
         </form>
 

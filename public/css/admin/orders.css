@@ -31,54 +31,6 @@
     gap: 10px; 
 }
 
-.alert-info-user {
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
-    border-radius: 8px;
-    color: #0c5460;
-    background-color: #d1ecf1;
-    border-color: #bee5eb;
-    text-align: center;
-}
-
-.btn-user {
-    display: inline-block;
-    font-weight: 400;
-    color: #fff;
-    text-align: center;
-    user-select: none;
-    background-color: #007bff;
-    border: 1px solid #007bff;
-    padding: 0.75rem 1.5rem;
-    font-size: 1.5rem;
-    line-height: 1.5;
-    border-radius: 0.5rem;
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    text-decoration: none;
-    cursor: pointer;
-    margin-top: 20px;
-    display: block;
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
-}
-
-.btn-user:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
-    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
-}
-
-.list-group-user {
-    display: flex;
-    flex-direction: column;
-    padding-left: 0;
-    margin-bottom: 0;
-    border-radius: 0.5rem;
-}
-
 .list-group-product {
     position: relative;
     display: block;
@@ -166,13 +118,49 @@
     cursor: pointer;
     outline: none;
     color: #2c3e50;
-    transition: border-color 0.2s ease;
-    margin-left: 10px; /* Espacio entre la fecha y el select */
-    height: fit-content; /* Asegura que no force el alto */
+    transition: all 0.2s ease;
+    margin-left: 10px;
+    height: fit-content;
 }
 
-.estado-envio-select:hover {
-    border-color: #007bff;
+.estado-envio-select option[value="pendiente"] {
+    background-color: #ffc107;
+    color: black;
+}
+
+.estado-envio-select option[value="enviado"] {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.estado-envio-select option[value="entregado"] {
+    background-color: #28a745;
+    color: white;
+}
+
+.estado-envio-select option[value="cancelado"] {
+    background-color: #dc3545;
+    color: white;
+}
+
+.estado-envio-select:has(option[value="pendiente"]:checked) {
+    background-color: #ffc107;
+    color: black;
+}
+
+.estado-envio-select:has(option[value="enviado"]:checked) {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.estado-envio-select:has(option[value="entregado"]:checked) {
+    background-color: #28a745;
+    color: white;
+}
+
+.estado-envio-select:has(option[value="cancelado"]:checked) {
+    background-color: #dc3545;
+    color: white;
 }
 
 @media (max-width: 575.98px) {

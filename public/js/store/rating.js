@@ -120,7 +120,7 @@ function handleEditReview(reviewId) {
   document.getElementById("reviewInput").value = review.trim();
   document.getElementById("ratingInput").value = rating;
 
-  showToast("Editando reseña...", "warning", "edit", "#f39c12");
+  showToast("Editando reseña...", "edit");
 
   document.getElementById("reviewForm").scrollIntoView({ behavior: "smooth" });
 }
