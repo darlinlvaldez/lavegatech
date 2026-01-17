@@ -1,6 +1,7 @@
 import { showToast } from '../../utils/toastify.js';
 import { showValidation, clearError } from '../../utils/showValidation.js';
 import { changeEntityStatus} from '../../utils/changeState.js';
+import { sweetAlert } from '../../utils/sweetAlert2.js';
 
 let cities = [];
 let filteredCities = [];
@@ -38,6 +39,9 @@ function renderCities() {
       <td>
         <button onclick="editCity(${city.id})" class="edit-button">
           Editar
+        </button>
+        <button onclick="deleteCity(${city.id})" class="delete-button">
+          Eliminar
         </button>
       </td>
     `;
@@ -141,6 +145,27 @@ async function fetchCities() {
   cities = data;
   filteredCities = [];
   renderCities();
+}
+
+window.deleteCity = async function(id) {
+  const confirmed = await sweetAlert({
+    title: "¿Eliminar Ciudad?",
+    text: "Esta acción no se puede deshacer.",
+    confirmButtonText: "Aceptar",
+  });
+
+  if (!confirmed) return;
+
+  try {
+    const res = await fetch(`/api/admin/ciudades/${id}`, { method: "DELETE" });
+    if (!res.ok) throw new Error();
+    
+    await fetchCities();
+    showToast("Ciudad eliminada con éxito.", "success");
+
+  } catch (err) {
+    showToast("Error al eliminar la ciudad.", "error");
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {

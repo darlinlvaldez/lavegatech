@@ -364,6 +364,10 @@ admin.estadoCategoria = async (id, activo) => {
   return result.affectedRows;
 };
 
+admin.eliminarCategoria = async (id) => {
+  await db.query("DELETE FROM categorias WHERE id = ?", [id]);
+};
+
 // Marcas
 
 admin.obtenerMarcas = async () => {
@@ -402,6 +406,12 @@ admin.estadoMarca = async (id, activo) => {
     [activo, id]
   );
   return result.affectedRows;
+};
+
+admin.eliminarMarca = async (id) => {
+  await db.query("DELETE FROM marca_categoria WHERE marca_id = ?", [id]);
+
+  await db.query("DELETE FROM p_marcas WHERE id = ?", [id]);
 };
 
 // Variantes
@@ -553,6 +563,14 @@ admin.estadoCiudad = async (id, activo) => {
   const [result] = await db.query(
     `UPDATE ciudades_envio SET activo = ? WHERE id = ?`,
     [activo, id]
+  );
+  return result.affectedRows;
+};
+
+admin.eliminarCiudad = async (id) => {
+  const [result] = await db.query(
+    `DELETE FROM ciudades_envio WHERE id = ?`,
+    [id]
   );
   return result.affectedRows;
 };

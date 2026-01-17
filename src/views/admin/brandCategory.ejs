@@ -6,28 +6,32 @@
     <link rel="stylesheet" href="/css/admin/table.css">
     <link rel="stylesheet" href="/css/utils/error.css">
     <link rel="stylesheet" href="/css/utils/state.css">
-
+    <link rel="stylesheet" href="/css/admin/tabs.css">
 
     <div class="main-content">
         <header class="header">
             <h1>Gestión de Marcas y Categorías</h1>
         </header>
 
-        <main class="main-content-area">
+         <main class="main-content-area">
+        <div class="card">
+            <div class="tabs-container">
+                <div class="tabs">
+                    <button class="tab-button" data-tab="categorias">Categorias</button>
+                    <button class="tab-button" data-tab="marcas">Marcas</button>
+                </div>
+            </div>
 
-            <div class="card">
+            <div class="tab-content" id="categorias">
                 <div class="card-header">
                     <h2>Lista de Categorías</h2>
                     <div class="search-container">
-                        <input type="text" id="searchCategoriaInput" placeholder="Buscar categorías..."
-                            class="input-search" />
+                        <input type="text" id="searchCategoriaInput" placeholder="Buscar categorías..." class="input-search" />
                         <i class="fa fa-search search-icon"></i>
                     </div>
                     <button id="addCategoryBtn" class="add-button">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6v6m0 0v6m0-6h6m-6 0H6">
-                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                         </svg>
                         Añadir Categoría
                     </button>
@@ -47,9 +51,9 @@
                         </tbody>
                     </table>
                 </div>
-            </div><br><br><br>
+            </div>
 
-            <div class="card">
+            <div class="tab-content" id="marcas">
                 <div class="card-header">
                     <h2>Lista de Marcas</h2>
                     <div class="search-container">
@@ -147,6 +151,6 @@
     <script type="module" src="/js/admin/brand-category/brandCategory.js"></script>
     <script src="/js/vendor/sweetalert2.min.js"></script>
     <script src="/js/vendor/toastify.js"></script>
-    
+    <script src="/js/utils/tab.js"></script>
 
     </html>

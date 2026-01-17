@@ -1,6 +1,7 @@
 import { showToast } from '../../utils/toastify.js';
 import { showValidation, clearError } from '../../utils/showValidation.js';
 import { changeEntityStatus} from '../../utils/changeState.js';
+import { sweetAlert } from '../../utils/sweetAlert2.js';
 
 let categorias = [];
 let marcas = [];
@@ -50,6 +51,7 @@ function renderCategories() {
       </td>
       <td>
         <button onclick="editCategory(${cat.id})" class="edit-button">Editar</button>
+        <button onclick="deleteCategory(${cat.id})" class="delete-button">Eliminar</button>
       </td>
     `;
 
@@ -177,6 +179,27 @@ window.editCategory = function (id) {
   }
 }
 
+window.deleteCategory = async function (id) {
+  const confirmed = await sweetAlert({
+    title: "¿Eliminar Categoría?",
+    text: "Esta acción no se puede deshacer.",
+    confirmButtonText: "Aceptar",
+  });
+
+  if (!confirmed) return;
+
+  try {
+    const res = await fetch(`/api/admin/categorias/${id}`, { method: "DELETE" });
+    if (!res.ok) throw new Error();
+
+    await fetchCategories();
+    showToast("Categoría eliminada con éxito.", "success");
+
+  } catch (err) {
+    showToast("Error al eliminar la categoría.", "error");
+  }
+}
+
 async function fetchCategories() {
   const res = await fetch("/api/admin/categorias");
   categorias = await res.json();
@@ -204,6 +227,7 @@ function renderBrands() {
       </td>
       <td>
         <button onclick="editBrand(${brand.id})" class="edit-button">Editar</button>
+        <button onclick="deleteBrand(${brand.id})" class="delete-button">Eliminar</button>
       </td>
     `;
     brandsTableBody.appendChild(row);
@@ -297,6 +321,27 @@ window.editBrand = function (id) {
     });
 
     brandModal.classList.add("visible");
+  }
+}
+
+window.deleteBrand = async function(id) {
+   const confirmed = await sweetAlert({
+    title: "¿Eliminar Categoría?",
+    text: "Esta acción no se puede deshacer.",
+    confirmButtonText: "Aceptar",
+  });
+
+  if (!confirmed) return;
+  
+  try {
+    const res = await fetch(`/api/admin/marcas/${id}`, { method: "DELETE" });
+    if (!res.ok) throw new Error();
+
+   await fetchBrands();
+    showToast("Marca eliminada con éxito.", "#27ae60", "check-circle");
+
+  } catch (err) {
+    showToast("Error al eliminar la marca.", "#e74c3c", "alert-circle");
   }
 }
 

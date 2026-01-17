@@ -724,35 +724,7 @@ input[type="checkbox"] {
 }
 </style>
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const tabButtons = document.querySelectorAll(".tab-button");
 
-    tabButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        tabButtons.forEach(b => b.classList.remove("active"));
-        document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
-
-        btn.classList.add("active");
-        const tabId = btn.getAttribute("data-tab");
-        document.getElementById(tabId).classList.add("active");
-
-        switch(tabId) {
-          case 'pantallas':
-            if (typeof fetchPantallas === 'function') fetchPantallas();
-            break;
-          case 'camaras':
-            if (typeof fetchCamaras === 'function') fetchCamaras();
-            break;
-        }
-      });
-    });
-
-    if (tabButtons.length > 0) {
-      tabButtons[0].click();
-    }
-  });
-</script>
 
 <script type="module" src="/js/admin/specs/screen.js"></script>
 <script type="module" src="/js/admin/specs/camera.js"></script>
@@ -768,3 +740,4 @@ input[type="checkbox"] {
 <script type="module" src="/js/admin/specs/variantStorage.js"></script>
 <script src="/js/vendor/sweetalert2.min.js"></script>
 <script src="/js/vendor/toastify.js"></script>
+<script src="/js/utils/tab.js"></script>

@@ -1,5 +1,6 @@
 import express from 'express';
 import admin from '../../controllers/admin/admin.js';
+import excel from '../../controllers/admin/excelReport.js';
 import validate from '../../middlewares/validateRequest.js';
 import request from '../schemas/admin.js';
 import { isAdmin, requireRole } from '../../middlewares/auth.js';
@@ -14,11 +15,11 @@ router.get('/panel', requireRole('superadmin', 'admin', 'editor', 'ventas', 'tra
 // Ventas
 router.get('/ventas-por-fecha', requireRole('superadmin', 'admin', 'ventas'), admin.graficoVentas);
 router.get('/allSales', requireRole('superadmin', 'admin', 'ventas'), admin.graficoVentas);
-router.get('/export-ventas-excel', requireRole('superadmin', 'admin', 'ventas'), admin.exportSalesExcel);
+router.get('/export-ventas-excel', requireRole('superadmin', 'admin', 'ventas'), excel.exportSalesExcel);
 
 // Estadisticas 
 router.get('/top-productos', requireRole('superadmin', 'admin', 'ventas'), admin.topProductos);
-router.get('/export-top-productos-excel', requireRole('superadmin', 'admin', 'ventas'), admin.exportTopProductsExcel);
+router.get('/export-top-productos-excel', requireRole('superadmin', 'admin', 'ventas'), excel.exportTopProductsExcel);
 router.get('/allProducts', requireRole('superadmin', 'admin', 'ventas'), admin.allProductsView);
 router.get('/marcaCategoria', requireRole('superadmin', 'admin', 'ventas'), admin.marcaCategoria);
 
@@ -45,18 +46,21 @@ router.get('/marcas',  requireRole('superadmin', 'admin', 'editor'), admin.lista
 router.post('/marcas',  requireRole('superadmin', 'admin'), validate(request.brand), admin.crearMarca);
 router.put('/marcas/:id',  requireRole('superadmin', 'admin'), validate(request.brand), admin.editarMarca);
 router.patch('/marcas/:id/estado', requireRole('superadmin', 'admin', 'ventas'), admin.estadoMarca);
+router.delete('/marcas/:id',  requireRole('superadmin', 'admin'), admin.borrarMarca);   
 
 // Categorías
 router.get('/categorias',  requireRole('superadmin', 'admin', 'editor'), admin.listarCategorias);
 router.post('/categorias',  requireRole('superadmin', 'admin', 'editor'), validate(request.category), admin.agregarCategoria); 
 router.put('/categorias/:id',  requireRole('superadmin', 'admin', 'editor'), validate(request.category), admin.editarCategoria); 
 router.patch('/categorias/:id/estado', requireRole('superadmin', 'admin', 'editor'), admin.estadoCategoria);
+router.delete('/categorias/:id',  requireRole('superadmin', 'admin'), admin.borrarCategoria);
 
 // Ciudades de envíos
 router.get('/ciudades',  requireRole('superadmin', 'admin', 'ventas', 'transportista'), admin.listarCiudades);
 router.post('/ciudades',  requireRole('superadmin', 'admin', 'ventas'), validate(request.shipping), admin.crearCiudad);
 router.put('/ciudades/:id',  requireRole('superadmin', 'admin', 'ventas'), validate(request.shipping), admin.editarCiudad);
 router.patch('/ciudades/:id/estado', requireRole('superadmin', 'admin', 'ventas'), admin.estadoCiudad);
+router.delete('/ciudades/:id',  requireRole('superadmin', 'admin'), admin.borrarCiudad);
 
 // RAM y Almacenamiento 
 router.get('/ram',  requireRole('superadmin', 'admin', 'editor'), admin.listarRAM);

@@ -6,9 +6,9 @@ import code from '../../utils/generateCode.js';
 import {ERROR_MESSAGES, renderError} from '../../utils/error.js';
 import {CODE_EXPIRATION, RESEND_COOLDOWN} from '../../utils/generateCode.js';
 
-const auth = {};
+const authController = {};
 
-auth.register = async (req, res) => {
+authController.register = async (req, res) => {
   try {
     const { username, email, password, confirmPassword } = req.body;
 
@@ -51,7 +51,7 @@ auth.register = async (req, res) => {
   }
 };
 
-auth.verifyCode = async (req, res) => {
+authController.verifyCode = async (req, res) => {
   try {
     const { email, code: userCode, type } = req.body;
     const store = type === 'reset' ? code.resetPending : code.pendingUsers;
@@ -88,7 +88,7 @@ auth.verifyCode = async (req, res) => {
   }
 };
 
-auth.resendCode = async (req, res) => {
+authController.resendCode = async (req, res) => {
   try {
     const {email, type} = req.body;
     const isReset = type === 'reset';
@@ -148,7 +148,7 @@ auth.resendCode = async (req, res) => {
   }
 };
 
-auth.login = async (req, res) => {
+authController.login = async (req, res) => {
   try {
     if (req.validationError) {
       return renderError(res, 'store/login/login', null, {
@@ -185,7 +185,7 @@ auth.login = async (req, res) => {
   }
 };
   
-auth.email = async (req, res) => {
+authController.email = async (req, res) => {
   try {
     const { email } = req.body;
 
@@ -237,7 +237,7 @@ auth.email = async (req, res) => {
   }
 };
 
-auth.forgotPassword = async (req, res) => {
+authController.forgotPassword = async (req, res) => {
   try {
     const { email, password, confirm } = req.body;
 
@@ -268,7 +268,7 @@ auth.forgotPassword = async (req, res) => {
   }
 };
 
-auth.logout = (req, res) => {
+authController.logout = (req, res) => {
   req.session.destroy(err => {
     if (err) {console.error('Error al cerrar sesión:', err);
       return res.status(500).send(ERROR_MESSAGES.SERVER_ERROR);
@@ -278,7 +278,7 @@ auth.logout = (req, res) => {
   });
 };
 
-auth.formEmail = async (req, res) => {
+authController.formEmail = async (req, res) => {
   const { name, email, affair, message } = req.body;
 
   if (req.validationError) {
@@ -299,4 +299,4 @@ auth.formEmail = async (req, res) => {
   }
 };
 
-export default auth;
+export default authController;
