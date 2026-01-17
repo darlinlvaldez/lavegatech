@@ -1,4 +1,3 @@
-import { getRealStock } from '../../utils/utils.js';
 import { getAuthStatus } from '../../store/fav/apiFav.js';
 import { loadCartPreview } from './loadCartPreview.js';
 import { fetchCartItems } from './cartApi.js';
@@ -44,8 +43,7 @@ window.updateQuantity = async function(element, change, variantId) {
       });
 
       countElement.textContent = `${totalItems} ${
-        totalItems === 1 ? "producto" : "productos"
-      }`;
+        totalItems === 1 ? "producto" : "productos"}`;
     }
 
     totalForItem(variantId);
@@ -140,7 +138,8 @@ async function loadCartPage() {
   let totalItems = 0;
 
   for (const item of cart) {
-    const stock = await getRealStock(item.variantId);
+    const stock = 
+    typeof item.realStock === "number" ? item.realStock : Infinity;
 
     const data = calculateItem(item, stock);
 
@@ -158,10 +157,11 @@ async function loadCartPage() {
           <b>Precio:</b>
           <span class="product-price">
             <b>$${formatPrice(data.finalPrice)}</b>
-            ${data.discount > 0 ? `
-            <del class="product-old-price">
+            ${data.discount > 0 ? 
+              `<del class="product-old-price">
             $${formatPrice(data.originalPrice)}</del>
-            <span class="sale">-${data.discount.toFixed(2)}%</span>` : ""} </span>
+            <span class="sale">-${data.discount.toFixed(2)}%</span>`
+                : "" } </span>
           <div class="item-total">
             <span><strong>Total:</strong></span>
             $${formatPrice(data.total)}
@@ -170,23 +170,27 @@ async function loadCartPage() {
         <div class="product-items">
           <span class="label">Color</span>
           <div class="color-item">
-            ${data.color ? `<span>${data.color}</span>`
-                : "<span>No disponible</span>"}
+            ${data.color
+                ? `<span>${data.color}</span>`
+                : "<span>No disponible</span>"
+            }
           </div>
         </div>
         <div data-id="${data.productId}" data-color="${data.color}">
           <div class="qty-cantidad">
             <span>Cantidad</span>
             <div class="input-number product-quantity">
-              ${stock > 0 ? `
-            <select class="input-select" 
+              ${stock > 0 ?
+                `<select class="input-select" 
             onchange="updateQuantity(this, 0, '${data.variantId}')">
               ${Array.from({ length: Math.min(stock, 20) },
-                (_, i) =>`<option value="${i + 1}" 
+                (_, i) => `<option value="${i + 1}" 
                 ${i + 1 === data.quantity ? "selected" : ""}>${i + 1}</option>`
               ).join("")}
             </select>
-            ` : `<span class="badge bg-danger">AGOTADO</span>`}
+            `
+                  : `<span class="badge">AGOTADO</span>`
+              }
             </div>
           </div>
         </div>
@@ -195,7 +199,7 @@ async function loadCartPage() {
           onclick="deleteProduct('${data.variantId}')"></i>
         </div>
       </div>`;
-    }
+  }
 
   container.innerHTML =
     html || "<p>No hay productos disponibles en el carrito.</p>";

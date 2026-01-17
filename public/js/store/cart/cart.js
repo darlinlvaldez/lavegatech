@@ -15,48 +15,33 @@ export async function fetchCart(action, data = {}) {
 }
 
 async function addToCart(product) {
-  const { id, variantId, color, quantity = 1, name, price, image, specs, discount, tax } = product;
+  const { id, variantId, color, quantity = 1, name,  price,
+    image, specs, discount, tax, stock } = product;
 
   try {
-    const { authenticated } = await getAuthStatus();
-    let stockReal;
+    const requestedQty = Math.max(1, parseInt(quantity) || 1);
 
-    if (authenticated) {
-      const stockResponse = await fetch(`/api/cart/stock?variantId=${variantId}`);
-      if (!stockResponse.ok) throw new Error();
-      stockReal = (await stockResponse.json()).stock || 0;
-    } else {
-      const colorStock = window.productData?.stockByColor?.[color];
-      stockReal = colorStock !== undefined ? colorStock : product.stock || 0;
-    }
-
-    if (stockReal <= 0) {
+    if (stock <= 0) {
       showToast("Producto agotado", "info");
       return;
     }
 
-    const safeQty = Math.min(parseInt(quantity) || 1, stockReal);
+    const safeQty = Math.min(requestedQty, stock);
 
-    const cartItem = { productId: id, variantId, selectedColor: color, 
-      quantity: safeQty, name, price, tax: tax || 0, 
-      discount: discount || 0, image, specs };
+    const cartItem = { productId: id, variantId, selectedColor: color, quantity: safeQty, 
+      name, price, tax: tax || 0, discount: discount || 0, realStock: stock, image, specs };
+
+    const { authenticated } = await getAuthStatus();
 
     if (!authenticated) {
       const localCart = JSON.parse(localStorage.getItem("carrito")) || [];
+
       const existingIndex = localCart.findIndex(
-        (item) => item.productId === id && item.variantId === variantId
+        item => item.variantId === variantId
       );
 
       if (existingIndex !== -1) {
-        const newQty = Math.min(
-          localCart[existingIndex].quantity + safeQty,
-          stockReal
-        );
-        if (newQty <= 0) {
-          localCart.splice(existingIndex, 1);
-        } else {
-          localCart[existingIndex].quantity = newQty;
-        }
+        localCart[existingIndex].quantity += safeQty;
       } else {
         localCart.unshift(cartItem);
       }
@@ -65,23 +50,23 @@ async function addToCart(product) {
     } else {
       const response = await fetchCart("add", cartItem);
       const data = await response.json();
-      if (!data.success) throw new Error(data.message);
+
+      if (!data.success) {
+        showToast(data.message || "No se pudo agregar", "error");
+        return;
+      }
     }
 
     sessionStorage.setItem(
       "toastSuccess",
-      JSON.stringify({
-        message: "Agregado al carrito"
-      })
+      JSON.stringify({ message: "Agregado al carrito" })
     );
 
     window.location.href = "/api/cart";
 
-  } catch (error) {
-    console.error("Error al agregar al carrito:", error);
-    showToast( "ha ocurrido un error. Intentelo de nuevo.",
-      "error",
-    );
+  } catch (err) {
+    console.error(err);
+    showToast("Ha ocurrido un error. Inténtelo de nuevo.", "error");
   }
 }
 

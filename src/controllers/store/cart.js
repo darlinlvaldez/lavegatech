@@ -128,39 +128,6 @@ cartController.clearAllCart = async (req, res) => {
   }
 };
 
-cartController.getStock = async (req, res) => {
-  try {
-    const { variantId, bulk } = req.query;
-
-    if (bulk === 'true' && req.session.user) {
-      const userId = req.session.user.id;
-      const items = await cart.getCartToPay(userId);
-      
-      const stocks = {};
-      items.forEach(item => {
-        const key = `${item.productId}_${item.selectedColor}`;
-        stocks[key] = item.stock; 
-      });
-
-      return res.json({ success: true, stocks });
-    }
-
-    if (!variantId) {
-      return res.status(400).json({ success: false, message: "variantId es requerido" });
-    }
-
-    const variant = await variantModel.getById(Number(variantId));
-    if (!variant) {
-      return res.status(404).json({ success: false, message: "Variante no encontrada" });
-    }
-
-    res.json({ success: true, stock: variant.stock });
-  } catch (error) {
-    console.error("Error al consultar stock:", error);
-    res.status(500).json({ success: false, message: "Error al consultar stock" });
-  }
-};
-
 cartController.getRelated = async (req, res) => {
   try {
     const userId = req.session.user?.id;
