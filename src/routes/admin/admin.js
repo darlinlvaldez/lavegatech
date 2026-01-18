@@ -40,6 +40,7 @@ router.put('/variantes/:id',  requireRole('superadmin', 'admin', 'editor'), vali
 router.delete('/variantes/:id',  requireRole('superadmin', 'admin'), admin.borrarVariante);
 router.post('/variantes/upload',  requireRole('superadmin', 'admin', 'editor'), admin.imagenArchivo);
 router.patch('/variantes/:id/estado', requireRole('superadmin', 'admin', 'editor'), admin.varianteEstado);
+router.patch('/variantes/:id/principal', requireRole('superadmin', 'admin', 'editor'), admin.imgPrincipal);
 
 // Marcas
 router.get('/marcas',  requireRole('superadmin', 'admin', 'editor'), admin.listarMarcas);

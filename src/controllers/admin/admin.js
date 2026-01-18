@@ -304,6 +304,19 @@ adminController.varianteEstado = async (req, res) => {
   }
 };
 
+adminController.imgPrincipal = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { principal } = req.body;
+
+    const success = await admin.imgPrincipal(id, principal);
+
+    res.json({ success });
+  } catch (error) {
+    res.status(500).json({ error: "Error al actualizar la imagen principal" });
+  }
+};
+
 // Pedidos
 
 adminController.listarPedidos = async (req, res) => {

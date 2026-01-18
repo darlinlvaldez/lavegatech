@@ -424,6 +424,7 @@ admin.obtenerVariantes = async () => {
       v.color,
       v.stock,
       v.img,
+      v.img_principal,
       v.activo,
       p.nombre AS producto,
       r.capacidad AS ram,
@@ -462,6 +463,29 @@ admin.actualizarVariante = async ({ id, color, stock, img, producto_id }) => {
 
 admin.estadoVariante = async (id, activo) => {
   const [result] = await db.query("UPDATE p_variantes SET activo = ? WHERE id = ?", [activo, id]);
+  return result.affectedRows > 0;
+};
+
+admin.imgPrincipal = async (variantId, principal) => {
+  const [[variant]] = await db.query(
+    "SELECT producto_id FROM p_variantes WHERE id = ?",
+    [variantId]
+  );
+
+  if (!variant) return false;
+
+  if (principal === 1) {
+    await db.query(
+      "UPDATE p_variantes SET img_principal = 0 WHERE producto_id = ?",
+      [variant.producto_id]
+    );
+  }
+
+  const [result] = await db.query(
+    "UPDATE p_variantes SET img_principal = ? WHERE id = ?",
+    [principal, variantId]
+  );
+
   return result.affectedRows > 0;
 };
 

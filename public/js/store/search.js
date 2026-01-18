@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const productElement = document.createElement('div');
       productElement.className = 'search-result-item';
       productElement.innerHTML = `
-        <a href="/product/${product.id}${product.colores ? `?color=${encodeURIComponent(product.colores.split(',')[0])}` : ''}">
+        <a href="/product/${product.id}?variant=${product.variantId}">
           <img src="${product.image?.split(',')[0]}" alt="${product.name}">
           <div class="product-info">
             <h4>${product.name} ${product.specs || ""}</h4>

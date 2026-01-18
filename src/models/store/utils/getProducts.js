@@ -13,7 +13,7 @@ productsBase.getActiveJoins = () => {
   return `
     JOIN categorias c ON p.categoria_id = c.id AND c.activo = 1
     JOIN p_marcas m ON p.marca_id = m.id AND m.activo = 1
-    LEFT JOIN p_variantes v ON p.id = v.producto_id AND v.activo = 1
+    LEFT JOIN p_variantes v ON p.id = v.producto_id AND v.activo = 1 AND v.img_principal = 1
   `;
 };
 

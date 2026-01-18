@@ -81,12 +81,25 @@ function renderVariants() {
     const stateText = variants.activo ? "Activo" : "Inactivo";
     const stateClass = variants.activo ? "active-state" : "inactive-state";
 
+    const principalText = variants.img_principal ? "Activo" : "Inactivo";
+    const principalClass = variants.img_principal ? "active-state" : "inactive-state";
+    const disabled = variants.img_principal ? "disabled" : "";
+
     row.innerHTML = `
       <td>${variants.id}</td>
       <td>${variants.producto} ${variants.specs || ""}</td>
       <td>${variants.color}</td>
       <td>${variants.stock}</td>
       <td><img src="${variants.img || ''}" alt="Img" width="40" height="40"></td>
+      <td>
+        <label class="switch">
+          <input type="checkbox"
+            ${variants.img_principal ? "checked" : ""}
+            ${variants.img_principal ? "disabled" : ""}
+            onclick="changePrincipal(${variants.id}, ${variants.img_principal})">
+          <span class="slider"></span>
+        </label>
+      </td>
       <td>
         <button class="estado-btn ${stateClass}" onclick="changeStatus(${variants.id}, 
         ${variants.activo})"> ${stateText}
@@ -226,6 +239,28 @@ window.changeStatus = async function (id) {
     render: renderVariants,
     errorMessage: "No se pudo cambiar el estado.",
   });
+};
+
+window.changePrincipal = async function (id, current) {
+  if (current) return;
+
+  try {
+    const res = await fetch(`/api/admin/variantes/${id}/principal`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ principal: 1 })
+    });
+
+    if (!res.ok) throw new Error();
+
+    const data = await res.json();
+    if (!data.success) throw new Error();
+
+    await fetchVariants();
+
+  } catch (error) {
+    showToast("Error al actualizar la imagen principal.", "error");
+  }
 };
 
 window.editVariant = function (id) {
