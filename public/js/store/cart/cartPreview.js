@@ -35,7 +35,7 @@ function renderCart(cart, cartList, cartCount, cartSummary, cartSubtotal) {
 
                     <h4 class="product-price">
                         ${stock > 0
-                                ? `<span class="qty-cart">${data.quantity}x</span>`
+                                ? `<span class="qty-cart">${data.quantity}x </span>`
                                 : `<span class="badge qty-cart">AGOTADO</span>`
                         }$${formatPrice(data.finalPrice)}
                     </h4>

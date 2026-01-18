@@ -75,9 +75,12 @@ function generateFavItemHTML(item) {
             <img src="${item.image}" alt="${item.name}" class="product-image">
             <div class="product-info">
                 <h5>${item.name} ${data.specs}</h5>
+                <div class="price-wrapper">
                 <b>Precio:</b>
                 <span class="product-price">  
                     <b>$${formatPrice(data.finalPrice)}</b>
+            </div>
+
                     ${data.discount > 0 ? `
                       <del class="product-old-price">$${formatPrice(data.originalPrice)}</del>
                       <span class="sale">-${data.discount.toFixed(2)}%</span> ` : ''}

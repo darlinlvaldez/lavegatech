@@ -11,57 +11,10 @@
 .container-user h2 {
     text-align: center;
     color: #2c3e50;
+    margin: 5%;
     margin-bottom: 30px;
     font-size: 2.2em;
     font-weight: 700;
-}
-
-.alert-info-user {
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
-    border-radius: 8px;
-    color: #0c5460;
-    background-color: #d1ecf1;
-    border-color: #bee5eb;
-    text-align: center;
-}
-
-.btn-user {
-    display: inline-block;
-    font-weight: 400;
-    color: #fff;
-    text-align: center;
-    user-select: none;
-    background-color: #007bff;
-    border: 1px solid #007bff;
-    padding: 0.75rem 1.5rem;
-    font-size: 1.5rem;
-    line-height: 1.5;
-    border-radius: 0.5rem;
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    text-decoration: none;
-    cursor: pointer;
-    margin-top: 20px;
-    display: block;
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
-}
-
-.btn-user:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
-    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
-}
-
-.list-group-user {
-    display: flex;
-    flex-direction: column;
-    padding-left: 0;
-    margin-bottom: 0;
-    border-radius: 0.5rem;
 }
 
 .list-group-product {
@@ -121,6 +74,41 @@
 
 .mb-1-user {
     margin-bottom: 0.25rem;
+}
+
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 20px auto;
+}
+
+.input-search {
+    width: 100%;
+    padding: 10px 40px 10px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    margin-top: 17px;
+    box-sizing: border-box;
+}
+
+.input-search:focus {
+    border-color: #3498db;
+}
+
+.search-icon {
+    position: absolute;
+    font-size: 20px;
+    right: 12px;
+    top: 65%;
+    transform: translateY(-50%);
+    color: #999;
+    pointer-events: none;
+    width: 20px;
+    height: 20px;
 }
 
 .badge-user {

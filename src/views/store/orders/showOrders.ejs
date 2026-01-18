@@ -9,6 +9,11 @@
 
     <div class="container-user">
         <h2>Mis Pedidos</h2>
+
+        <div class="search-container">
+            <input type="text" id="searchOrderInput" placeholder="Buscar pedidos..." class="input-search" />
+            <i class="fa fa-search search-icon"></i>
+        </div>
         
         <% if (orders.length === 0) { %>
             <div class="alert-info-user">
@@ -18,7 +23,8 @@
         <% } else { %>
             <div class="list-group-user">
                 <% orders.forEach(order => { %>
-                    <a href="/api/order/orderDetails/<%= order.id %>" class="list-group-product">
+                    <a href="/api/order/orderDetails/<%= order.id %>" class="list-group-product"
+                        data-order-id="<%= order.id %>" data-shipping="<%= order.shippingStatus || 'pendiente' %>">
                         <div class="d-flex-user w-100-user justify-content-user">
                             <h5 class="mb-1">Pedido #<%= order.id %></h5>
                             <div class="right-info-user">
@@ -50,4 +56,7 @@
     <%- include('../../partials/footer.ejs') %>
     
 </body>
+
+<script src="/js/utils/orderSearch.js"></script>
+
 </html>

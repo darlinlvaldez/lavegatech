@@ -9,14 +9,15 @@ searchInput.addEventListener("input", () => {
   pedidos.forEach((pedido) => {
     const envio = (pedido.dataset.envio || "").toLowerCase();
     const id = pedido.dataset.orderId || "";
-    const direccion = pedido.querySelector(".text-muted-user")?.textContent.toLowerCase() || "";
+    const fecha = pedido.querySelector(".text-muted-user")?.textContent.toLowerCase() || "";
 
     const visible =
       envio.includes(valor) ||
       id.includes(valor) ||
-      direccion.includes(valor);
+      fecha.includes(valor);
 
     pedido.style.display = visible ? "block" : "none";
+    console.log(fecha)
   });
 });
 

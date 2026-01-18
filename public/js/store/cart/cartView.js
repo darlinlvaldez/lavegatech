@@ -156,12 +156,17 @@ async function loadCartPage() {
           <h5>${item.name} ${data.specs}</h5>
           <b>Precio:</b>
           <span class="product-price">
-            <b>$${formatPrice(data.finalPrice)}</b>
-            ${data.discount > 0 ? 
-              `<del class="product-old-price">
-            $${formatPrice(data.originalPrice)}</del>
-            <span class="sale">-${data.discount.toFixed(2)}%</span>`
-                : "" } </span>
+            <b>$${formatPrice(data.finalPrice)}</b></span>
+          <div class="price-wrapper">
+            ${data.discount > 0 ? `
+              <div class="discount-row">
+                <del class="product-old-price">
+                  $${formatPrice(data.originalPrice)}
+                </del>
+                <span class="sale">-${data.discount.toFixed(2)}%</span>
+              </div>
+            ` : ""}
+          </div>
           <div class="item-total">
             <span><strong>Total:</strong></span>
             $${formatPrice(data.total)}

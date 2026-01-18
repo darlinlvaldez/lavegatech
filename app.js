@@ -1,14 +1,11 @@
-// Dependencias
 import express from 'express';
 import fileUpload from 'express-fileupload';
 import path from 'path';
 import config from './config.js';
 
-// Middlewares base
 import session from './src/middlewares/session.js';
 import { userLocals, adminLocals } from './src/middlewares/userLocals.js';
 
-// Routes agrupadas
 import storeRoutes from './routes/storeRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 
