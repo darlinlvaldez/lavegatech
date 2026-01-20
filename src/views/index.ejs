@@ -539,7 +539,7 @@ document.querySelector(".tablink").click();
                         <% for(let i = 0; i < Math.min(3, topSelling.length); i++) { %>
                             <% const product = topSelling[i]; %>
                             <div class="product-widget">
-                                 <a href="/product/<%= product.id %>">
+                                 <a href="/product/<%= product.id %>?variant=<%= product.variantId %>">
                                 <div class="product-img">
                                     <img src="<%= product.image %>" alt="<%= product.name %>">
                                 </div>
@@ -566,7 +566,7 @@ document.querySelector(".tablink").click();
                         <% for(let i = 3; i < Math.min(6, topSelling.length); i++) { %>
                             <% const product = topSelling[i]; %>
                             <div class="product-widget">
-                                 <a href="/product/<%= product.id %>">
+                                 <a href="/product/<%= product.id %>?variant=<%= product.variantId %>">
                                 <div class="product-img">
                                     <img src="<%= product.image %>" alt="<%= product.name %>">
                                 </div>
@@ -603,7 +603,7 @@ document.querySelector(".tablink").click();
                         <% for(let i = 6; i < Math.min(9, topSelling.length); i++) { %>
                             <% const product = topSelling[i]; %>
                             <div class="product-widget">
-                                 <a href="/product/<%= product.id %>">
+                                 <a href="/product/<%= product.id %>?variant=<%= product.variantId %>">
                                 <div class="product-img">
                                     <img src="<%= product.image %>" alt="<%= product.name %>">
                                 </div>
@@ -630,7 +630,7 @@ document.querySelector(".tablink").click();
                         <% for(let i = 9; i < Math.min(12, topSelling.length); i++) { %>
                             <% const product = topSelling[i]; %>
                             <div class="product-widget">
-                                 <a href="/product/<%= product.id %>">
+                                 <a href="/product/<%= product.id %>?variant=<%= product.variantId %>">
                                 <div class="product-img">
                                     <img src="<%= product.image %>" alt="<%= product.name %>">
                                 </div>
@@ -668,7 +668,7 @@ document.querySelector(".tablink").click();
                         <% for(let i = 12; i < Math.min(15, topSelling.length); i++) { %>
                             <% const product = topSelling[i]; %>
                             <div class="product-widget">
-                                 <a href="/product/<%= product.id %>">
+                                 <a href="/product/<%= product.id %>?variant=<%= product.variantId %>">
                                 <div class="product-img">
                                     <img src="<%= product.image %>" alt="<%= product.name %>">
                                 </div>
@@ -695,7 +695,7 @@ document.querySelector(".tablink").click();
                         <% for(let i = 15; i < Math.min(18, topSelling.length); i++) { %>
                             <% const product = topSelling[i]; %>
                             <div class="product-widget">
-                                 <a href="/product/<%= product.id %>">
+                                 <a href="/product/<%= product.id %>?variant=<%= product.variantId %>">
                                 <div class="product-img">
                                     <img src="<%= product.image %>" alt="<%= product.name %>">
                                 </div>

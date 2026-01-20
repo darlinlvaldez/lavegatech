@@ -133,7 +133,7 @@
 				<% if (topSelling?.length) { %>
 					<% topSelling.forEach(product => { %>
 					<div class="product-widget">
-						<a href="/product/<%= product.id %>">
+						<a href="/product/<%= product.id %>?variant=<%= product.variantId %>">
 						<div class="product-img">
 						<img src="<%= product.image %>"
 							alt="<%= product.name %>">
@@ -189,7 +189,7 @@
 					</div>
 				</div>
 				<!-- /store top filter -->
-
+				 
 				<!-- store products -->
 				<div id="store-products">
 					<div class="row">
@@ -197,7 +197,7 @@
 							<% products.forEach(product=> { %>
 								<div class="col-md-4 col-xs-6">
 									<div class="product">
-										<div class="product-img"> <a href="/product/<%= product.id %>?color=<%= product.color %>">
+										<div class="product-img"> <a href="/product/<%= product.id %>?variant=<%= product.variantId %>">
 											<img src="<%= product.image %>" alt="<%= product.name %>" >
 											<div class="product-label">
 												<% if (product.discount> 0) { %>

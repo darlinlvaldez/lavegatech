@@ -63,7 +63,7 @@ document.addEventListener("click", (e) => {
   }
 });
 
-const errorFields = ["producto_id", "color", "stock", "img"]
+const errorFields = ["producto_id", "color", "stock", "img", "imgFile"];
 
 async function fetchVariants() {
   const res = await fetch("/api/admin/variantes");
@@ -158,11 +158,7 @@ variantForm.addEventListener("submit", async (e) => {
   clearError(errorFields, "#variantForm");
 
   const id = variantIdInput.value;
-  if (!productoIdSeleccionado) {
-    showValidation([{ path: "producto_id", message: "Debe seleccionar un producto válido" }], "#variantForm");
-    return;
-  }
-
+ 
   const producto_id = productoIdSeleccionado;
   const color = variantColorInput.value;
   const stock = parseInt(variantStockInput.value);
@@ -195,12 +191,13 @@ variantForm.addEventListener("submit", async (e) => {
     }
   }
 
-  if (!imgPath) {
-    showValidation([{ path: "img", message: "Debe proporcionar una imagen o URL" }], "#variantForm");
-    return;
-  }
+  const body = {
+    producto_id: productoIdSeleccionado ?? undefined,
+    color: variantColorInput.value.trim(),
+    stock: variantStockInput.value === "" ? null : parseInt(variantStockInput.value),
+    img: imgPath,
+  };
 
-  const body = JSON.stringify({ producto_id, color, stock, img: imgPath });
   const url = id ? `/api/admin/variantes/${id}` : "/api/admin/variantes";
   const method = id ? "PUT" : "POST";
 
@@ -208,13 +205,17 @@ variantForm.addEventListener("submit", async (e) => {
     const res = await fetch(url, {
       method,
       headers: { "Content-Type": "application/json" },
-      body,
+      body: JSON.stringify(body),
     });
 
     const data = await res.json();
 
     if (!res.ok) {
-      showToast(data.error || "Error al guardar la variante.", "error");
+      if (data.validationError && Array.isArray(data.errors)) {
+        showValidation(data.errors, "#variantForm");
+      } else {
+        showToast(data.error || "Error al guardar la variante.", "error");
+      }
       return;
     }
 
