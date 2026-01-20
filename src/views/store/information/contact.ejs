@@ -26,20 +26,20 @@
             <div class="fila-campos">
                 <div class="campo-formulario">
                     <label for="nombre">Nombre</label>
-                    <input type="text" class="entrada-texto <%= validationErrors?.name ? 'input-error' : '' %>" 
+                    <input type="text" class="entrada-texto <%= validationErrors?.name ? 'input-error' : '' %>" data-error-input
                     id="name" name="name" placeholder="Introduce el nombre" value="<%= name || '' %>">
                     <% if (validationErrors?.name) { %>
-                        <p class="field-error">
+                        <p class="error-text field-error visible" data-error-for="name">
                         <i class="fa-solid fa-circle-exclamation"></i>
                         <%= validationErrors.name %></p>
                     <% } %>
                 </div>
                 <div class="campo-formulario">
                     <label for="email">Correo</label>
-                    <input type="email" class="entrada-texto <%= validationErrors?.email ? 'input-error' : '' %>" 
+                    <input type="email" class="entrada-texto <%= validationErrors?.email ? 'input-error' : '' %>" data-error-input
                     id="email" name="email" placeholder="ejemplo@gmail.com" value="<%= email || '' %>">
                     <% if (validationErrors?.email) { %>
-                        <p class="field-error">
+                        <p class="error-text field-error visible" data-error-for="email">
                         <i class="fa-solid fa-circle-exclamation"></i>
                         <%= validationErrors.email %></p>
                     <% } %>
@@ -47,29 +47,24 @@
             </div>
             <div class="campo-formulario">
                 <label for="asunto">Asunto</label>
-                <input type="text" class="entrada-texto <%= validationErrors?.affair ? 'input-error' : '' %>" 
+                <input type="text" class="entrada-texto <%= validationErrors?.affair ? 'input-error' : '' %>" data-error-input
                 id="affair" name="affair" placeholder="Introduce el asunto" value="<%= affair || '' %>">
                 <% if (validationErrors?.affair) { %>
-                    <p class="field-error">
+                    <p class="error-text field-error visible" data-error-for="affair">
                     <i class="fa-solid fa-circle-exclamation"></i>
                     <%= validationErrors.affair %></p>
                 <% } %>
             </div>
             <div class="campo-formulario">
                 <label for="mensaje" style="margin-top: 20px; display: block;">Mensaje</label>
-                <textarea class="entrada-texto <%= validationErrors?.mensaje ? 'input-error' : '' %>" 
+                <textarea class="entrada-texto <%= validationErrors?.mensaje ? 'input-error' : '' %>" data-error-input
                 id="message" name="message" placeholder="Escribe tu mensaje..." rows="8"><%= message || '' %></textarea>
                 <% if (validationErrors?.message) { %>
-                    <p class="field-error"><i class="fa-solid fa-circle-exclamation"></i>
+                    <p class="error-text field-error visible" data-error-for="message">
+                        <i class="fa-solid fa-circle-exclamation"></i>
                     <%= validationErrors.message %></p>
                 <% } %>
             </div>
-            
-            <% if (validationErrors?.password) { %>
-                <p class="field-error">
-                <i class="fa-solid fa-circle-exclamation"></i>
-                <%= validationErrors.password %></p>
-            <% } %>
 
             <% if (error && !validationErrors) { %>
                 <p class="general-error"><%= error %></p>
@@ -96,9 +91,9 @@
 
 </body>
 
+<script src="/js/utils/cleanFormError.js"></script>
 <script src="/js/vendor/leaflet.min.js"></script>
 <script src="/js/vendor/toastify.js"></script>
-
 <script src="/js/vendor/map.js"></script>
 <script src="/js/utils/flashToast.js" type="module"></script>
 
