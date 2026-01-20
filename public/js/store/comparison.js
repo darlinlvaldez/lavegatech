@@ -235,7 +235,7 @@ function renderSelectableDevices(devices, gridId = 'devices-grid') {
     card.className = 'device-select-card';
 
     card.innerHTML = `  
-      <a href="/product/${device.id}">
+      <a href="/product/${device.id}?variant=${device.variantId}">
         <img src="${device.image?.split(",")[0]}" alt="${device.name}">
       <h4 class="device-name">${device.name}</h4>
       </a>
@@ -367,9 +367,11 @@ function displayComparisonResults(devices) {
         </div>
       </div>
       
-      <button class="btn-comparison" onclick="window.location.href='/product/${device.id}'">
+      <a href="/product/${device.id}?variant=${device.variantId}">
+      <button class="btn-comparison">
         Ver Producto
       </button>
+      </a>
     `;
     
     wrapper.appendChild(deviceCard);

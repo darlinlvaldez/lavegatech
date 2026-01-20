@@ -18,20 +18,18 @@ export function showValidation(errors, formSelector = "") {
 
 export function clearError(fields, formSelector = "") {
   fields.forEach((name) => {
-    const input = document.querySelector(`${formSelector} [name="${name}"]`);
-    const errorText = document.querySelector(`${formSelector} .error-text[data-error-for="${name}"]`);
+    const input = document.querySelector(
+      `${formSelector} [name="${name}"]`
+    );
+    const errorText = document.querySelector(
+      `${formSelector} .error-text[data-error-for="${name}"]`
+    );
 
-    if (input) {
+    if (!input || !errorText) return;
+
+    input.addEventListener("input", () => {
       input.classList.remove("input-error");
-      input.addEventListener("input", () => {
-        input.classList.remove("input-error");
-        if (errorText) errorText.textContent = "";
-      });
-    }
-
-    if (errorText) {
-      errorText.textContent = "";
-      errorText.classList.remove("visible", "field-error");
-    }
+      errorText.classList.remove("visible");
+    });
   });
 }

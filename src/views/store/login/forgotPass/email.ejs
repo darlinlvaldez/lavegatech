@@ -6,11 +6,12 @@
     <p>Escribe la dirección de correo electrónico asociada a tu cuenta.</p>
 
     <form method="POST" action="/api/auth/email" class="password-form">
-        <input type="email" name="email" placeholder="ejemplo@gmail.com" value="<%= email || '' %>" required
-        class="form-input <%= validationErrors?.email ? 'input-error' : '' %>">
+        <input type="email" name="email" placeholder="ejemplo@gmail.com" value="<%= email || '' %>" 
+        data-error-input class="form-input <%= validationErrors?.email ? 'input-error' : '' %>">
         
         <% if (validationErrors?.email) { %>
-          <div class="field-error"><i class="fa-solid fa-circle-exclamation"></i>
+          <div class="error-text field-error visible" data-error-for="email">
+            <i class="fa-solid fa-circle-exclamation"></i>
             <%= validationErrors.email %></div>
         <% } %>
       

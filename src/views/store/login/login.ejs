@@ -8,18 +8,19 @@
   <form action="/api/auth/login" method="POST">
     <label for="email">Correo electrónico:</label>
     <input type="email" name="email" value="<%= email || '' %>" placeholder="ejemplo@gmail.com" 
-    required class="<%= validationErrors?.email ? 'input-error' : '' %>">
+     data-error-input class="<%= validationErrors?.email ? 'input-error' : '' %>">
     
     <% if (validationErrors?.email) { %>
-      <p class="field-error">
+      <p class="error-text field-error visible" data-error-for="email">
         <i class="fa-solid fa-circle-exclamation"></i>
-        <%= validationErrors.email %></p>
+        <%= validationErrors.email %>
+      </p>
     <% } %>
     
     <label for="password">Contraseña:</label>
     <div class="password-wrapper">
-      <input type="password" name="password" id="passwordInput" placeholder="Introduce la contraseña" required 
-      class="password-input <%= validationErrors?.password ? 'input-error' : '' %>" >
+      <input type="password" name="password" id="passwordInput" placeholder="Introduce la contraseña" 
+      data-error-input class="password-input <%= validationErrors?.password ? 'input-error' : '' %>" >
       
       <span onclick="togglePassword('password')" class="toggle-password">
         <i id="eyeIconPassword" class="fas fa-eye-slash"></i>
@@ -27,7 +28,7 @@
     </div>
     
     <% if (validationErrors?.password) { %>
-    <p class="field-error">
+    <p class="error-text field-error visible" data-error-for="password">
       <i class="fa-solid fa-circle-exclamation"></i>
       <%= validationErrors.password %>
     </p>

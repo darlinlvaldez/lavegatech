@@ -233,7 +233,7 @@ authController.email = async (req, res) => {
 
   } catch (error) {
     console.error(error);
-    return renderError(res, 'login/forgotPass/email', ERROR_MESSAGES.SERVER_ERROR, {
+    return renderError(res, 'store/login/forgotPass/email', ERROR_MESSAGES.SERVER_ERROR, {
       email: req.body.email, validationErrors: {}
     });
   }

@@ -8,50 +8,54 @@
   <form action="/api/auth/register" method="POST">
     <label>Nombre de usuario:</label>
     <input type="text" name="username" value="<%= username || '' %>" 
-    placeholder="Introducir nombre de usuario" required
+    placeholder="Introducir nombre de usuario" data-error-input
     class="<%= validationErrors?.username ? 'input-error' : '' %>">
     
     <% if (validationErrors?.username) { %>
-      <p class="field-error"><i class="fa-solid fa-circle-exclamation"></i>
+      <p class="error-text field-error visible" data-error-for="username">
+        <i class="fa-solid fa-circle-exclamation"></i>
       <%= validationErrors.username %></p>
     <% } %>
 
     <label>Correo electrónico:</label>
     <input type="email" name="email" value="<%= email || '' %>" placeholder="ejemplo@gmail.com" 
-    required class="<%= validationErrors?.email ? 'input-error' : '' %>">
+    data-error-input class="<%= validationErrors?.email ? 'input-error' : '' %>">
     
     <% if (validationErrors?.email) { %>
-      <p class="field-error"><i class="fa-solid fa-circle-exclamation"></i>
+      <p class="error-text field-error visible" data-error-for="email">
+        <i class="fa-solid fa-circle-exclamation"></i>
       <%= validationErrors.email %></p>
     <% } %>
     
     <label>Contraseña:</label>
     <div class="password-wrapper">
-      <input type="password" name="password" id="passwordInput" placeholder="Introducir contraseña" required
-      class="password-input <%= validationErrors?.password ? 'input-error' : '' %>">
+      <input type="password" name="password" id="passwordInput" placeholder="Introducir contraseña" 
+      data-error-input class="password-input <%= validationErrors?.password ? 'input-error' : '' %>">
   
-  <span onclick="togglePassword('password')" class="toggle-password">
-    <i id="eyeIconPassword" class="fas fa-eye-slash"></i>
-  </span>
-</div>
-    
-<% if (validationErrors?.password) { %>
-  <p class="field-error"><i class="fa-solid fa-circle-exclamation"></i>
-  <%= validationErrors.password %></p>
-<% } %>
+    <span onclick="togglePassword('password')" class="toggle-password">
+      <i id="eyeIconPassword" class="fas fa-eye-slash"></i>
+    </span>
+  </div>
+      
+  <% if (validationErrors?.password) { %>
+    <p class="error-text field-error visible" data-error-for="password">
+      <i class="fa-solid fa-circle-exclamation"></i>
+    <%= validationErrors.password %></p>
+  <% } %>
 
-<label>Confirmar contraseña:</label>
-<div class="password-wrapper">
-  <input type="password" name="confirmPassword" id="confirmPasswordInput" placeholder="Repetir contraseña" required
-    class="password-input <%= validationErrors?.confirmPassword ? 'input-error' : '' %>">
+  <label>Confirmar contraseña:</label>
+  <div class="password-wrapper">
+    <input type="password" name="confirmPassword" id="confirmPasswordInput" placeholder="Repetir contraseña" 
+    data-error-input class="password-input <%= validationErrors?.confirmPassword ? 'input-error' : '' %>">
 
-  <span onclick="togglePassword('confirm')" class="toggle-password">
-    <i id="eyeIconConfirmPassword" class="fas fa-eye-slash"></i>
-  </span>
-</div>
+    <span onclick="togglePassword('confirm')" class="toggle-password">
+      <i id="eyeIconConfirmPassword" class="fas fa-eye-slash"></i>
+    </span>
+  </div>
 
   <% if (validationErrors?.confirmPassword) { %>
-    <p class="field-error"><i class="fa-solid fa-circle-exclamation"></i>
+    <p class="error-text field-error visible" data-error-for="confirmPassword">
+      <i class="fa-solid fa-circle-exclamation"></i>
     <%= validationErrors.confirmPassword %></p>
   <% } %>
 

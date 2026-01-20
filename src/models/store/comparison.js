@@ -51,6 +51,7 @@ comparison.getTopSoldProducts = async ({
   const query = `
     SELECT 
       p.id,
+      v.id as variantId,
       p.movil_id AS mobileId,
       p.nombre AS name,
       p.precio AS price,
@@ -84,6 +85,7 @@ comparison.getTopRatedMobiles = async (limit = 6) => {
   const sql = `
     SELECT 
       p.id,
+      v.id as variantId,
       p.movil_id AS mobileId,
       p.nombre AS name,
       p.precio AS price,
@@ -140,6 +142,7 @@ comparison.getDevice = async (productIds) => {
   const query = `
     SELECT 
       p.id,
+      v.id as variantId,
       p.movil_id AS mobileId,
       p.nombre AS name,
       p.precio AS price,

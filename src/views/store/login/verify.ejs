@@ -1,9 +1,5 @@
 <%- include('../../components/header.ejs') %>
 
-<link rel="stylesheet" href="/css/vendor/toastify.css"
-<link rel="stylesheet" href="/css/vendor/sweetalert2css">">
-<link rel="stylesheet" href="/js/vendor/toastify.js/src/toastify.min.css">
-
 <body>
   <div class="code-container">
     <h2>Ingresar el código de verificación</h2>
@@ -12,11 +8,12 @@
     <form method="POST" action="/api/auth/verifyCode">
       <input type="hidden" name="email" value="<%= email %>">
       <input type="hidden" name="type" value="<%= type %>">
-      <input type="text" name="code" placeholder="Código de verificación" required
-        class="<%= validationErrors?.code ? 'input-error' : '' %>">
+      <input type="text" name="code" placeholder="Código de verificación" 
+      data-error-input class="<%= validationErrors?.code ? 'input-error' : '' %>">
         
       <% if (validationErrors?.code) { %>
-        <p class="field-error"><i class="fa-solid fa-circle-exclamation"></i>
+        <p class="error-text field-error visible" data-error-for="code">
+          <i class="fa-solid fa-circle-exclamation"></i>
         <%= validationErrors.code %></p>
       <% } %>
 
@@ -45,7 +42,5 @@
 </body>
 
 <script src='/js/store/accounts/resendCode.js' type="module"></script>
-<script src="/js/vendor/toastify.js"></script>
-
 
 <%- include('../../components/footer.ejs') %>
