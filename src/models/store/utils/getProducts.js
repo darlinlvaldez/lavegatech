@@ -21,13 +21,12 @@ productsBase.getProductsBase = async ({
   where = "",
   limit = "",
   order = "",
+  extraJoin = "",
   params = [],
 } = {}) => {
   const condiciones = ["p.activo = 1"];
 
-  if (where) {
-    condiciones.push(where);
-  }
+  if (where) { condiciones.push(where) }
 
   const whereClause = `WHERE ${condiciones.join(" AND ")}`;
   const limitClause = validateLimit(limit);
@@ -54,6 +53,7 @@ productsBase.getProductsBase = async ({
       LEFT JOIN ram r ON p.ram_id = r.id
       LEFT JOIN almacenamiento a ON p.almacenamiento_id = a.id
       LEFT JOIN clasificacion cl ON cl.producto_id = p.id
+      ${extraJoin}
       ${whereClause}
       GROUP BY p.id
       ${order}

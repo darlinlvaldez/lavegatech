@@ -61,6 +61,8 @@ const ORDER_MAP = {
   2: "p.precio ASC",
   3: "p.precio DESC",
   4: "p.descuento DESC",
+  5: "averageRating DESC",
+  6: "totalSold DESC"
 };
 
 store.getStore = async (page = 1, limit = 9, sortBy = 0, categories = [], brands = [], minPrice, maxPrice) => {
@@ -69,16 +71,28 @@ store.getStore = async (page = 1, limit = 9, sortBy = 0, categories = [], brands
   const { where, params } = constructWhereClause(categories, brands, minPrice, maxPrice);
 
   const orderColumn =
-    ORDER_MAP.hasOwnProperty(sortBy)
-      ? ORDER_MAP[sortBy]
-      : ORDER_MAP[0];
+    ORDER_MAP.hasOwnProperty(sortBy) ? ORDER_MAP[sortBy] : ORDER_MAP[0];
 
   const limitClause = `LIMIT ${limit} OFFSET ${offset}`;
+
+  let salesJoin = "";
+  if (parseInt(sortBy) === 6) {
+    salesJoin = `
+      LEFT JOIN (
+        SELECT dp.producto_id, SUM(dp.cantidad) as totalSold
+        FROM detalles_pedido dp
+        JOIN pedidos pe ON dp.pedido_id = pe.id
+        WHERE pe.estado IN ('pagado', 'completado')
+        GROUP BY dp.producto_id
+      ) as sales ON p.id = sales.producto_id
+    `;
+  }
 
   return productsBase.getProductsBase({
     where,
     order: `ORDER BY ${orderColumn}`,
     limit: limitClause,
+    extraJoin: salesJoin,
     params
   });
 };
