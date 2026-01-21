@@ -47,7 +47,7 @@ searchVariantesRAMInput.addEventListener("input", () => {
     const movilNombre = v.nombre_movil || "";
     const ram = ramsDisponibles.find(r => r.id === v.ram_id) || {};
     return (
-      movilNombre.toLowerCase().includes(query)
+      movilNombre.toLowerCase().includes(query) ||
       (ram.capacidad && ram.capacidad.toLowerCase().includes(query)) ||
       (ram.tipo && ram.tipo.toLowerCase().includes(query))
     );

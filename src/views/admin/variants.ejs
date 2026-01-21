@@ -40,8 +40,7 @@
                 <th>Color</th>
                 <th>Cantidad</th>
                 <th>Imagen</th>
-                <th style="width: 110px; text-align:center;">Imagen Principal</th>
-
+                <th>Imagen Principal</th>
                 <th>Estado</th>
                 <th style="width: 5%">Acciones</th>
               </tr>
@@ -81,9 +80,11 @@
         <div class="form-group">
           <label for="variantImgFile">Imagen (Archivo):</label>
           <div class="file-input-wrapper">
-            <input type="file" id="variantImgFile" name="imgFile" accept="image/png, image/jpeg">
-            <button type="button" id="clearImgFileBtn" class="clear-file-btn">❌</button>
-          </div>
+          <input type="file" id="variantImgFile" name="imgFile" accept="image/png, image/jpeg">
+          <button type="button" id="clearImgFileBtn" class="clear-file-btn" aria-label="Quitar imagen">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
           <div class="error-text" data-error-for="img"></div>
         </div>
         <div class="modal-buttons">

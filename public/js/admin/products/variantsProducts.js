@@ -1,7 +1,6 @@
 import { showToast } from '../../utils/toastify.js';
 import { sweetAlert } from '../../utils/sweetAlert2.js';
 import { showValidation, clearError } from '../../utils/showValidation.js';
-import { changeEntityStatus} from '../../utils/changeState.js';
 
 const variantsTableBody = document.getElementById("variantsTableBody");
 const addVariantBtn = document.getElementById("addVariantBtn");
@@ -81,10 +80,6 @@ function renderVariants() {
     const stateText = variants.activo ? "Activo" : "Inactivo";
     const stateClass = variants.activo ? "active-state" : "inactive-state";
 
-    const principalText = variants.img_principal ? "Activo" : "Inactivo";
-    const principalClass = variants.img_principal ? "active-state" : "inactive-state";
-    const disabled = variants.img_principal ? "disabled" : "";
-
     row.innerHTML = `
       <td>${variants.id}</td>
       <td>${variants.producto} ${variants.specs || ""}</td>
@@ -158,10 +153,6 @@ variantForm.addEventListener("submit", async (e) => {
   clearError(errorFields, "#variantForm");
 
   const id = variantIdInput.value;
- 
-  const producto_id = productoIdSeleccionado;
-  const color = variantColorInput.value;
-  const stock = parseInt(variantStockInput.value);
 
   let imgPath = variantImgInput.value.trim();
 
@@ -229,17 +220,28 @@ variantForm.addEventListener("submit", async (e) => {
 });
 
 window.changeStatus = async function (id) {
-  const variant = variants.find(c => Number(c.id) === Number(id));
+  const variant = variants.find(v => Number(v.id) === Number(id));
   if (!variant) return;
 
-  changeEntityStatus({
-    endpoint: "/api/admin/variantes",
-    id,
-    currentStatus: variant.activo,
-    collection: variants,
-    render: renderVariants,
-    errorMessage: "No se pudo cambiar el estado.",
-  });
+  try {
+    const newState = variant.activo ? 0 : 1;
+
+    const res = await fetch(`/api/admin/variantes/${id}/estado`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ activo: newState })
+    });
+
+    if (!res.ok) throw new Error();
+
+    const data = await res.json();
+    if (!data.success) throw new Error();
+
+    await fetchVariants();
+
+  } catch (err) {
+    showToast("No se pudo cambiar el estado.", "error");
+  }
 };
 
 window.changePrincipal = async function (id, current) {

@@ -461,9 +461,45 @@ admin.actualizarVariante = async ({ id, color, stock, img, producto_id }) => {
   return result.affectedRows > 0;
 };
 
-admin.estadoVariante = async (id, activo) => {
-  const [result] = await db.query("UPDATE p_variantes SET activo = ? WHERE id = ?", [activo, id]);
-  return result.affectedRows > 0;
+admin.estadoVariante = async (variantId, activo) => {
+
+  const [[variant]] = await db.query(
+    "SELECT producto_id, img_principal FROM p_variantes WHERE id = ?",
+    [variantId]
+  );
+
+  if (!variant) return false;
+
+  const [result] = await db.query(
+    "UPDATE p_variantes SET activo = ? WHERE id = ?",
+    [activo, variantId]
+  );
+
+  if (!result.affectedRows) return false;
+
+  if (activo === 0 && variant.img_principal === 1) {
+
+    await db.query(
+      "UPDATE p_variantes SET img_principal = 0 WHERE id = ?",
+      [variantId]
+    );
+
+    const [[newPrincipal]] = await db.query(`
+      SELECT id FROM p_variantes
+      WHERE producto_id = ?
+        AND activo = 1
+      LIMIT 1
+    `, [variant.producto_id]);
+
+    if (newPrincipal) {
+      await db.query(
+        "UPDATE p_variantes SET img_principal = 1 WHERE id = ?",
+        [newPrincipal.id]
+      );
+    }
+  }
+
+  return true;
 };
 
 admin.imgPrincipal = async (variantId, principal) => {
