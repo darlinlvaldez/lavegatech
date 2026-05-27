@@ -81,9 +81,8 @@ document.addEventListener("click", async (e) => {
 
   const getImage = () => {
     const slider = $("#product-main-img");
-    if (!slider.length) return "";
-
     const currentImg = slider.find(".slick-current img");
+
     return currentImg.length ? currentImg.attr("src") : "";
   };
 
