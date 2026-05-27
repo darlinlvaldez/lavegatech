@@ -2,6 +2,7 @@ import orders from '../../models/store/orders.js';
 import cart from '../../models/store/cart.js';
 import { getExchangeRate } from '../../services/exchange.js';
 import { calculateItemSubtotal } from '../../utils/orderPrices.js';
+import { createPayPalOrder, capturePayPalOrder } from '../../services/paypal.js';
 
 const orderController = {};
 
@@ -47,10 +48,9 @@ orderController.createOrder = async (req, res) => {
       });
 
     const totalLocal = orderItems.reduce((sum, item) => sum + item.subtotal, 0) + shippingCost;
+    const totalUSD = (totalLocal * await getExchangeRate()).toFixed(2);
 
-    const exchangeRate = await getExchangeRate();
-
-    const totalUSD = (totalLocal * exchangeRate).toFixed(2);  
+    const { id: paypalOrderId } = await createPayPalOrder(totalUSD);
 
     const orderData = {
       userId,
@@ -68,11 +68,10 @@ orderController.createOrder = async (req, res) => {
     };
 
     console.log("TOTAL LOCAL:", totalLocal);
-    console.log("EXCHANGE RATE:", exchangeRate);
+    console.log("EXCHANGE RATE:", getExchangeRate);
     console.log("TOTAL USD:", totalUSD);
 
-    res.json({success: true, orderData, orderItems, 
-      totalLocal, totalUSD, exchangeRate });
+    res.json({ success: true, paypalOrderId, orderData, orderItems });
 
   } catch (error) {
     console.error('Error al crear orden:', error);
@@ -93,7 +92,7 @@ orderController.getCities = async function (req, res) {
 orderController.processPayment = async (req, res) => {
   try {
     console.log("BODY RECIBIDO EN /api/order/payment:", req.body);
-    const { orderData, orderItems, paymentDetails, payerId, paymentId, paidUSD } = req.body;
+    const { paypalOrderId, orderData, orderItems } = req.body;
 
     if (!req.session.user) {
       return res.status(401).json({ success: false, message: 'No autorizado' });
@@ -106,10 +105,18 @@ orderController.processPayment = async (req, res) => {
       return res.status(400).json({ success: false, message: 'El carrito está vacío' });
     }
 
+    const capture = await capturePayPalOrder(paypalOrderId);
+    if (capture.status !== 'COMPLETED')
+      return res.status(400).json({ success: false, message: 'Pago no completado' });
+
     const cityData = await orders.getCityId(orderData.shippingCityId);
     if (!cityData) {
       return res.status(400).json({ success: false, message: 'Ciudad de envío no válida' });
     }
+
+    const paymentId = capture.purchase_units[0].payments.captures[0].id;
+    const payerId = capture.payer.payer_id;
+    const paidUSD = parseFloat(capture.purchase_units[0].payments.captures[0].amount.value);
 
     const shippingCost = parseFloat(cityData.shippingCost);
 
@@ -125,13 +132,12 @@ orderController.processPayment = async (req, res) => {
 
     const totalLocal = subtotalProducts + shippingCost;
 
-    const exchangeRate = orderData.exchangeRate || await getExchangeRate();
+    const exchangeRate = await getExchangeRate();
 
     const paidLocal = paidUSD / exchangeRate;
 
     if (Math.abs(paidLocal - totalLocal) > 50) {
-      return res.status(400).json({
-        success: false,
+      return res.status(400).json({success: false,
         message: 'Monto pagado no coincide con el total real de la orden'
       });
     }
