@@ -80,10 +80,9 @@ document.addEventListener("click", async (e) => {
   if (!btn) return;
 
   const getImage = () => {
-    const slider = $("#product-main-img");
-    const currentImg = slider.find(".slick-current img");
+    const currentImg = document.querySelector(".slick-current img");
 
-    return currentImg.length ? currentImg.attr("src") : "";
+    return currentImg ? currentImg.getAttribute("src") : "";
   };
 
   await addToCart({
