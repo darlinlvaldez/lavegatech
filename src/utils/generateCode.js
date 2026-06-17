@@ -21,7 +21,22 @@ code.validateCode = (map, email, codeInput) => {
   return { success: true, data: pending };
 };
 
+code.cleanExpired = (map) => {
+  const now = Date.now();
+
+  for (const [email, data] of map) {
+    if (data.expiresAt <= now) {
+      map.delete(email);
+    }
+  }
+};
+
 code.pendingUsers = new Map();
 code.resetPending = new Map();
+
+setInterval(() => {
+  code.cleanExpired(code.pendingUsers);
+  code.cleanExpired(code.resetPending);
+}, 60 * 1000);
 
 export default code;
